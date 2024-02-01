@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "8278256171",
+    "project_id": "tech-shift",
+    "storage_bucket": "tech-shift.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:8278256171:android:0236ee6ecb49c12401d86e",
+        "android_client_info": {
+          "package_name": "com.example.prosample_1"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "8278256171-p4i07t3coboimbolveicl0lt2simate8.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.prosample_1",
+            "certificate_hash": "a8795437598ac15f5ce211b5213c4ace84a7c0c4"
+          }
+        },
+        {
+          "client_id": "8278256171-vrloqra8ad9c42qsvaq4b3ndtbr8ds71.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCz7YftKg9KGx2xoI1SujH3l9CGMInZTLg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "8278256171-vrloqra8ad9c42qsvaq4b3ndtbr8ds71.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "8278256171-apoi239jnmagng7jf7b2o0kauh7gjct8.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.prosample1.RunnerTests"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
