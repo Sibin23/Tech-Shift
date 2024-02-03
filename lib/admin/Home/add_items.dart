@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:prosample_1/admin/utils/colors.dart';
+import 'package:prosample_1/admin/utils/text_style.dart';
 
 class ScreenInventory extends StatefulWidget {
   const ScreenInventory({super.key});
@@ -11,7 +13,11 @@ class _ScreenInventoryState extends State<ScreenInventory> {
   @override
   Widget build(BuildContext context) {
     return  Scaffold(
-      body: Center(child: Text('Add Inventory')),
+      appBar: AppBar(
+        backgroundColor: CustomColors.appTheme,
+        title: Text('Add Inventory',style: CustomText.apptitle,),
+      ),
+      body: ,
     );
   }
 }

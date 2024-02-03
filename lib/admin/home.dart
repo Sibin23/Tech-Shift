@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
-import 'package:prosample_1/admin/admin_home.dart';
+import 'package:prosample_1/admin/Home/admin_home.dart';
 import 'package:prosample_1/admin/details/details.dart';
 import 'package:prosample_1/admin/orders/orders_history.dart';
 import 'package:prosample_1/admin/pc%20builds/prebuild.dart';
@@ -50,11 +50,11 @@ class _AdminHomeState extends State<AdminHome> {
               ),
               GButton(
                 icon: Icons.list_rounded,
-                text: 'List',
+                text: 'Orders',
               ),
               GButton(
                 icon: Icons.build_outlined,
-                text: 'Build',
+                text: 'PC Build',
               ),
               GButton(
                 icon: Icons.info,

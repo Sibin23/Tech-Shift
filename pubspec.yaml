@@ -33,6 +33,7 @@ dependencies:
   firebase_auth: ^4.16.0
   firebase_core: ^2.24.2
   firebase_storage: ^11.6.0
+  cloud_firestore: ^4.15.3
   flutter:
     sdk: flutter
   font_awesome_flutter: ^10.7.0
@@ -41,6 +42,8 @@ dependencies:
   lottie: ^3.0.0
   shared_preferences: ^2.2.2
   smooth_page_indicator: ^1.1.0
+  fluentui_system_icons: ^1.1.225
+  image_picker: ^1.0.7
 
 dev_dependencies:
 
@@ -70,6 +73,15 @@ flutter:
     - assets/Splash/
     - assets/Ads section/
     - assets/Categories/
+    - assets/forgot pasword/
+    - assets/Processors/
+    - assets/Chairs/
+    - assets/Graphic Card/
+    - assets/Mother Board/
+    - assets/Power Supply/
+    - assets/RAM/
+    - assets/SSD/
+    - assets/Cabinet/
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
   # For details regarding adding assets from package dependencies, see

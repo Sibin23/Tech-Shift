@@ -1,8 +1,11 @@
+// ignore_for_file: void_checks
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:prosample_1/User/Home_screen/home_page.dart';
+import 'package:prosample_1/User/home.dart';
 import 'package:prosample_1/User/create_account.dart';
+import 'package:prosample_1/User/forgot_password.dart';
 import 'package:prosample_1/admin/home.dart';
 import 'package:prosample_1/User/utils/commonfile.dart';
 
@@ -97,12 +100,24 @@ class _ScreenLoginState extends State<ScreenLogin> {
                                 ),
                                 border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(10)))),
-                        const SizedBox(height: 10),
-                        TextButton(
-                            onPressed: () {},
-                            child: Text('Forgot Password?',
-                                style: GoogleFonts.poppins())),
-                        const SizedBox(height: 10),
+                        const SizedBox(height: 20),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (ctx) => const ScreenPassword()));
+                              },
+                              child: Text('Forgot Password?',
+                                  style: GoogleFonts.poppins(
+                                      color: Colors.purple)),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 20),
                         SizedBox(
                             width: MediaQuery.of(context).size.width *
                                 double.infinity,
@@ -151,21 +166,22 @@ class _ScreenLoginState extends State<ScreenLogin> {
   }
 
   void goToHome(String email, String password) async {
+    // ignore: unused_local_variable
     UserCredential? usercredential;
     try {
       if (email == 'admin@gmail.com' && password == 'admin123') {
-        Navigator.push(context,
-            MaterialPageRoute(builder: (ctx2) => const  AdminHome()));
+        Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (ctx2) => const AdminHome()));
       }
 
       usercredential = await FirebaseAuth.instance
           .signInWithEmailAndPassword(email: email, password: password)
           .then((value) {
         return Navigator.push(
-            context, MaterialPageRoute(builder: (ctx2) => const ScreenHome()));
+            context, MaterialPageRoute(builder: (ctx2) => const HomeInfo()));
       });
     } on FirebaseAuthException catch (ex) {
-      
+      // ignore: use_build_context_synchronously
       return UiHelper.customAlertBox(context, ex.code.toString());
     }
   }

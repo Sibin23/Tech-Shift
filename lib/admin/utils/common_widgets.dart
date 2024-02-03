@@ -20,13 +20,17 @@ class AdminUi {
   
    return SizedBox(
     width: MediaQuery.of(context).size.width* 0.5,
-    height: MediaQuery.of(context).size.height*.23,
+    height: MediaQuery.of(context).size.height*.20,
     child: Card(
-      child: Column(
-        children: [
-          Icon(icon,size: 20),
-          Text(title,style: CustomText.title,),
-        ],
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            Icon(icon,size: 50),
+            Text(title,style: CustomText.title,),
+          ],
+        ),
       ),
     ),
    );

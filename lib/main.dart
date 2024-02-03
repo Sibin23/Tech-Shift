@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:lottie/lottie.dart';
-import 'package:prosample_1/User/Home_screen/home_page.dart';
+import 'package:prosample_1/User/home.dart';
 import 'package:prosample_1/onboardScreens/onboard1.dart';
 import 'firebase_options.dart';
 
@@ -24,7 +24,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.purple),
         useMaterial3: true,
       ),
       home: const MyHomePage(),
@@ -47,7 +47,7 @@ class _MyHomePageState extends State<MyHomePage> {
     Future.delayed(const Duration(milliseconds: 3400), () {
       final user = FirebaseAuth.instance.currentUser;
      if(user != null){
-       Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (ctx2) =>const ScreenHome()), (route) => false);
+       Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (ctx2) =>const HomeInfo()), (route) => false);
      }
      else{
        Navigator.of(context).pushReplacement(
