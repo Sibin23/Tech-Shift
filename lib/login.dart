@@ -1,5 +1,3 @@
-// ignore_for_file: void_checks
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -181,7 +179,8 @@ class _ScreenLoginState extends State<ScreenLogin> {
             context, MaterialPageRoute(builder: (ctx2) => const HomeInfo()));
       });
     } on FirebaseAuthException catch (ex) {
-      // ignore: use_build_context_synchronously
+      
+      // ignore: void_checks, use_build_context_synchronously
       return UiHelper.customAlertBox(context, ex.code.toString());
     }
   }

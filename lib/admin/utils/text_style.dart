@@ -11,5 +11,8 @@ class CustomText {
   static final title3 = GoogleFonts.karla(fontSize: 18, color: Colors.black);
   static final subtitleWhite =
       GoogleFonts.abyssinicaSil(color: Colors.white, fontSize: 16);
-      static final categoryText = GoogleFonts.poppins(color: Colors.black54,fontSize: 13);
+  static final categoryText =
+      GoogleFonts.poppins(color: Colors.black54, fontSize: 13);
+  static final categoryTitleText =
+      GoogleFonts.lato(color: Colors.black87, fontSize: 15);
 }

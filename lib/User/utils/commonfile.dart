@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:prosample_1/User/utils/colors.dart';
 import 'package:prosample_1/User/utils/text_decorations.dart';
-import 'package:prosample_1/admin/utils/text_style.dart';
+
 
 class Pics {
   // Banners
@@ -52,7 +53,7 @@ class UiHelper {
                   },
                   child: Text(
                     'OK',
-                    style: CustomText.title2,
+                    style: TextStyling.subtitleapptheme,
                   ))
             ],
           );
@@ -62,35 +63,50 @@ class UiHelper {
   // custom Textfield
   static customTextField({
     required TextEditingController controller,
-    required String text,
+    required String labeltext,
     required IconData iconData,
     bool obscureText = false,
-    TextInputType keyboardType = TextInputType.text,
+    keyboardType = TextInputType.text,
   }) {
-    return TextField(
+    return TextFormField(
+      validator: (value) {
+        if(value!.isEmpty){
+          return 'Data is Requred';
+        }
+        return null;
+      },
       keyboardType: keyboardType,
       controller: controller,
       decoration: InputDecoration(
         prefixIcon: Icon(iconData),
-        label: Text(text,style: TextStyling.subtitleWhite,),
+        label: Text(labeltext, style: TextStyling.subtitleapptheme),
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
       ),
     );
   }
+
 // Elevated button
-  static customButton(VoidCallback voidCallback, String text, IconData icon) {
-    return ElevatedButton(
-      style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.purple,
-          foregroundColor: Colors.white,
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(8))),
-      onPressed: () {
+  static customButton(BuildContext context, VoidCallback voidCallback,
+      {required String text}) {
+    return GestureDetector(
+      onTap: () {
         voidCallback();
       },
-      child: Text(
-        text,
-        style: TextStyling.subtitleWhite,
+      child: Container(
+        width: MediaQuery.of(context).size.width,
+        height: MediaQuery.of(context).size.height * .07,
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10),
+            color: AppColors.appTheme,
+            boxShadow: const [
+              BoxShadow(
+                color: Colors.grey,
+                blurRadius: 4.0,
+                spreadRadius: 1.0,
+                offset: Offset(4.0, 4.0),
+              )
+            ]),
+        child: Center(child: Text(text, style: TextStyling.subtitleWhite)),
       ),
     );
   }

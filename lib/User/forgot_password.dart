@@ -60,17 +60,17 @@ class _ScreenPasswordState extends State<ScreenPassword> {
               const SizedBox(height: 30),
               UiHelper.customTextField(
                   controller: _emailController,
-                  text: 'Email',
+                  labeltext: 'Email',
                   iconData: Icons.email_rounded,
                   keyboardType: TextInputType.emailAddress),
               const SizedBox(height: 20),
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  
-                  UiHelper.customButton(() {
-                    resetPassword();
-                  }, 'Next', Icons.arrow_forward_rounded)
+                  UiHelper.customButton(context, () { }, text: 'Next'),
+                  // UiHelper.customButton(() {
+                  //   resetPassword();
+                  // }, 'Next', Icons.arrow_forward_rounded)
                   
                 ],
               )

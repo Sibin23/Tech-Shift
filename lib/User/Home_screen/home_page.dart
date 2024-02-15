@@ -1,4 +1,5 @@
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -79,7 +80,7 @@ class _ScreenHomeState extends State<ScreenHome> {
         child: Column(
           children: [
             Container(
-                width: MediaQuery.of(context).size.width,
+                width: MediaQuery.of(context).size.width* double.infinity,
                 height: 200,
                 decoration:
                     BoxDecoration(borderRadius: BorderRadius.circular(10)),
@@ -157,38 +158,53 @@ class _ScreenHomeState extends State<ScreenHome> {
               style: TextStyling.titleText,
             ),
             const SizedBox(height: 20),
-            SizedBox(
+            Container(
               
               width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.height * 0.25,
-              child: ListView.builder(
-                itemCount: Pics.categories.length,
-                scrollDirection: Axis.horizontal,
-                itemBuilder: (context, index) {
-                  return Card(
-                    color: Colors.white,
-                    child: SizedBox(
-                      width: 130,
-                      height: 100,
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              SizedBox(
-                                width: 70,
-                                height: 70,
-                                child: Image(
-                                    image: AssetImage(Pics.categories[index])),
-                              ),
-                              Text(Pics.categoriesName[index]),
-                            ]),
-                      ),
-                    ),
-                  );
-                },
-                physics: const BouncingScrollPhysics(),
-              ),
+              height: MediaQuery.of(context).size.height * 0.24,
+              child: StreamBuilder(
+                      stream: FirebaseFirestore.instance
+                          .collection('admin')
+                          .snapshots(),
+                      builder:
+                          (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                        if (snapshot.hasData) {
+                          return ListView.builder(
+                            scrollDirection: Axis.horizontal,
+                            itemCount: snapshot.data!.docs.length,
+                            itemBuilder: (context, index) {
+                              DocumentSnapshot document =
+                                  snapshot.data!.docs[index];
+                              String imageUrl = document['image'];
+                              String categoryName = document['name'];
+                              return Card(
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8),
+                                  child: Container(
+                                    
+                                    width: MediaQuery.of(context).size.width * 0.38,
+                                    height: MediaQuery.of(context).size.height,
+                                    child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                      children: [
+                                        SizedBox(
+                                          width: 120,
+                                          height: 120,
+                                          child: Image.network(imageUrl,fit: BoxFit.cover,)),
+                                          
+                                        Text(categoryName,style: TextStyling.categoryText),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              );
+                            },
+                          );
+                        } else {
+                          return Center(child: CircularProgressIndicator());
+                        }
+                      },
+                    )
             ),
             const SizedBox(height: 20),
             Container(
@@ -391,10 +407,11 @@ class _ScreenHomeState extends State<ScreenHome> {
                 "Here is the PC configurator of PC components and it is perfect tool for  you to choose one by one the parts of your computer and try different configurations and budgets. It’s use is to configure your dream pc in simple way and you can assemble a computer by parts completely to your liking. Get your basic,  gaming or professional desktop pc at the best price and for you. Can you ask for more? You can check the characteristics of the article and its availability by clicking on its name.",
               ),
             ),
-            UiHelper.customButton(() {
+            UiHelper.customButton(context, () {
               Navigator.push(context,
                   MaterialPageRoute(builder: (ctx) => const ScreenBuild()));
-            }, 'Build',Icons.laptop_windows_rounded),
+             }, text: 'Build'),
+            
             const SizedBox(
               height: 20,
             ),

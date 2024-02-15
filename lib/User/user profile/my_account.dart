@@ -1,11 +1,8 @@
-// ignore_for_file: void_checks
-
 import 'dart:io';
-
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:prosample_1/User/db/db_functions.dart';
+import 'package:prosample_1/User/db/user_model.dart';
 import 'package:prosample_1/User/utils/commonfile.dart';
 
 class ScreenMyAccount extends StatefulWidget {
@@ -26,7 +23,7 @@ class _ScreenMyAccountState extends State<ScreenMyAccount> {
   final _formkey = GlobalKey<FormState>();
 
   final ImagePicker _picker =
-      ImagePicker(); // Create an instance of ImagePicker
+      ImagePicker(); 
   XFile? _pickedImage;
   @override
   Widget build(BuildContext context) {
@@ -70,64 +67,61 @@ class _ScreenMyAccountState extends State<ScreenMyAccount> {
                     )),
                 const SizedBox(height: 10),
                 Form(
+                    key: _formkey,
                     child: Column(
-                  children: [
-                    UiHelper.customTextField(
-                        controller: _nameController,
-                        text: 'Full Name',
-                        iconData: Icons.person),
-                    const SizedBox(height: 10),
-                    UiHelper.customTextField(
-                        controller: _phoneNumberController,
-                        text: 'Phone Number',
-                        iconData: Icons.phone),
-                    const SizedBox(height: 10),
-                    UiHelper.customTextField(
-                        controller: _cityController,
-                        text: 'City',
-                        iconData: Icons.location_city_rounded),
-                    const SizedBox(height: 10),
-                    UiHelper.customTextField(
-                        controller: _stateController,
-                        text: 'State',
-                        iconData: Icons.location_city),
-                    const SizedBox(height: 10),
-                    UiHelper.customTextField(
-                        controller: _pincodeController,
-                        text: "Pincode",
-                        iconData: Icons.post_add_outlined),
-                    const SizedBox(height: 10),
-                    UiHelper.customTextField(
-                        controller: _addressController,
-                        text: 'House No., Building Name',
-                        iconData: Icons.home_rounded),
-                    const SizedBox(height: 10),
-                    UiHelper.customTextField(
-                        controller: _roadNameController,
-                        text: 'Road Name, Area',
-                        iconData: Icons.location_on),
-                  ],
-                )),
-                const SizedBox(height: 10),
+                      children: [
+                        UiHelper.customTextField(
+                            controller: _nameController,
+                            labeltext: 'Full Name',
+                            iconData: Icons.person),
+                        const SizedBox(height: 10),
+                        UiHelper.customTextField(
+                            controller: _phoneNumberController,
+                            labeltext: 'Phone Number',
+                            iconData: Icons.phone,
+                            keyboardType: TextInputType.number),
+                        const SizedBox(height: 10),
+                        UiHelper.customTextField(
+                            controller: _cityController,
+                            labeltext: 'City',
+                            iconData: Icons.location_city_rounded),
+                        const SizedBox(height: 10),
+                        UiHelper.customTextField(
+                            controller: _stateController,
+                            labeltext: 'State',
+                            iconData: Icons.location_city),
+                        const SizedBox(height: 10),
+                        UiHelper.customTextField(
+                            controller: _pincodeController,
+                            labeltext: "Pincode",
+                            iconData: Icons.post_add_outlined,
+                            keyboardType: TextInputType.number),
+                        const SizedBox(height: 10),
+                        UiHelper.customTextField(
+                            controller: _addressController,
+                            labeltext: 'House No., Building Name',
+                            iconData: Icons.home_rounded),
+                        const SizedBox(height: 10),
+                        UiHelper.customTextField(
+                            controller: _roadNameController,
+                            labeltext: 'Road Name, Area',
+                            iconData: Icons.location_on),
+                      ],
+                    )),
                 const SizedBox(height: 30),
-                SizedBox(
-                    width: MediaQuery.of(context).size.width * double.infinity,
-                    height: 50,
-                    child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8)),
-                            backgroundColor: Colors.purple),
-                        onPressed: () {
-                          if (_formkey.currentState!.validate()) {
-                            return UiHelper.customAlertBox(context,
-                                'Your data has been saved Successfully,');
-                          }
-                        },
-                        child: Text('Save Address',
-                            style: GoogleFonts.roboto(
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white)))),
+                UiHelper.customButton(context, () {
+                  if (_formkey.currentState!.validate()) {
+                    _addUserProfile(
+                      _nameController.text.trim(),
+                      _phoneNumberController.text.trim(),
+                      _cityController.text.trim(),
+                      _stateController.text.trim(),
+                      _pincodeController.text.trim(),
+                      _addressController.text.trim(),
+                      _roadNameController.text.trim(),
+                    );
+                  }
+                }, text: 'Save Address'),
                 const SizedBox(height: 40),
               ],
             ),
@@ -136,4 +130,24 @@ class _ScreenMyAccountState extends State<ScreenMyAccount> {
       ),
     );
   }
+}
+
+_addUserProfile(
+  name,
+  phone,
+  city,
+  state,
+  pincode,
+  home,
+  street,
+) {
+  final _userProfile = UserModel(
+      name: name,
+      phNum: phone,
+      city: city,
+      state: state,
+      pincode: pincode,
+      home: home,
+      street: street);
+  addUser(_userProfile);
 }

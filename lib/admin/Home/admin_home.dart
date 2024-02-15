@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:prosample_1/admin/Home/add_category.dart';
-import 'package:prosample_1/admin/Home/add_items.dart';
+import 'package:prosample_1/admin/Home/inventory/add_items_details.dart';
+import 'package:prosample_1/admin/Home/inventory/update/update_item.dart';
 import 'package:prosample_1/admin/Home/promo_banner.dart';
-import 'package:prosample_1/admin/Home/update_inventory.dart';
-
 import 'package:prosample_1/admin/utils/text_style.dart';
 
 class AdminHomePage extends StatefulWidget {
@@ -17,6 +16,7 @@ class _AdminHomePageState extends State<AdminHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -35,7 +35,7 @@ class _AdminHomePageState extends State<AdminHomePage> {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (ctx) => const ScreenInventory()));
+                              builder: (ctx) => const ScreenItemDetails()));
                     },
                     child: Card(
                       child: Padding(
@@ -65,7 +65,7 @@ class _AdminHomePageState extends State<AdminHomePage> {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (ctx) => const ScreenUpdateItems()));
+                              builder: (ctx) => const UpdateItem()));
                     },
                     child: Card(
                       child: Padding(
@@ -98,7 +98,10 @@ class _AdminHomePageState extends State<AdminHomePage> {
                   height: MediaQuery.of(context).size.height * 0.2,
                   child: InkWell(
                     onTap: () {
-                      Navigator.push(context, MaterialPageRoute(builder: (ctx)=> const ScreenCategory()));
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (ctx) => const ScreenCategory()));
                     },
                     child: Card(
                       child: Padding(
@@ -126,8 +129,10 @@ class _AdminHomePageState extends State<AdminHomePage> {
                   child: Card(
                     child: InkWell(
                       onTap: () {
-                        Navigator.push(context,
-                            MaterialPageRoute(builder: (ctx) => const ScreenPromo()));
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (ctx) => const ScreenPromo()));
                       },
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
@@ -150,7 +155,6 @@ class _AdminHomePageState extends State<AdminHomePage> {
                 )
               ],
             ),
-            Text('Tech Shift',style: CustomText.title3,)
           ],
         ),
       ),
