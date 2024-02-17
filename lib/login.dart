@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:prosample_1/User/home.dart';
 import 'package:prosample_1/User/create_account.dart';
 import 'package:prosample_1/User/forgot_password.dart';
+import 'package:prosample_1/User/utils/colors.dart';
 import 'package:prosample_1/admin/home.dart';
 import 'package:prosample_1/User/utils/commonfile.dart';
 
@@ -111,30 +112,17 @@ class _ScreenLoginState extends State<ScreenLogin> {
                               },
                               child: Text('Forgot Password?',
                                   style: GoogleFonts.poppins(
-                                      color: Colors.purple)),
+                                      color: AppColors.appTheme)),
                             ),
                           ],
                         ),
                         const SizedBox(height: 20),
-                        SizedBox(
-                            width: MediaQuery.of(context).size.width *
-                                double.infinity,
-                            height: 50,
-                            child: ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(8)),
-                                    backgroundColor: Colors.purple),
-                                onPressed: () {
-                                  if (_formkey.currentState!.validate()) {
+                        UiHelper.customButton(context, () {
+                          if (_formkey.currentState!.validate()) {
                                     goToHome(_emailController.text.toString(),
                                         _passwordController.text.toString());
                                   }
-                                },
-                                child: Text('Login',
-                                    style: GoogleFonts.roboto(
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.white)))),
+                        }, text: 'Login'),
                         const SizedBox(height: 20),
                         SizedBox(
                             width: MediaQuery.of(context).size.width *

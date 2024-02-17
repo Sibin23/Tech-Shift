@@ -17,7 +17,6 @@ class ScreenHome extends StatefulWidget {
 
 class _ScreenHomeState extends State<ScreenHome> {
   CarouselController buttonCarouselController = CarouselController();
-  
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +24,7 @@ class _ScreenHomeState extends State<ScreenHome> {
       drawer: Drawer(
         child: ListView(
           children: [
-             DrawerHeader(
+            DrawerHeader(
               decoration: const BoxDecoration(
                 color: Colors.blue,
               ),
@@ -61,10 +60,10 @@ class _ScreenHomeState extends State<ScreenHome> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const Image(
-              width: 40,
-              height: 40,
-              image: AssetImage('assets/login/login_logo.png')),
-              const SizedBox(width: 10),
+                width: 40,
+                height: 40,
+                image: AssetImage('assets/login/login_logo.png')),
+            const SizedBox(width: 10),
             Text(
               'Tech Shift',
               style: TextStyling.titleText,
@@ -80,7 +79,7 @@ class _ScreenHomeState extends State<ScreenHome> {
         child: Column(
           children: [
             Container(
-                width: MediaQuery.of(context).size.width* double.infinity,
+                width: MediaQuery.of(context).size.width * double.infinity,
                 height: 200,
                 decoration:
                     BoxDecoration(borderRadius: BorderRadius.circular(10)),
@@ -120,7 +119,7 @@ class _ScreenHomeState extends State<ScreenHome> {
             Container(
               width: MediaQuery.of(context).size.width * 0.58,
               height: 60,
-              color: Colors.purple,
+              color: Colors.purple.shade800,
               child: CarouselSlider(
                 options: CarouselOptions(
                     autoPlay: true,
@@ -159,53 +158,53 @@ class _ScreenHomeState extends State<ScreenHome> {
             ),
             const SizedBox(height: 20),
             Container(
-              
-              width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.height * 0.24,
-              child: StreamBuilder(
-                      stream: FirebaseFirestore.instance
-                          .collection('admin')
-                          .snapshots(),
-                      builder:
-                          (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-                        if (snapshot.hasData) {
-                          return ListView.builder(
-                            scrollDirection: Axis.horizontal,
-                            itemCount: snapshot.data!.docs.length,
-                            itemBuilder: (context, index) {
-                              DocumentSnapshot document =
-                                  snapshot.data!.docs[index];
-                              String imageUrl = document['image'];
-                              String categoryName = document['name'];
-                              return Card(
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8),
-                                  child: Container(
-                                    
-                                    width: MediaQuery.of(context).size.width * 0.38,
-                                    height: MediaQuery.of(context).size.height,
-                                    child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                      children: [
-                                        SizedBox(
-                                          width: 120,
-                                          height: 120,
-                                          child: Image.network(imageUrl,fit: BoxFit.cover,)),
-                                          
-                                        Text(categoryName,style: TextStyling.categoryText),
-                                      ],
-                                    ),
-                                  ),
+                width: MediaQuery.of(context).size.width,
+                height: MediaQuery.of(context).size.height * 0.24,
+                child: StreamBuilder(
+                  stream: FirebaseFirestore.instance
+                      .collection('admin')
+                      .snapshots(),
+                  builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                    if (snapshot.hasData) {
+                      return ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: snapshot.data!.docs.length,
+                        itemBuilder: (context, index) {
+                          DocumentSnapshot document =
+                              snapshot.data!.docs[index];
+                          String imageUrl = document['image'];
+                          String categoryName = document['name'];
+                          return Card(
+                            child: Padding(
+                              padding: const EdgeInsets.all(8),
+                              child: Container(
+                                width: MediaQuery.of(context).size.width * 0.38,
+                                height: MediaQuery.of(context).size.height,
+                                child: Column(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    SizedBox(
+                                        width: 120,
+                                        height: 120,
+                                        child: Image.network(
+                                          imageUrl,
+                                          fit: BoxFit.cover,
+                                        )),
+                                    Text(categoryName,
+                                        style: TextStyling.categoryText),
+                                  ],
                                 ),
-                              );
-                            },
+                              ),
+                            ),
                           );
-                        } else {
-                          return Center(child: CircularProgressIndicator());
-                        }
-                      },
-                    )
-            ),
+                        },
+                      );
+                    } else {
+                      return Center(child: CircularProgressIndicator());
+                    }
+                  },
+                )),
             const SizedBox(height: 20),
             Container(
               color: const Color.fromARGB(255, 190, 213, 198),
@@ -399,22 +398,31 @@ class _ScreenHomeState extends State<ScreenHome> {
               ),
             ),
             const SizedBox(height: 20),
-            Text("CHOOSE YOUR PC PART'S!", style: TextStyling.titleText2),
-            Text('Build Your Dream PC', style: TextStyling.titleText),
-            const Padding(
-              padding: EdgeInsets.all(13.0),
-              child: Text(
-                "Here is the PC configurator of PC components and it is perfect tool for  you to choose one by one the parts of your computer and try different configurations and budgets. It’s use is to configure your dream pc in simple way and you can assemble a computer by parts completely to your liking. Get your basic,  gaming or professional desktop pc at the best price and for you. Can you ask for more? You can check the characteristics of the article and its availability by clicking on its name.",
+            SizedBox(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  children: [
+                    Text("CHOOSE YOUR PC PART'S!", style: TextStyling.titleText2),
+                    Text('Build Your Dream PC', style: TextStyling.titleText),
+                    const SizedBox(height: 20),
+                    const Text(
+                      "Here is the PC configurator of PC components and it is perfect tool for  you to choose one by one the parts of your computer and try different configurations and budgets. It’s use is to configure your dream pc in simple way and you can assemble a computer by parts completely to your liking. Get your basic,  gaming or professional desktop pc at the best price and for you. Can you ask for more? You can check the characteristics of the article and its availability by clicking on its name.",
+                    ),
+                    const SizedBox(height: 30),
+                    UiHelper.customButton(context, () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (ctx) => const ScreenBuild()));
+                    }, text: 'Build'),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                  ],
+                ),
               ),
-            ),
-            UiHelper.customButton(context, () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (ctx) => const ScreenBuild()));
-             }, text: 'Build'),
-            
-            const SizedBox(
-              height: 20,
-            ),
+            )
           ],
         ),
       )),

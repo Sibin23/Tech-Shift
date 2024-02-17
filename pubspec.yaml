@@ -53,6 +53,7 @@ dependencies:
   provider: ^6.1.1
   shared_preferences: ^2.2.2
   smooth_page_indicator: ^1.1.0
+  top_snackbar_flutter: ^3.1.0
 
 dev_dependencies:
   flutter_lints: ^3.0.1
@@ -91,6 +92,7 @@ flutter:
     - assets/RAM/
     - assets/SSD/
     - assets/Cabinet/
+    - assets/Animations/
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
   # For details regarding adding assets from package dependencies, see

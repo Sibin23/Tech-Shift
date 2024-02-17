@@ -34,7 +34,7 @@ class _HomeInfo extends State<HomeInfo> {
           child: GNav(
             color: const Color.fromARGB(255, 47, 47, 47),
             activeColor: const Color.fromARGB(255, 255, 255, 255),
-            tabBackgroundColor: Colors.purple,
+            tabBackgroundColor: Colors.purple.shade800,
             padding: const EdgeInsets.all(10),
             onTabChange: (value) {
               setState(() {

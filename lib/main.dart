@@ -7,6 +7,7 @@ import 'package:hive_flutter/adapters.dart';
 import 'package:lottie/lottie.dart';
 import 'package:prosample_1/User/db/user_model.dart';
 import 'package:prosample_1/User/home.dart';
+import 'package:prosample_1/User/utils/text_decorations.dart';
 import 'package:prosample_1/onboardScreens/onboard1.dart';
 import 'firebase_options.dart';
 
@@ -31,7 +32,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.purple),
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.purple.shade800),
         useMaterial3: true,
       ),
       home: const MyHomePage(),
@@ -70,43 +71,41 @@ class _MyHomePageState extends State<MyHomePage> {
       backgroundColor: Colors.black,
       body: Padding(
         padding: const EdgeInsets.all(8.0),
-        child: Stack(
-          children: [
-            const SizedBox(
-              child: Image(
-                image: AssetImage(
-                  'assets/Splash/splash screen new.png',
-                ),
-                fit: BoxFit.cover,
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(top: 230, right: 10, left: 10),
-              child: SizedBox(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text('TECH SHIFT',
-                        style:
-                            GoogleFonts.lora(color: Colors.white, fontSize: 25)),
-                    const SizedBox(
-                      height: 270,
-                    ),
-                    Text('LETS CRAFT YOUR DREAM PC',
-                        style: GoogleFonts.carterOne(
-                            color: Colors.white, fontSize: 25)),
-                    SizedBox(
-                        height: MediaQuery.of(context).size.height * 0.2,
-                        width: MediaQuery.of(context).size.width * 0.93,
-                        child: Lottie.asset(
-                          'assets/Splash/Animation - 1706686055581.json',
-                          fit: BoxFit.cover,
-                        ))
-                  ],
+        child: Container(
+          width: MediaQuery.of(context).size.width,
+          height: MediaQuery.of(context).size.height,
+          decoration: BoxDecoration(image: DecorationImage(image: const AssetImage('assets/Splash/splash screen new.png'))),
+          child: Column(
+            children: [
+             
+              Padding(
+                padding: const EdgeInsets.only(top: 260, right: 10, left: 10),
+                child: SizedBox(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text('TECH SHIFT',
+                          style:
+                          TextStyling.title1W
+                      ),
+                      const SizedBox(
+                        height: 270,
+                      ),
+                      Text('LETS CRAFT YOUR DREAM PC',
+                          style: TextStyling.titile2W),
+                      SizedBox(
+                          height: MediaQuery.of(context).size.height * 0.2,
+                          width: MediaQuery.of(context).size.width * 0.93,
+                          child: Lottie.asset(
+                            'assets/Splash/Animation - 1706686055581.json',
+                            fit: BoxFit.cover,
+                          ))
+                    ],
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

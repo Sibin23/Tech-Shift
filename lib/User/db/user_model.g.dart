@@ -24,6 +24,7 @@ class UserModelAdapter extends TypeAdapter<UserModel> {
       pincode: fields[4] as String,
       home: fields[5] as String,
       street: fields[6] as String,
+     
     );
   }
 

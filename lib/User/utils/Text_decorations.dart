@@ -4,6 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class TextStyling {
+  static final title1W = GoogleFonts.lora(color: Colors.white, fontSize: 17);
+  static final titile2W = GoogleFonts.carterOne(
+                              color: Colors.white, fontSize: 20);
   static final titleText =
       GoogleFonts.crimsonText(color: Colors.black, fontSize: 30);
   static final titleText2 =
@@ -16,6 +19,6 @@ class TextStyling {
       GoogleFonts.abyssinicaSil(color: Colors.purple.shade800, fontSize: 16);
   static final categoryText =
       GoogleFonts.poppins(color: Colors.black54, fontSize: 13);
-      static final subtitle3 =
+  static final subtitle3 =
       GoogleFonts.abyssinicaSil(color: Colors.black, fontSize: 19);
 }

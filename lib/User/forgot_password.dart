@@ -28,6 +28,7 @@ class _ScreenPasswordState extends State<ScreenPassword> {
       UiHelper.customAlertBox(
           context, 'Password reset Link send ! Check your Email');
     } on FirebaseAuthException catch (ex) {
+      
       UiHelper.customAlertBox(context, ex.message.toString());
     }
   }
@@ -37,44 +38,40 @@ class _ScreenPasswordState extends State<ScreenPassword> {
     return Scaffold(
       appBar: AppBar(),
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Reset your Password',
-                style: TextStyling.titleText,
-              ),
-              Text(
-                "Enter the Email Address you used when you joined and We'll send you instructions to reset your password",
-                style: TextStyling.subtitle,
-              ),
-              const SizedBox(height: 20),
-              SizedBox(
-                width: MediaQuery.of(context).size.width * 0.9,
-                height: MediaQuery.of(context).size.height * 0.14,
-                child: Lottie.asset(
-                    'assets/forgot pasword/Animation - 1706880370842.json'),
-              ),
-              const SizedBox(height: 30),
-              UiHelper.customTextField(
-                  controller: _emailController,
-                  labeltext: 'Email',
-                  iconData: Icons.email_rounded,
-                  keyboardType: TextInputType.emailAddress),
-              const SizedBox(height: 20),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  UiHelper.customButton(context, () { }, text: 'Next'),
-                  // UiHelper.customButton(() {
-                  //   resetPassword();
-                  // }, 'Next', Icons.arrow_forward_rounded)
-                  
-                ],
-              )
-            ],
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Reset your Password',
+                  style: TextStyling.titleText,
+                ),
+                Text(
+                  "Enter the Email Address you used when you joined and We'll send you instructions to reset your password",
+                  style: TextStyling.subtitle,
+                ),
+                const SizedBox(height: 20),
+                SizedBox(
+                  width: MediaQuery.of(context).size.width * 0.9,
+                  height: MediaQuery.of(context).size.height * 0.14,
+                  child: Lottie.asset(
+                      'assets/forgot pasword/Animation - 1706880370842.json'),
+                ),
+                const SizedBox(height: 30),
+                UiHelper.customTextField(
+                    controller: _emailController,
+                    labeltext: 'Email',
+                    iconData: Icons.email_rounded,
+                    keyboardType: TextInputType.emailAddress,
+                    validate: 'Email Adress is required'),
+                const SizedBox(height: 30),
+                UiHelper.customButton(context, () { 
+                  resetPassword();
+                }, text: 'Next')
+              ],
+            ),
           ),
         ),
       ),

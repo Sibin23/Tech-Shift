@@ -1,5 +1,6 @@
 import 'package:hive/hive.dart';
-part'user_model.g.dart';
+part 'user_model.g.dart';
+
 @HiveType(typeId: 1)
 class UserModel {
   @HiveField(0)
@@ -18,12 +19,16 @@ class UserModel {
   final String home;
   @HiveField(7)
   final String street;
+ 
   UserModel(
-      {required this.name,
+    
+      {this.id,
+      required this.name,
       required this.phNum,
       required this.city,
       required this.state,
       required this.pincode,
       required this.home,
-      required this.street, this.id});
+      required this.street,
+     });
 }

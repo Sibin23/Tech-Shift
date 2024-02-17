@@ -3,15 +3,14 @@ import 'package:prosample_1/User/db/db_functions.dart';
 import 'package:prosample_1/User/db/user_model.dart';
 import 'package:prosample_1/User/utils/commonfile.dart';
 
-class ProfileDetais extends StatefulWidget {
-  
- const ProfileDetais({super.key});
+class UpdateProfile extends StatefulWidget {
+  const UpdateProfile({super.key});
 
   @override
-  State<ProfileDetais> createState() => _ProfileDetaisState();
+  State<UpdateProfile> createState() => _UpdateProfileState();
 }
 
-class _ProfileDetaisState extends State<ProfileDetais> {
+class _UpdateProfileState extends State<UpdateProfile> {
   final _nameController = TextEditingController();
   final _phoneNumberController = TextEditingController();
   final _cityController = TextEditingController();
@@ -20,6 +19,12 @@ class _ProfileDetaisState extends State<ProfileDetais> {
   final _addressController = TextEditingController();
   final _roadNameController = TextEditingController();
   final _formkey = GlobalKey<FormState>();
+ 
+  @override
+  void initState() {
+    getUser();
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -33,18 +38,19 @@ class _ProfileDetaisState extends State<ProfileDetais> {
             builder:
                 (BuildContext ctx, List<UserModel> profile, Widget? child) {
               final data = profile;
+              final user = data.first;
+              _nameController.text = user.name;
+              _phoneNumberController.text = user.phNum;
+              _cityController.text = user.city;
+              _stateController.text = user.state;
+              _pincodeController.text = user.pincode;
+              _addressController.text = user.home;
+              _roadNameController.text = user.street;
               return SizedBox(
                 width: MediaQuery.of(context).size.width,
                 child: Column(
                   children: [
-                    SizedBox(
-                      width: MediaQuery.of(context).size.width,
-                      height: MediaQuery.of(context).size.height * 0.3,
-                      child: Image.asset(
-                        'assets/Ads section/itachi.jpg',
-                        fit: BoxFit.cover,
-                      ),
-                    ),
+                    
                     Form(
                         key: _formkey,
                         child: Padding(
@@ -54,39 +60,43 @@ class _ProfileDetaisState extends State<ProfileDetais> {
                               UiHelper.customTextField(
                                   controller: _nameController,
                                   labeltext: 'Full Name',
-                                  iconData: Icons.person),
+                                  iconData: Icons.person,
+                                  validate: 'Name is reqired'),
                               const SizedBox(height: 10),
                               UiHelper.customTextField(
                                   controller: _phoneNumberController,
                                   labeltext: 'Phone Number',
                                   iconData: Icons.phone,
-                                  keyboardType: TextInputType.number),
+                                  keyboardType: TextInputType.number,
+                                  validate: 'Contact Number is required'),
                               const SizedBox(height: 10),
                               UiHelper.customTextField(
                                   controller: _cityController,
                                   labeltext: 'City',
-                                  iconData: Icons.location_city_rounded),
+                                  iconData: Icons.location_city_rounded,
+                                  validate: 'City Name is reqired'),
                               const SizedBox(height: 10),
                               UiHelper.customTextField(
                                   controller: _stateController,
                                   labeltext: 'State',
-                                  iconData: Icons.location_city),
+                                  iconData: Icons.location_city,
+                                  validate: 'State Name is required'),
                               const SizedBox(height: 10),
                               UiHelper.customTextField(
                                   controller: _pincodeController,
                                   labeltext: "Pincode",
                                   iconData: Icons.post_add_outlined,
-                                  keyboardType: TextInputType.number),
+                                  keyboardType: TextInputType.number,
+                                  validate: 'Pincode is required'),
                               const SizedBox(height: 10),
                               UiHelper.customTextField(
                                   controller: _addressController,
                                   labeltext: 'House No., Building Name',
-                                  iconData: Icons.home_rounded),
+                                  iconData: Icons.home_rounded,
+                                  validate: 'Address is reqired'),
                               const SizedBox(height: 10),
-                              UiHelper.customTextField(
-                                  controller: _roadNameController,
-                                  labeltext: 'Road Name, Area',
-                                  iconData: Icons.location_on),
+                              UiHelper.customTextField(controller: _roadNameController, labeltext: 
+                              'Road Name, Area', iconData: Icons.location_on, validate: 'This field is required')
                             ],
                           ),
                         )),
@@ -94,8 +104,22 @@ class _ProfileDetaisState extends State<ProfileDetais> {
                     Padding(
                       padding: const EdgeInsets.all(10.0),
                       child: UiHelper.customButton(context, () {
-                        if (_formkey.currentState!.validate()) {}
-                      }, text: 'Save Address'),
+                        if (_formkey.currentState!.validate()) {
+                          updateProfile(
+                            user.id,
+                            _nameController.text,
+                            _phoneNumberController.text,
+                            _cityController.text,
+                            _stateController.text,
+                            _pincodeController.text,
+                            _addressController.text,
+                            _roadNameController.text,
+                          );
+                          UiHelper.userSnackbar(
+                              context, 'Updated successfully');
+                          Navigator.pop(context);
+                        }
+                      }, text: 'Update Profile'),
                     ),
                     const SizedBox(height: 40),
                   ],
@@ -104,5 +128,18 @@ class _ProfileDetaisState extends State<ProfileDetais> {
             }),
       )),
     );
+  }
+
+  void updateProfile(id,name, phNum, city, state, pincode, house, road) {
+    final updatedUser = UserModel(
+      id: id,
+        name: name,
+        phNum: phNum,
+        city: city,
+        state: state,
+        pincode: pincode,
+        home: house,
+        street: road);
+        updateUser(id, updatedUser);
   }
 }

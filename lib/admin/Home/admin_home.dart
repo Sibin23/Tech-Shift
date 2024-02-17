@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:prosample_1/admin/Home/add_category.dart';
 import 'package:prosample_1/admin/Home/inventory/add_items_details.dart';
 import 'package:prosample_1/admin/Home/inventory/update/update_item.dart';
+import 'package:prosample_1/admin/Home/list_category.dart';
 import 'package:prosample_1/admin/Home/promo_banner.dart';
+import 'package:prosample_1/admin/utils/colors.dart';
 import 'package:prosample_1/admin/utils/text_style.dart';
 
 class AdminHomePage extends StatefulWidget {
@@ -17,7 +19,13 @@ class _AdminHomePageState extends State<AdminHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      appBar: AppBar(),
+      appBar: AppBar(
+          leading: IconButton(
+              onPressed: () {},
+              icon: const Icon(
+                Icons.menu,
+                color: CustomColors.appTheme,
+              ))),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Column(
@@ -101,7 +109,7 @@ class _AdminHomePageState extends State<AdminHomePage> {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (ctx) => const ScreenCategory()));
+                              builder: (ctx) => const ListCategory()));
                     },
                     child: Card(
                       child: Padding(

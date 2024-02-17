@@ -65,13 +65,14 @@ class UiHelper {
     required TextEditingController controller,
     required String labeltext,
     required IconData iconData,
+    required String validate,
     bool obscureText = false,
     keyboardType = TextInputType.text,
   }) {
     return TextFormField(
       validator: (value) {
         if(value!.isEmpty){
-          return 'Data is Requred';
+          return validate;
         }
         return null;
       },
@@ -164,5 +165,26 @@ class UiHelper {
         ),
       ),
     );
+  }
+  static userSnackbar(BuildContext context, String text) {
+    return ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Row(
+        children: [
+          const Icon(Icons.check_circle, color: Colors.green),
+          const SizedBox(width: 10.0),
+          Text(
+            text,
+            style: TextStyling.subtitleWhite,
+          ),
+        ],
+      ),
+      backgroundColor: Colors.black.withOpacity(0.8),
+      padding: const EdgeInsets.all(16.0),
+      margin: const EdgeInsets.all(10.0),
+      // Adjust animation and behavior:
+      duration: const Duration(seconds: 3),
+      elevation: 8.0,
+      behavior: SnackBarBehavior.floating,
+    ));
   }
 }

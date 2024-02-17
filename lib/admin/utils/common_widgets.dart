@@ -65,21 +65,7 @@ class AdminUi {
     );
   }
 
-  // Custom Snackbar
-  static customSnackBar(context) {
-    SnackBar(
-        content: const Text("Data has been saven successfully"),
-        action: SnackBarAction(label: 'Undo', onPressed: () {}),
-        backgroundColor: Colors.green,
-        behavior: SnackBarBehavior.floating,
-        duration: const Duration(seconds: 5));
-
-//     return Scaffold.of(context).showSnackBar(
-//      SnackBar(content: Text("Thanks for using snackbar",
-//      textAlign: TextAlign.center, style: TextStyle(fontSize: 16.0, fontWeight:
-//      FontWeight.bold),), duration: Duration(seconds: 2), backgroundColor: Colors.red,)
-// );
-  }
+  // 
 
   static customCategoryCard(BuildContext context,
       {required String imageUrl, required String categoryName}) {

@@ -22,9 +22,8 @@ class _ScreenMyAccountState extends State<ScreenMyAccount> {
   final _roadNameController = TextEditingController();
   final _formkey = GlobalKey<FormState>();
 
-  final ImagePicker _picker =
-      ImagePicker(); 
-  XFile? _pickedImage;
+  // final ImagePicker _picker = ImagePicker();
+  // XFile? _pickedImage;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -35,36 +34,36 @@ class _ScreenMyAccountState extends State<ScreenMyAccount> {
             padding: const EdgeInsets.all(16.0),
             child: Column(
               children: [
-                SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.4,
-                    height: MediaQuery.of(context).size.height * 0.2,
-                    child: GestureDetector(
-                      onTap: () async {
-                        final XFile? image = await _picker.pickImage(
-                            source: ImageSource.gallery);
-                        if (image != null) {
-                          setState(() {
-                            _pickedImage = image;
-                          });
-                        }
-                      },
-                      child: ClipOval(
-                        child: SizedBox(
-                          height: 10,
-                          width: MediaQuery.of(context).size.width * 0.2,
-                          child: _pickedImage != null
-                              ? Image.file(
-                                  File(_pickedImage!.path),
-                                  fit: BoxFit.cover,
-                                )
-                              : Image.asset(
-                                  "assets/Ads section/image_add.png",
-                                  width: 10,
-                                  height: 20,
-                                ),
-                        ),
-                      ),
-                    )),
+                // SizedBox(
+                //     width: MediaQuery.of(context).size.width * 0.4,
+                //     height: MediaQuery.of(context).size.height * 0.2,
+                //     child: GestureDetector(
+                //       onTap: () async {
+                //         final XFile? image = await _picker.pickImage(
+                //             source: ImageSource.gallery);
+                //         if (image != null) {
+                //           setState(() {
+                //             _pickedImage = image;
+                //           });
+                //         }
+                //       },
+                //       child: ClipOval(
+                //         child: SizedBox(
+                //           height: 10,
+                //           width: MediaQuery.of(context).size.width * 0.2,
+                //           child: _pickedImage != null
+                //               ? Image.file(
+                //                   File(_pickedImage!.path),
+                //                   fit: BoxFit.cover,
+                //                 )
+                //               : Image.asset(
+                //                   "assets/Ads section/image_add.png",
+                //                   width: 10,
+                //                   height: 20,
+                //                 ),
+                //         ),
+                //       ),
+                //     )),
                 const SizedBox(height: 10),
                 Form(
                     key: _formkey,
@@ -73,39 +72,46 @@ class _ScreenMyAccountState extends State<ScreenMyAccount> {
                         UiHelper.customTextField(
                             controller: _nameController,
                             labeltext: 'Full Name',
-                            iconData: Icons.person),
+                            iconData: Icons.person,
+                            validate: 'Name is required'),
                         const SizedBox(height: 10),
                         UiHelper.customTextField(
                             controller: _phoneNumberController,
                             labeltext: 'Phone Number',
                             iconData: Icons.phone,
-                            keyboardType: TextInputType.number),
+                            keyboardType: TextInputType.number,
+                            validate: 'Contact details is required'),
                         const SizedBox(height: 10),
                         UiHelper.customTextField(
                             controller: _cityController,
                             labeltext: 'City',
-                            iconData: Icons.location_city_rounded),
+                            iconData: Icons.location_city_rounded,
+                            validate: 'City Name is required'),
                         const SizedBox(height: 10),
                         UiHelper.customTextField(
                             controller: _stateController,
                             labeltext: 'State',
-                            iconData: Icons.location_city),
+                            iconData: Icons.location_city,
+                            validate: 'State Name is required'),
                         const SizedBox(height: 10),
                         UiHelper.customTextField(
                             controller: _pincodeController,
                             labeltext: "Pincode",
                             iconData: Icons.post_add_outlined,
-                            keyboardType: TextInputType.number),
+                            keyboardType: TextInputType.number,
+                            validate: 'Pincode is reqired'),
                         const SizedBox(height: 10),
                         UiHelper.customTextField(
                             controller: _addressController,
                             labeltext: 'House No., Building Name',
-                            iconData: Icons.home_rounded),
+                            iconData: Icons.home_rounded,
+                            validate: 'Adress is required'),
                         const SizedBox(height: 10),
                         UiHelper.customTextField(
                             controller: _roadNameController,
                             labeltext: 'Road Name, Area',
-                            iconData: Icons.location_on),
+                            iconData: Icons.location_on,
+                            validate: 'This field is required'),
                       ],
                     )),
                 const SizedBox(height: 30),
@@ -120,8 +126,11 @@ class _ScreenMyAccountState extends State<ScreenMyAccount> {
                       _addressController.text.trim(),
                       _roadNameController.text.trim(),
                     );
+                    UiHelper.userSnackbar(
+                        context, 'Profile Added Successfully');
+                    Navigator.pop(context);
                   }
-                }, text: 'Save Address'),
+                }, text: 'Add Profile'),
                 const SizedBox(height: 40),
               ],
             ),
@@ -141,7 +150,7 @@ _addUserProfile(
   home,
   street,
 ) {
-  final _userProfile = UserModel(
+  final userProfile = UserModel(
       name: name,
       phNum: phone,
       city: city,
@@ -149,5 +158,6 @@ _addUserProfile(
       pincode: pincode,
       home: home,
       street: street);
-  addUser(_userProfile);
+
+  addUser(userProfile);
 }

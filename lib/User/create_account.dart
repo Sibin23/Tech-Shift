@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -41,22 +43,11 @@ class _ScreenCreateAccntState extends State<ScreenCreateAccnt> {
                     key: _formkey,
                     child: Column(
                       children: [
-                        TextFormField(
+                        UiHelper.customTextField(
                             controller: _emailController,
-                            validator: (value) {
-                              if (value!.isEmpty) {
-                                return 'Email address is required';
-                              }
-                              return null;
-                            },
-                            keyboardType: TextInputType.emailAddress,
-                            decoration: InputDecoration(
-                                label: Text('E-Mail',
-                                    style: GoogleFonts.poppins(
-                                        color: Colors.black)),
-                                prefixIcon: const Icon(Icons.email_rounded),
-                                border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(10)))),
+                            labeltext: 'E-Mail',
+                            iconData: Icons.email_rounded,
+                            validate: 'Email address is required'),
                         const SizedBox(height: 20),
                         TextFormField(
                             obscureText: _obscuretext1,
@@ -112,25 +103,11 @@ class _ScreenCreateAccntState extends State<ScreenCreateAccnt> {
                                 border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(10)))),
                         const SizedBox(height: 50),
-                        SizedBox(
-                            width: MediaQuery.of(context).size.width *
-                                double.infinity,
-                            height: 50,
-                            child: ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                  backgroundColor: Colors.purple,
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(8))),
-                              onPressed: () {
-                                if (_formkey.currentState!.validate()) {
-                                  createAccount();
-                                }
-                              },
-                              child: Text(
-                                'Create Account',
-                                style: GoogleFonts.poppins(color: Colors.white),
-                              ),
-                            )),
+                        UiHelper.customButton(context, () {
+                          if (_formkey.currentState!.validate()) {
+                            createAccount();
+                          }
+                        }, text: 'Create Account')
                       ],
                     ))
               ],
@@ -148,12 +125,16 @@ class _ScreenCreateAccntState extends State<ScreenCreateAccnt> {
     if (pass1 != pass2) {
       return UiHelper.customAlertBox(context, "Password Doesn't match");
     } else {
+      // ignore: unused_local_variable
       UserCredential? usercredential;
       try {
         usercredential = await FirebaseAuth.instance
-            .createUserWithEmailAndPassword(email: email, password: pass1).then((value) {
-              Navigator.push(context, MaterialPageRoute(builder: (ctx2)=>ScreenHome()));
-            });
+            .createUserWithEmailAndPassword(email: email, password: pass1)
+            .then((value) {
+          Navigator.push(context,
+              MaterialPageRoute(builder: (ctx2) => const ScreenHome()));
+          return null;
+        });
       } on FirebaseAuthException catch (ex) {
         return UiHelper.customAlertBox(context, ex.code.toString());
       }
