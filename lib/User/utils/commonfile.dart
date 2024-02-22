@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:prosample_1/User/utils/colors.dart';
 import 'package:prosample_1/User/utils/text_decorations.dart';
 
-
 class Pics {
   // Banners
   static const String promoBanner1 = 'assets/Ads section/caliber-r3.webp';
@@ -15,30 +14,36 @@ class Pics {
   static const String promoText2 = '// Editing //';
   static const String promoText3 = '// Coding //';
   static const String promoText4 = '// Streaming //';
-
-// Categories
-
-  static List<String> categories = [
-    'assets/Categories/keyboard.png',
-    'assets/Categories/headset.jpg',
-    'assets/Categories/processor.png',
-    'assets/Categories/Cabinet.jpg',
-    'assets/Categories/Chair.png',
-    'assets/Categories/Mouse.webp',
-  ];
-  static List<String> categoriesName = [
-    'Gaming Keyboard',
-    'Gaming Headsets',
-    'Processos',
-    'Gaming Cabinets',
-    'Gaming Chairs',
-    'Gaming Mouse',
-  ];
 }
 
 class UiHelper {
+  // custom Textfield
+  static customTextField({
+    required TextEditingController controller,
+    required String labeltext,
+    required IconData iconData,
+    required String validate,
+    bool obscureText = false,
+    keyboardType = TextInputType.text,
+  }) {
+    return TextFormField(
+        validator: (value) {
+          if (value!.isEmpty) {
+            return validate;
+          }
+          return null;
+        },
+        keyboardType: keyboardType,
+        controller: controller,
+        decoration: InputDecoration(
+            prefixIcon: Icon(iconData),
+            label: Text(labeltext, style: TextStyling.subtitleapptheme),
+            border:
+                OutlineInputBorder(borderRadius: BorderRadius.circular(10))));
+  }
+
   // alert dialogue
-  static customAlertBox(BuildContext context, String text) {
+  static customTextAlert(BuildContext context, String text) {
     return showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -58,32 +63,6 @@ class UiHelper {
             ],
           );
         });
-  }
-
-  // custom Textfield
-  static customTextField({
-    required TextEditingController controller,
-    required String labeltext,
-    required IconData iconData,
-    required String validate,
-    bool obscureText = false,
-    keyboardType = TextInputType.text,
-  }) {
-    return TextFormField(
-      validator: (value) {
-        if(value!.isEmpty){
-          return validate;
-        }
-        return null;
-      },
-      keyboardType: keyboardType,
-      controller: controller,
-      decoration: InputDecoration(
-        prefixIcon: Icon(iconData),
-        label: Text(labeltext, style: TextStyling.subtitleapptheme),
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
-      ),
-    );
   }
 
 // Elevated button
@@ -111,7 +90,7 @@ class UiHelper {
       ),
     );
   }
-
+// itemcard
   static itemCard({
     required String image,
     required String category,
@@ -166,6 +145,7 @@ class UiHelper {
       ),
     );
   }
+// snackbar
   static userSnackbar(BuildContext context, String text) {
     return ScaffoldMessenger.of(context).showSnackBar(SnackBar(
       content: Row(

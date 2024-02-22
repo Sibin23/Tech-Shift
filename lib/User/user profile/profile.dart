@@ -3,7 +3,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 // import 'package:hive/hive.dart';
 // import 'package:prosample_1/User/user%20profile/contact_page.dart';
-import 'package:prosample_1/User/user%20profile/add_account.dart';
+
 import 'package:prosample_1/User/user%20profile/sample.dart';
 
 import 'package:prosample_1/User/user%20profile/terms_policies.dart';

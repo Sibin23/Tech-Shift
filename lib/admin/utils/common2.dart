@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:prosample_1/admin/utils/colors.dart';
 import 'package:prosample_1/admin/utils/text_style.dart';
@@ -99,9 +100,9 @@ class AdminUiHelper {
                 decoration: BoxDecoration(
                     border: Border.all(color: Colors.grey),
                     borderRadius: BorderRadius.circular(10.0)),
-                child: imageurl.isEmpty
-                    ? const Center(child: Text('Pick an image'))
-                    : Image.network(imageurl.toString(), fit: BoxFit.cover))));
+                child: imageurl.isEmpty?
+                const Center(child: Text('Pick an Image')): Image.network(imageurl),
+                )));
   }
 
   static customSnackbar(BuildContext context, String text) {

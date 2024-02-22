@@ -34,7 +34,7 @@ class _UpdateProcessorState extends State<UpdateProcessor> {
                     String categoryName = document['name'];
                     // String categoryid = document['categoryid'];
                     return AdminUiHelper.updatelist(context, () {
-                      AdminUi.customAlert(() { 
+                      AdminUi.customAlert( text1:'Edit' ,text2:'Delete' ,() { 
                         // Navigator.push(context, MaterialPageRoute(builder: (ctx)=> const EditProcessor()));
                       }, () { }, context);
                     },

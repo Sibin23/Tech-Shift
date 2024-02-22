@@ -123,7 +123,7 @@ class _ScreenCreateAccntState extends State<ScreenCreateAccnt> {
     final pass2 = _passwordController2.text;
     final email = _emailController.text;
     if (pass1 != pass2) {
-      return UiHelper.customAlertBox(context, "Password Doesn't match");
+      return UiHelper.customTextAlert(context, "Password Doesn't match");
     } else {
       // ignore: unused_local_variable
       UserCredential? usercredential;
@@ -136,7 +136,7 @@ class _ScreenCreateAccntState extends State<ScreenCreateAccnt> {
           return null;
         });
       } on FirebaseAuthException catch (ex) {
-        return UiHelper.customAlertBox(context, ex.code.toString());
+        return UiHelper.customTextAlert(context, ex.code.toString());
       }
     }
   }

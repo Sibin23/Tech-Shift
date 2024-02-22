@@ -29,7 +29,7 @@ class _ScreenLoginState extends State<ScreenLogin> {
         child: SingleChildScrollView(
             child: Padding(
           padding:
-              const EdgeInsets.only(top: 10, left: 10, right: 10, bottom: 20),
+              const EdgeInsets.only(top: 20, left: 10, right: 10, bottom: 20),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -119,8 +119,8 @@ class _ScreenLoginState extends State<ScreenLogin> {
                         const SizedBox(height: 20),
                         UiHelper.customButton(context, () {
                           if (_formkey.currentState!.validate()) {
-                                    goToHome(_emailController.text.toString(),
-                                        _passwordController.text.toString());
+                                    goToHome(_emailController.text.trim(),
+                                        _passwordController.text.trim());
                                   }
                         }, text: 'Login'),
                         const SizedBox(height: 20),
@@ -155,7 +155,7 @@ class _ScreenLoginState extends State<ScreenLogin> {
     // ignore: unused_local_variable
     UserCredential? usercredential;
     try {
-      if (email == 'admin@gmail.com' && password == 'admin123') {
+      if (email == 'admin@gmail.com' && password == 'admin23') {
         Navigator.pushReplacement(
             context, MaterialPageRoute(builder: (ctx2) => const AdminHome()));
       }
@@ -169,7 +169,7 @@ class _ScreenLoginState extends State<ScreenLogin> {
     } on FirebaseAuthException catch (ex) {
       
       // ignore: void_checks, use_build_context_synchronously
-      return UiHelper.customAlertBox(context, ex.code.toString());
+      return UiHelper.customTextAlert(context, ex.code.toString());
     }
   }
 }

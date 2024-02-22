@@ -1,6 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/adapters.dart';
@@ -8,6 +8,7 @@ import 'package:lottie/lottie.dart';
 import 'package:prosample_1/User/db/user_model.dart';
 import 'package:prosample_1/User/home.dart';
 import 'package:prosample_1/User/utils/text_decorations.dart';
+
 import 'package:prosample_1/onboardScreens/onboard1.dart';
 import 'firebase_options.dart';
 
@@ -17,7 +18,7 @@ Future<void> main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
   await Hive.initFlutter();
-  if(!Hive.isAdapterRegistered(UserModelAdapter().typeId)){
+  if (!Hive.isAdapterRegistered(UserModelAdapter().typeId)) {
     Hive.registerAdapter(UserModelAdapter());
   }
   runApp(const MyApp());
@@ -52,15 +53,17 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   @override
   void initState() {
-    Future.delayed(const Duration(milliseconds: 3400), () {
+    Future.delayed(const Duration(seconds: 3), () {
       final user = FirebaseAuth.instance.currentUser;
-     if(user != null){
-       Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (ctx2) =>const HomeInfo()), (route) => false);
-     }
-     else{
-       Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (ctx) => const OnboardScreen1()));
-     }
+      // ignore: unrelated_type_equality_checks
+      if (user != null) {
+        Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute(builder: (ctx2) => const HomeInfo()),
+            (route) => false);
+      } else {
+        Navigator.of(context).pushReplacement(
+            MaterialPageRoute(builder: (ctx) => const OnboardScreen1()));
+      }
     });
     super.initState();
   }
@@ -74,22 +77,20 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Container(
           width: MediaQuery.of(context).size.width,
           height: MediaQuery.of(context).size.height,
-          decoration: BoxDecoration(image: DecorationImage(image: const AssetImage('assets/Splash/splash screen new.png'))),
+          decoration: const BoxDecoration(
+              image: DecorationImage(
+                  image: AssetImage('assets/Splash/splash screen new.png'),fit: BoxFit.cover)),
           child: Column(
             children: [
-             
               Padding(
-                padding: const EdgeInsets.only(top: 260, right: 10, left: 10),
+                padding: const EdgeInsets.only(top: 300, right: 10, left: 10),
                 child: SizedBox(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text('TECH SHIFT',
-                          style:
-                          TextStyling.title1W
-                      ),
+                      Text('TECH SHIFT', style: TextStyling.title1W),
                       const SizedBox(
-                        height: 270,
+                        height: 200,
                       ),
                       Text('LETS CRAFT YOUR DREAM PC',
                           style: TextStyling.titile2W),

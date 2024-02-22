@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:prosample_1/User/Details/process.dart';
 import 'package:prosample_1/User/Home_screen/home_page.dart';
-import 'package:prosample_1/User/Pre%20Builds/pre_build_pc.dart';
+import 'package:prosample_1/User/cart/cart.dart';
 import 'package:prosample_1/User/user%20profile/profile.dart';
 
 class HomeInfo extends StatefulWidget {
@@ -16,7 +16,7 @@ class _HomeInfo extends State<HomeInfo> {
   List pages = [
     const ScreenHome(),
     const UserProfile(),
-    const ScreenPC(),
+    const ScreenCart(),
     const ScreenProcess(),
   ];
   int _myindex = 0;

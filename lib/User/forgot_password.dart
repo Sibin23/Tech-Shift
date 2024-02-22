@@ -25,11 +25,11 @@ class _ScreenPasswordState extends State<ScreenPassword> {
     try {
       await FirebaseAuth.instance
           .sendPasswordResetEmail(email: _emailController.text.trim());
-      UiHelper.customAlertBox(
+      UiHelper.customTextAlert(
           context, 'Password reset Link send ! Check your Email');
     } on FirebaseAuthException catch (ex) {
       
-      UiHelper.customAlertBox(context, ex.message.toString());
+      UiHelper.customTextAlert(context, ex.message.toString());
     }
   }
 

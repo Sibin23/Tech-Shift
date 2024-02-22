@@ -65,7 +65,7 @@ class AdminUi {
     );
   }
 
-  // 
+  //
 
   static customCategoryCard(BuildContext context,
       {required String imageUrl, required String categoryName}) {
@@ -99,7 +99,8 @@ class AdminUi {
 
   // Custom Alert Dialogue
   static customAlert(VoidCallback voidCallback1, VoidCallback voidCallback2,
-      BuildContext context) {
+      BuildContext context,
+      {required text1, required text2}) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -110,20 +111,20 @@ class AdminUi {
           actions: [
             TextButton(
               onPressed: () {
-                
+                Navigator.pop(context);
                 voidCallback1();
               },
               child: Text(
-                'Edit',
+                text1,
                 style: GoogleFonts.poppins(color: CustomColors.appTheme),
               ),
             ),
             TextButton(
               onPressed: () {
-                
+                Navigator.pop(context);
                 voidCallback2();
               },
-              child: Text('Delete',
+              child: Text(text2,
                   style: GoogleFonts.poppins(color: CustomColors.appTheme)),
             ),
           ],
@@ -155,5 +156,4 @@ class AdminUi {
           style: CustomText.apptitle,
         ));
   }
-  
 }

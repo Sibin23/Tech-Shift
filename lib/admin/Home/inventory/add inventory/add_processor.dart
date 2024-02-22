@@ -130,7 +130,7 @@ class _ScreenAddProcessorState extends State<ScreenAddProcessor> {
                 const SizedBox(height: 20),
                 AdminUiHelper.customImageBox(() {
                   pickImage();
-                }, imageurl: imageurl),
+                },imageurl: imageurl),
                 const SizedBox(height: 20),
                 Form(
                     key: _formkey,

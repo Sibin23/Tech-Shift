@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:prosample_1/admin/utils/common2.dart';
 import 'package:prosample_1/admin/utils/common_widgets.dart';
+import 'package:prosample_1/admin/utils/text_style.dart';
 
 class EditPC extends StatefulWidget {
   final String itemId;
@@ -26,23 +27,22 @@ class _EditPCState extends State<EditPC> {
   final _ssd = TextEditingController();
   final _expandableStorage = TextEditingController();
   final _gpu = TextEditingController();
-  final _cooler = TextEditingController();
+  
   final _specialFeatures = TextEditingController();
   final _psu = TextEditingController();
   final _case = TextEditingController();
   final _warranty = TextEditingController();
+  bool? newArival;
+  bool? cooler;
   late String imageurl = '';
+
   Future<void> pickImage() async {
     // ignore: no_leading_underscores_for_local_identifiers
     final ImagePicker _picker = ImagePicker();
     final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
     if (image != null) {
       imageurl = await uploadImage(image);
-      setState(() async{
-        
-        
-        
-      });
+      setState(() async {});
     }
   }
 
@@ -65,11 +65,12 @@ class _EditPCState extends State<EditPC> {
         .get()
         .then((snapshot) {
       if (snapshot.exists) {
+         print(widget.itemId);
         Map<String, dynamic> data = snapshot.data()!;
 
         _productCategory.text = data['categoryid'];
         _productName.text = data['name'];
-        imageurl = data['image'].toString();
+        imageurl = data['image'];
         _oldPrice.text = data['oldprice'];
         _newPrice.text = data['newprice'];
         _processor.text = data['processor'];
@@ -78,8 +79,9 @@ class _EditPCState extends State<EditPC> {
         _ssd.text = data['ssd'];
         _expandableStorage.text = data['expstorage'];
         _gpu.text = data['gpu'];
-        _cooler.text = data['cooler'];
+        cooler = data['cooler'];
         _specialFeatures.text = data['features'];
+        newArival = data['newarrival'];
         _psu.text = data['psu'];
         _case.text = data['case'];
         _warranty.text = data['warranty'];
@@ -87,13 +89,18 @@ class _EditPCState extends State<EditPC> {
     });
   }
 
+void onCheckboxChanged(bool value) {
+  setState(() {
+    cooler = value;
+  });
+}
   updateData() {
     FirebaseFirestore.instance
         .collection('prebuild')
-        .doc(_productCategory.text.toLowerCase()) // Use the itemId
+        .doc(widget.itemId) // Use the itemId
         .update({
       'categoryid': _productCategory.text.toLowerCase(),
-      'image': imageurl.toString(),
+      'image': imageurl,
       'name': _productName.text,
       'oldprice': _oldPrice.text,
       'newprice': _newPrice.text,
@@ -101,13 +108,32 @@ class _EditPCState extends State<EditPC> {
       'motherboard': _motherBoard.text,
       'ram': _ram.text,
       'ssd': _ssd.text,
+      'newarrival': newArival,
       'expstorage': _expandableStorage.text,
       'gpu': _gpu.text,
-      'cooler': _cooler.text,
+      'cooler': cooler,
       'features': _specialFeatures.text,
       'psu': _psu.text,
       'case': _case.text,
       'warranty': _warranty.text,
+    });
+    setState(() {
+      _productCategory.clear();
+      imageurl = '';
+      _productName.clear();
+      _oldPrice.clear();
+      _newPrice.clear();
+      _processor.clear();
+      _motherBoard.clear();
+      _ram.clear();
+      _ssd.clear();
+      _expandableStorage.clear();
+      _gpu.clear();
+      newArival = false;
+      _specialFeatures.clear();
+      _psu.clear();
+      _case.clear();
+      _warranty.clear();
     });
   }
 
@@ -158,9 +184,7 @@ class _EditPCState extends State<EditPC> {
                           textcontroller: _expandableStorage),
                       const SizedBox(height: 10),
                       AdminUi.admTextField(label: 'GPU', textcontroller: _gpu),
-                      const SizedBox(height: 10),
-                      AdminUi.admTextField(
-                          label: 'Cooler', textcontroller: _cooler),
+                     
                       const SizedBox(height: 10),
                       AdminUi.admTextField(
                           label: 'Features', textcontroller: _specialFeatures),
@@ -174,12 +198,32 @@ class _EditPCState extends State<EditPC> {
                       AdminUi.admTextField(
                           label: 'Warranty', textcontroller: _warranty),
                       const SizedBox(height: 30),
+                      SizedBox(
+                            width: MediaQuery.of(context).size.width * .4,
+                            height: MediaQuery.of(context).size.height * .08,
+                            child: Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      children: [
+                                        Checkbox(
+                          value: cooler ?? false, // Handle potential null value
+                          onChanged: (value)=>onCheckboxChanged(value!),
+                        ),
+                                        Text('Coolers',
+                                            style: CustomText.title3)
+                                      ])
+                                ])),
                     ])),
                 AdminUiHelper.customButton(context, () {
                   if (_formkey.currentState!.validate()) {
                     updateData();
+
                     AdminUiHelper.customSnackbar(
                         context, 'Item Updated Successfully !');
+                    Navigator.pop(context);
                   }
                 }, text: 'Save'),
                 const SizedBox(height: 30)

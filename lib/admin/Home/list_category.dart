@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:prosample_1/admin/Home/add_category.dart';
@@ -15,7 +16,6 @@ import 'package:prosample_1/admin/Home/categories/psu.dart';
 import 'package:prosample_1/admin/Home/categories/ram.dart';
 import 'package:prosample_1/admin/Home/categories/ssd.dart';
 import 'package:prosample_1/admin/utils/colors.dart';
-
 import 'package:prosample_1/admin/utils/text_style.dart';
 
 class ListCategory extends StatefulWidget {
@@ -72,7 +72,7 @@ class _ListCategoryState extends State<ListCategory> {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (ctx) => const ListCoolers()),
+                                      builder: (ctx) => const ListCooler()),
                                 );
                               } else if (document['categoryid'] == 'cable') {
                                 Navigator.push(
@@ -195,9 +195,14 @@ class _ListCategoryState extends State<ListCategory> {
                                                         .size
                                                         .height *
                                                     0.1,
-                                                child: Image.network(
-                                                  imageUrl,
-                                                  fit: BoxFit.cover,
+                                                child: CachedNetworkImage(
+                                                  imageUrl: imageUrl,fit: BoxFit.cover, placeholder: (context, url) {
+                                                    return const Center(child: CircularProgressIndicator());
+                                                  },
+                                                  // child: Image.network(
+                                                  //   imageUrl,
+                                                  //   fit: BoxFit.cover,
+                                                  // ),
                                                 )),
                                             const SizedBox(width: 30),
                                             Text(

@@ -1,6 +1,6 @@
-import 'dart:io';
+
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
+
 import 'package:prosample_1/User/db/db_functions.dart';
 import 'package:prosample_1/User/db/user_model.dart';
 import 'package:prosample_1/User/utils/commonfile.dart';
