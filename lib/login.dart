@@ -7,6 +7,7 @@ import 'package:prosample_1/User/forgot_password.dart';
 import 'package:prosample_1/User/utils/colors.dart';
 import 'package:prosample_1/admin/home.dart';
 import 'package:prosample_1/User/utils/commonfile.dart';
+import 'package:provider/provider.dart';
 
 class ScreenLogin extends StatefulWidget {
   const ScreenLogin({super.key});
@@ -21,6 +22,11 @@ class _ScreenLoginState extends State<ScreenLogin> {
   final _formkey = GlobalKey<FormState>();
 
   bool _obscuretext = true;
+  @override
+  void dispose() {
+    _obscuretext;
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -108,7 +114,8 @@ class _ScreenLoginState extends State<ScreenLogin> {
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (ctx) => const ScreenPassword()));
+                                        builder: (ctx) =>
+                                            const ScreenPassword()));
                               },
                               child: Text('Forgot Password?',
                                   style: GoogleFonts.poppins(
@@ -119,9 +126,20 @@ class _ScreenLoginState extends State<ScreenLogin> {
                         const SizedBox(height: 20),
                         UiHelper.customButton(context, () {
                           if (_formkey.currentState!.validate()) {
-                                    goToHome(_emailController.text.trim(),
-                                        _passwordController.text.trim());
-                                  }
+                            final email = _emailController.text.trim();
+                            final password = _passwordController.text.trim();
+
+                            if (email == 'admin@gmail.com' &&
+                                password == 'admin23') {
+                              Navigator.pushAndRemoveUntil(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (ctx) => const AdminHome()),
+                                  (route) => false);
+                            } else {
+                              signInWithEmailAndPassword(email, password);
+                            }
+                          }
                         }, text: 'Login'),
                         const SizedBox(height: 20),
                         SizedBox(
@@ -151,25 +169,22 @@ class _ScreenLoginState extends State<ScreenLogin> {
     );
   }
 
-  void goToHome(String email, String password) async {
-    // ignore: unused_local_variable
-    UserCredential? usercredential;
+  Future<void> signInWithEmailAndPassword(String email, String password) async {
     try {
-      if (email == 'admin@gmail.com' && password == 'admin23') {
-        Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (ctx2) => const AdminHome()));
-      }
+      final UserCredential userCredential =
+          await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
 
-      usercredential = await FirebaseAuth.instance
-          .signInWithEmailAndPassword(email: email, password: password)
-          .then((value) {
-        return Navigator.push(
-            context, MaterialPageRoute(builder: (ctx2) => const HomeInfo()));
-      });
+      // Navigate to HomeInfo screen
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (ctx) => const HomeInfo()),
+      );
     } on FirebaseAuthException catch (ex) {
-      
-      // ignore: void_checks, use_build_context_synchronously
-      return UiHelper.customTextAlert(context, ex.code.toString());
+      // Handle specific errors based on ex.code
+      UiHelper.customTextAlert(context, ex.code.toString());
     }
   }
 }

@@ -1,13 +1,11 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-
 import 'package:flutter/material.dart';
 import 'package:prosample_1/admin/utils/colors.dart';
 import 'package:prosample_1/admin/utils/common_widgets.dart';
 import 'package:prosample_1/admin/utils/text_style.dart';
 import 'package:top_snackbar_flutter/custom_snack_bar.dart';
-
 import 'package:top_snackbar_flutter/top_snack_bar.dart';
 
 class ListProcessor extends StatefulWidget {
@@ -149,8 +147,10 @@ class _ListProcessorState extends State<ListProcessor> {
       ),
       body: SafeArea(
         child: StreamBuilder<QuerySnapshot>(
-          stream:
-              FirebaseFirestore.instance.collection('cpudetails').orderBy('name').snapshots(),
+          stream: FirebaseFirestore.instance
+              .collection('cpudetails')
+              .orderBy('name')
+              .snapshots(),
           builder: (context, snapshot) {
             if (snapshot.hasError) {
               return Text('Error: ${snapshot.error}');

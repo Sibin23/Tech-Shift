@@ -103,111 +103,114 @@ class _ScreenAddCoolersState extends State<ScreenAddCoolers> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-        child: SingleChildScrollView(
-            child: SizedBox(
-                width: MediaQuery.of(context).size.width,
-                child: Padding(
-                    padding: const EdgeInsets.all(10.0),
-                    child: Column(children: [
-                      Text('Coolers', style: CustomText.title),
-                      const SizedBox(height: 20),
-                      AdminUiHelper.customImageBox(() {
-                        pickImage();
-                      }, imageurl: imageurl),
-                      const SizedBox(height: 20),
-                      Form(
-                          key: _formkey,
-                          child: Column(children: [
-                            AdminUi.admTextField(
-                                label: 'Category Name',
-                                textcontroller: _productCategory),
-                            const SizedBox(height: 10),
-                            AdminUi.admTextField(
-                                label: 'Product Name',
-                                textcontroller: _productName),
-                            const SizedBox(height: 10),
-                            AdminUi.admTextField(
-                                label: 'Manufacturer',
-                                textcontroller: _manufacturer),
-                            const SizedBox(height: 10),
-                            AdminUi.admTextField(
-                                label: 'Old Price', textcontroller: _oldPrice),
-                            const SizedBox(height: 10),
-                            AdminUi.admTextField(
-                                label: 'New Price', textcontroller: _newPrice),
-                            const SizedBox(height: 10),
-                            AdminUi.admTextField(
-                                label: 'Connector Type',
-                                textcontroller: _connector),
-                            const SizedBox(height: 10),
-                            AdminUi.admTextField(
-                                label: 'Voltage', textcontroller: _voltage),
-                            const SizedBox(height: 10),
-                            AdminUi.admTextField(
-                                label: 'Wattage', textcontroller: _wattage),
-                            const SizedBox(height: 10),
-                            AdminUi.admTextField(
-                                label: 'Cooling Method',
-                                textcontroller: _coolingMethod),
-                            const SizedBox(height: 10),
-                            AdminUi.admTextField(
-                                label: 'Noise Level',
-                                textcontroller: _noiseLevel),
-                            const SizedBox(height: 10),
-                            AdminUi.admTextField(
-                                label: 'Model Name',
-                                textcontroller: _modelName),
-                            const SizedBox(height: 10),
-                            AdminUi.admTextField(
-                                label: 'Product Dimensions',
-                                textcontroller: _productDimension),
-                            const SizedBox(height: 10),
-                            AdminUi.admTextField(
-                                label: 'Material', textcontroller: _material),
-                            const SizedBox(height: 10),
-                            AdminUi.admTextField(
-                                label: 'Rotaional Speed',
-                                textcontroller: _speed),
-                            const SizedBox(height: 10),
-                            AdminUi.admTextField(
-                                label: 'Country', textcontroller: _country),
-                            const SizedBox(height: 10),
-                            AdminUi.admTextField(
-                                label: 'Item Weight',
-                                textcontroller: _itemWeight),
-                            const SizedBox(height: 10),
-                            SizedBox(
-                                width: MediaQuery.of(context).size.width * .4,
-                                height:
-                                    MediaQuery.of(context).size.height * .08,
-                                child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: [
-                                      Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.start,
-                                          children: [
-                                            Checkbox(
-                                                value: newArival,
-                                                onChanged: (bool? value) {
-                                                  setState(() {
-                                                    newArival = value!;
-                                                  });
-                                                }),
-                                            Text('New Arrival',
-                                                style: CustomText.title3)
-                                          ])
-                                    ]))
-                          ])),
-                      AdminUiHelper.customButton(context, () {
-                        if (_formkey.currentState!.validate()) {
-                          submitData();
-                          AdminUiHelper.customSnackbar(
-                              context, 'Item Added Successfully !');
-                        }
-                      }, text: 'Save'),
-                      const SizedBox(height: 30)
-                    ])))));
+    return Scaffold(
+      appBar: AppBar(),
+      body: SafeArea(
+          child: SingleChildScrollView(
+              child: SizedBox(
+                  width: MediaQuery.of(context).size.width,
+                  child: Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Column(children: [
+                        Text('Coolers', style: CustomText.title),
+                        const SizedBox(height: 20),
+                        AdminUiHelper.customImageBox(() {
+                          pickImage();
+                        }, imageurl: imageurl),
+                        const SizedBox(height: 20),
+                        Form(
+                            key: _formkey,
+                            child: Column(children: [
+                              AdminUi.admTextField(
+                                  label: 'Category Name',
+                                  textcontroller: _productCategory),
+                              const SizedBox(height: 10),
+                              AdminUi.admTextField(
+                                  label: 'Product Name',
+                                  textcontroller: _productName),
+                              const SizedBox(height: 10),
+                              AdminUi.admTextField(
+                                  label: 'Manufacturer',
+                                  textcontroller: _manufacturer),
+                              const SizedBox(height: 10),
+                              AdminUi.admTextField(
+                                  label: 'Old Price', textcontroller: _oldPrice),
+                              const SizedBox(height: 10),
+                              AdminUi.admTextField(
+                                  label: 'New Price', textcontroller: _newPrice),
+                              const SizedBox(height: 10),
+                              AdminUi.admTextField(
+                                  label: 'Connector Type',
+                                  textcontroller: _connector),
+                              const SizedBox(height: 10),
+                              AdminUi.admTextField(
+                                  label: 'Voltage', textcontroller: _voltage),
+                              const SizedBox(height: 10),
+                              AdminUi.admTextField(
+                                  label: 'Wattage', textcontroller: _wattage),
+                              const SizedBox(height: 10),
+                              AdminUi.admTextField(
+                                  label: 'Cooling Method',
+                                  textcontroller: _coolingMethod),
+                              const SizedBox(height: 10),
+                              AdminUi.admTextField(
+                                  label: 'Noise Level',
+                                  textcontroller: _noiseLevel),
+                              const SizedBox(height: 10),
+                              AdminUi.admTextField(
+                                  label: 'Model Name',
+                                  textcontroller: _modelName),
+                              const SizedBox(height: 10),
+                              AdminUi.admTextField(
+                                  label: 'Product Dimensions',
+                                  textcontroller: _productDimension),
+                              const SizedBox(height: 10),
+                              AdminUi.admTextField(
+                                  label: 'Material', textcontroller: _material),
+                              const SizedBox(height: 10),
+                              AdminUi.admTextField(
+                                  label: 'Rotaional Speed',
+                                  textcontroller: _speed),
+                              const SizedBox(height: 10),
+                              AdminUi.admTextField(
+                                  label: 'Country', textcontroller: _country),
+                              const SizedBox(height: 10),
+                              AdminUi.admTextField(
+                                  label: 'Item Weight',
+                                  textcontroller: _itemWeight),
+                              const SizedBox(height: 10),
+                              SizedBox(
+                                  width: MediaQuery.of(context).size.width * .4,
+                                  height:
+                                      MediaQuery.of(context).size.height * .08,
+                                  child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      children: [
+                                        Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            children: [
+                                              Checkbox(
+                                                  value: newArival,
+                                                  onChanged: (bool? value) {
+                                                    setState(() {
+                                                      newArival = value!;
+                                                    });
+                                                  }),
+                                              Text('New Arrival',
+                                                  style: CustomText.title3)
+                                            ])
+                                      ]))
+                            ])),
+                        AdminUiHelper.customButton(context, () {
+                          if (_formkey.currentState!.validate()) {
+                            submitData();
+                            AdminUiHelper.customSnackbar(
+                                context, 'Item Added Successfully !');
+                          }
+                        }, text: 'Save'),
+                        const SizedBox(height: 30)
+                      ]))))),
+    );
   }
 }

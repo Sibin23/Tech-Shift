@@ -67,7 +67,7 @@ class _EditPCState extends State<EditPC> {
       if (snapshot.exists) {
          print(widget.itemId);
         Map<String, dynamic> data = snapshot.data()!;
-
+        
         _productCategory.text = data['categoryid'];
         _productName.text = data['name'];
         imageurl = data['image'];

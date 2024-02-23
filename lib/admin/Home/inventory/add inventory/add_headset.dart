@@ -97,97 +97,100 @@ class _ScreenAddHeadsetState extends State<ScreenAddHeadset> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-        child: SingleChildScrollView(
-            child: SizedBox(
-                width: MediaQuery.of(context).size.width,
-                child: Padding(
-                    padding: const EdgeInsets.all(10.0),
-                    child: Column(children: [
-                      Text('Gaming Headsets', style: CustomText.title),
-                      const SizedBox(height: 20),
-                      AdminUiHelper.customImageBox(() {
-                        pickImage();
-                      }, imageurl: imageurl),
-                      const SizedBox(height: 20),
-                      Form(
-                          key: _formkey,
-                          child: Column(children: [
-                            AdminUi.admTextField(
-                                label: 'Category Name',
-                                textcontroller: _productCategory),
-                            const SizedBox(height: 10),
-                            AdminUi.admTextField(
-                                label: 'Product Name',
-                                textcontroller: _productName),
-                            const SizedBox(height: 10),
-                            AdminUi.admTextField(
-                                label: 'Manufacturer',
-                                textcontroller: _manufacturer),
-                            const SizedBox(height: 10),
-                            AdminUi.admTextField(
-                                label: 'Series', textcontroller: _series),
-                            const SizedBox(height: 10),
-                            AdminUi.admTextField(
-                                label: 'Colour', textcontroller: _color),
-                            const SizedBox(height: 10),
-                            AdminUi.admTextField(
-                                label: 'Model Name',
-                                textcontroller: _modelName),
-                            const SizedBox(height: 10),
-                            AdminUi.admTextField(
-                                label: 'Features',
-                                textcontroller: _specialFeatures),
-                            const SizedBox(height: 10),
-                            AdminUi.admTextField(
-                                label: 'Product Dimensions',
-                                textcontroller: _productDimension),
-                            const SizedBox(height: 10),
-                            AdminUi.admTextField(
-                                label: 'Connectivity',
-                                textcontroller: _connector),
-                            const SizedBox(height: 10),
-                            AdminUi.admTextField(
-                                label: 'Country', textcontroller: _country),
-                            const SizedBox(height: 10),
-                            AdminUi.admTextField(
-                                label: 'Item Weight',
-                                textcontroller: _itemWeight),
-                            const SizedBox(height: 10),
-                            AdminUi.admTextField(
-                                label: 'Warranty', textcontroller: _warranty),
-                            const SizedBox(height: 10),
-                            SizedBox(
-                                width: MediaQuery.of(context).size.width * .4,
-                                height:
-                                    MediaQuery.of(context).size.height * .08,
-                                child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: [
-                                      Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.start,
-                                          children: [
-                                            Checkbox(
-                                                value: newArival,
-                                                onChanged: (bool? value) {
-                                                  setState(() {
-                                                    newArival = value!;
-                                                  });
-                                                }),
-                                            Text('New Arrival',
-                                                style: CustomText.title3)
-                                          ])
-                                    ]))
-                          ])),
-                      AdminUiHelper.customButton(context, () {
-                        if (_formkey.currentState!.validate()) {
-                          submitData();
-                          AdminUiHelper.customSnackbar(
-                              context, 'Item Added Successfully !');
-                        }
-                      }, text: 'Save'),
-                      const SizedBox(height: 30)
-                    ])))));
+    return Scaffold(
+      appBar: AppBar(),
+      body: SafeArea(
+          child: SingleChildScrollView(
+              child: SizedBox(
+                  width: MediaQuery.of(context).size.width,
+                  child: Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Column(children: [
+                        Text('Gaming Headsets', style: CustomText.title),
+                        const SizedBox(height: 20),
+                        AdminUiHelper.customImageBox(() {
+                          pickImage();
+                        }, imageurl: imageurl),
+                        const SizedBox(height: 20),
+                        Form(
+                            key: _formkey,
+                            child: Column(children: [
+                              AdminUi.admTextField(
+                                  label: 'Category Name',
+                                  textcontroller: _productCategory),
+                              const SizedBox(height: 10),
+                              AdminUi.admTextField(
+                                  label: 'Product Name',
+                                  textcontroller: _productName),
+                              const SizedBox(height: 10),
+                              AdminUi.admTextField(
+                                  label: 'Manufacturer',
+                                  textcontroller: _manufacturer),
+                              const SizedBox(height: 10),
+                              AdminUi.admTextField(
+                                  label: 'Series', textcontroller: _series),
+                              const SizedBox(height: 10),
+                              AdminUi.admTextField(
+                                  label: 'Colour', textcontroller: _color),
+                              const SizedBox(height: 10),
+                              AdminUi.admTextField(
+                                  label: 'Model Name',
+                                  textcontroller: _modelName),
+                              const SizedBox(height: 10),
+                              AdminUi.admTextField(
+                                  label: 'Features',
+                                  textcontroller: _specialFeatures),
+                              const SizedBox(height: 10),
+                              AdminUi.admTextField(
+                                  label: 'Product Dimensions',
+                                  textcontroller: _productDimension),
+                              const SizedBox(height: 10),
+                              AdminUi.admTextField(
+                                  label: 'Connectivity',
+                                  textcontroller: _connector),
+                              const SizedBox(height: 10),
+                              AdminUi.admTextField(
+                                  label: 'Country', textcontroller: _country),
+                              const SizedBox(height: 10),
+                              AdminUi.admTextField(
+                                  label: 'Item Weight',
+                                  textcontroller: _itemWeight),
+                              const SizedBox(height: 10),
+                              AdminUi.admTextField(
+                                  label: 'Warranty', textcontroller: _warranty),
+                              const SizedBox(height: 10),
+                              SizedBox(
+                                  width: MediaQuery.of(context).size.width * .4,
+                                  height:
+                                      MediaQuery.of(context).size.height * .08,
+                                  child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      children: [
+                                        Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            children: [
+                                              Checkbox(
+                                                  value: newArival,
+                                                  onChanged: (bool? value) {
+                                                    setState(() {
+                                                      newArival = value!;
+                                                    });
+                                                  }),
+                                              Text('New Arrival',
+                                                  style: CustomText.title3)
+                                            ])
+                                      ]))
+                            ])),
+                        AdminUiHelper.customButton(context, () {
+                          if (_formkey.currentState!.validate()) {
+                            submitData();
+                            AdminUiHelper.customSnackbar(
+                                context, 'Item Added Successfully !');
+                          }
+                        }, text: 'Save'),
+                        const SizedBox(height: 30)
+                      ]))))),
+    );
   }
 }

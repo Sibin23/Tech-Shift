@@ -198,11 +198,8 @@ class _ListCategoryState extends State<ListCategory> {
                                                 child: CachedNetworkImage(
                                                   imageUrl: imageUrl,fit: BoxFit.cover, placeholder: (context, url) {
                                                     return const Center(child: CircularProgressIndicator());
-                                                  },
-                                                  // child: Image.network(
-                                                  //   imageUrl,
-                                                  //   fit: BoxFit.cover,
-                                                  // ),
+                                                  }
+                                                 
                                                 )),
                                             const SizedBox(width: 30),
                                             Text(

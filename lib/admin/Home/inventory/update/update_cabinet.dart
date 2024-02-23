@@ -32,11 +32,11 @@ class _UpdateCabinetState extends State<UpdateCabinet> {
                     DocumentSnapshot document = snapshot.data!.docs[index];
                     String imageUrl = document['image'];
                     String categoryid = document['categoryid'];
-                    String cooler = document['cooler'];
+                    
                     String country = document['country'];
                     Map<String , dynamic> itemId = {
                       'categoryid': document.id,
-                      'cooler': cooler,
+                      
                       'country': country,
                     };
 
