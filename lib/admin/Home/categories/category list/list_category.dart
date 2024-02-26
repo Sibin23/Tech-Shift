@@ -1,7 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:prosample_1/admin/Home/add_category.dart';
 import 'package:prosample_1/admin/Home/categories/cabinet.dart';
 import 'package:prosample_1/admin/Home/categories/cables.dart';
 import 'package:prosample_1/admin/Home/categories/cooler.dart';
@@ -31,19 +30,7 @@ class _ListCategoryState extends State<ListCategory> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: CustomColors.appTheme,
-        actions: [
-          IconButton(
-              onPressed: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (ctx) => const ScreenCategory()));
-              },
-              icon: const Icon(
-                Icons.add_to_queue_rounded,
-                color: Colors.white,
-              ))
-        ],
+       
       ),
       body: SafeArea(
           child: SizedBox(
@@ -61,33 +48,33 @@ class _ListCategoryState extends State<ListCategory> {
                         itemBuilder: (context, index) {
                           DocumentSnapshot document =
                               snapshot.data!.docs[index];
-                          // ignore: unused_local_variable
-                          String id = document['categoryid'];
+                          
+                          
                           String imageUrl = document['image'];
                           String categoryName = document['name'];
 
                           return GestureDetector(
                             onTap: () {
-                              if (document['categoryid'] == 'cooler') {
+                              if (document.id == 'cooler') {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
                                       builder: (ctx) => const ListCooler()),
                                 );
-                              } else if (document['categoryid'] == 'cable') {
+                              } else if (document.id == 'cable') {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
                                       builder: (ctx) => const ListCables()),
                                 );
-                              } else if (document['categoryid'] == 'cabinet') {
+                              } else if (document.id == 'cabinet') {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
                                       builder: (ctx) =>
                                           const ListCabinet()),
                                 );
-                              }else if(document['categoryid'] == 'chair'){
+                              }else if(document.id == 'chair'){
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
@@ -108,49 +95,49 @@ class _ListCategoryState extends State<ListCategory> {
                                       builder: (ctx) =>
                                           const ListKeyboard()),
                                 );
-                              }else if(document ['categoryid'] == 'mouse'){
+                              }else if(document.id == 'mouse'){
                                  Navigator.push(
                                   context,
                                   MaterialPageRoute(
                                       builder: (ctx) =>
                                           const ListMouse()),
                                 );
-                              }else if(document['categoryid'] == 'monitor'){
+                              }else if(document.id == 'monitor'){
                                  Navigator.push(
                                   context,
                                   MaterialPageRoute(
                                       builder: (ctx1) =>
                                           const ListMonitor()),
                                 );
-                              }else if(document['categoryid'] == 'motherboard'){
+                              }else if(document.id == 'motherboard'){
                                  Navigator.push(
                                   context,
                                   MaterialPageRoute(
                                       builder: (ctx1) =>
                                           const ListMotherboard()),
                                 );
-                              }else if(document['categoryid'] == 'psu'){
+                              }else if(document.id == 'psu'){
                                  Navigator.push(
                                   context,
                                   MaterialPageRoute(
                                       builder: (ctx) =>
                                           const ListPsu()),
                                 );
-                              }else if(document['categoryid'] == 'processor'){
+                              }else if(document.id == 'processor'){
                                  Navigator.push(
                                   context,
                                   MaterialPageRoute(
                                       builder: (ctx) =>
                                           const ListProcessor()),
                                 );
-                              }else if(document['categoryid'] == 'ram'){
+                              }else if(document.id == 'ram'){
                                  Navigator.push(
                                   context,
                                   MaterialPageRoute(
                                       builder: (ctx) =>
                                           const ListRam()),
                                 );
-                              }else if(document['categoryid'] == 'ssd'){
+                              }else if(document.id == 'ssd'){
                                  Navigator.push(
                                   context,
                                   MaterialPageRoute(

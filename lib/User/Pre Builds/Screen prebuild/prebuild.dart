@@ -2,10 +2,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:prosample_1/User/Pre%20Builds/prebuild_screen.dart';
-import 'package:prosample_1/User/utils/text_decorations.dart';
 import 'package:prosample_1/User/utils/widget2.dart';
 
-// ignore: must_be_immutable
+
 class PreBuildSection extends StatefulWidget {
   const PreBuildSection({super.key});
 
@@ -43,9 +42,10 @@ class _PreBuildSectionState extends State<PreBuildSection> {
                                 crossAxisCount: 2),
                         itemBuilder: (context, index) {
                           DocumentSnapshot document = snapshot.data!.docs[index];
-                                  
+                              
                           String imageUrl = document['image'];
-                          String categoryName = document['name'];
+                          String categoryName = document['categoryid'];
+                          String name = document['name'];
                           String oldPrice = document['oldprice'];
                           String newPrice = document['newprice'];
                           String cabinet = document['case'];
@@ -64,20 +64,21 @@ class _PreBuildSectionState extends State<PreBuildSection> {
                             () {
                               Map<String, dynamic> prebuild = {
                                 'image': imageUrl,
-                                'name': categoryName,
-                                'oldprice': oldPrice,
-                                'newprice': newPrice,
-                                'processor': processor,
-                                'motherboard': board,
-                                'ram': ram,
-                                'ssd': ssd,
-                                'expstorage': expstorage,
-                                'gpu': gpu,
-                                'features': features,
-                                'cooler': cooler,
-                                'psu': psu,
-                                'case': cabinet,
-                                'warranty': warranty
+                                    'categoryid': categoryName,
+                                    'name': name,
+                                    'oldprice': oldPrice,
+                                    'newprice': newPrice,
+                                    'processor': processor,
+                                    'motherboard': board,
+                                    'ram': ram,
+                                    'ssd': ssd,
+                                    'expstorage': expstorage,
+                                    'gpu': gpu,
+                                    'features': features,
+                                    'cooler': cooler,
+                                    'psu': psu,
+                                    'case': cabinet,
+                                    'warranty': warranty
                               };
                               Navigator.push(
                                   context,

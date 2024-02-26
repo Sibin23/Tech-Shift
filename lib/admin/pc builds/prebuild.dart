@@ -3,7 +3,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:prosample_1/admin/pc%20builds/update_textfield.dart';
 import 'package:prosample_1/admin/utils/colors.dart';
 import 'package:prosample_1/admin/utils/common2.dart';
 import 'package:prosample_1/admin/utils/common_widgets.dart';
@@ -19,6 +18,7 @@ class ScreenPreBuild extends StatefulWidget {
 class __ScreenPreBuildStateState extends State<ScreenPreBuild>
     with TickerProviderStateMixin {
   final _formkey = GlobalKey<FormState>();
+  final _idNum = TextEditingController();
   final _productCategory = TextEditingController();
   final _productName = TextEditingController();
   final _oldPrice = TextEditingController();
@@ -34,8 +34,8 @@ class __ScreenPreBuildStateState extends State<ScreenPreBuild>
   final _psu = TextEditingController();
   final _case = TextEditingController();
   final _warranty = TextEditingController();
-
-  late TabController _tabController;
+  
+ 
   late String imageurl = '';
   Future<void> pickImage() async {
     // ignore: no_leading_underscores_for_local_identifiers
@@ -59,7 +59,8 @@ class __ScreenPreBuildStateState extends State<ScreenPreBuild>
   // submit
   Future submitData() async {
     final data = {
-      'categoryid': _productCategory.text.toLowerCase(),
+      'idnum': _idNum.text,
+      'category': _productCategory.text.toLowerCase(),
       'image': imageurl.toString(),
       'name': _productName.text,
       'oldprice': _oldPrice.text,
@@ -78,11 +79,12 @@ class __ScreenPreBuildStateState extends State<ScreenPreBuild>
     };
     FirebaseFirestore.instance
         .collection('prebuild')
-        .doc()
+        .doc(_idNum.text.toLowerCase())
         .set(data);
     setState(() {
       _productCategory.clear();
       imageurl = '';
+      _idNum.clear();
       _productName.clear();
       _oldPrice.clear();
       _newPrice.clear();
@@ -100,18 +102,6 @@ class __ScreenPreBuildStateState extends State<ScreenPreBuild>
     });
   }
 
-  Future deleteData(itemId) async {
-    final firestore = FirebaseFirestore.instance;
-    final docRef = firestore.collection('prebuild').doc(itemId);
-    await docRef.delete();
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    _tabController = TabController(length: 2, vsync: this);
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -119,144 +109,87 @@ class __ScreenPreBuildStateState extends State<ScreenPreBuild>
         backgroundColor: CustomColors.appTheme,
         centerTitle: true,
         title: Text("Pre - Build PC's", style: CustomText.apptitle),
-        bottom: TabBar(
-          labelStyle: CustomText.subtitleWhite,
-          unselectedLabelColor: Colors.white,
-          controller: _tabController,
-          tabs: const [
-            Tab(text: 'Add New PC'),
-            Tab(text: 'Update PC'),
-          ],
+       
+      ),
+      body: SafeArea(
+          child: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(10.0),
+          child: Column(
+            children: [
+              AdminUiHelper.customImageBox(() {
+                pickImage();
+              }, imageurl: imageurl),
+              const SizedBox(height: 20),
+              Form(
+                  key: _formkey,
+                  child: Column(children: [
+                    AdminUi.admTextField(label: 'Unique ID', textcontroller: _idNum),
+                    const SizedBox(height: 10),
+                    AdminUi.admTextField(
+                        label: 'Category Name',
+                        textcontroller: _productCategory),
+                    const SizedBox(height: 10),
+                    AdminUi.admTextField(
+                        label: 'Product Name',
+                        textcontroller: _productName),
+                    const SizedBox(height: 10),
+                    AdminUi.admTextField(
+                        label: 'Old Price', textcontroller: _oldPrice),
+                    const SizedBox(height: 10),
+                    AdminUi.admTextField(
+                        label: 'New Price', textcontroller: _newPrice),
+                    const SizedBox(height: 10),
+                    AdminUi.admTextField(
+                        label: 'Processor', textcontroller: _processor),
+                    const SizedBox(height: 10),
+                    AdminUi.admTextField(
+                        label: 'Motherboard', textcontroller: _motherBoard),
+                    const SizedBox(height: 10),
+                    AdminUi.admTextField(
+                        label: 'Memory', textcontroller: _ram),
+                    const SizedBox(height: 10),
+                    AdminUi.admTextField(
+                        label: 'Storage', textcontroller: _ssd),
+                    const SizedBox(height: 10),
+                    AdminUi.admTextField(
+                        label: 'Expandable Storage',
+                        textcontroller: _expandableStorage),
+                    const SizedBox(height: 10),
+                    AdminUi.admTextField(
+                        label: 'GPU', textcontroller: _gpu),
+                    const SizedBox(height: 10),
+                    AdminUi.admTextField(
+                        label: 'Cooler', textcontroller: _cooler),
+                    const SizedBox(height: 10),
+                    AdminUi.admTextField(
+                        label: 'Features',
+                        textcontroller: _specialFeatures),
+                    const SizedBox(height: 10),
+                    AdminUi.admTextField(
+                        label: 'PSU Certification', textcontroller: _psu),
+                    const SizedBox(height: 10),
+                    AdminUi.admTextField(label: 'Cooler', textcontroller: _cooler),
+                    const SizedBox(height: 10),
+                    AdminUi.admTextField(
+                        label: 'Case', textcontroller: _case),
+                    const SizedBox(height: 10),
+                    AdminUi.admTextField(
+                        label: 'Warranty', textcontroller: _warranty),
+                    const SizedBox(height: 30),
+                  ])),
+              AdminUiHelper.customButton(context, () {
+                if (_formkey.currentState!.validate()) {
+                  submitData();
+                  AdminUiHelper.customSnackbar(
+                      context, 'Item Added Successfully !');
+                }
+              }, text: 'Save'),
+              const SizedBox(height: 30)
+            ],
+          ),
         ),
-      ),
-      body: TabBarView(
-        controller: _tabController,
-        children: [
-          // Content for Home tab
-          SafeArea(
-              child: SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: Column(
-                children: [
-                  AdminUiHelper.customImageBox(() {
-                    pickImage();
-                  }, imageurl: imageurl),
-                  const SizedBox(height: 20),
-                  Form(
-                      key: _formkey,
-                      child: Column(children: [
-                        AdminUi.admTextField(
-                            label: 'Category Name',
-                            textcontroller: _productCategory),
-                        const SizedBox(height: 10),
-                        AdminUi.admTextField(
-                            label: 'Product Name',
-                            textcontroller: _productName),
-                        const SizedBox(height: 10),
-                        AdminUi.admTextField(
-                            label: 'Old Price', textcontroller: _oldPrice),
-                        const SizedBox(height: 10),
-                        AdminUi.admTextField(
-                            label: 'New Price', textcontroller: _newPrice),
-                        const SizedBox(height: 10),
-                        AdminUi.admTextField(
-                            label: 'Processor', textcontroller: _processor),
-                        const SizedBox(height: 10),
-                        AdminUi.admTextField(
-                            label: 'Motherboard', textcontroller: _motherBoard),
-                        const SizedBox(height: 10),
-                        AdminUi.admTextField(
-                            label: 'Memory', textcontroller: _ram),
-                        const SizedBox(height: 10),
-                        AdminUi.admTextField(
-                            label: 'Storage', textcontroller: _ssd),
-                        const SizedBox(height: 10),
-                        AdminUi.admTextField(
-                            label: 'Expandable Storage',
-                            textcontroller: _expandableStorage),
-                        const SizedBox(height: 10),
-                        AdminUi.admTextField(
-                            label: 'GPU', textcontroller: _gpu),
-                        const SizedBox(height: 10),
-                        AdminUi.admTextField(
-                            label: 'Cooler', textcontroller: _cooler),
-                        const SizedBox(height: 10),
-                        AdminUi.admTextField(
-                            label: 'Features',
-                            textcontroller: _specialFeatures),
-                        const SizedBox(height: 10),
-                        AdminUi.admTextField(
-                            label: 'PSU Certification', textcontroller: _psu),
-                        const SizedBox(height: 10),
-                        AdminUi.admTextField(
-                            label: 'Case', textcontroller: _case),
-                        const SizedBox(height: 10),
-                        AdminUi.admTextField(
-                            label: 'Warranty', textcontroller: _warranty),
-                        const SizedBox(height: 30),
-                      ])),
-                  AdminUiHelper.customButton(context, () {
-                    if (_formkey.currentState!.validate()) {
-                      submitData();
-                      AdminUiHelper.customSnackbar(
-                          context, 'Item Added Successfully !');
-                    }
-                  }, text: 'Save'),
-                  const SizedBox(height: 30)
-                ],
-              ),
-            ),
-          )),
-          // Content for Settings tab
-          SafeArea(
-              child: SizedBox(
-                  width: MediaQuery.of(context).size.width,
-                  height: MediaQuery.of(context).size.height,
-                  child: StreamBuilder(
-                    stream: FirebaseFirestore.instance
-                        .collection('prebuild')
-                        .orderBy('name')
-                        .snapshots(),
-                    builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-                      if (snapshot.hasData) {
-                        return ListView.builder(
-                          // physics: const NeverScrollableScrollPhysics(),
-                          itemCount: snapshot.data!.docs.length,
-                          itemBuilder: (context, index) {
-                            DocumentSnapshot document =
-                                snapshot.data!.docs[index];
-                            // ignore: unused_local_variable
-                            String itemId = document.id;
-                            String imageUrl = document['image'];
-                            String categoryName = document['name'];
-                            // String categoryid = document['categoryid'];
-                            return AdminUiHelper.updatelist(context, () {
-                              AdminUi.customAlert(text1:'Edit' ,text2:'Delete' ,() {
-                                Navigator.of(context).pop();
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (ctx) => EditPC(
-                                              itemId: itemId,
-                                            )));
-                              }, () {
-                                deleteData(itemId);
-                                AdminUiHelper.customSnackbar(
-                                    context, 'Item Deleted Successfully !');
-                                    Navigator.pop(context);
-                                    
-                              }, context);
-                            }, imageUrl: imageUrl, categoryName: categoryName);
-                          },
-                        );
-                      } else {
-                        return const Center(child: CircularProgressIndicator());
-                      }
-                    },
-                  )))
-        ],
-      ),
+      )),
     );
   }
 }

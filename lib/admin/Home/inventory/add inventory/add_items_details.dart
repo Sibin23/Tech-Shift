@@ -1,20 +1,22 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:prosample_1/admin/Home/add_category.dart';
 import 'package:prosample_1/admin/Home/categories/psu.dart';
-import 'package:prosample_1/admin/Home/inventory/add%20inventory/add_cabinet.dart';
-import 'package:prosample_1/admin/Home/inventory/add%20inventory/add_cables.dart';
-import 'package:prosample_1/admin/Home/inventory/add%20inventory/add_chair.dart';
-import 'package:prosample_1/admin/Home/inventory/add%20inventory/add_coolers.dart';
-import 'package:prosample_1/admin/Home/inventory/add%20inventory/add_headset.dart';
-import 'package:prosample_1/admin/Home/inventory/add%20inventory/add_keyboard.dart';
-import 'package:prosample_1/admin/Home/inventory/add%20inventory/add_monitor.dart';
-import 'package:prosample_1/admin/Home/inventory/add%20inventory/add_motherboard.dart';
-import 'package:prosample_1/admin/Home/inventory/add%20inventory/add_mouse.dart';
-import 'package:prosample_1/admin/Home/inventory/add%20inventory/add_processor.dart';
-import 'package:prosample_1/admin/Home/inventory/add%20inventory/add_ram.dart';
-import 'package:prosample_1/admin/Home/inventory/add%20inventory/add_ssd.dart';
+import 'package:prosample_1/admin/Home/inventory/Cabinet/cabinet_list.dart';
+import 'package:prosample_1/admin/Home/inventory/Cables/cable_list.dart';
+import 'package:prosample_1/admin/Home/inventory/Chairs/chair_list.dart';
+import 'package:prosample_1/admin/Home/inventory/Coolers/cooler_list.dart';
+import 'package:prosample_1/admin/Home/inventory/Cabinet/add_cabinet.dart';
+import 'package:prosample_1/admin/Home/inventory/Cables/add_cables.dart';
+import 'package:prosample_1/admin/Home/inventory/Chairs/add_chair.dart';
+import 'package:prosample_1/admin/Home/inventory/Headset/add_headset.dart';
+import 'package:prosample_1/admin/Home/inventory/Keyboard/add_keyboard.dart';
+import 'package:prosample_1/admin/Home/inventory/Monitor/add_monitor.dart';
+import 'package:prosample_1/admin/Home/inventory/MotherBoard/add_motherboard.dart';
+import 'package:prosample_1/admin/Home/inventory/Mouse/add_mouse.dart';
+import 'package:prosample_1/admin/Home/inventory/RAM/add_ram.dart';
+import 'package:prosample_1/admin/Home/inventory/SSD/add_ssd.dart';
+import 'package:prosample_1/admin/Home/inventory/processor/details.dart';
 import 'package:prosample_1/admin/utils/colors.dart';
 import 'package:prosample_1/admin/utils/text_style.dart';
 
@@ -30,21 +32,12 @@ class _ScreenItemDetailsState extends State<ScreenItemDetails> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Add Items',style: CustomText.apptitle),
+        centerTitle: true,
+        title: Text('Select Category',style: CustomText.apptitle),
         backgroundColor: CustomColors.appTheme,
-        actions: [
-          IconButton(
-              onPressed: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (ctx) => const ScreenCategory()));
-              },
-              icon: const Icon(
-                Icons.add_to_queue_rounded,
-                color: Colors.white,
-              ))
-        ],
+       leading: IconButton(onPressed: (){
+        Navigator.pop(context);
+       }, icon: const Icon(Icons.arrow_back,color: Colors.white),),
       ),
       body: SafeArea(
           child: SizedBox(
@@ -73,27 +66,27 @@ class _ScreenItemDetailsState extends State<ScreenItemDetails> {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (ctx) => const ScreenAddCoolers()),
+                                      builder: (ctx) => const CoolerDetails()),
                                 );
                               } else if (document['categoryid'] == 'cable') {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (ctx) => const ScreenAddCables()),
+                                      builder: (ctx) => const CableDetails()),
                                 );
                               } else if (document['categoryid'] == 'cabinet') {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
                                       builder: (ctx) =>
-                                          const ScreenAddCabinet()),
+                                          const CabinetDetails()),
                                 );
                               }else if(document['categoryid'] == 'chair'){
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
                                       builder: (ctx) =>
-                                          const ScreenAddChairs()),
+                                          const ChairDetails()),
                                 );
                               }else if(document['categoryid'] == 'headset'){
                                 Navigator.push(
@@ -142,7 +135,7 @@ class _ScreenItemDetailsState extends State<ScreenItemDetails> {
                                   context,
                                   MaterialPageRoute(
                                       builder: (ctx) =>
-                                          const ScreenAddProcessor()));
+                                          const UpdateProcessor()));
                                 
                               }else if(document['categoryid'] == 'ram'){
                                  Navigator.push(

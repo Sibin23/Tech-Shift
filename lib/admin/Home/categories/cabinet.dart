@@ -1,12 +1,9 @@
-// ignore_for_file: use_build_context_synchronously
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:prosample_1/admin/utils/colors.dart';
 import 'package:prosample_1/admin/utils/common_widgets.dart';
 import 'package:prosample_1/admin/utils/text_style.dart';
 import 'package:top_snackbar_flutter/custom_snack_bar.dart';
-
 import 'package:top_snackbar_flutter/top_snack_bar.dart';
 
 class ListCabinet extends StatefulWidget {
@@ -17,22 +14,21 @@ class ListCabinet extends StatefulWidget {
 }
 
 class _ListCabinetState extends State<ListCabinet> {
-  final _idController = TextEditingController();
-  final _textController = TextEditingController();
-  final _cooler = TextEditingController();
-  final _newarrival = TextEditingController();
+  final _productName = TextEditingController();
+  final _manufacturer = TextEditingController();
+  final _model = TextEditingController();
 
   Future submit() async {
     final data = {
-      'categoryid': _idController.text.toLowerCase(),
-      'name': _textController.text,
-      'cooler': _cooler.text,
-      'newarrival': _newarrival.text,
+      'name': _productName.text,
+      'manufacturer': _manufacturer.text,
+      'model': _model.text,
     };
     FirebaseFirestore.instance.collection('cabinetdetails').doc().set(data);
     setState(() {
-      _textController.clear();
-      _idController.clear();
+      _productName.clear();
+      _manufacturer.clear();
+      _model.clear();
     });
     showTopSnackBar(
       Overlay.of(context),
@@ -42,24 +38,25 @@ class _ListCabinetState extends State<ListCabinet> {
     );
   }
 
+  void deleteMessage() {
+    showTopSnackBar(Overlay.of(context),
+        const CustomSnackBar.error(message: "Item Deleted Successfully"));
+  }
+
+  void errorMessage(error) {
+    ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(content: Text('Error deleting item: $error')));
+  }
+
   Future deleteItem(documentId) async {
     try {
-      print(documentId);
       await FirebaseFirestore.instance
           .collection('cabinetdetails')
           .doc(documentId)
           .delete();
-      showTopSnackBar(
-        Overlay.of(context),
-        const CustomSnackBar.error(
-          message: "Item Deleted Successfully",
-        ),
-      );
+      deleteMessage();
     } catch (error) {
-      // Handle errors gracefully
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error deleting item: $error')),
-      );
+      errorMessage(error);
     }
   }
 
@@ -80,14 +77,14 @@ class _ListCabinetState extends State<ListCabinet> {
                         children: [
                           AdminUi.admTextField(
                               label: 'Product Name',
-                              textcontroller: _idController),
+                              textcontroller: _productName),
                           const SizedBox(height: 10),
                           AdminUi.admTextField(
-                              label: 'Product Series',
-                              textcontroller: _textController),
+                              label: 'Manufacturer',
+                              textcontroller: _manufacturer),
                           const SizedBox(height: 10),
                           AdminUi.admTextField(
-                              label: 'newarival', textcontroller: _newarrival)
+                              label: 'Model Name', textcontroller: _model)
                         ],
                       )),
                 ],
@@ -172,12 +169,18 @@ class _ListCabinetState extends State<ListCabinet> {
                           child: Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: Row(
-                              mainAxisAlignment:
-                                  MainAxisAlignment.spaceBetween,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Text(
-                                  name,
-                                  style: CustomText.title3,
+                                SizedBox(
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.75,
+                                  child: Text(
+                                    name,
+                                    overflow: TextOverflow.ellipsis,
+                                    maxLines: 1,
+                                    softWrap: false,
+                                    style: CustomText.title3,
+                                  ),
                                 ),
                                 IconButton(
                                   onPressed: () {

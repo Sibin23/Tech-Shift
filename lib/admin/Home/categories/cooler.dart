@@ -1,12 +1,10 @@
-// ignore_for_file: use_build_context_synchronously
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:prosample_1/admin/utils/colors.dart';
+import 'package:prosample_1/admin/utils/common2.dart';
 import 'package:prosample_1/admin/utils/common_widgets.dart';
 import 'package:prosample_1/admin/utils/text_style.dart';
 import 'package:top_snackbar_flutter/custom_snack_bar.dart';
-
 import 'package:top_snackbar_flutter/top_snack_bar.dart';
 
 class ListCooler extends StatefulWidget {
@@ -17,21 +15,30 @@ class ListCooler extends StatefulWidget {
 }
 
 class _ListCoolerState extends State<ListCooler> {
-  final _idController = TextEditingController();
-  final _textController = TextEditingController();
-  final _newarrival = TextEditingController();
+  final _manufacturer = TextEditingController();
+  final _productName = TextEditingController();
+  final _coolingMethod = TextEditingController();
+  final _fans = TextEditingController();
+  final _speed = TextEditingController();
 
   Future submit() async {
     final data = {
-      'categoryid': _idController.text.toLowerCase(),
-      'name': _textController.text,
-      'newarrival': _newarrival.text,
+      'name': _productName.text,
+      'manufacturer': _manufacturer.text,
+      'method': _coolingMethod.text,
+      'fans': _fans.text,
+      'speed': _speed.text
     };
-    FirebaseFirestore.instance.collection('coolerdetails').doc().set(data);
+    FirebaseFirestore.instance
+        .collection('coolerdetails')
+        .doc(_productName.text)
+        .set(data);
     setState(() {
-      _textController.clear();
-      _idController.clear();
-      _newarrival.clear();
+      _productName.clear();
+      _coolingMethod.clear();
+      _fans.clear();
+      _manufacturer.clear();
+      _speed.clear();
     });
     showTopSnackBar(
       Overlay.of(context),
@@ -43,23 +50,30 @@ class _ListCoolerState extends State<ListCooler> {
 
   Future deleteItem(documentId) async {
     try {
-      print(documentId);
       await FirebaseFirestore.instance
           .collection('coolerdetails')
           .doc(documentId)
           .delete();
-      showTopSnackBar(
-        Overlay.of(context),
-        const CustomSnackBar.error(
-          message: "Item Deleted Successfully",
-        ),
-      );
+      deleteMessage();
     } catch (error) {
       // Handle errors gracefully
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error deleting item: $error')),
-      );
+      errorMessage(error);
     }
+  }
+
+  void deleteMessage() {
+    showTopSnackBar(
+      Overlay.of(context),
+      const CustomSnackBar.error(
+        message: "Item Deleted Successfully",
+      ),
+    );
+  }
+
+  void errorMessage(error) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Error deleting item: $error')),
+    );
   }
 
   void addItem() {
@@ -68,6 +82,8 @@ class _ListCoolerState extends State<ListCooler> {
         context: context,
         builder: (context) {
           return AlertDialog(
+            backgroundColor: Colors.white,
+            elevation: 0,
             title: const Text('Enter Details'),
             content: SingleChildScrollView(
               child: Column(
@@ -79,14 +95,21 @@ class _ListCoolerState extends State<ListCooler> {
                         children: [
                           AdminUi.admTextField(
                               label: 'Product Name',
-                              textcontroller: _idController),
+                              textcontroller: _productName),
                           const SizedBox(height: 10),
                           AdminUi.admTextField(
-                              label: 'Product Series',
-                              textcontroller: _textController),
+                              label: 'Manufacturer',
+                              textcontroller: _manufacturer),
                           const SizedBox(height: 10),
                           AdminUi.admTextField(
-                              label: 'newarival', textcontroller: _newarrival)
+                              label: 'Cooling Method',
+                              textcontroller: _coolingMethod),
+                          const SizedBox(height: 10),
+                          AdminUi.admTextField(
+                              label: 'Fans', textcontroller: _fans),
+                          const SizedBox(height: 10),
+                          AdminUi.admTextField(
+                              label: 'Speed', textcontroller: _speed)
                         ],
                       )),
                 ],
@@ -95,7 +118,8 @@ class _ListCoolerState extends State<ListCooler> {
             actions: [
               TextButton(
                 onPressed: () => Navigator.pop(context),
-                child: const Text('Cancel'),
+                child: const Text('Cancel',
+                    style: TextStyle(color: CustomColors.appTheme)),
               ),
               TextButton(
                 onPressed: () {
@@ -104,7 +128,8 @@ class _ListCoolerState extends State<ListCooler> {
                     Navigator.pop(context);
                   }
                 },
-                child: const Text('Submit'),
+                child: const Text('Submit',
+                    style: TextStyle(color: CustomColors.appTheme)),
               ),
             ],
           );
@@ -148,53 +173,12 @@ class _ListCoolerState extends State<ListCooler> {
                 return ListView.builder(
                   itemCount: snapshot.data!.docs.length,
                   itemBuilder: (ctx, index) {
-                    // Access the document and the desired field
                     final document = snapshot.data!.docs[index];
                     final id = document.id;
                     String name = document['name'];
-                    return Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            color: Colors.white,
-                            boxShadow: const [
-                              BoxShadow(
-                                color: Colors.grey,
-                                blurRadius: 10.0,
-                                spreadRadius: 1.0,
-                                offset: Offset(3.0, 3.0),
-                              )
-                            ],
-                          ),
-                          width: MediaQuery.of(context).size.width,
-                          height: MediaQuery.of(context).size.height * 0.09,
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Row(
-                              mainAxisAlignment:
-                                  MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  name,
-                                  style: CustomText.title3,
-                                ),
-                                IconButton(
-                                  onPressed: () {
-                                    AdminUi.customAlert(() {}, () {
-                                      deleteItem(
-                                        id,
-                                      );
-                                    }, context,
-                                        text1: 'Cancel', text2: 'Delete');
-                                  },
-                                  icon: const Icon(Icons.delete),
-                                  color: CustomColors.appTheme,
-                                )
-                              ],
-                            ),
-                          )),
-                    ); // Display the field value
+                    return AdminUiHelper.listCard(context, () {
+                      deleteItem(id);
+                    }, name: name, iconData: Icons.delete);
                   },
                 );
             }

@@ -1,4 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:prosample_1/User/Pre%20Builds/details.dart';
 import 'package:prosample_1/User/cart/cart.dart';
@@ -6,22 +8,21 @@ import 'package:prosample_1/User/utils/colors.dart';
 import 'package:prosample_1/User/utils/text_decorations.dart';
 import 'package:prosample_1/User/utils/widget2.dart';
 
-// ignore: must_be_immutable
 class PreBuildInfo extends StatefulWidget {
-  Map<String, dynamic> prebuild;
-  PreBuildInfo({super.key, required this.prebuild});
+  final Map<String, dynamic> prebuild;
+  const PreBuildInfo({super.key, required this.prebuild});
 
   @override
   State<PreBuildInfo> createState() => _PreBuildInfoState();
 }
 
 class _PreBuildInfoState extends State<PreBuildInfo> {
-  bool wishlist = true;
   @override
   Widget build(BuildContext context) {
+    print(widget.prebuild);
     String name = widget.prebuild['name'];
     String imageUrl = widget.prebuild['image'];
-    String categoryName = widget.prebuild['name'];
+    String categoryName = widget.prebuild['categoryid'];
     String cabinet = widget.prebuild['case'];
     String oldPrice = widget.prebuild['oldprice'];
     String newPrice = widget.prebuild['newprice'];
@@ -35,6 +36,24 @@ class _PreBuildInfoState extends State<PreBuildInfo> {
     String cooler = widget.prebuild['cooler'];
     String psu = widget.prebuild['psu'];
     String warranty = widget.prebuild['warranty'];
+    Map<String, dynamic> prebuild = {
+      'image': imageUrl,
+      'categoryid': categoryName,
+      'name': name,
+      'oldprice': oldPrice,
+      'newprice': newPrice,
+      'processor': processor,
+      'motherboard': board,
+      'ram': ram,
+      'ssd': ssd,
+      'expstorage': expstorage,
+      'gpu': gpu,
+      'features': features,
+      'cooler': cooler,
+      'psu': psu,
+      'case': cabinet,
+      'warranty': warranty
+    };
 
     return Scaffold(
         appBar: AppBar(
@@ -84,15 +103,6 @@ class _PreBuildInfoState extends State<PreBuildInfo> {
                                     name,
                                     style: TextStyling.titleText,
                                   ),
-                                  GestureDetector(
-                                    onTap: () {
-                                      setState(() {
-                                        wishlist = !wishlist;
-                                      });
-                                    },
-                                    child: wishlist == true ?
-                                    const Icon(Icons.favorite_outline,size: 35): const Icon(Icons.favorite, size: 35,color: Colors.red)
-                                  ),
                                 ],
                               ),
                               const SizedBox(height: 20),
@@ -108,7 +118,11 @@ class _PreBuildInfoState extends State<PreBuildInfo> {
                                     children: [
                                       Text('₹', style: TextStyling.subtitle),
                                       const SizedBox(width: 3),
-                                      Text(newPrice.replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => "${m[1]},"),
+                                      Text(
+                                          newPrice.replaceAllMapped(
+                                              RegExp(
+                                                  r'(\d{1,3})(?=(\d{3})+(?!\d))'),
+                                              (Match m) => "${m[1]},"),
                                           style: TextStyling.newPbig),
                                     ],
                                   ),
@@ -116,7 +130,11 @@ class _PreBuildInfoState extends State<PreBuildInfo> {
                                   Row(children: [
                                     Text('₹', style: TextStyling.subtitle),
                                     const SizedBox(width: 3),
-                                    Text(oldPrice.replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => "${m[1]},"),
+                                    Text(
+                                        oldPrice.replaceAllMapped(
+                                            RegExp(
+                                                r'(\d{1,3})(?=(\d{3})+(?!\d))'),
+                                            (Match m) => "${m[1]},"),
                                         style: TextStyling.oldGreyinfo),
                                   ]),
                                 ],
@@ -198,21 +216,6 @@ class _PreBuildInfoState extends State<PreBuildInfo> {
                               const SizedBox(height: 20),
                               ElevatedButton(
                                   onPressed: () {
-                                    Map<String, dynamic> prebuild = {
-                                      'name': categoryName,
-                                      'cabinet': cabinet,
-                                      'processor': processor,
-                                      'motherboard': board,
-                                      'ram': ram,
-                                      'ssd': ssd,
-                                      'storage': ssd,
-                                      'expstorage': expstorage,
-                                      'gpu': gpu,
-                                      'features': features,
-                                      'cooler': cooler,
-                                      'psu': psu,
-                                      'warranty': warranty,
-                                    };
                                     Navigator.push(
                                         context,
                                         MaterialPageRoute(
@@ -247,11 +250,11 @@ class _PreBuildInfoState extends State<PreBuildInfo> {
                                           style: TextStyling.buttonB))),
                               GestureDetector(
                                 onTap: () {
+                                  addToCart();
                                   Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                          builder: (ctx) =>
-                                              const ScreenCart()));
+                                          builder: (ctx) => ScreenCart()));
                                 },
                                 child: Container(
                                     decoration: BoxDecoration(
@@ -272,5 +275,35 @@ class _PreBuildInfoState extends State<PreBuildInfo> {
                     ),
                   ),
                 ]))));
+  }
+
+  Future<void> addToCart() async {
+    try {
+      final userEmail = FirebaseAuth.instance.currentUser!;
+      final userDocRef = FirebaseFirestore.instance
+          .collection('User')
+          .doc(userEmail.toString());
+      final cartCollectionRef = userDocRef.collection('PreBuildCart');
+      await cartCollectionRef.add({
+        'image': widget.prebuild['image'],
+        'categoryid': widget.prebuild['categoryid'],
+        'name': widget.prebuild['name'],
+        'oldprice': widget.prebuild['oldprice'],
+        'newprice': widget.prebuild['newprice'],
+        'case': widget.prebuild['case'],
+        'processor': widget.prebuild['processor'],
+        'motherboard': widget.prebuild['motherboard'],
+        'ram': widget.prebuild['ram'],
+        'ssd': widget.prebuild['ssd'],
+        'expstorage': widget.prebuild['expstorage'],
+        'gpu': widget.prebuild['gpu'],
+        'features': widget.prebuild['features'],
+        'cooler': widget.prebuild['cooler'],
+        'psu': widget.prebuild['psu'],
+        'warranty': widget.prebuild['warranty'],
+      });
+    } catch (error) {
+      print('Error adding item to cart: $error');
+    }
   }
 }

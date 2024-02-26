@@ -1,6 +1,7 @@
-
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:prosample_1/admin/utils/colors.dart';
+import 'package:prosample_1/admin/utils/common_widgets.dart';
 import 'package:prosample_1/admin/utils/text_style.dart';
 
 class AdminUiHelper {
@@ -12,7 +13,7 @@ class AdminUiHelper {
         voidCallback();
       },
       child: Container(
-        width: MediaQuery.of(context).size.width,
+        width: MediaQuery.of(context).size.width * .7,
         height: MediaQuery.of(context).size.height * .075,
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),
@@ -67,15 +68,24 @@ class AdminUiHelper {
                     SizedBox(
                         width: MediaQuery.of(context).size.width * .22,
                         height: MediaQuery.of(context).size.height * 0.1,
-                        child: Image.network(
-                          imageUrl,
+                        child: CachedNetworkImage(
+                          imageUrl: imageUrl,
                           fit: BoxFit.cover,
+                          placeholder: (context, url) {
+                            return const Center(
+                                child: CircularProgressIndicator());
+                          },
                         )),
-                    const SizedBox(width: 5),
-                    Text(
-                      categoryName,
-                      style: CustomText.categoryTitleText,
-                      overflow: TextOverflow.fade,
+                    const SizedBox(width: 10),
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width * 0.64,
+                      child: Text(
+                        categoryName,
+                        style: CustomText.categoryTitleText,
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 1,
+                        softWrap: false,
+                      ),
                     ),
                   ],
                 ),
@@ -93,16 +103,16 @@ class AdminUiHelper {
         onTap: () {
           voidCallback();
         },
-        child: Expanded(
-            child: Container(
-                width: 150.0,
-                height: 150.0,
-                decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey),
-                    borderRadius: BorderRadius.circular(10.0)),
-                child: imageurl.isEmpty?
-                const Center(child: Text('Pick an Image')): Image.network(imageurl),
-                )));
+        child: Container(
+          width: 150.0,
+          height: 150.0,
+          decoration: BoxDecoration(
+              border: Border.all(color: Colors.grey),
+              borderRadius: BorderRadius.circular(10.0)),
+          child: imageurl.isEmpty
+              ? const Center(child: Text('Pick an Image'))
+              : Image.network(imageurl),
+        ));
   }
 
   static customSnackbar(BuildContext context, String text) {
@@ -125,5 +135,56 @@ class AdminUiHelper {
       elevation: 8.0,
       behavior: SnackBarBehavior.floating,
     ));
+  }
+
+  // list category
+  static listCard(BuildContext context, VoidCallback voidCallback,
+      {required String name, required IconData iconData}) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10),
+            color: Colors.white,
+            boxShadow: const [
+              BoxShadow(
+                color: Colors.grey,
+                blurRadius: 10.0,
+                spreadRadius: 1.0,
+                offset: Offset(3.0, 3.0),
+              )
+            ],
+          ),
+          width: MediaQuery.of(context).size.width,
+          height: MediaQuery.of(context).size.height * 0.09,
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                SizedBox(
+                  width: MediaQuery.of(context).size.width * 0.73,
+                  height: MediaQuery.of(context).size.height * 0.03,
+                  child: Text(
+                    name,
+                    softWrap: false,
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 1,
+                    style: CustomText.title3,
+                  ),
+                ),
+                IconButton(
+                  onPressed: () {
+                    AdminUi.customAlert(() {}, () {
+                      voidCallback();
+                    }, context, text1: 'Cancel', text2: 'Delete');
+                  },
+                  icon: Icon(iconData),
+                  color: CustomColors.appTheme,
+                )
+              ],
+            ),
+          )),
+    );
   }
 }

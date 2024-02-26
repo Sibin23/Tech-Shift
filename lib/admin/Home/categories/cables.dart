@@ -1,12 +1,9 @@
-// ignore_for_file: use_build_context_synchronously
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:prosample_1/admin/utils/colors.dart';
 import 'package:prosample_1/admin/utils/common_widgets.dart';
 import 'package:prosample_1/admin/utils/text_style.dart';
 import 'package:top_snackbar_flutter/custom_snack_bar.dart';
-
 import 'package:top_snackbar_flutter/top_snack_bar.dart';
 
 class ListCables extends StatefulWidget {
@@ -17,23 +14,30 @@ class ListCables extends StatefulWidget {
 }
 
 class _ListCablesState extends State<ListCables> {
-  final _idController = TextEditingController();
-  final _textController = TextEditingController();
-  final _newarrival = TextEditingController();
+  final _productName = TextEditingController();
+  final _manufacturer = TextEditingController();
+  final _model = TextEditingController();
+  final _speed = TextEditingController();
 
   Future submit() async {
     final data = {
-      'categoryid': _idController.text.toLowerCase(),
-      'name': _textController.text,
-      'newarrival': _newarrival.text,
+      'name': _productName.text,
+      'manufacturer': _manufacturer.text,
+      'speed': _speed.text,
+      'model': _model.text,
     };
     FirebaseFirestore.instance.collection('cabledetails').doc().set(data);
     setState(() {
-      _textController.clear();
-      _idController.clear();
-      _newarrival.clear();
+      _productName.clear();
+      _manufacturer.clear();
+      _speed.clear();
+      _model.clear();
     });
-    showTopSnackBar(
+    success();
+  }
+
+  void success() {
+     showTopSnackBar(
       Overlay.of(context),
       const CustomSnackBar.success(
         message: "Item Added Successfully",
@@ -41,24 +45,27 @@ class _ListCablesState extends State<ListCables> {
     );
   }
 
+  void errorMessage(error) {
+    ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(content: Text('Error deleting item: $error')));
+  }
+void deleteMessage(){
+  showTopSnackBar(
+      Overlay.of(context),
+      const CustomSnackBar.error(
+        message: "Item Deleted Successfully",
+      ),
+    );
+}
   Future deleteItem(documentId) async {
     try {
-      print(documentId);
       await FirebaseFirestore.instance
           .collection('cabledetails')
           .doc(documentId)
           .delete();
-      showTopSnackBar(
-        Overlay.of(context),
-        const CustomSnackBar.error(
-          message: "Item Deleted Successfully",
-        ),
-      );
+      deleteMessage();
     } catch (error) {
-      // Handle errors gracefully
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error deleting item: $error')),
-      );
+      errorMessage(error);
     }
   }
 
@@ -79,14 +86,18 @@ class _ListCablesState extends State<ListCables> {
                         children: [
                           AdminUi.admTextField(
                               label: 'Product Name',
-                              textcontroller: _idController),
+                              textcontroller: _productName),
+                                const SizedBox(height: 10),
+                          AdminUi.admTextField(
+                              label: 'Manufacturer',
+                              textcontroller: _manufacturer),
                           const SizedBox(height: 10),
                           AdminUi.admTextField(
-                              label: 'Product Series',
-                              textcontroller: _textController),
+                              label: 'Model', textcontroller: _model),
                           const SizedBox(height: 10),
                           AdminUi.admTextField(
-                              label: 'newarival', textcontroller: _newarrival)
+                              label: 'Transfer Rate', textcontroller: _speed),
+                        
                         ],
                       )),
                 ],
@@ -134,9 +145,8 @@ class _ListCablesState extends State<ListCables> {
       ),
       body: SafeArea(
         child: StreamBuilder<QuerySnapshot>(
-          stream: FirebaseFirestore.instance
-              .collection('cabledetails')
-              .snapshots(),
+          stream:
+              FirebaseFirestore.instance.collection('cabledetails').snapshots(),
           builder: (context, snapshot) {
             if (snapshot.hasError) {
               return Text('Error: ${snapshot.error}');
@@ -153,7 +163,8 @@ class _ListCablesState extends State<ListCables> {
                     final id = document.id;
                     String name = document['name'];
                     return Padding(
-                      padding: const EdgeInsets.only(right: 16, left: 16, top: 8, bottom: 8),
+                      padding: const EdgeInsets.only(
+                          right: 16, left: 16, top: 8, bottom: 8),
                       child: Container(
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(10),
@@ -172,8 +183,7 @@ class _ListCablesState extends State<ListCables> {
                           child: Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: Row(
-                              mainAxisAlignment:
-                                  MainAxisAlignment.spaceBetween,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text(
                                   name,
@@ -194,7 +204,7 @@ class _ListCablesState extends State<ListCables> {
                               ],
                             ),
                           )),
-                    ); // Display the field value
+                    );
                   },
                 );
             }

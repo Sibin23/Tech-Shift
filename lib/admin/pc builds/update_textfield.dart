@@ -27,13 +27,12 @@ class _EditPCState extends State<EditPC> {
   final _ssd = TextEditingController();
   final _expandableStorage = TextEditingController();
   final _gpu = TextEditingController();
-  
+  final _idNum = TextEditingController();
   final _specialFeatures = TextEditingController();
   final _psu = TextEditingController();
   final _case = TextEditingController();
   final _warranty = TextEditingController();
-  bool? newArival;
-  bool? cooler;
+  String? image;
   late String imageurl = '';
 
   Future<void> pickImage() async {
@@ -61,15 +60,16 @@ class _EditPCState extends State<EditPC> {
 
     FirebaseFirestore.instance
         .collection('prebuild')
-        .doc(widget.itemId) // Use the itemId directly
+        .doc(widget.itemId)
         .get()
         .then((snapshot) {
       if (snapshot.exists) {
-         print(widget.itemId);
+        print(widget.itemId);
         Map<String, dynamic> data = snapshot.data()!;
-        
-        _productCategory.text = data['categoryid'];
+
+        _productCategory.text = data['category'];
         _productName.text = data['name'];
+        _idNum.text = data['idnum'];
         imageurl = data['image'];
         _oldPrice.text = data['oldprice'];
         _newPrice.text = data['newprice'];
@@ -79,9 +79,7 @@ class _EditPCState extends State<EditPC> {
         _ssd.text = data['ssd'];
         _expandableStorage.text = data['expstorage'];
         _gpu.text = data['gpu'];
-        cooler = data['cooler'];
         _specialFeatures.text = data['features'];
-        newArival = data['newarrival'];
         _psu.text = data['psu'];
         _case.text = data['case'];
         _warranty.text = data['warranty'];
@@ -89,11 +87,6 @@ class _EditPCState extends State<EditPC> {
     });
   }
 
-void onCheckboxChanged(bool value) {
-  setState(() {
-    cooler = value;
-  });
-}
   updateData() {
     FirebaseFirestore.instance
         .collection('prebuild')
@@ -101,6 +94,7 @@ void onCheckboxChanged(bool value) {
         .update({
       'categoryid': _productCategory.text.toLowerCase(),
       'image': imageurl,
+      'idnum': _idNum.text,
       'name': _productName.text,
       'oldprice': _oldPrice.text,
       'newprice': _newPrice.text,
@@ -108,10 +102,8 @@ void onCheckboxChanged(bool value) {
       'motherboard': _motherBoard.text,
       'ram': _ram.text,
       'ssd': _ssd.text,
-      'newarrival': newArival,
       'expstorage': _expandableStorage.text,
       'gpu': _gpu.text,
-      'cooler': cooler,
       'features': _specialFeatures.text,
       'psu': _psu.text,
       'case': _case.text,
@@ -129,7 +121,7 @@ void onCheckboxChanged(bool value) {
       _ssd.clear();
       _expandableStorage.clear();
       _gpu.clear();
-      newArival = false;
+
       _specialFeatures.clear();
       _psu.clear();
       _case.clear();
@@ -154,6 +146,8 @@ void onCheckboxChanged(bool value) {
                 Form(
                     key: _formkey,
                     child: Column(children: [
+                      AdminUi.admTextField(label: 'Unique ID', textcontroller: _idNum),
+                      const SizedBox(height: 10),
                       AdminUi.admTextField(
                           label: 'Category Name',
                           textcontroller: _productCategory),
@@ -184,7 +178,6 @@ void onCheckboxChanged(bool value) {
                           textcontroller: _expandableStorage),
                       const SizedBox(height: 10),
                       AdminUi.admTextField(label: 'GPU', textcontroller: _gpu),
-                     
                       const SizedBox(height: 10),
                       AdminUi.admTextField(
                           label: 'Features', textcontroller: _specialFeatures),
@@ -198,24 +191,7 @@ void onCheckboxChanged(bool value) {
                       AdminUi.admTextField(
                           label: 'Warranty', textcontroller: _warranty),
                       const SizedBox(height: 30),
-                      SizedBox(
-                            width: MediaQuery.of(context).size.width * .4,
-                            height: MediaQuery.of(context).size.height * .08,
-                            child: Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      children: [
-                                        Checkbox(
-                          value: cooler ?? false, // Handle potential null value
-                          onChanged: (value)=>onCheckboxChanged(value!),
-                        ),
-                                        Text('Coolers',
-                                            style: CustomText.title3)
-                                      ])
-                                ])),
+                     
                     ])),
                 AdminUiHelper.customButton(context, () {
                   if (_formkey.currentState!.validate()) {

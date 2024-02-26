@@ -1,11 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-// import 'package:hive/hive.dart';
-// import 'package:prosample_1/User/user%20profile/contact_page.dart';
-
 import 'package:prosample_1/User/user%20profile/sample.dart';
-
 import 'package:prosample_1/User/user%20profile/terms_policies.dart';
 import 'package:prosample_1/User/utils/Text_decorations.dart';
 import 'package:prosample_1/User/utils/colors.dart';
@@ -39,13 +35,7 @@ class _UserProfileState extends State<UserProfile> {
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         GestureDetector(
-                            onTap: () {
-                              
-                              // Navigator.push(
-                              //     context,
-                              //     MaterialPageRoute(
-                              //         builder: (ctx) =>  const ScreenMyAccount()));
-                            },
+                            onTap: () {},
                             child: Container(
                                 decoration: BoxDecoration(
                                     color: AppColors.appTheme,
@@ -141,7 +131,8 @@ class _UserProfileState extends State<UserProfile> {
                 ],
               ),
             ),
-            UiHelper.customButton(context, () {
+            UiHelper.customButton(context, () async {
+              await FirebaseAuth.instance.signOut();
               logout();
             }, text: 'Logout'),
           ],
@@ -150,24 +141,10 @@ class _UserProfileState extends State<UserProfile> {
     );
   }
 
-  Future<void> logout() async {
-    await FirebaseAuth.instance.signOut();
-    // ignore: use_build_context_synchronously
+  void logout() {
     Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute(builder: (ctx) => const ScreenLogin()),
         (route) => false);
   }
-  
-  //  goToProfile() {
-  //    final Box profileBox = Hive.box('userProfile');
-  // final isProfileAvailable = profileBox.containsKey('name');
-
-  // if (isProfileAvailable) {
-  //   // ProfileDetais(userData: profileBox.get('data'))
-  //   return; // Replace with actual data mapping
-  // } else {
-  //   return const ScreenMyAccount();
-  // }
-  // }
 }

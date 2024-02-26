@@ -15,21 +15,21 @@ class ListChair extends StatefulWidget {
 }
 
 class _ListChairState extends State<ListChair> {
-  final _idController = TextEditingController();
-  final _textController = TextEditingController();
-  final _newarrival = TextEditingController();
+  final _productName = TextEditingController();
+  final _manufacturer = TextEditingController();
+  final _model = TextEditingController();
 
   Future submit() async {
     final data = {
-      'categoryid': _idController.text.toLowerCase(),
-      'name': _textController.text,
-      'newarrival': _newarrival.text,
+      'name': _productName.text,
+      'manufacturer': _manufacturer.text,
+      'model': _model.text,
     };
     FirebaseFirestore.instance.collection('chairdetails').doc().set(data);
     setState(() {
-      _textController.clear();
-      _idController.clear();
-      _newarrival.clear();
+      _productName.clear();
+      _manufacturer.clear();
+      _model.clear();
     });
     showTopSnackBar(Overlay.of(context),
         const CustomSnackBar.success(message: "Item Added Successfully"));
@@ -37,7 +37,6 @@ class _ListChairState extends State<ListChair> {
 
   Future deleteItem(documentId) async {
     try {
-      print(documentId);
       await FirebaseFirestore.instance
           .collection('chairdetails')
           .doc(documentId)
@@ -68,14 +67,14 @@ class _ListChairState extends State<ListChair> {
                         children: [
                           AdminUi.admTextField(
                               label: 'Product Name',
-                              textcontroller: _idController),
+                              textcontroller: _productName),
                           const SizedBox(height: 10),
                           AdminUi.admTextField(
-                              label: 'Product Series',
-                              textcontroller: _textController),
+                              label: 'Manufacturer',
+                              textcontroller: _manufacturer),
                           const SizedBox(height: 10),
                           AdminUi.admTextField(
-                              label: 'newarival', textcontroller: _newarrival)
+                              label: 'Model Name', textcontroller: _model)
                         ],
                       )),
                 ],
@@ -162,9 +161,12 @@ class _ListChairState extends State<ListChair> {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Text(
-                                  name,
-                                  style: CustomText.title3,
+                                Container(
+                                  width: MediaQuery.of(context).size.width * 0.75,
+                                  child: Text(
+                                    name, overflow: TextOverflow.ellipsis,softWrap: false,maxLines: 1,
+                                    style: CustomText.title3,
+                                  ),
                                 ),
                                 IconButton(
                                   onPressed: () {
@@ -181,7 +183,7 @@ class _ListChairState extends State<ListChair> {
                               ],
                             ),
                           )),
-                    ); // Display the field value
+                    );
                   },
                 );
             }

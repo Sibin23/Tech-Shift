@@ -348,9 +348,10 @@ class _ScreenHomeState extends State<ScreenHome> {
                                 itemBuilder: (ctx, index) {
                                   DocumentSnapshot document =
                                       snapshot.data!.docs[index];
-
+                                 
                                   String imageUrl = document['image'];
-                                  String categoryName = document['name'];
+                                  String name = document['name'];
+                                  String categoryName = document['categoryid'];
                                   String cabinet = document['case'];
                                   String oldPrice = document['oldprice'];
                                   String newPrice = document['newprice'];
@@ -365,10 +366,11 @@ class _ScreenHomeState extends State<ScreenHome> {
                                   String psu = document['psu'];
                                   String warranty = document['warranty'];
                                   Map<String, dynamic> prebuild = {
-                                    'image': imageUrl,
-                                    'name': categoryName,
-                                    'oldprice': oldPrice.replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => "${m[1]},"),
-                                    'newprice': newPrice.replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => "${m[1]},"),
+                                     'image': imageUrl,
+                                    'categoryid': categoryName,
+                                    'name': name,
+                                    'oldprice': oldPrice,
+                                    'newprice': newPrice,
                                     'processor': processor,
                                     'motherboard': board,
                                     'ram': ram,
@@ -386,12 +388,19 @@ class _ScreenHomeState extends State<ScreenHome> {
                                         context,
                                         MaterialPageRoute(
                                             builder: (ctx) => PreBuildInfo(
-                                                prebuild: prebuild)));
+                                                  prebuild: prebuild,
+                                                )));
                                   },
                                       imageUrl: imageUrl,
                                       categoryName: categoryName,
-                                      oldPrice: oldPrice.replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => "${m[1]},"),
-                                      newPrice: newPrice.replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => "${m[1]},"),
+                                      oldPrice: oldPrice.replaceAllMapped(
+                                          RegExp(
+                                              r'(\d{1,3})(?=(\d{3})+(?!\d))'),
+                                          (Match m) => "${m[1]},"),
+                                      newPrice: newPrice.replaceAllMapped(
+                                          RegExp(
+                                              r'(\d{1,3})(?=(\d{3})+(?!\d))'),
+                                          (Match m) => "${m[1]},"),
                                       cabinet: cabinet);
                                 }),
                           );

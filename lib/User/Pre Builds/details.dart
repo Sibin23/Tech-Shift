@@ -2,17 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:prosample_1/User/utils/colors.dart';
 import 'package:prosample_1/User/utils/text_decorations.dart';
 
-// ignore: must_be_immutable
+
 class PreBuildDetails extends StatelessWidget {
-  Map<String, dynamic> prebuild;
-  PreBuildDetails({super.key, required this.prebuild});
+ final Map<String, dynamic> prebuild;
+  const PreBuildDetails({super.key, required this.prebuild});
 
   @override
   Widget build(BuildContext context) {
-    String categoryName = prebuild['name'];
-    String cabinet = prebuild['cabinet'];
+    String name = prebuild['name'];
+    String imageUrl = prebuild['image'];
+    String categoryName = prebuild['categoryid'];
+    String cabinet = prebuild['case'];
+    String oldPrice = prebuild['oldprice'];
+    String newPrice = prebuild['newprice'];
     String processor = prebuild['processor'];
-    String board = prebuild['motherboard'];
+    String board = prebuild['motherboard']; 
     String ram = prebuild['ram'];
     String ssd = prebuild['ssd'];
     String expstorage = prebuild['expstorage'];
@@ -21,6 +25,7 @@ class PreBuildDetails extends StatelessWidget {
     String cooler = prebuild['cooler'];
     String psu = prebuild['psu'];
     String warranty = prebuild['warranty'];
+
 
     return Scaffold(
       appBar: AppBar(

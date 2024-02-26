@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
-import 'package:prosample_1/admin/Home/admin_home.dart';
+import 'package:prosample_1/admin/pc%20builds/prebuild_list.dart';
+import 'package:prosample_1/admin/screens/home_details.dart';
 import 'package:prosample_1/admin/details/details.dart';
-import 'package:prosample_1/admin/orders/orders_history.dart';
-import 'package:prosample_1/admin/pc%20builds/prebuild.dart';
+import 'package:prosample_1/admin/screens/orders_history.dart';
 
 class AdminHome extends StatefulWidget {
   const AdminHome({super.key});
@@ -17,7 +17,7 @@ class _AdminHomeState extends State<AdminHome> {
   List pages = [
     const AdminHomePage(),
     const ScreenOrdersList(),
-    const ScreenPreBuild(),
+    const ListPreBuildState(),
     const ScreenDetails(),
   ];
   int _myindex = 0;
