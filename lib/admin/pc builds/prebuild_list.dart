@@ -54,10 +54,12 @@ class __ListPreBuildStateState extends State<ListPreBuildState> {
                         return AdminUiHelper.updatelist(context, () {
                           AdminUi.customAlert(text1: 'Edit', text2: 'Delete',
                               () {
-                            Navigator.of(context).pop();
+                                print(itemId);
+                            
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
+                                  
                                     builder: (ctx) => EditPC(
                                           itemId: itemId,
                                         )));

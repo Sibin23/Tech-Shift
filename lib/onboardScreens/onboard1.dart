@@ -19,7 +19,7 @@ class OnboardScreen1 extends StatefulWidget {
 class _OnboardScreen1State extends State<OnboardScreen1> {
   final controller = OnboardItems();
   final pageController = PageController();
-
+  bool isFirstPage = false;
   bool isLastPage = false;
   @override
   Widget build(BuildContext context) {
@@ -34,9 +34,14 @@ class _OnboardScreen1State extends State<OnboardScreen1> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   TextButton(
-                      onPressed: () =>
-                          pageController.jumpTo(controller.items.length - 1),
-                      child: const Text('Back')),
+                      onPressed: () {
+                        Navigator.pushAndRemoveUntil(
+                            context,
+                            MaterialPageRoute(
+                                builder: (ctx) => const ScreenLogin()),
+                            (route) => false);
+                      },
+                      child: const Text('Skip')),
                   SmoothPageIndicator(
                     controller: pageController,
                     count: controller.items.length,
@@ -58,17 +63,21 @@ class _OnboardScreen1State extends State<OnboardScreen1> {
               ),
       ),
       body: PageView.builder(
-          onPageChanged: (index) =>
-              setState(() => isLastPage = controller.items.length - 1 == index),
+          onPageChanged: (index) {
+            setState(() {
+              isLastPage = controller.items.length - 1 == index;
+            });
+          },
           itemCount: controller.items.length,
           controller: pageController,
           itemBuilder: (context, index) {
             return Padding(
-              padding: const EdgeInsets.all(16.0),
+              padding: const EdgeInsets.only(left: 16, right: 16),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Lottie.asset(controller.items[index].image, width: 300),
+                  Lottie.asset(controller.items[index].image,
+                      width: 300, fit: BoxFit.cover),
                   const SizedBox(
                     height: 10,
                   ),

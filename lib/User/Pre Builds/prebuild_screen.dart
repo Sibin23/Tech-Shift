@@ -2,8 +2,8 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:prosample_1/User/Pre%20Builds/Screen%20prebuild/prebuild_cart.dart';
 import 'package:prosample_1/User/Pre%20Builds/details.dart';
-import 'package:prosample_1/User/cart/cart.dart';
 import 'package:prosample_1/User/utils/colors.dart';
 import 'package:prosample_1/User/utils/text_decorations.dart';
 import 'package:prosample_1/User/utils/widget2.dart';
@@ -22,6 +22,7 @@ class _PreBuildInfoState extends State<PreBuildInfo> {
     print(widget.prebuild);
     String name = widget.prebuild['name'];
     String imageUrl = widget.prebuild['image'];
+    String idNum = widget.prebuild['idnum'];
     String categoryName = widget.prebuild['categoryid'];
     String cabinet = widget.prebuild['case'];
     String oldPrice = widget.prebuild['oldprice'];
@@ -38,6 +39,7 @@ class _PreBuildInfoState extends State<PreBuildInfo> {
     String warranty = widget.prebuild['warranty'];
     Map<String, dynamic> prebuild = {
       'image': imageUrl,
+      'idnum': idNum,
       'categoryid': categoryName,
       'name': name,
       'oldprice': oldPrice,
@@ -56,6 +58,43 @@ class _PreBuildInfoState extends State<PreBuildInfo> {
     };
 
     return Scaffold(
+        bottomNavigationBar: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Container(
+                  decoration: BoxDecoration(
+                      border: Border.all(color: AppColors.appTheme),
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(6)),
+                  height: MediaQuery.of(context).size.height * 0.06,
+                  width: MediaQuery.of(context).size.width * 0.45,
+                  child: Center(
+                      child: Text('Buy Now', style: TextStyling.buttonB))),
+              GestureDetector(
+                onTap: () {
+                  addToCart();
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (ctx) => CartPreBuild(
+                                prebuild: prebuild,
+                              )));
+                },
+                child: Container(
+                    decoration: BoxDecoration(
+                        color: AppColors.appTheme,
+                        borderRadius: BorderRadius.circular(6)),
+                    height: MediaQuery.of(context).size.height * 0.06,
+                    width: MediaQuery.of(context).size.width * 0.45,
+                    child: Center(
+                        child:
+                            Text('Add to Cart', style: TextStyling.buttonW))),
+              ),
+            ],
+          ),
+        ),
         appBar: AppBar(
           surfaceTintColor: Colors.white,
         ),
@@ -230,47 +269,6 @@ class _PreBuildInfoState extends State<PreBuildInfo> {
                         ),
                         SizedBox(
                             height: MediaQuery.of(context).size.height * .05),
-                        Padding(
-                          padding: const EdgeInsets.all(16.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Container(
-                                  decoration: BoxDecoration(
-                                      border:
-                                          Border.all(color: AppColors.appTheme),
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.circular(6)),
-                                  height:
-                                      MediaQuery.of(context).size.height * 0.06,
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.45,
-                                  child: Center(
-                                      child: Text('Buy Now',
-                                          style: TextStyling.buttonB))),
-                              GestureDetector(
-                                onTap: () {
-                                  addToCart();
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (ctx) => ScreenCart()));
-                                },
-                                child: Container(
-                                    decoration: BoxDecoration(
-                                        color: AppColors.appTheme,
-                                        borderRadius: BorderRadius.circular(6)),
-                                    height: MediaQuery.of(context).size.height *
-                                        0.06,
-                                    width: MediaQuery.of(context).size.width *
-                                        0.45,
-                                    child: Center(
-                                        child: Text('Add to Cart',
-                                            style: TextStyling.buttonW))),
-                              ),
-                            ],
-                          ),
-                        ),
                       ],
                     ),
                   ),
@@ -283,9 +281,12 @@ class _PreBuildInfoState extends State<PreBuildInfo> {
       final userDocRef = FirebaseFirestore.instance
           .collection('User')
           .doc(userEmail.toString());
-      final cartCollectionRef = userDocRef.collection('PreBuildCart');
-      await cartCollectionRef.add({
+      final uniqueId = widget.prebuild['idnum'].toString().toLowerCase();
+      final cartCollectionRef =
+          userDocRef.collection('PreBuildCart').doc(uniqueId);
+      final cartItem = {
         'image': widget.prebuild['image'],
+        'idnum': widget.prebuild['idnum'],
         'categoryid': widget.prebuild['categoryid'],
         'name': widget.prebuild['name'],
         'oldprice': widget.prebuild['oldprice'],
@@ -301,7 +302,8 @@ class _PreBuildInfoState extends State<PreBuildInfo> {
         'cooler': widget.prebuild['cooler'],
         'psu': widget.prebuild['psu'],
         'warranty': widget.prebuild['warranty'],
-      });
+      };
+      await cartCollectionRef.set(cartItem);
     } catch (error) {
       print('Error adding item to cart: $error');
     }

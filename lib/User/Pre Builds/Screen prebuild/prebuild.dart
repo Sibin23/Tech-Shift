@@ -4,7 +4,6 @@ import 'package:lottie/lottie.dart';
 import 'package:prosample_1/User/Pre%20Builds/prebuild_screen.dart';
 import 'package:prosample_1/User/utils/widget2.dart';
 
-
 class PreBuildSection extends StatefulWidget {
   const PreBuildSection({super.key});
 
@@ -21,8 +20,8 @@ class _PreBuildSectionState extends State<PreBuildSection> {
         ),
         body: SafeArea(
             child: SizedBox(
-                      width: MediaQuery.of(context).size.width,
-                      child: StreamBuilder<QuerySnapshot>(
+          width: MediaQuery.of(context).size.width,
+          child: StreamBuilder<QuerySnapshot>(
               stream: FirebaseFirestore.instance
                   .collection('prebuild')
                   .orderBy('name')
@@ -41,9 +40,11 @@ class _PreBuildSectionState extends State<PreBuildSection> {
                                 mainAxisExtent: 230,
                                 crossAxisCount: 2),
                         itemBuilder: (context, index) {
-                          DocumentSnapshot document = snapshot.data!.docs[index];
-                              
+                          DocumentSnapshot document =
+                              snapshot.data!.docs[index];
+
                           String imageUrl = document['image'];
+                          String idNum = document['idnum'];
                           String categoryName = document['categoryid'];
                           String name = document['name'];
                           String oldPrice = document['oldprice'];
@@ -64,21 +65,22 @@ class _PreBuildSectionState extends State<PreBuildSection> {
                             () {
                               Map<String, dynamic> prebuild = {
                                 'image': imageUrl,
-                                    'categoryid': categoryName,
-                                    'name': name,
-                                    'oldprice': oldPrice,
-                                    'newprice': newPrice,
-                                    'processor': processor,
-                                    'motherboard': board,
-                                    'ram': ram,
-                                    'ssd': ssd,
-                                    'expstorage': expstorage,
-                                    'gpu': gpu,
-                                    'features': features,
-                                    'cooler': cooler,
-                                    'psu': psu,
-                                    'case': cabinet,
-                                    'warranty': warranty
+                                'idnum': idNum,
+                                'categoryid': categoryName,
+                                'name': name,
+                                'oldprice': oldPrice,
+                                'newprice': newPrice,
+                                'processor': processor,
+                                'motherboard': board,
+                                'ram': ram,
+                                'ssd': ssd,
+                                'expstorage': expstorage,
+                                'gpu': gpu,
+                                'features': features,
+                                'cooler': cooler,
+                                'psu': psu,
+                                'case': cabinet,
+                                'warranty': warranty
                               };
                               Navigator.push(
                                   context,
@@ -103,6 +105,6 @@ class _PreBuildSectionState extends State<PreBuildSection> {
                           'assets/Animations/Animation - 1708393071899.json')),
                 );
               }),
-                    )));
+        )));
   }
 }

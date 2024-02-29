@@ -16,7 +16,8 @@ class OnboardItems {
         image: 'assets/OnboardScreen/Animation - 1706679585914.json'),
     OnboardInfo(
         title: 'TECH SHIFT',
-        description: 'By Experts For Expets. We Offer You The Expertise And Resources To Create Your Perfect PC',
+        description:
+            'By Experts For Expets. We Offer You The Expertise And Resources To Create Your Perfect PC',
         image: 'assets/OnboardScreen/Animation - 1706677779345.json'),
     OnboardInfo(
         title: 'Free Installation and Tech Support',

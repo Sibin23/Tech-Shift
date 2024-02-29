@@ -11,6 +11,7 @@ class PreBuildDetails extends StatelessWidget {
   Widget build(BuildContext context) {
     String name = prebuild['name'];
     String imageUrl = prebuild['image'];
+    String idNum = prebuild['idnum'];
     String categoryName = prebuild['categoryid'];
     String cabinet = prebuild['case'];
     String oldPrice = prebuild['oldprice'];

@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -10,7 +9,7 @@ import 'package:prosample_1/admin/utils/common_widgets.dart';
 import 'package:prosample_1/admin/utils/text_style.dart';
 
 class EditCooler extends StatefulWidget {
- final String itemId;
+  final String itemId;
   const EditCooler({super.key, required this.itemId});
 
   @override
@@ -19,6 +18,8 @@ class EditCooler extends StatefulWidget {
 
 class _EditCoolerState extends State<EditCooler> {
   final _formkey = GlobalKey<FormState>();
+  final uniqueId = TextEditingController();
+  final categoryName = TextEditingController();
   final _productName = TextEditingController();
   final _manufacturer = TextEditingController();
   final _oldPrice = TextEditingController();
@@ -29,6 +30,7 @@ class _EditCoolerState extends State<EditCooler> {
   final _coolingMethod = TextEditingController();
   final _fans = TextEditingController();
   final _speed = TextEditingController();
+  final features = TextEditingController();
   final _noiseLevel = TextEditingController();
   final _warranty = TextEditingController();
   final _productDimension = TextEditingController();
@@ -42,8 +44,7 @@ class _EditCoolerState extends State<EditCooler> {
   String? selectedManufacturer;
   String? selectedMethod;
   String? selectedSpeed;
-   Future<void> pickImage() async {
-    
+  Future<void> pickImage() async {
     final ImagePicker picker = ImagePicker();
     final XFile? image = await picker.pickImage(source: ImageSource.gallery);
 
@@ -70,6 +71,8 @@ class _EditCoolerState extends State<EditCooler> {
         .doc(widget.itemId) // Use the itemId
         .update({
       'image': imageurl.toString(),
+      'uniqueid': uniqueId.text.trim(),
+      'category': categoryName.text.trim(),
       'name': _productName.text,
       'manufacturer': _manufacturer.text,
       'oldprice': _oldPrice.text,
@@ -78,6 +81,7 @@ class _EditCoolerState extends State<EditCooler> {
       'voltage': _voltage.text,
       'wattage': _wattage.text,
       'cooling': _coolingMethod.text,
+      'features': features.text,
       'fans': _fans.text,
       'noise': _noiseLevel.text,
       'productdimension': _productDimension.text,
@@ -90,6 +94,9 @@ class _EditCoolerState extends State<EditCooler> {
     setState(() {
       imageurl = '';
       _productName.clear();
+      categoryName.clear();
+      uniqueId.clear();
+      features.clear();
       _manufacturer.clear();
       _oldPrice.clear();
       _newPrice.clear();
@@ -107,6 +114,7 @@ class _EditCoolerState extends State<EditCooler> {
       _warranty.clear();
     });
   }
+
   @override
   void initState() {
     FirebaseFirestore.instance
@@ -121,6 +129,8 @@ class _EditCoolerState extends State<EditCooler> {
           image = imageurl;
         });
         imageurl = data['image'];
+        uniqueId.text = data['uniqueid'];
+        categoryName.text = data['category'];
         _oldPrice.text = data['oldprice'];
         _newPrice.text = data['newprice'];
         _manufacturer.text = data['manufacturer'];
@@ -129,6 +139,7 @@ class _EditCoolerState extends State<EditCooler> {
         _wattage.text = data['wattage'];
         _speed.text = data['speed'];
         _fans.text = data['fans'];
+        features.text = data['features'];
         _coolingMethod.text = data['cooling'];
         _noiseLevel.text = data['noise'];
         _productDimension.text = data['productdimension'];
@@ -141,24 +152,25 @@ class _EditCoolerState extends State<EditCooler> {
     });
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-       appBar: AppBar(
-       surfaceTintColor: Colors.white,
+      appBar: AppBar(
+        surfaceTintColor: Colors.white,
       ),
       body: SafeArea(
-        child: StreamBuilder<QuerySnapshot>(
+          child: StreamBuilder<QuerySnapshot>(
               stream: FirebaseFirestore.instance
                   .collection('coolerdetails')
                   .snapshots(),
               builder: (context, snapshot) {
-                 if (snapshot.hasError) {
-                return Text('Error: ${snapshot.error}');
-              }
-              if (!snapshot.hasData) {
-                return const Center(child: CircularProgressIndicator());
-              }
+                if (snapshot.hasError) {
+                  return Text('Error: ${snapshot.error}');
+                }
+                if (!snapshot.hasData) {
+                  return const Center(child: CircularProgressIndicator());
+                }
                 final cooler = snapshot.data!.docs
                     .map((doc) => doc['name'] as String)
                     .toSet()
@@ -194,6 +206,14 @@ class _EditCoolerState extends State<EditCooler> {
                               Form(
                                   key: _formkey,
                                   child: Column(children: [
+                                    AdminUi.admTextField(
+                                        label: 'Unique ID',
+                                        textcontroller: uniqueId),
+                                    const SizedBox(height: 10),
+                                    AdminUi.admTextField(
+                                        label: 'Category',
+                                        textcontroller: categoryName),
+                                    const SizedBox(height: 10),
                                     DropdownMenu<String>(
                                         controller: _productName,
                                         menuStyle: const MenuStyle(
@@ -393,6 +413,10 @@ class _EditCoolerState extends State<EditCooler> {
                                         textcontroller: _productDimension),
                                     const SizedBox(height: 10),
                                     AdminUi.admTextField(
+                                        label: 'Features',
+                                        textcontroller: features),
+                                    const SizedBox(height: 10),
+                                    AdminUi.admTextField(
                                         label: 'Material',
                                         textcontroller: _material),
                                     const SizedBox(height: 10),
@@ -418,8 +442,7 @@ class _EditCoolerState extends State<EditCooler> {
                               }, text: 'Save'),
                               const SizedBox(height: 30)
                             ]))));
-              })
-      ),
+              })),
     );
   }
 }

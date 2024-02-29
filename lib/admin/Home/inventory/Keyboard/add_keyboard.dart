@@ -29,7 +29,7 @@ class _ScreenAddKeyboardState extends State<ScreenAddKeyboard> {
   final _itemWeight = TextEditingController();
   final _material = TextEditingController();
   final _warranty = TextEditingController();
-  static bool newArival = false;
+
   late String imageurl = '';
 
   Future<void> pickImage() async {
@@ -60,14 +60,14 @@ class _ScreenAddKeyboardState extends State<ScreenAddKeyboard> {
       'manufacturer': _manufacturer.text,
       'oldprice': _oldPrice.text,
       'newprice': _newPrice.text,
-      'modelname': _modelName.text,
+      'model': _modelName.text,
       'productdimension': _productDimension.text,
       'features': _specialFeatures.text,
       'connector': _connector.text,
       'material': _material.text,
       'country': _country.text,
       'itemweight': _itemWeight.text,
-      'newarrival': newArival,
+      'warranty': _warranty.text
     };
     FirebaseFirestore.instance
         .collection('keyboard')
@@ -87,14 +87,16 @@ class _ScreenAddKeyboardState extends State<ScreenAddKeyboard> {
       _connector.clear();
       _country.clear();
       _itemWeight.clear();
-      newArival = false;
+      _warranty.clear();
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        surfaceTintColor: Colors.white,
+      ),
       body: SafeArea(
           child: SingleChildScrollView(
               child: SizedBox(
@@ -124,6 +126,14 @@ class _ScreenAddKeyboardState extends State<ScreenAddKeyboard> {
                                   textcontroller: _manufacturer),
                               const SizedBox(height: 10),
                               AdminUi.admTextField(
+                                  label: 'Old Price',
+                                  textcontroller: _oldPrice),
+                              const SizedBox(height: 10),
+                              AdminUi.admTextField(
+                                  label: 'New Price',
+                                  textcontroller: _newPrice),
+                              const SizedBox(height: 10),
+                              AdminUi.admTextField(
                                   label: 'Model Name',
                                   textcontroller: _modelName),
                               const SizedBox(height: 10),
@@ -147,30 +157,8 @@ class _ScreenAddKeyboardState extends State<ScreenAddKeyboard> {
                               const SizedBox(height: 10),
                               AdminUi.admTextField(
                                   label: 'Warranty', textcontroller: _warranty),
-                              const SizedBox(height: 10),
-                              SizedBox(
-                                  width: MediaQuery.of(context).size.width * .4,
-                                  height:
-                                      MediaQuery.of(context).size.height * .08,
-                                  child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.start,
-                                      children: [
-                                        Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.start,
-                                            children: [
-                                              Checkbox(
-                                                  value: newArival,
-                                                  onChanged: (bool? value) {
-                                                    setState(() {
-                                                      newArival = value!;
-                                                    });
-                                                  }),
-                                              Text('New Arrival',
-                                                  style: CustomText.title3)
-                                            ])
-                                      ]))
                             ])), // Text field
+                        const SizedBox(height: 30),
                         AdminUiHelper.customButton(context, () {
                           if (_formkey.currentState!.validate()) {
                             submitData();

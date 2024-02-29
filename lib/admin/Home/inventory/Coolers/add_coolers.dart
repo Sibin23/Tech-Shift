@@ -17,6 +17,9 @@ class ScreenAddCoolers extends StatefulWidget {
 
 class _ScreenAddCoolersState extends State<ScreenAddCoolers> {
   final _formkey = GlobalKey<FormState>();
+  final categoryName = TextEditingController();
+  final features = TextEditingController();
+  final uniqueId = TextEditingController();
   final _productName = TextEditingController();
   final _manufacturer = TextEditingController();
   final _oldPrice = TextEditingController();
@@ -61,6 +64,8 @@ class _ScreenAddCoolersState extends State<ScreenAddCoolers> {
   Future submitData() async {
     final data = {
       'image': imageurl.toString(),
+      'category': categoryName.text.trim(),
+      'uniqueid': uniqueId.text.trim(),
       'name': _productName.text,
       'manufacturer': _manufacturer.text,
       'oldprice': _oldPrice.text,
@@ -72,6 +77,7 @@ class _ScreenAddCoolersState extends State<ScreenAddCoolers> {
       'noise': _noiseLevel.text,
       'fans': _fans.text,
       'productdimension': _productDimension.text,
+      'features': features.text,
       'material': _material.text,
       'speed': _speed.text,
       'country': _country.text,
@@ -86,6 +92,7 @@ class _ScreenAddCoolersState extends State<ScreenAddCoolers> {
       imageurl = '';
       _productName.clear();
       _manufacturer.clear();
+      features.clear();
       _oldPrice.clear();
       _newPrice.clear();
       _connector.clear();
@@ -115,12 +122,12 @@ class _ScreenAddCoolersState extends State<ScreenAddCoolers> {
                   .collection('coolerdetails')
                   .snapshots(),
               builder: (context, snapshot) {
-                 if (snapshot.hasError) {
-                return Text('Error: ${snapshot.error}');
-              }
-              if (!snapshot.hasData) {
-                return const Center(child: CircularProgressIndicator());
-              }
+                if (snapshot.hasError) {
+                  return Text('Error: ${snapshot.error}');
+                }
+                if (!snapshot.hasData) {
+                  return const Center(child: CircularProgressIndicator());
+                }
                 final cooler = snapshot.data!.docs
                     .map((doc) => doc['name'] as String)
                     .toSet()
@@ -156,6 +163,14 @@ class _ScreenAddCoolersState extends State<ScreenAddCoolers> {
                               Form(
                                   key: _formkey,
                                   child: Column(children: [
+                                    AdminUi.admTextField(
+                                        label: 'Unique ID',
+                                        textcontroller: uniqueId),
+                                    const SizedBox(height: 10),
+                                    AdminUi.admTextField(
+                                        label: 'Category',
+                                        textcontroller: categoryName),
+                                    const SizedBox(height: 10),
                                     DropdownMenu<String>(
                                         controller: _productName,
                                         menuStyle: const MenuStyle(
@@ -353,6 +368,8 @@ class _ScreenAddCoolersState extends State<ScreenAddCoolers> {
                                     AdminUi.admTextField(
                                         label: 'Product Dimensions',
                                         textcontroller: _productDimension),
+                                        const SizedBox(height: 10),
+                                        AdminUi.admTextField(label: 'Features', textcontroller: features),
                                     const SizedBox(height: 10),
                                     AdminUi.admTextField(
                                         label: 'Material',

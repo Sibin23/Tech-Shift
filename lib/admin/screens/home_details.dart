@@ -4,6 +4,8 @@ import 'package:prosample_1/admin/Home/categories/category%20list/list_category.
 import 'package:prosample_1/admin/Home/promo_banner.dart';
 import 'package:prosample_1/admin/utils/colors.dart';
 import 'package:prosample_1/admin/utils/text_style.dart';
+import 'package:prosample_1/login.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AdminHomePage extends StatefulWidget {
   const AdminHomePage({super.key});
@@ -13,17 +15,57 @@ class AdminHomePage extends StatefulWidget {
 }
 
 class _AdminHomePageState extends State<AdminHomePage> {
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
+
+  void signOut() {
+    Navigator.of(context).pushAndRemoveUntil(
+      MaterialPageRoute(builder: (ctx) => const ScreenLogin()),
+      (route) => false,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
-          leading: IconButton(
-              onPressed: () {},
-              icon: const Icon(
-                Icons.menu,
-                color: CustomColors.appTheme,
-              ))),
+        leading: IconButton(
+          onPressed: () => _scaffoldKey.currentState!.openDrawer(),
+          icon: const Icon(
+            Icons.menu,
+            color: CustomColors.appTheme,
+          ),
+        ),
+      ),
+      drawer: Drawer(
+        child: ListView(
+          // Add your drawer content here
+          children: [
+            ListTile(
+              leading: IconButton(
+                  onPressed: () {
+                    signOut();
+                  },
+                  icon: const Icon(
+                    Icons.exit_to_app_rounded,
+                  )),
+              title: const Text('Item 1'),
+              onTap: () {
+                // Handle item 1 tap
+                Navigator.pop(context); // Close the drawer
+              },
+            ),
+            ListTile(
+              title: const Text('Item 2'),
+              onTap: () {
+                // Handle item 2 tap
+                Navigator.pop(context); // Close the drawer
+              },
+            ),
+          ],
+        ),
+      ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Column(
@@ -63,7 +105,6 @@ class _AdminHomePageState extends State<AdminHomePage> {
                     ),
                   ),
                 ),
-               
               ],
             ),
             const SizedBox(height: 20),

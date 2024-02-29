@@ -30,7 +30,7 @@ class _ScreenAddHeadsetState extends State<ScreenAddHeadset> {
   final _country = TextEditingController();
   final _itemWeight = TextEditingController();
   final _warranty = TextEditingController();
-  static bool newArival = false;
+  
   late String imageurl = '';
   Future<void> pickImage() async {
     // ignore: no_leading_underscores_for_local_identifiers
@@ -69,11 +69,11 @@ class _ScreenAddHeadsetState extends State<ScreenAddHeadset> {
       'country': _country.text,
       'itemweight': _itemWeight.text,
       'warranty': _warranty.text,
-      'newarrival': newArival,
+      
     };
     FirebaseFirestore.instance
         .collection('headsets')
-        .doc(_productCategory.text.toLowerCase())
+        .doc(_productName.text.toLowerCase())
         .set(data);
     setState(() {
       _productCategory.clear();
@@ -91,7 +91,7 @@ class _ScreenAddHeadsetState extends State<ScreenAddHeadset> {
       _country.clear();
       _itemWeight.clear();
       _warranty.clear();
-      newArival = false;
+      
     });
   }
 
@@ -158,29 +158,8 @@ class _ScreenAddHeadsetState extends State<ScreenAddHeadset> {
                               const SizedBox(height: 10),
                               AdminUi.admTextField(
                                   label: 'Warranty', textcontroller: _warranty),
-                              const SizedBox(height: 10),
-                              SizedBox(
-                                  width: MediaQuery.of(context).size.width * .4,
-                                  height:
-                                      MediaQuery.of(context).size.height * .08,
-                                  child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.start,
-                                      children: [
-                                        Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.start,
-                                            children: [
-                                              Checkbox(
-                                                  value: newArival,
-                                                  onChanged: (bool? value) {
-                                                    setState(() {
-                                                      newArival = value!;
-                                                    });
-                                                  }),
-                                              Text('New Arrival',
-                                                  style: CustomText.title3)
-                                            ])
-                                      ]))
+                              const SizedBox(height: 30),
+                              
                             ])),
                         AdminUiHelper.customButton(context, () {
                           if (_formkey.currentState!.validate()) {

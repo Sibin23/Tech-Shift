@@ -7,6 +7,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:prosample_1/User/Build%20page/build_page.dart';
 import 'package:prosample_1/User/Pre%20Builds/Screen%20prebuild/prebuild.dart';
 import 'package:prosample_1/User/Pre%20Builds/prebuild_screen.dart';
+import 'package:prosample_1/User/category/processor/processor_details.dart';
 import 'package:prosample_1/User/utils/colors.dart';
 import 'package:prosample_1/User/utils/widget2.dart';
 import 'package:prosample_1/login.dart';
@@ -93,7 +94,7 @@ class _ScreenHomeState extends State<ScreenHome> {
                   BoxDecoration(borderRadius: BorderRadius.circular(10)),
               child: CarouselSlider(
                 options: CarouselOptions(
-                  viewportFraction: 0.8,
+                  viewportFraction: 1,
                   enableInfiniteScroll: true,
                   reverse: false,
                   autoPlay: true,
@@ -112,7 +113,7 @@ class _ScreenHomeState extends State<ScreenHome> {
                           width: MediaQuery.of(context).size.width,
                           height: MediaQuery.of(context).size.height,
                           child: Padding(
-                            padding: const EdgeInsets.only(left: 10),
+                            padding: const EdgeInsets.only(left: 5, right: 5),
                             child: Image(
                               image: AssetImage(i),
                               fit: BoxFit.cover,
@@ -183,34 +184,41 @@ class _ScreenHomeState extends State<ScreenHome> {
                         String categoryName = document['name'];
                         return Padding(
                           padding: const EdgeInsets.all(8),
-                          child: Container(
-                            decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(10),
-                                boxShadow: const [
-                                  BoxShadow(
-                                    color: Colors.grey,
-                                    blurRadius: 4.0,
-                                    spreadRadius: 1.0,
-                                    offset: Offset(2.0, 2.3),
-                                  )
-                                ]),
-                            width: MediaQuery.of(context).size.width * 0.38,
-                            height: MediaQuery.of(context).size.height,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                SizedBox(
-                                    width: MediaQuery.of(context).size.width *
-                                        0.99,
-                                    height: 120,
-                                    child: CachedNetworkImage(
-                                      imageUrl: imageUrl,
-                                      fit: BoxFit.cover,
-                                    )),
-                                Text(categoryName,
-                                    style: TextStyling.categoryText)
-                              ],
+                          child: GestureDetector(
+                            onTap: () {
+                              if(document['categoryid'] == 'processor'){
+                                Navigator.push(context, MaterialPageRoute(builder: (ctx)=> const DetailsProcessor()));
+                              }
+                            },
+                            child: Container(
+                              decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(10),
+                                  boxShadow: const [
+                                    BoxShadow(
+                                      color: Colors.grey,
+                                      blurRadius: 4.0,
+                                      spreadRadius: 1.0,
+                                      offset: Offset(2.0, 2.3),
+                                    )
+                                  ]),
+                              width: MediaQuery.of(context).size.width * 0.38,
+                              height: MediaQuery.of(context).size.height,
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  SizedBox(
+                                      width: MediaQuery.of(context).size.width *
+                                          0.99,
+                                      height: 120,
+                                      child: CachedNetworkImage(
+                                        imageUrl: imageUrl,
+                                        fit: BoxFit.cover,
+                                      )),
+                                  Text(categoryName,
+                                      style: TextStyling.categoryText)
+                                ],
+                              ),
                             ),
                           ),
                         );
@@ -351,6 +359,7 @@ class _ScreenHomeState extends State<ScreenHome> {
                                  
                                   String imageUrl = document['image'];
                                   String name = document['name'];
+                                  String idNum = document['idnum'];
                                   String categoryName = document['categoryid'];
                                   String cabinet = document['case'];
                                   String oldPrice = document['oldprice'];
@@ -367,6 +376,7 @@ class _ScreenHomeState extends State<ScreenHome> {
                                   String warranty = document['warranty'];
                                   Map<String, dynamic> prebuild = {
                                      'image': imageUrl,
+                                     'idnum': idNum,
                                     'categoryid': categoryName,
                                     'name': name,
                                     'oldprice': oldPrice,

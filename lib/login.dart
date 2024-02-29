@@ -1,13 +1,17 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:prosample_1/User/Home_screen/home_page.dart';
 import 'package:prosample_1/User/home.dart';
 import 'package:prosample_1/User/create_account.dart';
 import 'package:prosample_1/User/forgot_password.dart';
 import 'package:prosample_1/User/utils/colors.dart';
-import 'package:prosample_1/admin/screens/admin_home.dart';
 import 'package:prosample_1/User/utils/commonfile.dart';
-import 'package:provider/provider.dart';
+import 'package:prosample_1/admin/screens/admin_home.dart';
+import 'package:prosample_1/admin/screens/home_details.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+const saveKeyName = 'adminLoggedOut';
 
 class ScreenLogin extends StatefulWidget {
   const ScreenLogin({super.key});
@@ -131,11 +135,7 @@ class _ScreenLoginState extends State<ScreenLogin> {
 
                             if (email == 'admin@gmail.com' &&
                                 password == 'admin23') {
-                              Navigator.pushAndRemoveUntil(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (ctx) => const AdminHome()),
-                                  (route) => false);
+                              logIn();
                             } else {
                               signInWithEmailAndPassword(email, password);
                             }
@@ -169,22 +169,43 @@ class _ScreenLoginState extends State<ScreenLogin> {
     );
   }
 
+  goToAdminHome() {
+    Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (ctx) => const AdminHomePage()),
+        (route) => false);
+  }
+
+  Future<void> logIn() async {
+    final sharedPreferences = await SharedPreferences.getInstance();
+
+    await sharedPreferences.setBool(saveKeyName, true);
+
+    goToAdminHome();
+  }
+
   Future<void> signInWithEmailAndPassword(String email, String password) async {
     try {
-      final UserCredential userCredential =
-          await FirebaseAuth.instance.signInWithEmailAndPassword(
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: email,
         password: password,
       );
 
       // Navigate to HomeInfo screen
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (ctx) => const HomeInfo()),
-      );
+      goToHome();
     } on FirebaseAuthException catch (ex) {
-      // Handle specific errors based on ex.code
-      UiHelper.customTextAlert(context, ex.code.toString());
+      error(ex);
     }
+  }
+
+  void error(ex) {
+    UiHelper.customTextAlert(context, ex.code.toString());
+  }
+
+  void goToHome() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (ctx) => const HomeInfo()),
+    );
   }
 }

@@ -111,6 +111,7 @@ class _UpdateChairState extends State<UpdateChair> {
           image = imageurl;
         });
         imageurl = data['image'];
+        _idNum.text = data['uniqueid'];
         _oldPrice.text = data['oldprice'];
         _newPrice.text = data['newprice'];
         _manufacturer.text = data['manufacturer'];

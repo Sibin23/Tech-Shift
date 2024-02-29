@@ -15,8 +15,7 @@ class ScreenPreBuild extends StatefulWidget {
   State<ScreenPreBuild> createState() => __ScreenPreBuildStateState();
 }
 
-class __ScreenPreBuildStateState extends State<ScreenPreBuild>
-    with TickerProviderStateMixin {
+class __ScreenPreBuildStateState extends State<ScreenPreBuild> {
   final _formkey = GlobalKey<FormState>();
   final _idNum = TextEditingController();
   final _productCategory = TextEditingController();
@@ -35,12 +34,11 @@ class __ScreenPreBuildStateState extends State<ScreenPreBuild>
   final _case = TextEditingController();
   final _warranty = TextEditingController();
   
- 
   late String imageurl = '';
   Future<void> pickImage() async {
-    // ignore: no_leading_underscores_for_local_identifiers
-    final ImagePicker _picker = ImagePicker();
-    final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+   
+    final ImagePicker picker = ImagePicker();
+    final XFile? image = await picker.pickImage(source: ImageSource.gallery);
     if (image != null) {
       imageurl = await uploadImage(image);
       setState(() {});
@@ -60,7 +58,7 @@ class __ScreenPreBuildStateState extends State<ScreenPreBuild>
   Future submitData() async {
     final data = {
       'idnum': _idNum.text,
-      'category': _productCategory.text.toLowerCase(),
+      'categoryid': _productCategory.text.toLowerCase(),
       'image': imageurl.toString(),
       'name': _productName.text,
       'oldprice': _oldPrice.text,
@@ -159,9 +157,7 @@ class __ScreenPreBuildStateState extends State<ScreenPreBuild>
                     AdminUi.admTextField(
                         label: 'GPU', textcontroller: _gpu),
                     const SizedBox(height: 10),
-                    AdminUi.admTextField(
-                        label: 'Cooler', textcontroller: _cooler),
-                    const SizedBox(height: 10),
+                    
                     AdminUi.admTextField(
                         label: 'Features',
                         textcontroller: _specialFeatures),

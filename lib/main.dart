@@ -10,10 +10,10 @@ import 'package:prosample_1/User/utils/text_decorations.dart';
 import 'package:prosample_1/onboardScreens/onboard1.dart';
 import 'firebase_options.dart';
 
-
+const saveKeyName = 'adminloggedin';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-   
+
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
@@ -51,16 +51,19 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+
   @override
   void initState() {
-    Future.delayed(const Duration(seconds: 3), () {
+    Future.delayed(const Duration(seconds: 3), () async {
       final user = FirebaseAuth.instance.currentUser;
+     
+     
       // ignore: unrelated_type_equality_checks
       if (user != null) {
         Navigator.of(context).pushAndRemoveUntil(
             MaterialPageRoute(builder: (ctx2) => const HomeInfo()),
             (route) => false);
-      } else {
+        }  else {
         Navigator.of(context).pushReplacement(
             MaterialPageRoute(builder: (ctx) => const OnboardScreen1()));
       }
@@ -79,7 +82,8 @@ class _MyHomePageState extends State<MyHomePage> {
           height: MediaQuery.of(context).size.height,
           decoration: const BoxDecoration(
               image: DecorationImage(
-                  image: AssetImage('assets/Splash/splash screen new.png'),fit: BoxFit.cover)),
+                  image: AssetImage('assets/Splash/splash screen new.png'),
+                  fit: BoxFit.cover)),
           child: Column(
             children: [
               Padding(

@@ -6,11 +6,8 @@ import 'package:prosample_1/admin/Home/inventory/Cabinet/cabinet_list.dart';
 import 'package:prosample_1/admin/Home/inventory/Cables/cable_list.dart';
 import 'package:prosample_1/admin/Home/inventory/Chairs/chair_list.dart';
 import 'package:prosample_1/admin/Home/inventory/Coolers/cooler_list.dart';
-import 'package:prosample_1/admin/Home/inventory/Cabinet/add_cabinet.dart';
-import 'package:prosample_1/admin/Home/inventory/Cables/add_cables.dart';
-import 'package:prosample_1/admin/Home/inventory/Chairs/add_chair.dart';
-import 'package:prosample_1/admin/Home/inventory/Headset/add_headset.dart';
-import 'package:prosample_1/admin/Home/inventory/Keyboard/add_keyboard.dart';
+import 'package:prosample_1/admin/Home/inventory/Headset/details_headset.dart';
+import 'package:prosample_1/admin/Home/inventory/Keyboard/list_keyboard.dart';
 import 'package:prosample_1/admin/Home/inventory/Monitor/add_monitor.dart';
 import 'package:prosample_1/admin/Home/inventory/MotherBoard/add_motherboard.dart';
 import 'package:prosample_1/admin/Home/inventory/Mouse/add_mouse.dart';
@@ -93,14 +90,14 @@ class _ScreenItemDetailsState extends State<ScreenItemDetails> {
                                   context,
                                   MaterialPageRoute(
                                       builder: (ctx) =>
-                                          const ScreenAddHeadset()),
+                                          const HeadsetDetails()),
                                 );
                               }else if(document['categoryid'] == 'keyboard'){
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
                                       builder: (ctx) =>
-                                          const ScreenAddKeyboard()),
+                                          const KeyboardDetails()),
                                 );
                               }else if(document ['categoryid'] == 'mouse'){
                                  Navigator.push(
