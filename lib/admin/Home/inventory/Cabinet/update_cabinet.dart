@@ -20,6 +20,8 @@ class UpdateCabinet extends StatefulWidget {
 
 class _UpdateCabinetState extends State<UpdateCabinet> {
   final _formkey = GlobalKey<FormState>();
+  final idNum = TextEditingController();
+  final categoryName = TextEditingController();
   final _productName = TextEditingController();
   final _manufacturer = TextEditingController();
   final _oldPrice = TextEditingController();
@@ -57,6 +59,7 @@ class _UpdateCabinetState extends State<UpdateCabinet> {
         .update({
       'image': imageurl.toString(),
       'name': _productName.text,
+      'idnum': idNum.text,
       'manufacturer': _manufacturer.text,
       'oldprice': _oldPrice.text,
       'newprice': _newPrice.text,
@@ -74,6 +77,8 @@ class _UpdateCabinetState extends State<UpdateCabinet> {
     setState(() {
       imageurl = '';
       _productName.clear();
+      categoryName.clear();
+      idNum.clear();
       _manufacturer.clear();
       _oldPrice.clear();
       _newPrice.clear();
@@ -99,7 +104,8 @@ class _UpdateCabinetState extends State<UpdateCabinet> {
     final String downloadUrl = await snapshot.ref.getDownloadURL();
     return imageurl = downloadUrl;
   }
- @override
+
+  @override
   void initState() {
     FirebaseFirestore.instance
         .collection('cabinet')
@@ -113,6 +119,8 @@ class _UpdateCabinetState extends State<UpdateCabinet> {
           image = imageurl;
         });
         imageurl = data['image'];
+        idNum.text = data['idnum'];
+        categoryName.text = data['category'];
         _oldPrice.text = data['oldprice'];
         _newPrice.text = data['newprice'];
         _model.text = data['model'];
@@ -130,6 +138,7 @@ class _UpdateCabinetState extends State<UpdateCabinet> {
     });
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -174,6 +183,14 @@ class _UpdateCabinetState extends State<UpdateCabinet> {
                               Form(
                                   key: _formkey,
                                   child: Column(children: [
+                                    AdminUi.admTextField(
+                                        label: 'Unique ID',
+                                        textcontroller: idNum),
+                                    const SizedBox(height: 10),
+                                    AdminUi.admTextField(
+                                        label: 'Category',
+                                        textcontroller: categoryName),
+                                    const SizedBox(height: 10),
                                     DropdownMenu<String>(
                                         controller: _productName,
                                         menuStyle: const MenuStyle(

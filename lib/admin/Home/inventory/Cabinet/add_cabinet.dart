@@ -9,7 +9,6 @@ import 'package:prosample_1/admin/utils/common_widgets.dart';
 import 'package:prosample_1/admin/utils/text_style.dart';
 
 class ScreenAddCabinet extends StatefulWidget {
-  
   const ScreenAddCabinet({super.key});
 
   @override
@@ -19,6 +18,8 @@ class ScreenAddCabinet extends StatefulWidget {
 class _ScreenAddCabinetState extends State<ScreenAddCabinet> {
   final _formkey = GlobalKey<FormState>();
   final _productName = TextEditingController();
+  final idNum = TextEditingController();
+  final categoryName = TextEditingController();
   final _manufacturer = TextEditingController();
   final _oldPrice = TextEditingController();
   final _newPrice = TextEditingController();
@@ -63,6 +64,8 @@ class _ScreenAddCabinetState extends State<ScreenAddCabinet> {
     final data = {
       'image': imageurl.toString(),
       'name': _productName.text,
+      'idnum': idNum.text,
+      'category': categoryName.text,
       'manufacturer': _manufacturer.text,
       'oldprice': _oldPrice.text,
       'newprice': _newPrice.text,
@@ -84,6 +87,8 @@ class _ScreenAddCabinetState extends State<ScreenAddCabinet> {
     setState(() {
       imageurl = '';
       _productName.clear();
+      idNum.clear();
+      categoryName.clear();
       _manufacturer.clear();
       _oldPrice.clear();
       _newPrice.clear();
@@ -99,7 +104,7 @@ class _ScreenAddCabinetState extends State<ScreenAddCabinet> {
       _fancount.clear();
     });
   }
- 
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -144,6 +149,14 @@ class _ScreenAddCabinetState extends State<ScreenAddCabinet> {
                               Form(
                                   key: _formkey,
                                   child: Column(children: [
+                                    AdminUi.admTextField(
+                                        label: 'Unique ID',
+                                        textcontroller: idNum),
+                                    const SizedBox(height: 10),
+                                    AdminUi.admTextField(
+                                        label: 'Category',
+                                        textcontroller: categoryName),
+                                    const SizedBox(height: 10), 
                                     DropdownMenu<String>(
                                         controller: _productName,
                                         menuStyle: const MenuStyle(

@@ -1,9 +1,7 @@
 import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:hive/hive.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:prosample_1/admin/utils/colors.dart';
 import 'package:prosample_1/admin/utils/common2.dart';
@@ -19,8 +17,9 @@ class UpdateChair extends StatefulWidget {
 }
 
 class _UpdateChairState extends State<UpdateChair> {
-   final _formkey = GlobalKey<FormState>();
-   final _idNum = TextEditingController();
+  final _formkey = GlobalKey<FormState>();
+  final _idNum = TextEditingController();
+  final categoryName = TextEditingController();
   final _productName = TextEditingController();
   final _manufacturer = TextEditingController();
   final _oldPrice = TextEditingController();
@@ -40,9 +39,8 @@ class _UpdateChairState extends State<UpdateChair> {
   late String imageurl = '';
   String? image;
   Future<void> pickImage() async {
-    // ignore: no_leading_underscores_for_local_identifiers
-    final ImagePicker _picker = ImagePicker();
-    final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+    final ImagePicker picker = ImagePicker();
+    final XFile? image = await picker.pickImage(source: ImageSource.gallery);
     if (image != null) {
       imageurl = await uploadImage(image);
       setState(() {});
@@ -57,6 +55,7 @@ class _UpdateChairState extends State<UpdateChair> {
     final String downloadUrl = await snapshot.ref.getDownloadURL();
     return imageurl = downloadUrl;
   }
+
   updateData() {
     FirebaseFirestore.instance
         .collection('chairs')
@@ -64,6 +63,7 @@ class _UpdateChairState extends State<UpdateChair> {
         .update({
       'image': imageurl.toString(),
       'idnum': _idNum.text,
+      'category': categoryName.text,
       'name': _productName.text,
       'manufacturer': _manufacturer.text,
       'oldprice': _oldPrice.text,
@@ -81,6 +81,7 @@ class _UpdateChairState extends State<UpdateChair> {
     setState(() {
       imageurl = '';
       _productName.clear();
+      categoryName.clear();
       _idNum.clear();
       _manufacturer.clear();
       _oldPrice.clear();
@@ -111,7 +112,8 @@ class _UpdateChairState extends State<UpdateChair> {
           image = imageurl;
         });
         imageurl = data['image'];
-        _idNum.text = data['uniqueid'];
+        _idNum.text = data['idnum'];
+        categoryName.text = data['category'];
         _oldPrice.text = data['oldprice'];
         _newPrice.text = data['newprice'];
         _manufacturer.text = data['manufacturer'];
@@ -132,7 +134,10 @@ class _UpdateChairState extends State<UpdateChair> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+
+        surfaceTintColor: Colors.white,
+      ),
       body: SafeArea(
         child: StreamBuilder<QuerySnapshot>(
             stream: FirebaseFirestore.instance
@@ -174,7 +179,12 @@ class _UpdateChairState extends State<UpdateChair> {
                         Form(
                             key: _formkey,
                             child: Column(children: [
-                              AdminUi.admTextField(label: 'Unique ID', textcontroller: _idNum),
+                              AdminUi.admTextField(
+                                  label: 'Unique ID', textcontroller: _idNum),
+                              const SizedBox(height: 10),
+                              AdminUi.admTextField(
+                                  label: 'Category',
+                                  textcontroller: categoryName),
                               const SizedBox(height: 10),
                               DropdownMenu<String>(
                                   controller: _productName,
@@ -298,7 +308,7 @@ class _UpdateChairState extends State<UpdateChair> {
                               AdminUi.admTextField(
                                   label: 'Item Weight',
                                   textcontroller: _itemWeight),
-                                  const SizedBox(height: 10),
+                              const SizedBox(height: 10),
                               AdminUi.admTextField(
                                   label: 'Warranty', textcontroller: _warranty),
                             ])),

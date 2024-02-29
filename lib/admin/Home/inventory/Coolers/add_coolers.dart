@@ -65,7 +65,7 @@ class _ScreenAddCoolersState extends State<ScreenAddCoolers> {
     final data = {
       'image': imageurl.toString(),
       'category': categoryName.text.trim(),
-      'uniqueid': uniqueId.text.trim(),
+      'idnum': uniqueId.text.trim(),
       'name': _productName.text,
       'manufacturer': _manufacturer.text,
       'oldprice': _oldPrice.text,

@@ -47,6 +47,8 @@ class AdminUi {
     required TextEditingController textcontroller,
   }) {
     return TextFormField(
+      minLines: 1,
+      maxLines: 10,
       controller: textcontroller,
       validator: (value) {
         if (value!.isEmpty) {
@@ -55,6 +57,7 @@ class AdminUi {
         return null;
       },
       decoration: InputDecoration(
+        
         label: Text(label),
         labelStyle: const TextStyle(color: CustomColors.appTheme),
         focusedBorder: OutlineInputBorder(

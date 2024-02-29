@@ -18,6 +18,7 @@ class ScreenAddChairs extends StatefulWidget {
 class _ScreenAddChairsState extends State<ScreenAddChairs> {
   final _formkey = GlobalKey<FormState>();
   final _idNum = TextEditingController();
+  final categoryName = TextEditingController();
   final _productName = TextEditingController();
   final _manufacturer = TextEditingController();
   final _oldPrice = TextEditingController();
@@ -59,6 +60,7 @@ class _ScreenAddChairsState extends State<ScreenAddChairs> {
     final data = {
       'image': imageurl.toString(),
       'idnum': _idNum.text,
+      'category': categoryName.text,
       'name': _productName.text,
       'manufacturer': _manufacturer.text,
       'oldprice': _oldPrice.text,
@@ -80,6 +82,7 @@ class _ScreenAddChairsState extends State<ScreenAddChairs> {
     setState(() {
       imageurl = '';
       _productName.clear();
+      categoryName.clear();
       _idNum.clear();
       _manufacturer.clear();
       _oldPrice.clear();
@@ -99,7 +102,9 @@ class _ScreenAddChairsState extends State<ScreenAddChairs> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        surfaceTintColor: Colors.white,
+      ),
       body: SafeArea(
         child: StreamBuilder<QuerySnapshot>(
             stream: FirebaseFirestore.instance
@@ -141,8 +146,13 @@ class _ScreenAddChairsState extends State<ScreenAddChairs> {
                         Form(
                             key: _formkey,
                             child: Column(children: [
-                              AdminUi.admTextField(label: 'Unique ID', textcontroller: _idNum),
+                              AdminUi.admTextField(
+                                  label: 'Unique ID', textcontroller: _idNum),
                               const SizedBox(height: 20),
+                              AdminUi.admTextField(
+                                  label: 'Category',
+                                  textcontroller: categoryName),
+                              const SizedBox(height: 10),
                               DropdownMenu<String>(
                                   controller: _productName,
                                   menuStyle: const MenuStyle(
@@ -265,7 +275,7 @@ class _ScreenAddChairsState extends State<ScreenAddChairs> {
                               AdminUi.admTextField(
                                   label: 'Item Weight',
                                   textcontroller: _itemWeight),
-                                  const SizedBox(height: 10),
+                              const SizedBox(height: 10),
                               AdminUi.admTextField(
                                   label: 'Warranty', textcontroller: _warranty),
                             ])),

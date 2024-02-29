@@ -71,7 +71,7 @@ class _EditCoolerState extends State<EditCooler> {
         .doc(widget.itemId) // Use the itemId
         .update({
       'image': imageurl.toString(),
-      'uniqueid': uniqueId.text.trim(),
+      'idnum': uniqueId.text.trim(),
       'category': categoryName.text.trim(),
       'name': _productName.text,
       'manufacturer': _manufacturer.text,
@@ -129,7 +129,7 @@ class _EditCoolerState extends State<EditCooler> {
           image = imageurl;
         });
         imageurl = data['image'];
-        uniqueId.text = data['uniqueid'];
+        uniqueId.text = data['idnum'];
         categoryName.text = data['category'];
         _oldPrice.text = data['oldprice'];
         _newPrice.text = data['newprice'];

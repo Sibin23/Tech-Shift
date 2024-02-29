@@ -17,6 +17,8 @@ class ScreenAddCables extends StatefulWidget {
 
 class _ScreenAddCablesState extends State<ScreenAddCables> {
   final _formkey = GlobalKey<FormState>();
+  final categoryName = TextEditingController();
+  final idNum = TextEditingController();
   final _speed = TextEditingController();
   final _productName = TextEditingController();
   final _manufacturer = TextEditingController();
@@ -62,6 +64,8 @@ class _ScreenAddCablesState extends State<ScreenAddCables> {
       
       'image': imageurl.toString(),
       'name': _productName.text,
+      'category': categoryName.text,
+      'idnum': idNum.text,
       'manufacturer': _manufacturer.text,
       'oldprice': _oldPrice.text,
       'newprice': _newPrice.text,
@@ -84,6 +88,8 @@ class _ScreenAddCablesState extends State<ScreenAddCables> {
       
       imageurl = '';
       _productName.clear();
+      idNum.clear();
+      categoryName.clear();
       _manufacturer.clear();
       _oldPrice.clear();
       _newPrice.clear();
@@ -151,6 +157,10 @@ class _ScreenAddCablesState extends State<ScreenAddCables> {
                               Form(
                                   key: _formkey,
                                   child: Column(children: [
+                                    AdminUi.admTextField(label: 'Unique ID', textcontroller: idNum),
+                                    const SizedBox(height: 10),
+                                    AdminUi.admTextField(label: 'Category', textcontroller: categoryName),
+                                    const SizedBox(height: 10),
                                     DropdownMenu<String>(
                                         controller: _productName,
                                         menuStyle: const MenuStyle(

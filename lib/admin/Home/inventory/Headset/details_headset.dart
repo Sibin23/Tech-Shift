@@ -20,7 +20,7 @@ class _HeadsetDetailsState extends State<HeadsetDetails> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Text('Processor Details', style: CustomText.apptitle),
+        title: Text('Headset Details', style: CustomText.apptitle),
         backgroundColor: CustomColors.appTheme,
         leading: IconButton(
             onPressed: () {

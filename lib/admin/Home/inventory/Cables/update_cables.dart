@@ -19,6 +19,8 @@ class UpdateCable extends StatefulWidget {
 class _MyWidgetState extends State<UpdateCable> {
   final _formkey = GlobalKey<FormState>();
   final _speed = TextEditingController();
+  final idNum = TextEditingController();
+  final categoryName = TextEditingController();
   final _productName = TextEditingController();
   final _manufacturer = TextEditingController();
   final _oldPrice = TextEditingController();
@@ -61,6 +63,8 @@ class _MyWidgetState extends State<UpdateCable> {
     FirebaseFirestore.instance.collection('cables').doc(widget.itemId).update({
       'image': imageurl.toString(),
       'name': _productName.text,
+      'idnum': idNum.text,
+      'category': categoryName.text,
       'manufacturer': _manufacturer.text,
       'oldprice': _oldPrice.text,
       'newprice': _newPrice.text,
@@ -77,6 +81,8 @@ class _MyWidgetState extends State<UpdateCable> {
     });
     setState(() {
       imageurl = '';
+      idNum.clear();
+      categoryName.clear();
       _productName.clear();
       _manufacturer.clear();
       _oldPrice.clear();
@@ -109,6 +115,8 @@ class _MyWidgetState extends State<UpdateCable> {
           image = imageurl;
         });
         imageurl = data['image'];
+        idNum.text = data['idnum'];
+        categoryName.text = data['category'];
         _manufacturer.text = data['manufacturer'];
         _oldPrice.text = data['oldprice'];
         _newPrice.text = data['newprice'];
@@ -177,6 +185,14 @@ class _MyWidgetState extends State<UpdateCable> {
                               Form(
                                   key: _formkey,
                                   child: Column(children: [
+                                    AdminUi.admTextField(
+                                        label: 'Unique ID',
+                                        textcontroller: idNum),
+                                    const SizedBox(height: 10),
+                                    AdminUi.admTextField(
+                                        label: 'Category',
+                                        textcontroller: categoryName),
+                                    const SizedBox(height: 10),
                                     DropdownMenu<String>(
                                         controller: _productName,
                                         menuStyle: const MenuStyle(

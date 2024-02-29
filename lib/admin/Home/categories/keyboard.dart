@@ -1,4 +1,3 @@
-// ignore_for_file: use_build_context_synchronously
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:prosample_1/admin/utils/colors.dart';
@@ -15,21 +14,22 @@ class ListKeyboard extends StatefulWidget {
 }
 
 class _ListKeyboardState extends State<ListKeyboard> {
-  final _idController = TextEditingController();
-  final _textController = TextEditingController();
-  final _modelName = TextEditingController();
+  final categoryName = TextEditingController();
+  final productName = TextEditingController();
+  final modelName = TextEditingController();
+  final manufacturer = TextEditingController();
 
   Future submit() async {
     final data = {
-      'categoryid': _idController.text.toLowerCase(),
-      'name': _textController.text,
-      'model': _modelName.text,
+      'categoryid': categoryName.text.toLowerCase(),
+      'name': productName.text,
+      'model': modelName.text,
     };
     FirebaseFirestore.instance.collection('keyboarddetails').doc().set(data);
     setState(() {
-      _textController.clear();
-      _idController.clear();
-      _modelName.clear();
+      productName.clear();
+      categoryName.clear();
+      modelName.clear();
     });
     showTopSnackBar(Overlay.of(context),
         const CustomSnackBar.success(message: "Item Added Successfully"));
@@ -37,18 +37,24 @@ class _ListKeyboardState extends State<ListKeyboard> {
 
   Future deleteItem(documentId) async {
     try {
-      print(documentId);
       await FirebaseFirestore.instance
           .collection('keyboarddetails')
           .doc(documentId)
           .delete();
-      showTopSnackBar(Overlay.of(context),
-          const CustomSnackBar.error(message: "Item Deleted Successfully"));
+      deleteMessage();
     } catch (error) {
-      // Handle errors gracefully
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text('Error deleting item: $error')));
+      errorMessage(error);
     }
+  }
+
+  void errorMessage(error) {
+    ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(content: Text('Error deleting item: $error')));
+  }
+
+  deleteMessage() {
+    showTopSnackBar(Overlay.of(context),
+        const CustomSnackBar.error(message: "Item Deleted Successfully"));
   }
 
   void addItem() {
@@ -67,15 +73,16 @@ class _ListKeyboardState extends State<ListKeyboard> {
                       child: Column(
                         children: [
                           AdminUi.admTextField(
+                              label: 'Product Category',
+                              textcontroller: categoryName),
+                          const SizedBox(height: 10),
+                          AdminUi.admTextField(
                               label: 'Product Name',
-                              textcontroller: _idController),
+                              textcontroller: productName),
                           const SizedBox(height: 10),
                           AdminUi.admTextField(
-                              label: 'Product Series',
-                              textcontroller: _textController),
-                          const SizedBox(height: 10),
-                          AdminUi.admTextField(
-                              label: 'Model Name', textcontroller: _modelName)
+                              label: 'Model Name', textcontroller: modelName),
+                              AdminUi.admTextField(label: 'Manufacturer', textcontroller: manufacturer),
                         ],
                       )),
                 ],
@@ -123,8 +130,9 @@ class _ListKeyboardState extends State<ListKeyboard> {
       ),
       body: SafeArea(
         child: StreamBuilder<QuerySnapshot>(
-          stream:
-              FirebaseFirestore.instance.collection('keyboarddetails').snapshots(),
+          stream: FirebaseFirestore.instance
+              .collection('keyboarddetails')
+              .snapshots(),
           builder: (context, snapshot) {
             if (snapshot.hasError) {
               return Text('Error: ${snapshot.error}');

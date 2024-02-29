@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:prosample_1/admin/utils/colors.dart';
 import 'package:prosample_1/admin/utils/common2.dart';
 import 'package:prosample_1/admin/utils/common_widgets.dart';
 import 'package:prosample_1/admin/utils/text_style.dart';
@@ -16,9 +17,9 @@ class ScreenAddKeyboard extends StatefulWidget {
 
 class _ScreenAddKeyboardState extends State<ScreenAddKeyboard> {
   final _formkey = GlobalKey<FormState>();
-  final _productCategory = TextEditingController();
-  final _productName = TextEditingController();
-  final _manufacturer = TextEditingController();
+  final categoryName = TextEditingController();
+  final productName = TextEditingController();
+  final manufacturer = TextEditingController();
   final _oldPrice = TextEditingController();
   final _newPrice = TextEditingController();
   final _specialFeatures = TextEditingController();
@@ -29,6 +30,10 @@ class _ScreenAddKeyboardState extends State<ScreenAddKeyboard> {
   final _itemWeight = TextEditingController();
   final _material = TextEditingController();
   final _warranty = TextEditingController();
+  String? sselectedKeyboard;
+  String? selectedModel;
+  String? selectedManufacturer;
+  String? selectedCategory;
 
   late String imageurl = '';
 
@@ -54,10 +59,10 @@ class _ScreenAddKeyboardState extends State<ScreenAddKeyboard> {
   // submit
   Future submitData() async {
     final data = {
-      'categoryid': _productCategory.text.toLowerCase(),
+      'categoryid': categoryName.text.toLowerCase(),
       'image': imageurl.toString(),
-      'name': _productName.text,
-      'manufacturer': _manufacturer.text,
+      'name': productName.text,
+      'manufacturer': manufacturer.text,
       'oldprice': _oldPrice.text,
       'newprice': _newPrice.text,
       'model': _modelName.text,
@@ -71,13 +76,13 @@ class _ScreenAddKeyboardState extends State<ScreenAddKeyboard> {
     };
     FirebaseFirestore.instance
         .collection('keyboard')
-        .doc(_productCategory.text.toLowerCase())
+        .doc(categoryName.text.toLowerCase())
         .set(data);
     setState(() {
-      _productCategory.clear();
+      categoryName.clear();
       imageurl = '';
-      _productName.clear();
-      _manufacturer.clear();
+      productName.clear();
+      manufacturer.clear();
       _oldPrice.clear();
       _newPrice.clear();
       _modelName.clear();
@@ -99,9 +104,32 @@ class _ScreenAddKeyboardState extends State<ScreenAddKeyboard> {
       ),
       body: SafeArea(
           child: SingleChildScrollView(
-              child: SizedBox(
-                  width: MediaQuery.of(context).size.width,
-                  child: Padding(
+              child: StreamBuilder<QuerySnapshot>(
+                stream: FirebaseFirestore.instance.collection('keyboard').snapshots(),
+                builder: (context, snapshot) {
+                   if (snapshot.hasError) {
+                  return Text('Error: ${snapshot.error}');
+                }
+                if (!snapshot.hasData) {
+                  return const Center(child: CircularProgressIndicator());
+                }
+                final category = snapshot.data!.docs
+                    .map((doc) => doc['category'] as String)
+                    .toSet()
+                    .toList();
+                final keyboard = snapshot.data!.docs
+                    .map((doc) => doc['name'] as String)
+                    .toSet()
+                    .toList();
+                final model = snapshot.data!.docs
+                    .map((doc) => doc['model'] as String)
+                    .toSet()
+                    .toList();
+                    final manufacturer = snapshot.data!.docs
+                    .map((doc) => doc['manufacturer'] as String)
+                    .toSet()
+                    .toList();
+                  return Padding(
                       padding: const EdgeInsets.all(10.0),
                       child: Column(children: [
                         Text('Gaming Keyboard', style: CustomText.title),
@@ -113,18 +141,39 @@ class _ScreenAddKeyboardState extends State<ScreenAddKeyboard> {
                         Form(
                             key: _formkey,
                             child: Column(children: [
-                              AdminUi.admTextField(
-                                  label: 'Category Name',
-                                  textcontroller: _productCategory),
-                              const SizedBox(height: 10),
-                              AdminUi.admTextField(
-                                  label: 'Product Name',
-                                  textcontroller: _productName),
-                              const SizedBox(height: 10),
-                              AdminUi.admTextField(
-                                  label: 'Manufacturer',
-                                  textcontroller: _manufacturer),
-                              const SizedBox(height: 10),
+                              DropdownMenu<String>(
+                                        controller: productName,
+                                        menuStyle: const MenuStyle(
+                                            surfaceTintColor:
+                                                MaterialStatePropertyAll(
+                                                    Colors.white)),
+                                        hintText: 'Select Category',
+                                        width:
+                                            MediaQuery.of(context).size.width *
+                                                .93,
+                                        menuHeight: 300,
+                                        inputDecorationTheme:
+                                            InputDecorationTheme(
+                                                hintStyle: const TextStyle(
+                                                    color:
+                                                        CustomColors.appTheme),
+                                                border: OutlineInputBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            8)),
+                                                fillColor: Colors.white,
+                                                filled: true),
+                                        onSelected: (value) {
+                                          setState(() {
+                                            selectedCategory = value;
+                                          });
+                                        },
+                                        dropdownMenuEntries: category
+                                            .map<DropdownMenuEntry<String>>(
+                                                (String value) {
+                                          return DropdownMenuEntry<String>(
+                                              value: value, label: value);
+                                        }).toList()),
                               AdminUi.admTextField(
                                   label: 'Old Price',
                                   textcontroller: _oldPrice),
@@ -166,7 +215,9 @@ class _ScreenAddKeyboardState extends State<ScreenAddKeyboard> {
                                 context, 'Item Added Successfully !');
                           }
                         }, text: 'Save'),
-                      ]))))),
+                      ]));
+                }
+              ))),
     );
   }
 }

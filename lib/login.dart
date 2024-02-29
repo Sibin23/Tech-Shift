@@ -135,7 +135,7 @@ class _ScreenLoginState extends State<ScreenLogin> {
 
                             if (email == 'admin@gmail.com' &&
                                 password == 'admin23') {
-                              logIn();
+                              goToAdminHome();
                             } else {
                               signInWithEmailAndPassword(email, password);
                             }
@@ -172,17 +172,11 @@ class _ScreenLoginState extends State<ScreenLogin> {
   goToAdminHome() {
     Navigator.pushAndRemoveUntil(
         context,
-        MaterialPageRoute(builder: (ctx) => const AdminHomePage()),
+        MaterialPageRoute(builder: (ctx) => const AdminHome()),
         (route) => false);
   }
 
-  Future<void> logIn() async {
-    final sharedPreferences = await SharedPreferences.getInstance();
-
-    await sharedPreferences.setBool(saveKeyName, true);
-
-    goToAdminHome();
-  }
+ 
 
   Future<void> signInWithEmailAndPassword(String email, String password) async {
     try {
