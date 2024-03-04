@@ -58,7 +58,7 @@ class _MyHomePageState extends State<MyHomePage> {
       final user = FirebaseAuth.instance.currentUser;
      
      
-      // ignore: unrelated_type_equality_checks
+     
       if (user != null) {
         Navigator.of(context).pushAndRemoveUntil(
             MaterialPageRoute(builder: (ctx2) => const HomeInfo()),

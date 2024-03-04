@@ -47,6 +47,29 @@ class AdminUi {
     required TextEditingController textcontroller,
   }) {
     return TextFormField(
+      controller: textcontroller,
+      validator: (value) {
+        if (value!.isEmpty) {
+          return 'Data is required';
+        }
+        return null;
+      },
+      decoration: InputDecoration(
+        
+        label: Text(label),
+        labelStyle: const TextStyle(color: CustomColors.appTheme),
+        focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
+            borderSide: const BorderSide(color: CustomColors.appTheme)),
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+      ),
+    );
+  }
+
+  // text field features
+  static featuresTextfield({required String label,
+    required TextEditingController textcontroller}){
+return TextFormField(
       minLines: 1,
       maxLines: 10,
       controller: textcontroller,
@@ -67,8 +90,6 @@ class AdminUi {
       ),
     );
   }
-
-  //
 
   static customCategoryCard(BuildContext context,
       {required String imageUrl, required String categoryName}) {

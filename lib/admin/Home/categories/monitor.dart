@@ -15,21 +15,24 @@ class ListMonitor extends StatefulWidget {
 }
 
 class _ListMonitorState extends State<ListMonitor> {
-  final _idController = TextEditingController();
-  final _textController = TextEditingController();
-  final _modelName = TextEditingController();
+  final categoryName = TextEditingController();
+  final productName = TextEditingController();
+  final modelName = TextEditingController();
+  final manufacturer = TextEditingController();
 
   Future submit() async {
     final data = {
-      'categoryid': _idController.text.toLowerCase(),
-      'name': _textController.text,
-      'model': _modelName.text,
+      'category': categoryName.text.toLowerCase(),
+      'name': productName.text,
+      'model': modelName.text,
+      'manufacturer': manufacturer.text,
     };
     FirebaseFirestore.instance.collection('monitordetails').doc().set(data);
     setState(() {
-      _textController.clear();
-      _idController.clear();
-      _modelName.clear();
+      productName.clear();
+      categoryName.clear();
+      modelName.clear();
+      manufacturer.clear();
     });
     showTopSnackBar(Overlay.of(context),
         const CustomSnackBar.success(message: "Item Added Successfully"));
@@ -68,14 +71,18 @@ class _ListMonitorState extends State<ListMonitor> {
                         children: [
                           AdminUi.admTextField(
                               label: 'Product Name',
-                              textcontroller: _idController),
+                              textcontroller: productName),
                           const SizedBox(height: 10),
                           AdminUi.admTextField(
-                              label: 'Product Series',
-                              textcontroller: _textController),
+                              label: 'Product Category',
+                              textcontroller: categoryName),
                           const SizedBox(height: 10),
                           AdminUi.admTextField(
-                              label: 'Model Name', textcontroller: _modelName)
+                              label: 'Model Name', textcontroller: modelName),
+                          const SizedBox(height: 10),
+                          AdminUi.admTextField(
+                              label: 'Manufacturer',
+                              textcontroller: manufacturer)
                         ],
                       )),
                 ],
@@ -123,8 +130,9 @@ class _ListMonitorState extends State<ListMonitor> {
       ),
       body: SafeArea(
         child: StreamBuilder<QuerySnapshot>(
-          stream:
-              FirebaseFirestore.instance.collection('monitordetails').snapshots(),
+          stream: FirebaseFirestore.instance
+              .collection('monitordetails')
+              .snapshots(),
           builder: (context, snapshot) {
             if (snapshot.hasError) {
               return Text('Error: ${snapshot.error}');

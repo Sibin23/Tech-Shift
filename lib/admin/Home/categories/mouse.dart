@@ -1,4 +1,3 @@
-// ignore_for_file: use_build_context_synchronously
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:prosample_1/admin/utils/colors.dart';
@@ -15,21 +14,24 @@ class ListMouse extends StatefulWidget {
 }
 
 class _ListMouseState extends State<ListMouse> {
-  final _idController = TextEditingController();
-  final _textController = TextEditingController();
-  final _modelName = TextEditingController();
+  final categoryName= TextEditingController();
+  final productName = TextEditingController();
+  final model = TextEditingController();
+  final manufacturer = TextEditingController();
 
   Future submit() async {
     final data = {
-      'categoryid': _idController.text.toLowerCase(),
-      'name': _textController.text,
-      'model': _modelName.text,
+      'category': categoryName.text.toLowerCase(),
+      'name': productName.text,
+      'model': model.text,
+      'manufacturer': manufacturer.text,
     };
-    FirebaseFirestore.instance.collection('mouseddetails').doc().set(data);
+    FirebaseFirestore.instance.collection('mousedetails').doc().set(data);
     setState(() {
-      _textController.clear();
-      _idController.clear();
-      _modelName.clear();
+     categoryName.clear();
+      productName.clear();
+      model.clear();
+      manufacturer.clear();
     });
     showTopSnackBar(Overlay.of(context),
         const CustomSnackBar.success(message: "Item Added Successfully"));
@@ -67,14 +69,16 @@ class _ListMouseState extends State<ListMouse> {
                         children: [
                           AdminUi.admTextField(
                               label: 'Product Name',
-                              textcontroller: _idController),
+                              textcontroller: productName),
                           const SizedBox(height: 10),
                           AdminUi.admTextField(
-                              label: 'Product Series',
-                              textcontroller: _textController),
+                              label: 'Product Category',
+                              textcontroller: categoryName),
                           const SizedBox(height: 10),
                           AdminUi.admTextField(
-                              label: 'Model Name', textcontroller: _modelName),
+                              label: 'Model Name', textcontroller: model),
+                          const SizedBox(height: 10),
+                          AdminUi.admTextField(label: 'Manufacturer', textcontroller: manufacturer),
                           const SizedBox(height: 10),
                         ],
                       )),
@@ -107,7 +111,7 @@ class _ListMouseState extends State<ListMouse> {
         centerTitle: true,
         backgroundColor: CustomColors.appTheme,
         title: Text(
-          'Motherboards',
+          'Mouse',
           style: CustomText.apptitle,
         ),
         actions: [
@@ -123,9 +127,8 @@ class _ListMouseState extends State<ListMouse> {
       ),
       body: SafeArea(
         child: StreamBuilder<QuerySnapshot>(
-          stream: FirebaseFirestore.instance
-              .collection('mousedetails')
-              .snapshots(),
+          stream:
+              FirebaseFirestore.instance.collection('mousedetails').snapshots(),
           builder: (context, snapshot) {
             if (snapshot.hasError) {
               return Text('Error: ${snapshot.error}');
@@ -137,7 +140,6 @@ class _ListMouseState extends State<ListMouse> {
                 return ListView.builder(
                   itemCount: snapshot.data!.docs.length,
                   itemBuilder: (ctx, index) {
-                    // Access the document and the desired field
                     final document = snapshot.data!.docs[index];
                     final id = document.id;
                     String name = document['name'];
@@ -182,7 +184,7 @@ class _ListMouseState extends State<ListMouse> {
                               ],
                             ),
                           )),
-                    ); // Display the field value
+                    );
                   },
                 );
             }

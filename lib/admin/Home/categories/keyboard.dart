@@ -21,15 +21,17 @@ class _ListKeyboardState extends State<ListKeyboard> {
 
   Future submit() async {
     final data = {
-      'categoryid': categoryName.text.toLowerCase(),
+      'category': categoryName.text.trim().toLowerCase(),
       'name': productName.text,
       'model': modelName.text,
+      'manufacturer': manufacturer.text,
     };
     FirebaseFirestore.instance.collection('keyboarddetails').doc().set(data);
     setState(() {
       productName.clear();
       categoryName.clear();
       modelName.clear();
+      manufacturer.clear();
     });
     showTopSnackBar(Overlay.of(context),
         const CustomSnackBar.success(message: "Item Added Successfully"));

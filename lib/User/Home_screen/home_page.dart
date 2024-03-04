@@ -7,6 +7,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:prosample_1/User/Build%20page/build_page.dart';
 import 'package:prosample_1/User/Pre%20Builds/Screen%20prebuild/prebuild.dart';
 import 'package:prosample_1/User/Pre%20Builds/prebuild_screen.dart';
+import 'package:prosample_1/User/category/motherboard/motherboard_details.dart';
 import 'package:prosample_1/User/category/processor/processor_details.dart';
 import 'package:prosample_1/User/utils/colors.dart';
 import 'package:prosample_1/User/utils/widget2.dart';
@@ -186,8 +187,19 @@ class _ScreenHomeState extends State<ScreenHome> {
                           padding: const EdgeInsets.all(8),
                           child: GestureDetector(
                             onTap: () {
-                              if(document['categoryid'] == 'processor'){
-                                Navigator.push(context, MaterialPageRoute(builder: (ctx)=> const DetailsProcessor()));
+                              if (document['categoryid'] == 'processor') {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (ctx) =>
+                                            const DetailsProcessor()));
+                              } else if (document['categoryid'] ==
+                                  'motherboard') {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (ctx) =>
+                                            const DetailsMotherboard()));
                               }
                             },
                             child: Container(
@@ -205,7 +217,8 @@ class _ScreenHomeState extends State<ScreenHome> {
                               width: MediaQuery.of(context).size.width * 0.38,
                               height: MediaQuery.of(context).size.height,
                               child: Column(
-                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
                                 children: [
                                   SizedBox(
                                       width: MediaQuery.of(context).size.width *
@@ -356,7 +369,7 @@ class _ScreenHomeState extends State<ScreenHome> {
                                 itemBuilder: (ctx, index) {
                                   DocumentSnapshot document =
                                       snapshot.data!.docs[index];
-                                 
+
                                   String imageUrl = document['image'];
                                   String name = document['name'];
                                   String idNum = document['idnum'];
@@ -375,8 +388,8 @@ class _ScreenHomeState extends State<ScreenHome> {
                                   String psu = document['psu'];
                                   String warranty = document['warranty'];
                                   Map<String, dynamic> prebuild = {
-                                     'image': imageUrl,
-                                     'idnum': idNum,
+                                    'image': imageUrl,
+                                    'idnum': idNum,
                                     'categoryid': categoryName,
                                     'name': name,
                                     'oldprice': oldPrice,

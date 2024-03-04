@@ -15,33 +15,36 @@ class ListMotherboard extends StatefulWidget {
 }
 
 class _ListMotherboardState extends State<ListMotherboard> {
-  final _idController = TextEditingController();
-  final _textController = TextEditingController();
-  final _modelName = TextEditingController();
-  final _chipset = TextEditingController();
-  final _socket = TextEditingController();
-  final _ramType = TextEditingController();
-  final _ssdType = TextEditingController();
+  final categoryName = TextEditingController();
+  final productName = TextEditingController();
+  final model = TextEditingController();
+  final clockSpeed = TextEditingController();
+  final socket = TextEditingController();
+  final manufacturer = TextEditingController();
+  final ramType = TextEditingController();
+  final ssdType = TextEditingController();
 
   Future submit() async {
     final data = {
-      'categoryid': _idController.text.toLowerCase(),
-      'name': _textController.text,
-      'model': _modelName.text,
-      'chipset': _chipset.text,
-      'socket': _socket.text,
-      'ram': _ramType.text,
-      'ssd': _ssdType.text,
+      'category': categoryName.text.trim().toLowerCase(),
+      'name': productName.text,
+      'model': model.text,
+      'manufacturer': manufacturer.text,
+      'maxclockspeed': clockSpeed.text,
+      'socket': socket.text,
+      'ram': ramType.text.trim().toUpperCase(),
+      'ssd': ssdType.text,
     };
     FirebaseFirestore.instance.collection('motherboarddetails').doc().set(data);
     setState(() {
-      _textController.clear();
-      _idController.clear();
-      _modelName.clear();
-      _chipset.clear();
-      _ramType.clear();
-      _socket.clear();
-      _ssdType.clear();
+      categoryName.clear();
+      productName.clear();
+      model.clear();
+      manufacturer.clear();
+      clockSpeed.clear();
+      ramType.clear();
+      socket.clear();
+      ssdType.clear();
     });
     showTopSnackBar(Overlay.of(context),
         const CustomSnackBar.success(message: "Item Added Successfully"));
@@ -49,7 +52,6 @@ class _ListMotherboardState extends State<ListMotherboard> {
 
   Future deleteItem(documentId) async {
     try {
-    
       await FirebaseFirestore.instance
           .collection('motherboarddetails')
           .doc(documentId)
@@ -78,28 +80,34 @@ class _ListMotherboardState extends State<ListMotherboard> {
                       key: formkey,
                       child: Column(
                         children: [
+                          const SizedBox(height: 10),
+                          AdminUi.admTextField(
+                              label: 'Product Category',
+                              textcontroller: categoryName),
+                          const SizedBox(height: 10),
                           AdminUi.admTextField(
                               label: 'Product Name',
-                              textcontroller: _idController),
+                              textcontroller: productName),
                           const SizedBox(height: 10),
                           AdminUi.admTextField(
-                              label: 'Product Series',
-                              textcontroller: _textController),
+                              label: 'Model Name', textcontroller: model),
                           const SizedBox(height: 10),
                           AdminUi.admTextField(
-                              label: 'Chipset Type', textcontroller: _chipset),
+                              label: 'Manufacturer',
+                              textcontroller: manufacturer),
                           const SizedBox(height: 10),
                           AdminUi.admTextField(
-                              label: 'Model Name', textcontroller: _modelName),
+                              label: 'Socket Type', textcontroller: socket),
                           const SizedBox(height: 10),
                           AdminUi.admTextField(
-                              label: 'Socket Type', textcontroller: _socket),
+                              label: 'Ram Type', textcontroller: ramType),
                           const SizedBox(height: 10),
                           AdminUi.admTextField(
-                              label: 'Ram Type', textcontroller: _ramType),
+                              label: 'Max Clock Speed',
+                              textcontroller: clockSpeed),
                           const SizedBox(height: 10),
                           AdminUi.admTextField(
-                              label: 'SSD Type', textcontroller: _ssdType),
+                              label: 'SSD Type', textcontroller: ssdType),
                         ],
                       )),
                 ],
@@ -187,9 +195,16 @@ class _ListMotherboardState extends State<ListMotherboard> {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Text(
-                                  name,
-                                  style: CustomText.title3,
+                                SizedBox(
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.73,
+                                  child: Text(
+                                    name,
+                                    overflow: TextOverflow.ellipsis,
+                                    maxLines: 1,
+                                    softWrap: false,
+                                    style: CustomText.title3,
+                                  ),
                                 ),
                                 IconButton(
                                   onPressed: () {
@@ -206,7 +221,7 @@ class _ListMotherboardState extends State<ListMotherboard> {
                               ],
                             ),
                           )),
-                    ); // Display the field value
+                    );
                   },
                 );
             }

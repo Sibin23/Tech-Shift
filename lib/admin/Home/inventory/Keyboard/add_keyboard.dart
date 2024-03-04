@@ -17,6 +17,7 @@ class ScreenAddKeyboard extends StatefulWidget {
 
 class _ScreenAddKeyboardState extends State<ScreenAddKeyboard> {
   final _formkey = GlobalKey<FormState>();
+  final idNum = TextEditingController();
   final categoryName = TextEditingController();
   final productName = TextEditingController();
   final manufacturer = TextEditingController();
@@ -38,9 +39,8 @@ class _ScreenAddKeyboardState extends State<ScreenAddKeyboard> {
   late String imageurl = '';
 
   Future<void> pickImage() async {
-    // ignore: no_leading_underscores_for_local_identifiers
-    final ImagePicker _picker = ImagePicker();
-    final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+    final ImagePicker picker = ImagePicker();
+    final XFile? image = await picker.pickImage(source: ImageSource.gallery);
     if (image != null) {
       imageurl = await uploadImage(image);
       setState(() {});
@@ -59,7 +59,8 @@ class _ScreenAddKeyboardState extends State<ScreenAddKeyboard> {
   // submit
   Future submitData() async {
     final data = {
-      'categoryid': categoryName.text.toLowerCase(),
+      'category': categoryName.text.toLowerCase(),
+      'idnum': idNum.text,
       'image': imageurl.toString(),
       'name': productName.text,
       'manufacturer': manufacturer.text,
@@ -76,11 +77,12 @@ class _ScreenAddKeyboardState extends State<ScreenAddKeyboard> {
     };
     FirebaseFirestore.instance
         .collection('keyboard')
-        .doc(categoryName.text.toLowerCase())
+        .doc(idNum.text.toLowerCase())
         .set(data);
     setState(() {
       categoryName.clear();
       imageurl = '';
+      idNum.clear();
       productName.clear();
       manufacturer.clear();
       _oldPrice.clear();
@@ -105,119 +107,208 @@ class _ScreenAddKeyboardState extends State<ScreenAddKeyboard> {
       body: SafeArea(
           child: SingleChildScrollView(
               child: StreamBuilder<QuerySnapshot>(
-                stream: FirebaseFirestore.instance.collection('keyboard').snapshots(),
-                builder: (context, snapshot) {
-                   if (snapshot.hasError) {
-                  return Text('Error: ${snapshot.error}');
-                }
-                if (!snapshot.hasData) {
-                  return const Center(child: CircularProgressIndicator());
-                }
-                final category = snapshot.data!.docs
-                    .map((doc) => doc['category'] as String)
-                    .toSet()
-                    .toList();
-                final keyboard = snapshot.data!.docs
-                    .map((doc) => doc['name'] as String)
-                    .toSet()
-                    .toList();
-                final model = snapshot.data!.docs
-                    .map((doc) => doc['model'] as String)
-                    .toSet()
-                    .toList();
-                    final manufacturer = snapshot.data!.docs
-                    .map((doc) => doc['manufacturer'] as String)
-                    .toSet()
-                    .toList();
-                  return Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: Column(children: [
-                        Text('Gaming Keyboard', style: CustomText.title),
-                        const SizedBox(height: 20),
-                        AdminUiHelper.customImageBox(() {
-                          pickImage();
-                        }, imageurl: imageurl),
-                        const SizedBox(height: 20),
-                        Form(
-                            key: _formkey,
-                            child: Column(children: [
-                              DropdownMenu<String>(
-                                        controller: productName,
-                                        menuStyle: const MenuStyle(
-                                            surfaceTintColor:
-                                                MaterialStatePropertyAll(
-                                                    Colors.white)),
-                                        hintText: 'Select Category',
-                                        width:
-                                            MediaQuery.of(context).size.width *
-                                                .93,
-                                        menuHeight: 300,
-                                        inputDecorationTheme:
-                                            InputDecorationTheme(
-                                                hintStyle: const TextStyle(
-                                                    color:
-                                                        CustomColors.appTheme),
-                                                border: OutlineInputBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            8)),
-                                                fillColor: Colors.white,
-                                                filled: true),
-                                        onSelected: (value) {
-                                          setState(() {
-                                            selectedCategory = value;
-                                          });
-                                        },
-                                        dropdownMenuEntries: category
-                                            .map<DropdownMenuEntry<String>>(
-                                                (String value) {
-                                          return DropdownMenuEntry<String>(
-                                              value: value, label: value);
-                                        }).toList()),
-                              AdminUi.admTextField(
-                                  label: 'Old Price',
-                                  textcontroller: _oldPrice),
-                              const SizedBox(height: 10),
-                              AdminUi.admTextField(
-                                  label: 'New Price',
-                                  textcontroller: _newPrice),
-                              const SizedBox(height: 10),
-                              AdminUi.admTextField(
-                                  label: 'Model Name',
-                                  textcontroller: _modelName),
-                              const SizedBox(height: 10),
-                              AdminUi.admTextField(
-                                  label: 'Product Dimensions',
-                                  textcontroller: _productDimension),
-                              const SizedBox(height: 10),
-                              AdminUi.admTextField(
-                                  label: 'Features',
-                                  textcontroller: _specialFeatures),
-                              const SizedBox(height: 10),
-                              AdminUi.admTextField(
-                                  label: 'Connectivity',
-                                  textcontroller: _connector),
-                              const SizedBox(height: 10),
-                              AdminUi.admTextField(
-                                  label: 'Material', textcontroller: _material),
-                              const SizedBox(height: 10),
-                              AdminUi.admTextField(
-                                  label: 'Country', textcontroller: _country),
-                              const SizedBox(height: 10),
-                              AdminUi.admTextField(
-                                  label: 'Warranty', textcontroller: _warranty),
-                            ])), // Text field
-                        const SizedBox(height: 30),
-                        AdminUiHelper.customButton(context, () {
-                          if (_formkey.currentState!.validate()) {
-                            submitData();
-                            AdminUiHelper.customSnackbar(
-                                context, 'Item Added Successfully !');
-                          }
-                        }, text: 'Save'),
-                      ]));
-                }
-              ))),
+                  stream: FirebaseFirestore.instance
+                      .collection('keyboarddetails')
+                      .snapshots(),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasError) {
+                      return Text('Error: ${snapshot.error}');
+                    }
+                    if (!snapshot.hasData) {
+                      return const Center(child: CircularProgressIndicator());
+                    }
+                    final category = snapshot.data!.docs
+                        .map((doc) => doc['category'] as String)
+                        .toSet()
+                        .toList();
+                    final keyboard = snapshot.data!.docs
+                        .map((doc) => doc['name'] as String)
+                        .toSet()
+                        .toList();
+                    final model = snapshot.data!.docs
+                        .map((doc) => doc['model'] as String)
+                        .toSet()
+                        .toList();
+                    final manufactured = snapshot.data!.docs
+                        .map((doc) => doc['manufacturer'] as String)
+                        .toSet()
+                        .toList();
+                    return Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: Column(children: [
+                          Text('Gaming Keyboard', style: CustomText.title),
+                          const SizedBox(height: 20),
+                          AdminUiHelper.customImageBox(() {
+                            pickImage();
+                          }, imageurl: imageurl),
+                          const SizedBox(height: 20),
+                          Form(
+                              key: _formkey,
+                              child: Column(children: [
+                                AdminUi.admTextField(
+                                    label: 'Unique ID', textcontroller: idNum),
+                                const SizedBox(height: 10),
+                                DropdownMenu<String>(
+                                    label: const Text('Select Category',
+                                        style: TextStyle(
+                                            color: CustomColors.appTheme)),
+                                    controller: categoryName,
+                                    menuStyle: const MenuStyle(
+                                        surfaceTintColor:
+                                            MaterialStatePropertyAll(
+                                                Colors.white)),
+                                    width:
+                                        MediaQuery.of(context).size.width * .93,
+                                    menuHeight: 300,
+                                    inputDecorationTheme: InputDecorationTheme(
+                                        border: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(8)),
+                                        fillColor: Colors.white,
+                                        filled: true),
+                                    onSelected: (value) {
+                                      setState(() {
+                                        selectedCategory = value;
+                                      });
+                                    },
+                                    dropdownMenuEntries: category
+                                        .map<DropdownMenuEntry<String>>(
+                                            (String value) {
+                                      return DropdownMenuEntry<String>(
+                                          value: value, label: value);
+                                    }).toList()),
+                                const SizedBox(height: 10),
+                                DropdownMenu<String>(
+                                    label: const Text('Select Keyboard',
+                                        style: TextStyle(
+                                            color: CustomColors.appTheme)),
+                                    controller: productName,
+                                    menuStyle: const MenuStyle(
+                                        surfaceTintColor:
+                                            MaterialStatePropertyAll(
+                                                Colors.white)),
+                                    width:
+                                        MediaQuery.of(context).size.width * .93,
+                                    menuHeight: 300,
+                                    inputDecorationTheme: InputDecorationTheme(
+                                        border: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(8)),
+                                        fillColor: Colors.white,
+                                        filled: true),
+                                    onSelected: (value) {
+                                      setState(() {
+                                        sselectedKeyboard = value;
+                                      });
+                                    },
+                                    dropdownMenuEntries: keyboard
+                                        .map<DropdownMenuEntry<String>>(
+                                            (String value) {
+                                      return DropdownMenuEntry<String>(
+                                          value: value, label: value);
+                                    }).toList()),
+                                const SizedBox(height: 10),
+                                DropdownMenu<String>(
+                                    label: const Text('Select Model',
+                                        style: TextStyle(
+                                            color: CustomColors.appTheme)),
+                                    controller: _modelName,
+                                    menuStyle: const MenuStyle(
+                                        surfaceTintColor:
+                                            MaterialStatePropertyAll(
+                                                Colors.white)),
+                                    width:
+                                        MediaQuery.of(context).size.width * .93,
+                                    menuHeight: 300,
+                                    inputDecorationTheme: InputDecorationTheme(
+                                        border: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(8)),
+                                        fillColor: Colors.white,
+                                        filled: true),
+                                    onSelected: (value) {
+                                      setState(() {
+                                        selectedCategory = value;
+                                      });
+                                    },
+                                    dropdownMenuEntries: model
+                                        .map<DropdownMenuEntry<String>>(
+                                            (String value) {
+                                      return DropdownMenuEntry<String>(
+                                          value: value, label: value);
+                                    }).toList()),
+                                const SizedBox(height: 10),
+                                DropdownMenu<String>(
+                                    label: const Text('Select Manufacturer',
+                                        style: TextStyle(
+                                            color: CustomColors.appTheme)),
+                                    controller: manufacturer,
+                                    menuStyle: const MenuStyle(
+                                        surfaceTintColor:
+                                            MaterialStatePropertyAll(
+                                                Colors.white)),
+                                    width:
+                                        MediaQuery.of(context).size.width * .93,
+                                    menuHeight: 300,
+                                    inputDecorationTheme: InputDecorationTheme(
+                                        border: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(8)),
+                                        fillColor: Colors.white,
+                                        filled: true),
+                                    onSelected: (value) {
+                                      setState(() {
+                                        selectedManufacturer = value;
+                                      });
+                                    },
+                                    dropdownMenuEntries: manufactured
+                                        .map<DropdownMenuEntry<String>>(
+                                            (String value) {
+                                      return DropdownMenuEntry<String>(
+                                          value: value, label: value);
+                                    }).toList()),
+                                const SizedBox(height: 10),
+                                AdminUi.admTextField(
+                                    label: 'Old Price',
+                                    textcontroller: _oldPrice),
+                                const SizedBox(height: 10),
+                                AdminUi.admTextField(
+                                    label: 'New Price',
+                                    textcontroller: _newPrice),
+                                const SizedBox(height: 10),
+                                AdminUi.admTextField(
+                                    label: 'Product Dimensions',
+                                    textcontroller: _productDimension),
+                                const SizedBox(height: 10),
+                                AdminUi.featuresTextfield(
+                                    label: 'Features',
+                                    textcontroller: _specialFeatures),
+                                const SizedBox(height: 10),
+                                AdminUi.admTextField(
+                                    label: 'Connectivity',
+                                    textcontroller: _connector),
+                                const SizedBox(height: 10),
+                                AdminUi.admTextField(
+                                    label: 'Material',
+                                    textcontroller: _material),
+                                const SizedBox(height: 10),
+                                AdminUi.admTextField(
+                                    label: 'Country', textcontroller: _country),
+                                const SizedBox(height: 10),
+                                AdminUi.admTextField(
+                                    label: 'Warranty',
+                                    textcontroller: _warranty),
+                              ])), // Text field
+                          const SizedBox(height: 30),
+                          AdminUiHelper.customButton(context, () {
+                            if (_formkey.currentState!.validate()) {
+                              submitData();
+                              AdminUiHelper.customSnackbar(
+                                  context, 'Item Added Successfully !');
+                            }
+                          }, text: 'Save'),
+                        ]));
+                  }))),
     );
   }
 }

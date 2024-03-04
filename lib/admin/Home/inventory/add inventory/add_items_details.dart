@@ -9,8 +9,10 @@ import 'package:prosample_1/admin/Home/inventory/Coolers/cooler_list.dart';
 import 'package:prosample_1/admin/Home/inventory/Headset/details_headset.dart';
 import 'package:prosample_1/admin/Home/inventory/Keyboard/list_keyboard.dart';
 import 'package:prosample_1/admin/Home/inventory/Monitor/add_monitor.dart';
+import 'package:prosample_1/admin/Home/inventory/Monitor/monitor_list.dart';
+import 'package:prosample_1/admin/Home/inventory/MotherBoard/Motherboard_list.dart';
 import 'package:prosample_1/admin/Home/inventory/MotherBoard/add_motherboard.dart';
-import 'package:prosample_1/admin/Home/inventory/Mouse/add_mouse.dart';
+import 'package:prosample_1/admin/Home/inventory/Mouse/mouse_list.dart';
 import 'package:prosample_1/admin/Home/inventory/RAM/add_ram.dart';
 import 'package:prosample_1/admin/Home/inventory/SSD/add_ssd.dart';
 import 'package:prosample_1/admin/Home/inventory/processor/details.dart';
@@ -104,21 +106,21 @@ class _ScreenItemDetailsState extends State<ScreenItemDetails> {
                                   context,
                                   MaterialPageRoute(
                                       builder: (ctx) =>
-                                          const ScreenAddMouse()),
+                                          const MouseDetails()),
                                 );
                               }else if(document['categoryid'] == 'monitor'){
                                  Navigator.push(
                                   context,
                                   MaterialPageRoute(
                                       builder: (ctx1) =>
-                                          const ScreenAddMonitor()),
+                                          const MonitorDetails()),
                                 );
                               }else if(document['categoryid'] == 'motherboard'){
                                  Navigator.push(
                                   context,
                                   MaterialPageRoute(
                                       builder: (ctx1) =>
-                                          const ScreenAddMotherboard())
+                                          const MotherboardDetails())
                                 );
                               }else if(document['categoryid'] == 'psu'){
                                  Navigator.push(
