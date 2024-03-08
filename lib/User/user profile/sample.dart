@@ -1,14 +1,10 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
-
 import 'package:lottie/lottie.dart';
 import 'package:prosample_1/User/db/db_functions.dart';
 import 'package:prosample_1/User/db/user_model.dart';
 import 'package:prosample_1/User/user%20profile/add_account.dart';
 import 'package:prosample_1/User/user%20profile/update_profile.dart';
-
 import 'package:prosample_1/User/utils/colors.dart';
 import 'package:prosample_1/User/utils/commonfile.dart';
 import 'package:prosample_1/User/utils/text_decorations.dart';

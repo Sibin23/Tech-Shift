@@ -111,6 +111,7 @@ class _ScreenAddProcessorState extends State<ScreenAddProcessor> {
   String? selectedSocket;
   String? selectedThreads;
   String? selectedCores;
+  String? selectedCategory;
   @override
   void initState() {
     FirebaseFirestore.instance.collection('cpudetails').get().then((snapshot) {
@@ -136,6 +137,10 @@ class _ScreenAddProcessorState extends State<ScreenAddProcessor> {
               if (!snapshot.hasData) {
                 return const Center(child: CircularProgressIndicator());
               }
+              final category = snapshot.data!.docs
+                  .map((doc) => doc['category'] as String)
+                  .toSet()
+                  .toList();
               final processor = snapshot.data!.docs
                   .map((doc) => doc['name'] as String)
                   .toSet()
@@ -179,7 +184,35 @@ class _ScreenAddProcessorState extends State<ScreenAddProcessor> {
                                 AdminUi.admTextField(
                                     label: 'Unique ID', textcontroller: _idNum),
                                 const SizedBox(height: 10),
-                                AdminUi.admTextField(label: 'Category', textcontroller: _productCategory),
+                                DropdownMenu<String>(
+                                    controller: _productCategory,
+                                    menuStyle: const MenuStyle(
+                                        surfaceTintColor:
+                                            MaterialStatePropertyAll(
+                                                Colors.white)),
+                                    hintText: 'Select Category',
+                                    width:
+                                        MediaQuery.of(context).size.width * .93,
+                                    menuHeight: 300,
+                                    inputDecorationTheme: InputDecorationTheme(
+                                        hintStyle: const TextStyle(
+                                            color: CustomColors.appTheme),
+                                        border: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(8)),
+                                        fillColor: Colors.white,
+                                        filled: true),
+                                    onSelected: (value) {
+                                      setState(() {
+                                        selectedCategory = value;
+                                      });
+                                    },
+                                    dropdownMenuEntries: category
+                                        .map<DropdownMenuEntry<String>>(
+                                            (String value) {
+                                      return DropdownMenuEntry<String>(
+                                          value: value, label: value);
+                                    }).toList()),
                                 const SizedBox(height: 10),
                                 DropdownMenu<String>(
                                     controller: _socket,
@@ -365,6 +398,7 @@ class _ScreenAddProcessorState extends State<ScreenAddProcessor> {
                         const SizedBox(height: 30),
                         AdminUiHelper.customButton(context, () {
                           if (_formkey.currentState!.validate()) {
+                            Navigator.pop(context);
                             submitData();
                             AdminUiHelper.customSnackbar(
                                 context, 'Item Added Successfully !');

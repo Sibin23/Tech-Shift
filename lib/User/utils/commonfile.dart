@@ -90,6 +90,7 @@ class UiHelper {
       ),
     );
   }
+
 // itemcard
   static itemCard({
     required String image,
@@ -125,7 +126,9 @@ class UiHelper {
                   children: [
                     const Icon(Icons.currency_rupee),
                     Text(
-                      oldamt,
+                      oldamt.replaceAllMapped(
+                          RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
+                          (Match m) => "${m[1]},"),
                       style: const TextStyle(
                           color: Colors.black54,
                           decoration: TextDecoration.lineThrough,
@@ -135,7 +138,9 @@ class UiHelper {
                 ),
                 const SizedBox(width: 10),
                 Text(
-                  currentamt,
+                  currentamt.replaceAllMapped(
+                      RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
+                      (Match m) => "${m[1]},"),
                   style: const TextStyle(color: Colors.green, fontSize: 16),
                 )
               ],
@@ -145,6 +150,7 @@ class UiHelper {
       ),
     );
   }
+
 // snackbar
   static userSnackbar(BuildContext context, String text) {
     return ScaffoldMessenger.of(context).showSnackBar(SnackBar(

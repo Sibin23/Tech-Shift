@@ -1,4 +1,4 @@
-// ignore_for_file: use_build_context_synchronously
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:prosample_1/admin/utils/colors.dart';
@@ -40,20 +40,30 @@ class _ListMonitorState extends State<ListMonitor> {
 
   Future deleteItem(documentId) async {
     try {
-      print(documentId);
       await FirebaseFirestore.instance
           .collection('monitordetails')
           .doc(documentId)
           .delete();
-      showTopSnackBar(Overlay.of(context),
-          const CustomSnackBar.error(message: "Item Deleted Successfully"));
+     deleteMessage();
     } catch (error) {
       // Handle errors gracefully
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text('Error deleting item: $error')));
+    errorMessage(error);
     }
   }
+ void errorMessage(error) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Error deleting item: $error')),
+    );
+  }
 
+  void deleteMessage() {
+    return showTopSnackBar(
+      Overlay.of(context),
+      const CustomSnackBar.error(
+        message: "Item Deleted Successfully",
+      ),
+    );
+  }
   void addItem() {
     final formkey = GlobalKey<FormState>();
     showDialog(

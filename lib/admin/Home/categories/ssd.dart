@@ -1,4 +1,3 @@
-// ignore_for_file: use_build_context_synchronously
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:prosample_1/admin/utils/colors.dart';
@@ -24,9 +23,9 @@ class _ListSsdState extends State<ListSsd> {
 
   Future submit() async {
     final data = {
-      'categoryid': _idController.text.toLowerCase(),
+      'category': _idController.text.trim().toLowerCase(),
       'name': _textController.text,
-      'modelname': _modelName.text,
+      'model': _modelName.text,
       'gentype': _genType.text,
       'speed': _speed.text,
       'storage': _storage.text,
@@ -54,18 +53,25 @@ class _ListSsdState extends State<ListSsd> {
           .collection('ssddetails')
           .doc(documentId)
           .delete();
-      showTopSnackBar(
-        Overlay.of(context),
-        const CustomSnackBar.error(
-          message: "Item Deleted Successfully",
-        ),
-      );
+      deleteMessage();
     } catch (error) {
-      // Handle errors gracefully
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error deleting item: $error')),
-      );
+      errorMessage(error);
     }
+  }
+
+  void errorMessage(error) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Error deleting item: $error')),
+    );
+  }
+
+  void deleteMessage() {
+    return showTopSnackBar(
+      Overlay.of(context),
+      const CustomSnackBar.error(
+        message: "Item Deleted Successfully",
+      ),
+    );
   }
 
   void addItem() {
@@ -83,11 +89,11 @@ class _ListSsdState extends State<ListSsd> {
                       key: formkey,
                       child: Column(children: [
                         AdminUi.admTextField(
-                            label: 'Product Name',
+                            label: 'Product Category',
                             textcontroller: _idController),
                         const SizedBox(height: 10),
                         AdminUi.admTextField(
-                            label: 'Product Series',
+                            label: 'Product Name',
                             textcontroller: _textController),
                         const SizedBox(height: 10),
                         AdminUi.admTextField(
@@ -97,7 +103,7 @@ class _ListSsdState extends State<ListSsd> {
                             label: 'Gen Type', textcontroller: _genType),
                         const SizedBox(height: 10),
                         AdminUi.admTextField(
-                            label: 'speed', textcontroller: _speed),
+                            label: 'Transfer Speed', textcontroller: _speed),
                         const SizedBox(height: 10),
                         AdminUi.admTextField(
                             label: 'Storage Capacity', textcontroller: _storage)
@@ -159,7 +165,6 @@ class _ListSsdState extends State<ListSsd> {
                 return ListView.builder(
                   itemCount: snapshot.data!.docs.length,
                   itemBuilder: (ctx, index) {
-                    // Access the document and the desired field
                     final document = snapshot.data!.docs[index];
                     String name = document['name'];
                     return Padding(
@@ -203,7 +208,7 @@ class _ListSsdState extends State<ListSsd> {
                               ],
                             ),
                           )),
-                    ); // Display the field value
+                    ); 
                   },
                 );
             }

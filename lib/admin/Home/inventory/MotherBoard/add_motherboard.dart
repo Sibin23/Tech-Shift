@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -33,6 +32,7 @@ class __ScreenAddMotherboardState extends State<ScreenAddMotherboard> {
   final ramMax = TextEditingController();
   final _processorSocket = TextEditingController();
   final _ssdType = TextEditingController();
+  final ports = TextEditingController();
   final maxClock = TextEditingController();
   final _voltage = TextEditingController();
   final _formFactor = TextEditingController();
@@ -50,9 +50,8 @@ class __ScreenAddMotherboardState extends State<ScreenAddMotherboard> {
   String? selectedRam;
   String? selectedSsd;
   Future<void> pickImage() async {
-    // ignore: no_leading_underscores_for_local_identifiers
-    final ImagePicker _picker = ImagePicker();
-    final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+    final ImagePicker picker = ImagePicker();
+    final XFile? image = await picker.pickImage(source: ImageSource.gallery);
     if (image != null) {
       imageurl = await uploadImage(image);
       setState(() {});
@@ -82,12 +81,13 @@ class __ScreenAddMotherboardState extends State<ScreenAddMotherboard> {
       'ramType': _ramType.text,
       'ramsize': ramMax.text,
       'ramslots': ramSlots.text,
-      'ssdtype': _ssdType.text, 
+      'ssdtype': _ssdType.text,
       'ssdslots': _slots.text,
       'oldprice': _oldPrice.text,
       'newprice': _newPrice.text,
-      'productdimension': _productDimension.text,  
+      'productdimension': _productDimension.text,
       'features': _specialFeatures.text,
+      'ports': ports.text,
       'voltage': _voltage.text,
       'formfactor': _formFactor.text,
       'country': _country.text,
@@ -103,24 +103,25 @@ class __ScreenAddMotherboardState extends State<ScreenAddMotherboard> {
       _productCategory.clear();
       imageurl = '';
       _productName.clear();
-     maxClock.clear();
-     _modelName.clear();
-     manufacturer.clear();
-     _processorSocket.clear();
-     _ramType.clear();
-     ramMax.clear();
-     ramSlots.clear();
-     _ssdType.clear();
-     _oldPrice.clear();
-     _newPrice.clear();
-     _productDimension.clear();
-     _slots.clear();
-     _specialFeatures.clear();
-     _voltage.clear();
-     _formFactor.clear();
-     _country.clear();
-     _itemWeight.clear();
-     _warranty.clear();
+      maxClock.clear();
+      _modelName.clear();
+      manufacturer.clear();
+      _processorSocket.clear();
+      _ramType.clear();
+      ramMax.clear();
+      ramSlots.clear();
+      _ssdType.clear();
+      _oldPrice.clear();
+      _newPrice.clear();
+      _productDimension.clear();
+      _slots.clear();
+      _specialFeatures.clear();
+      ports.clear();
+      _voltage.clear();
+      _formFactor.clear();
+      _country.clear();
+      _itemWeight.clear();
+      _warranty.clear();
     });
   }
 
@@ -453,7 +454,9 @@ class __ScreenAddMotherboardState extends State<ScreenAddMotherboard> {
                                   label: 'Product Dimensions',
                                   textcontroller: _productDimension),
                               const SizedBox(height: 10),
-                              
+                              AdminUi.featuresTextfield(
+                                  label: 'Ports', textcontroller: ports),
+                              const SizedBox(height: 10),
                               AdminUi.featuresTextfield(
                                   label: 'Features',
                                   textcontroller: _specialFeatures),

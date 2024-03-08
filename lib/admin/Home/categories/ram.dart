@@ -1,4 +1,3 @@
-// ignore_for_file: use_build_context_synchronously
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:prosample_1/admin/utils/colors.dart';
@@ -19,15 +18,17 @@ class _ListRamState extends State<ListRam> {
   final _textController = TextEditingController();
   final _ramType = TextEditingController();
   final _speed = TextEditingController();
-  final _modelName = TextEditingController();
+  final modelName = TextEditingController();
+  final ramSize = TextEditingController();
 
   Future submit() async {
     final data = {
-      'categoryid': _idController.text.toLowerCase(),
-      'name': _textController.text,
-      'modelname': _modelName.text,
-      'ramtype': _ramType.text,
-      'speed': _speed.text,
+      'category': _idController.text.trim().toLowerCase(),
+      'name': _textController.text.trim(),
+      'model': modelName.text.trim(),
+      'ramtype': _ramType.text.trim().toUpperCase(),
+      'speed': _speed.text.trim(),
+      'ramsize': ramSize.text
     };
     FirebaseFirestore.instance.collection('ramdetails').doc().set(data);
     setState(() {
@@ -35,7 +36,8 @@ class _ListRamState extends State<ListRam> {
       _idController.clear();
       _ramType.clear();
       _speed.clear();
-      _modelName.clear();
+      modelName.clear();
+      ramSize.clear();
     });
     showTopSnackBar(
       Overlay.of(context),
@@ -51,18 +53,25 @@ class _ListRamState extends State<ListRam> {
           .collection('ramdetails')
           .doc(documentId)
           .delete();
-      showTopSnackBar(
-        Overlay.of(context),
-        const CustomSnackBar.error(
-          message: "Item Deleted Successfully",
-        ),
-      );
+      deleteMessage();
     } catch (error) {
-      // Handle errors gracefully
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error deleting item: $error')),
-      );
+      errorMessage(error);
     }
+  }
+
+  void errorMessage(error) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Error deleting item: $error')),
+    );
+  }
+
+  void deleteMessage() {
+    return showTopSnackBar(
+      Overlay.of(context),
+      const CustomSnackBar.error(
+        message: "Item Deleted Successfully",
+      ),
+    );
   }
 
   void addItem() {
@@ -80,18 +89,21 @@ class _ListRamState extends State<ListRam> {
                       key: formkey,
                       child: Column(children: [
                         AdminUi.admTextField(
-                            label: 'Product Name',
+                            label: 'Product Category',
                             textcontroller: _idController),
                         const SizedBox(height: 10),
                         AdminUi.admTextField(
-                            label: 'Product Series',
+                            label: 'Product Name',
                             textcontroller: _textController),
                         const SizedBox(height: 10),
                         AdminUi.admTextField(
-                            label: 'Model name', textcontroller: _modelName),
+                            label: 'Model name', textcontroller: modelName),
                         const SizedBox(height: 10),
                         AdminUi.admTextField(
                             label: 'RAM Type', textcontroller: _ramType),
+                        const SizedBox(height: 10),
+                        AdminUi.admTextField(
+                            label: 'RAM Size', textcontroller: ramSize),
                         const SizedBox(height: 10),
                         AdminUi.admTextField(
                             label: 'Clock Speed', textcontroller: _speed),
@@ -154,7 +166,6 @@ class _ListRamState extends State<ListRam> {
                 return ListView.builder(
                   itemCount: snapshot.data!.docs.length,
                   itemBuilder: (ctx, index) {
-                    // Access the document and the desired field
                     final document = snapshot.data!.docs[index];
                     String name = document['name'];
                     return Padding(
@@ -179,9 +190,18 @@ class _ListRamState extends State<ListRam> {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Text(
-                                  name,
-                                  style: CustomText.title3,
+                                SizedBox(
+                                  child: SizedBox(
+                                    width: MediaQuery.of(context).size.width *
+                                        0.73,
+                                    child: Text(
+                                      name,
+                                      overflow: TextOverflow.ellipsis,
+                                      maxLines: 1,
+                                      softWrap: false,
+                                      style: CustomText.title3,
+                                    ),
+                                  ),
                                 ),
                                 IconButton(
                                   onPressed: () {
@@ -198,7 +218,7 @@ class _ListRamState extends State<ListRam> {
                               ],
                             ),
                           )),
-                    ); // Display the field value
+                    );
                   },
                 );
             }

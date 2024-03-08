@@ -4,7 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:prosample_1/User/Build%20page/build_page.dart';
+import 'package:prosample_1/User/Build%20page/build_details.dart';
 import 'package:prosample_1/User/Pre%20Builds/Screen%20prebuild/prebuild.dart';
 import 'package:prosample_1/User/Pre%20Builds/prebuild_screen.dart';
 import 'package:prosample_1/User/category/motherboard/motherboard_details.dart';

@@ -39,9 +39,9 @@ class _EditProcessorState extends State<EditProcessor> {
   String? selectedSocket;
   String? selectedThreads;
   String? selectedCores;
+  String? selectedCategory;
   String? image = '';
   Future<void> pickImage() async {
-    
     final ImagePicker picker = ImagePicker();
     final XFile? image = await picker.pickImage(source: ImageSource.gallery);
 
@@ -156,9 +156,15 @@ class _EditProcessorState extends State<EditProcessor> {
                           if (!snapshot.hasData) {
                             return const Center(
                                 child: CircularProgressIndicator());
-                          }else{
-                            const Center(child: CircularProgressIndicator(color: CustomColors.appTheme));
+                          } else {
+                            const Center(
+                                child: CircularProgressIndicator(
+                                    color: CustomColors.appTheme));
                           }
+                          final category = snapshot.data!.docs
+                  .map((doc) => doc['category'] as String)
+                  .toSet()
+                  .toList();
                           final processor = snapshot.data!.docs
                               .map((doc) => doc['name'] as String)
                               .toSet()
@@ -182,8 +188,7 @@ class _EditProcessorState extends State<EditProcessor> {
                           return Padding(
                               padding: const EdgeInsets.all(10.0),
                               child: Column(
-                                  crossAxisAlignment:
-                                      CrossAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
                                     Text('Update Processor',
                                         style: CustomText.title),
@@ -196,9 +201,39 @@ class _EditProcessorState extends State<EditProcessor> {
                                         key: _formkey,
                                         child: Column(
                                           children: [
-                                            AdminUi.admTextField(label: 'Unique ID', textcontroller: _idNum),
-                                            const SizedBox(height: 10),
-                                            AdminUi.admTextField(label: 'Category', textcontroller: _productCategory),
+                                            AdminUi.admTextField(
+                                                label: 'Unique ID',
+                                                textcontroller: _idNum),
+                                             const SizedBox(height: 10),
+                                DropdownMenu<String>(
+                                    controller: _productCategory,
+                                    menuStyle: const MenuStyle(
+                                        surfaceTintColor:
+                                            MaterialStatePropertyAll(
+                                                Colors.white)),
+                                    hintText: 'Select Category',
+                                    width:
+                                        MediaQuery.of(context).size.width * .93,
+                                    menuHeight: 300,
+                                    inputDecorationTheme: InputDecorationTheme(
+                                        hintStyle: const TextStyle(
+                                            color: CustomColors.appTheme),
+                                        border: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(8)),
+                                        fillColor: Colors.white,
+                                        filled: true),
+                                    onSelected: (value) {
+                                      setState(() {
+                                        selectedCategory = value;
+                                      });
+                                    },
+                                    dropdownMenuEntries: category
+                                        .map<DropdownMenuEntry<String>>(
+                                            (String value) {
+                                      return DropdownMenuEntry<String>(
+                                          value: value, label: value);
+                                    }).toList()),
                                             const SizedBox(height: 10),
                                             DropdownMenu<String>(
                                                 controller: _productName,
@@ -206,29 +241,29 @@ class _EditProcessorState extends State<EditProcessor> {
                                                     surfaceTintColor:
                                                         MaterialStatePropertyAll(
                                                             Colors.white)),
-                                                hintText:
-                                                    'Select Processor',
-                                                width:
-                                                    MediaQuery.of(context)
-                                                            .size
-                                                            .width *
-                                                        .93,
+                                                hintText: 'Select Processor',
+                                                width: MediaQuery.of(context)
+                                                        .size
+                                                        .width *
+                                                    .93,
                                                 menuHeight: 300,
                                                 inputDecorationTheme:
                                                     InputDecorationTheme(
-                                                      hintStyle: const TextStyle(color: CustomColors.appTheme),
-                                                        border: OutlineInputBorder(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        8)),
-                                                        fillColor:
-                                                            Colors.white,
+                                                        hintStyle: const TextStyle(
+                                                            color:
+                                                                CustomColors
+                                                                    .appTheme),
+                                                        border:
+                                                            OutlineInputBorder(
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            8)),
+                                                        fillColor: Colors.white,
                                                         filled: true),
                                                 onSelected: (value) {
                                                   setState(() {
-                                                    selectedProcessor =
-                                                        value;
+                                                    selectedProcessor = value;
                                                   });
                                                 },
                                                 dropdownMenuEntries: processor
@@ -247,22 +282,24 @@ class _EditProcessorState extends State<EditProcessor> {
                                                         MaterialStatePropertyAll(
                                                             Colors.white)),
                                                 hintText: 'Select Socket',
-                                                width:
-                                                    MediaQuery.of(context)
-                                                            .size
-                                                            .width *
-                                                        .93,
+                                                width: MediaQuery.of(context)
+                                                        .size
+                                                        .width *
+                                                    .93,
                                                 menuHeight: 300,
                                                 inputDecorationTheme:
                                                     InputDecorationTheme(
-                                                      hintStyle: const TextStyle(color: CustomColors.appTheme),
-                                                        border: OutlineInputBorder(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        8)),
-                                                        fillColor:
-                                                            Colors.white,
+                                                        hintStyle: const TextStyle(
+                                                            color:
+                                                                CustomColors
+                                                                    .appTheme),
+                                                        border:
+                                                            OutlineInputBorder(
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            8)),
+                                                        fillColor: Colors.white,
                                                         filled: true),
                                                 onSelected: (value) {
                                                   setState(() {
@@ -285,22 +322,24 @@ class _EditProcessorState extends State<EditProcessor> {
                                                         MaterialStatePropertyAll(
                                                             Colors.white)),
                                                 hintText: 'Select Cores',
-                                                width:
-                                                    MediaQuery.of(context)
-                                                            .size
-                                                            .width *
-                                                        .93,
+                                                width: MediaQuery.of(context)
+                                                        .size
+                                                        .width *
+                                                    .93,
                                                 menuHeight: 300,
                                                 inputDecorationTheme:
                                                     InputDecorationTheme(
-                                                      hintStyle: const TextStyle(color: CustomColors.appTheme),
-                                                        border: OutlineInputBorder(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        8)),
-                                                        fillColor:
-                                                            Colors.white,
+                                                        hintStyle: const TextStyle(
+                                                            color:
+                                                                CustomColors
+                                                                    .appTheme),
+                                                        border:
+                                                            OutlineInputBorder(
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            8)),
+                                                        fillColor: Colors.white,
                                                         filled: true),
                                                 onSelected: (value) {
                                                   setState(() {
@@ -323,22 +362,24 @@ class _EditProcessorState extends State<EditProcessor> {
                                                         MaterialStatePropertyAll(
                                                             Colors.white)),
                                                 hintText: 'Select Threads',
-                                                width:
-                                                    MediaQuery.of(context)
-                                                            .size
-                                                            .width *
-                                                        .93,
+                                                width: MediaQuery.of(context)
+                                                        .size
+                                                        .width *
+                                                    .93,
                                                 menuHeight: 300,
                                                 inputDecorationTheme:
                                                     InputDecorationTheme(
-                                                      hintStyle: const TextStyle(color: CustomColors.appTheme),
-                                                        border: OutlineInputBorder(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        8)),
-                                                        fillColor:
-                                                            Colors.white,
+                                                        hintStyle: const TextStyle(
+                                                            color:
+                                                                CustomColors
+                                                                    .appTheme),
+                                                        border:
+                                                            OutlineInputBorder(
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            8)),
+                                                        fillColor: Colors.white,
                                                         filled: true),
                                                 onSelected: (value) {
                                                   setState(() {
@@ -360,24 +401,25 @@ class _EditProcessorState extends State<EditProcessor> {
                                                     surfaceTintColor:
                                                         MaterialStatePropertyAll(
                                                             Colors.white)),
-                                                hintText:
-                                                    'Select Clock Speed',
-                                                width:
-                                                    MediaQuery.of(context)
-                                                            .size
-                                                            .width *
-                                                        .93,
+                                                hintText: 'Select Clock Speed',
+                                                width: MediaQuery.of(context)
+                                                        .size
+                                                        .width *
+                                                    .93,
                                                 menuHeight: 300,
                                                 inputDecorationTheme:
                                                     InputDecorationTheme(
-                                                      hintStyle: const TextStyle(color: CustomColors.appTheme),
-                                                        border: OutlineInputBorder(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        8)),
-                                                        fillColor:
-                                                            Colors.white,
+                                                        hintStyle: const TextStyle(
+                                                            color:
+                                                                CustomColors
+                                                                    .appTheme),
+                                                        border:
+                                                            OutlineInputBorder(
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            8)),
+                                                        fillColor: Colors.white,
                                                         filled: true),
                                                 onSelected: (value) {
                                                   setState(() {
@@ -406,14 +448,12 @@ class _EditProcessorState extends State<EditProcessor> {
                                                 textcontroller: _cache),
                                             const SizedBox(height: 10),
                                             AdminUi.admTextField(
-                                                label:
-                                                    'Integrated Graphics',
+                                                label: 'Integrated Graphics',
                                                 textcontroller:
                                                     _integratedGraphics),
                                             const SizedBox(height: 10),
                                             AdminUi.admTextField(
-                                                label:
-                                                    'Included CPU Cooler',
+                                                label: 'Included CPU Cooler',
                                                 textcontroller:
                                                     _includedCPUCooler),
                                             const SizedBox(height: 10),
@@ -429,11 +469,10 @@ class _EditProcessorState extends State<EditProcessor> {
                                         )),
                                     const SizedBox(height: 30),
                                     AdminUiHelper.customButton(context, () {
-                                      if (_formkey.currentState!
-                                          .validate()) {
+                                      if (_formkey.currentState!.validate()) {
+                                        Navigator.pop(context);
                                         updateData();
-                                        AdminUiHelper.customSnackbar(
-                                            context,
+                                        AdminUiHelper.customSnackbar(context,
                                             'Item Added Successfully !');
                                       }
                                     }, text: 'Save'),

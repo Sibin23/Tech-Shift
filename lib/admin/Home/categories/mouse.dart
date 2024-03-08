@@ -43,15 +43,25 @@ class _ListMouseState extends State<ListMouse> {
           .collection('mousedetails')
           .doc(documentId)
           .delete();
-      showTopSnackBar(Overlay.of(context),
-          const CustomSnackBar.error(message: "Item Deleted Successfully"));
+    deleteMessage();
     } catch (error) {
-      // Handle errors gracefully
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text('Error deleting item: $error')));
+      errorMessage(error);
     }
   }
+ void errorMessage(error) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Error deleting item: $error')),
+    );
+  }
 
+  void deleteMessage() {
+    return showTopSnackBar(
+      Overlay.of(context),
+      const CustomSnackBar.error(
+        message: "Item Deleted Successfully",
+      ),
+    );
+  }
   void addItem() {
     final formkey = GlobalKey<FormState>();
     showDialog(

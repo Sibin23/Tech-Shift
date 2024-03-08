@@ -36,6 +36,7 @@ class _UpdateMotherboardState extends State<UpdateMotherboard> {
   final oldPrice = TextEditingController();
   final newPrice = TextEditingController();
   final dimension = TextEditingController();
+  final ports = TextEditingController();
   final features = TextEditingController();
   final voltage = TextEditingController();
   final formFactor = TextEditingController();
@@ -85,12 +86,13 @@ class _UpdateMotherboardState extends State<UpdateMotherboard> {
       'ramType': ramType.text,
       'ramsize': ramSize.text,
       'ramslots': ramSlots.text,
-      'ssdtype': ssdType.text, 
+      'ssdtype': ssdType.text,
       'ssdslots': ssdSlots.text,
       'oldprice': oldPrice.text,
       'newprice': newPrice.text,
-      'productdimension': dimension.text,  
+      'productdimension': dimension.text,
       'features': features.text,
+      'ports': ports.text,
       'voltage': voltage.text,
       'formfactor': formFactor.text,
       'country': country.text,
@@ -102,24 +104,25 @@ class _UpdateMotherboardState extends State<UpdateMotherboard> {
       categoryName.clear();
       imageurl = '';
       itemName.clear();
-     maxClock.clear();
-     modelName.clear();
-     manufacturer.clear();
-     processorSocket.clear();
-     ramType.clear();
-     ramSize.clear();
-     ramSlots.clear();
-     ssdType.clear();
-     ssdSlots.clear();
-     oldPrice.clear();
-     newPrice.clear();
-     dimension.clear();
-     features.clear();
-     voltage.clear();
-     formFactor.clear();
-     country.clear();
-     weight.clear();
-     warranty.clear();
+      maxClock.clear();
+      modelName.clear();
+      manufacturer.clear();
+      processorSocket.clear();
+      ramType.clear();
+      ramSize.clear();
+      ramSlots.clear();
+      ssdType.clear();
+      ssdSlots.clear();
+      oldPrice.clear();
+      newPrice.clear();
+      dimension.clear();
+      features.clear();
+      ports.clear();
+      voltage.clear();
+      formFactor.clear();
+      country.clear();
+      weight.clear();
+      warranty.clear();
     });
   }
 
@@ -147,6 +150,7 @@ class _UpdateMotherboardState extends State<UpdateMotherboard> {
         ramSize.text = data['ramsize'];
         dimension.text = data['productdimension'];
         ssdSlots.text = data['ssdslots'];
+        ports.text = data['ports'];
         features.text = data['features'];
         ramType.text = data['ramType'];
         ramSlots.text = data['ramslots'];
@@ -447,8 +451,7 @@ class _UpdateMotherboardState extends State<UpdateMotherboard> {
                                   textcontroller: ramSize),
                               const SizedBox(height: 10),
                               AdminUi.admTextField(
-                                  label: 'RAM Slots',
-                                  textcontroller: ramSlots),
+                                  label: 'RAM Slots', textcontroller: ramSlots),
                               const SizedBox(height: 10),
                               DropdownMenu<String>(
                                   label: const Text('Select Storage Type',
@@ -481,12 +484,10 @@ class _UpdateMotherboardState extends State<UpdateMotherboard> {
                                   }).toList()),
                               const SizedBox(height: 10),
                               AdminUi.admTextField(
-                                  label: 'Old Price',
-                                  textcontroller: oldPrice),
+                                  label: 'Old Price', textcontroller: oldPrice),
                               const SizedBox(height: 10),
                               AdminUi.admTextField(
-                                  label: 'New Price',
-                                  textcontroller: newPrice),
+                                  label: 'New Price', textcontroller: newPrice),
                               const SizedBox(height: 10),
                               AdminUi.admTextField(
                                   label: 'Product Dimensions',
@@ -496,8 +497,10 @@ class _UpdateMotherboardState extends State<UpdateMotherboard> {
                                   label: 'SSD Slots', textcontroller: ssdSlots),
                               const SizedBox(height: 10),
                               AdminUi.featuresTextfield(
-                                  label: 'Features',
-                                  textcontroller: features),
+                                  label: 'Ports', textcontroller: ports),
+                              const SizedBox(height: 10),
+                              AdminUi.featuresTextfield(
+                                  label: 'Features', textcontroller: features),
                               const SizedBox(height: 10),
                               AdminUi.admTextField(
                                   label: 'Voltage', textcontroller: voltage),
@@ -510,8 +513,7 @@ class _UpdateMotherboardState extends State<UpdateMotherboard> {
                                   label: 'Country', textcontroller: country),
                               const SizedBox(height: 10),
                               AdminUi.admTextField(
-                                  label: 'Item Weight',
-                                  textcontroller: weight),
+                                  label: 'Item Weight', textcontroller: weight),
                               const SizedBox(height: 10),
                               AdminUi.admTextField(
                                   label: 'Warranty', textcontroller: warranty),

@@ -1,5 +1,3 @@
-// ignore_for_file: use_build_context_synchronously
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:prosample_1/admin/utils/colors.dart';
@@ -25,9 +23,9 @@ class _ListProcessorState extends State<ListProcessor> {
 
   Future submit() async {
     final data = {
-      'categoryid': _idController.text.toLowerCase(),
+      'category': _idController.text.trim().toLowerCase(),
       'name': _textController.text,
-      'socket': _socket.text,
+      'socket': _socket.text.toUpperCase(),
       'cores': _cores.text,
       'threads': _threades.text,
       'speed': _speed.text,
@@ -55,20 +53,25 @@ class _ListProcessorState extends State<ListProcessor> {
           .collection('cpudetails')
           .doc(documentId)
           .delete();
-      showTopSnackBar(
-        Overlay.of(context),
-        const CustomSnackBar.error(
-          message: "Item Deleted Successfully",
-        ),
-      );
+     deleteMessage();
     } catch (error) {
-      // Handle errors gracefully
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error deleting item: $error')),
-      );
+     errorMessage(error);
     }
   }
+ void errorMessage(error) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Error deleting item: $error')),
+    );
+  }
 
+  void deleteMessage() {
+    return showTopSnackBar(
+      Overlay.of(context),
+      const CustomSnackBar.error(
+        message: "Item Deleted Successfully",
+      ),
+    );
+  }
   void addItem() {
     final formkey = GlobalKey<FormState>();
     showDialog(
@@ -84,11 +87,11 @@ class _ListProcessorState extends State<ListProcessor> {
                       key: formkey,
                       child: Column(children: [
                         AdminUi.admTextField(
-                            label: 'Product Name',
+                            label: 'Product Category',
                             textcontroller: _idController),
                         const SizedBox(height: 10),
                         AdminUi.admTextField(
-                            label: 'Product Series',
+                            label: 'Product Name',
                             textcontroller: _textController),
                         const SizedBox(height: 10),
                         AdminUi.admTextField(

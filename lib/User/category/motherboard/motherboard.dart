@@ -136,9 +136,9 @@ class _MotherboardInfoState extends State<MotherboardInfo> {
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Container(
-                                    color: Colors.amber,
-                                    width: MediaQuery.of(context).size.width * 0.9,
+                                  SizedBox(
+                                    width:
+                                        MediaQuery.of(context).size.width * 0.9,
                                     child: Text(
                                       name,
                                       style: TextStyling.subtitle3,
@@ -257,7 +257,11 @@ class _MotherboardInfoState extends State<MotherboardInfo> {
                               const SizedBox(height: 20),
                               ElevatedButton(
                                   onPressed: () {
-                                    Navigator.push(context, MaterialPageRoute(builder: (ctx)=> MotherboardInfo2(itemInfo: motherBoard)));
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (ctx) => MotherboardInfo2(
+                                                itemInfo: motherBoard)));
                                   },
                                   child: const Text(
                                     'View More',

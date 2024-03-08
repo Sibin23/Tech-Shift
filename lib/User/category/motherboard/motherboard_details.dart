@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:prosample_1/User/category/motherboard/motherboard.dart';
 import 'package:prosample_1/User/utils/text_decorations.dart';
+import 'package:rate_in_stars/rate_in_stars.dart';
 
 class DetailsMotherboard extends StatefulWidget {
   const DetailsMotherboard({super.key});
@@ -30,14 +31,14 @@ class _DetailsMotherboardState extends State<DetailsMotherboard> {
             builder: (context, snapshot) {
               if (snapshot.hasData) {
                 return Padding(
-                  padding: const EdgeInsets.all(16.0),
+                  padding: const EdgeInsets.all(10.0),
                   child: GridView.builder(
                       // physics: const NeverScrollableScrollPhysics(),
                       itemCount: snapshot.data!.docs.length,
                       gridDelegate:
                           const SliverGridDelegateWithFixedCrossAxisCount(
-                              mainAxisSpacing: 16,
-                              crossAxisSpacing: 16,
+                              mainAxisSpacing: 15,
+                              crossAxisSpacing: 5,
                               mainAxisExtent: 230,
                               crossAxisCount: 2),
                       itemBuilder: (context, index) {
@@ -55,17 +56,17 @@ class _DetailsMotherboardState extends State<DetailsMotherboard> {
                         String ramSize = document['ramsize'];
                         String ramSlots = document['ramslots'];
                         String ssdType = document['ssdtype'];
-                        String ssdSlots = document['ssdslots']; 
+                        String ssdSlots = document['ssdslots'];
                         String oldPrice = document['oldprice'];
                         String newPrice = document['newprice'];
                         String dimension = document['productdimension'];
-                        String  features = document['features'];
+                        String features = document['features'];
                         String voltage = document['voltage'];
                         String formFactor = document['formfactor'];
                         String country = document['country'];
                         String weight = document['itemweight'];
                         String warranty = document['warranty'];
-                        
+
                         final motherBoard = {
                           'idnum': idNum,
                           'category': categoryName,
@@ -91,79 +92,110 @@ class _DetailsMotherboardState extends State<DetailsMotherboard> {
                           'warranty': warranty,
                         };
 
-                        return GestureDetector(
-                          onTap: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (ctx) =>  MotherboardInfo(itemInfo: motherBoard)));
-                          },
-                          child: Container(
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(8),
-                                  color: Colors.white,
-                                  boxShadow: const [
-                                    BoxShadow(
-                                        color: Colors.grey,
-                                        blurRadius: 4.0,
-                                        spreadRadius: 1.0,
-                                        offset: Offset(4.0, 4.0))
-                                  ]),
-                              width: MediaQuery.of(context).size.width * 0.02,
-                              height: MediaQuery.of(context).size.height * 0.1,
-                              child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
+                        return Padding(
+                          padding: const EdgeInsets.only(left: 5, right: 5),
+                          child: GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (ctx) => MotherboardInfo(
+                                          itemInfo: motherBoard)));
+                            },
+                            child: Container(
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(8),
+                                    color: Colors.white,
+                                    boxShadow: const [
+                                      BoxShadow(
+                                          color: Colors.grey,
+                                          blurRadius: 4.0,
+                                          spreadRadius: 1.0,
+                                          offset: Offset(4.0, 4.0))
+                                    ]),
+                                width: MediaQuery.of(context).size.width * 0.02,
+                                height: MediaQuery.of(context).size.height * 0.1,
+                                child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                SizedBox(
+                                                  width: MediaQuery.of(context)
+                                                          .size
+                                                          .width *
+                                                      0.35,
+                                                  height: MediaQuery.of(context)
+                                                          .size
+                                                          .height *
+                                                      0.15,
+                                                  child: CachedNetworkImage(
+                                                    imageUrl: imageUrl,
+                                                    fit: BoxFit.cover,
+                                                    placeholder: (context, url) {
+                                                      return const Center(
+                                                          child:
+                                                              CircularProgressIndicator());
+                                                    },
+                                                  ),
+                                                )
+                                              ]),
+                                          Text(categoryName,
+                                              style: TextStyling.categoryText),
+                                          Text(name,
+                                              softWrap: false,
+                                              maxLines: 1,
+                                              overflow: TextOverflow.ellipsis),
+                                              const SizedBox(height: 8),
+                                          Row(
                                             children: [
-                                              SizedBox(
-                                                width: MediaQuery.of(context)
-                                                        .size
-                                                        .width *
-                                                    0.35,
-                                                height: MediaQuery.of(context)
-                                                        .size
-                                                        .height *
-                                                    0.15,
-                                                child: CachedNetworkImage(
-                                                  imageUrl: imageUrl,
-                                                  fit: BoxFit.cover,
-                                                  placeholder: (context, url) {
-                                                    return const Center(
-                                                        child:
-                                                            CircularProgressIndicator());
-                                                  },
-                                                ),
-                                              )
-                                            ]),
-                                        Text(categoryName,
-                                            style: TextStyling.categoryText),
-                                        Text(name,
-                                            softWrap: false,
-                                            maxLines: 1,
-                                            overflow: TextOverflow.ellipsis),
-                                        Text('****',
-                                            style: TextStyling.subtitle),
-                                        Row(children: [
+                                              RatingStars(
+                                                editable: false,
+                                                rating: 3.5,
+                                                color: Colors.green,
+                                                iconSize: 10,
+                                              ),
+                                            ],
+                                          ),
+                                          const SizedBox(height: 8),
                                           Row(children: [
-                                            Text(
-                                              '₹',
-                                              style: TextStyling.subtitle3,
-                                            ),
-                                            const SizedBox(width: 5),
-                                            Text(oldPrice,
-                                                style: TextStyling.lineThrough),
-                                          ]),
-                                          const SizedBox(width: 10),
-                                          Text(newPrice,
-                                              style: TextStyling.newP)
-                                        ])
-                                      ]))),
+                                            Row(children: [
+                                              Text(
+                                                '₹',
+                                                style: TextStyling.subtitle2,
+                                              ),
+                                              const SizedBox(width: 2),
+                                              Text(
+                                                  oldPrice.replaceAllMapped(
+                                                      RegExp(
+                                                          r'(\d{1,3})(?=(\d{3})+(?!\d))'),
+                                                      (Match m) => "${m[1]},"),
+                                                  style: TextStyling.lineThrough),
+                                            ]),
+                                            const SizedBox(width: 10),
+                                            Row(
+                                              children: [
+                                                Text(
+                                                  '₹',
+                                                  style: TextStyling.subtitle2,
+                                                ),
+                                                const SizedBox(width: 2),
+                                                Text(
+                                                    newPrice.replaceAllMapped(
+                                                        RegExp(
+                                                            r'(\d{1,3})(?=(\d{3})+(?!\d))'),
+                                                        (Match m) => "${m[1]},"),
+                                                    style: TextStyling.newP),
+                                              ],
+                                            )
+                                          ])
+                                        ]))),
+                          ),
                         );
                       }),
                 );

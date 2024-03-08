@@ -8,13 +8,11 @@ import 'package:prosample_1/admin/Home/inventory/Chairs/chair_list.dart';
 import 'package:prosample_1/admin/Home/inventory/Coolers/cooler_list.dart';
 import 'package:prosample_1/admin/Home/inventory/Headset/details_headset.dart';
 import 'package:prosample_1/admin/Home/inventory/Keyboard/list_keyboard.dart';
-import 'package:prosample_1/admin/Home/inventory/Monitor/add_monitor.dart';
 import 'package:prosample_1/admin/Home/inventory/Monitor/monitor_list.dart';
 import 'package:prosample_1/admin/Home/inventory/MotherBoard/Motherboard_list.dart';
-import 'package:prosample_1/admin/Home/inventory/MotherBoard/add_motherboard.dart';
 import 'package:prosample_1/admin/Home/inventory/Mouse/mouse_list.dart';
-import 'package:prosample_1/admin/Home/inventory/RAM/add_ram.dart';
-import 'package:prosample_1/admin/Home/inventory/SSD/add_ssd.dart';
+import 'package:prosample_1/admin/Home/inventory/RAM/ram_list.dart';
+import 'package:prosample_1/admin/Home/inventory/SSD/ssd_list.dart';
 import 'package:prosample_1/admin/Home/inventory/processor/details.dart';
 import 'package:prosample_1/admin/utils/colors.dart';
 import 'package:prosample_1/admin/utils/text_style.dart';
@@ -32,11 +30,14 @@ class _ScreenItemDetailsState extends State<ScreenItemDetails> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Text('Select Category',style: CustomText.apptitle),
+        title: Text('Select Category', style: CustomText.apptitle),
         backgroundColor: CustomColors.appTheme,
-       leading: IconButton(onPressed: (){
-        Navigator.pop(context);
-       }, icon: const Icon(Icons.arrow_back,color: Colors.white),),
+        leading: IconButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
+        ),
       ),
       body: SafeArea(
           child: SizedBox(
@@ -54,8 +55,7 @@ class _ScreenItemDetailsState extends State<ScreenItemDetails> {
                         itemBuilder: (context, index) {
                           DocumentSnapshot document =
                               snapshot.data!.docs[index];
-                          // ignore: unused_local_variable
-                          String id = document['categoryid'];
+
                           String imageUrl = document['image'];
                           String categoryName = document['name'];
 
@@ -77,78 +77,71 @@ class _ScreenItemDetailsState extends State<ScreenItemDetails> {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (ctx) =>
-                                          const CabinetDetails()),
+                                      builder: (ctx) => const CabinetDetails()),
                                 );
-                              }else if(document['categoryid'] == 'chair'){
+                              } else if (document['categoryid'] == 'chair') {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (ctx) =>
-                                          const ChairDetails()),
+                                      builder: (ctx) => const ChairDetails()),
                                 );
-                              }else if(document['categoryid'] == 'headset'){
+                              } else if (document['categoryid'] == 'headset') {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (ctx) =>
-                                          const HeadsetDetails()),
+                                      builder: (ctx) => const HeadsetDetails()),
                                 );
-                              }else if(document['categoryid'] == 'keyboard'){
+                              } else if (document['categoryid'] == 'keyboard') {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
                                       builder: (ctx) =>
                                           const KeyboardDetails()),
                                 );
-                              }else if(document ['categoryid'] == 'mouse'){
-                                 Navigator.push(
+                              } else if (document['categoryid'] == 'mouse') {
+                                Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (ctx) =>
-                                          const MouseDetails()),
+                                      builder: (ctx) => const MouseDetails()),
                                 );
-                              }else if(document['categoryid'] == 'monitor'){
-                                 Navigator.push(
+                              } else if (document['categoryid'] == 'monitor') {
+                                Navigator.push(
                                   context,
                                   MaterialPageRoute(
                                       builder: (ctx1) =>
                                           const MonitorDetails()),
                                 );
-                              }else if(document['categoryid'] == 'motherboard'){
-                                 Navigator.push(
+                              } else if (document['categoryid'] ==
+                                  'motherboard') {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (ctx1) =>
+                                            const MotherboardDetails()));
+                              } else if (document['categoryid'] == 'psu') {
+                                Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (ctx1) =>
-                                          const MotherboardDetails())
+                                      builder: (ctx) => const ListPsu()),
                                 );
-                              }else if(document['categoryid'] == 'psu'){
-                                 Navigator.push(
+                              } else if (document['categoryid'] ==
+                                  'processor') {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (ctx) =>
+                                            const UpdateProcessor()));
+                              } else if (document['categoryid'] == 'ram') {
+                                Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (ctx) =>
-                                          const ListPsu()),
+                                      builder: (ctx) => const RamDetails()),
                                 );
-                              }else if(document['categoryid'] == 'processor'){
-                                 Navigator.push(
+                              } else if (document['categoryid'] == 'ssd') {
+                                Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (ctx) =>
-                                          const UpdateProcessor()));
-                                
-                              }else if(document['categoryid'] == 'ram'){
-                                 Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (ctx) =>
-                                          const ScreenAddRam()),
-                                );
-                              }else if(document['categoryid'] == 'ssd'){
-                                 Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (ctx) =>
-                                          const ScreenAddSsd()),
+                                      builder: (ctx) => const SsdDetails()),
                                 );
                               }
                             },
@@ -189,11 +182,14 @@ class _ScreenItemDetailsState extends State<ScreenItemDetails> {
                                                         .height *
                                                     0.1,
                                                 child: CachedNetworkImage(
-                                                  imageUrl: imageUrl,fit: BoxFit.cover, placeholder: (context, url) {
-                                                    return const Center(child: CircularProgressIndicator());
-                                                  }
-                                                 
-                                                )),
+                                                    imageUrl: imageUrl,
+                                                    fit: BoxFit.cover,
+                                                    placeholder:
+                                                        (context, url) {
+                                                      return const Center(
+                                                          child:
+                                                              CircularProgressIndicator());
+                                                    })),
                                             const SizedBox(width: 30),
                                             Text(
                                               categoryName,

@@ -10,7 +10,6 @@ import 'package:prosample_1/User/utils/text_decorations.dart';
 import 'package:prosample_1/onboardScreens/onboard1.dart';
 import 'firebase_options.dart';
 
-const saveKeyName = 'adminloggedin';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -31,7 +30,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Flutter Demo',
+      title: 'Tech Shift',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.purple.shade800),
         useMaterial3: true,
@@ -51,19 +50,16 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-
   @override
   void initState() {
     Future.delayed(const Duration(seconds: 3), () async {
       final user = FirebaseAuth.instance.currentUser;
-     
-     
-     
+
       if (user != null) {
         Navigator.of(context).pushAndRemoveUntil(
             MaterialPageRoute(builder: (ctx2) => const HomeInfo()),
             (route) => false);
-        }  else {
+      } else {
         Navigator.of(context).pushReplacement(
             MaterialPageRoute(builder: (ctx) => const OnboardScreen1()));
       }
