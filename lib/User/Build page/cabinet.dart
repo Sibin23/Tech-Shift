@@ -12,11 +12,10 @@ class CabinetConfig extends StatefulWidget {
 class _CabinetConfigState extends State<CabinetConfig> {
   @override
   Widget build(BuildContext context) {
-    print(widget.config);
     return Scaffold(
       bottomNavigationBar: UiCustom.bottomNextButton(context, () {
         Navigator.pop(context);
-      }, () { }, amt: '7777'),
+      }, () { }),
       body: SafeArea(child: Center(child:Text('Cabinet'),)),
     );
   }

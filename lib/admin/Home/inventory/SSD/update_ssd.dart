@@ -33,6 +33,7 @@ class _UpdateSsdState extends State<UpdateSsd> {
   final transferSpeed = TextEditingController();
   final connector = TextEditingController();
   final fromFactor = TextEditingController();
+  final wattage =TextEditingController();
   final country = TextEditingController();
   final itemWeight = TextEditingController();
   final warranty = TextEditingController();
@@ -79,6 +80,7 @@ class _UpdateSsdState extends State<UpdateSsd> {
       'transferspeed': transferSpeed.text,
       'connectivity': connector.text,
       'formfactor': fromFactor.text,
+      'wattage': wattage.text,
       'country': country.text,
       'itemweight': itemWeight.text,
       'warranty': warranty.text,
@@ -99,6 +101,7 @@ class _UpdateSsdState extends State<UpdateSsd> {
       transferSpeed.clear();
       connector.clear();
       fromFactor.clear();
+      wattage.clear();
       country.clear();
       itemWeight.clear();
       warranty.clear();
@@ -132,6 +135,7 @@ class _UpdateSsdState extends State<UpdateSsd> {
         transferSpeed.text = data['transferspeed'];
         connector.text = data['connectivity'];
         fromFactor.text = data['formfactor'];
+        wattage.text = data['wattage'];
         country.text = data['country'];
         itemWeight.text = data['itemweight'];
         warranty.text = data['warranty'];
@@ -401,6 +405,9 @@ class _UpdateSsdState extends State<UpdateSsd> {
                                   label: 'Form Factor',
                                   textcontroller: fromFactor),
                               const SizedBox(height: 10),
+                               AdminUi.admTextField(
+                                    label: 'Wattage', textcontroller: wattage),
+                                const SizedBox(height: 10),
                               AdminUi.admTextField(
                                   label: 'Country', textcontroller: country),
                               const SizedBox(height: 10),

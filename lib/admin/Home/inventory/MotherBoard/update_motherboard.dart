@@ -38,7 +38,7 @@ class _UpdateMotherboardState extends State<UpdateMotherboard> {
   final dimension = TextEditingController();
   final ports = TextEditingController();
   final features = TextEditingController();
-  final voltage = TextEditingController();
+  final wattage = TextEditingController();
   final formFactor = TextEditingController();
   final country = TextEditingController();
   final weight = TextEditingController();
@@ -93,7 +93,7 @@ class _UpdateMotherboardState extends State<UpdateMotherboard> {
       'productdimension': dimension.text,
       'features': features.text,
       'ports': ports.text,
-      'voltage': voltage.text,
+      'wattage': wattage.text,
       'formfactor': formFactor.text,
       'country': country.text,
       'itemweight': weight.text,
@@ -118,7 +118,7 @@ class _UpdateMotherboardState extends State<UpdateMotherboard> {
       dimension.clear();
       features.clear();
       ports.clear();
-      voltage.clear();
+      wattage.clear();
       formFactor.clear();
       country.clear();
       weight.clear();
@@ -157,7 +157,7 @@ class _UpdateMotherboardState extends State<UpdateMotherboard> {
         processorSocket.text = data['processorsocket'];
         ssdType.text = data['ssdtype'];
         maxClock.text = data['maxclock'];
-        voltage.text = data['voltage'];
+        wattage.text = data['wattage'];
         formFactor.text = data['formfactor'];
         country.text = data['country'];
         weight.text = data['itemweight'];
@@ -503,11 +503,12 @@ class _UpdateMotherboardState extends State<UpdateMotherboard> {
                                   label: 'Features', textcontroller: features),
                               const SizedBox(height: 10),
                               AdminUi.admTextField(
-                                  label: 'Voltage', textcontroller: voltage),
-                              const SizedBox(height: 10),
-                              AdminUi.admTextField(
                                   label: 'Form Factor',
                                   textcontroller: formFactor),
+                              const SizedBox(height: 10),
+                              AdminUi.admTextField(
+                                  label: 'Power Consumption (W)',
+                                  textcontroller: wattage),
                               const SizedBox(height: 10),
                               AdminUi.admTextField(
                                   label: 'Country', textcontroller: country),

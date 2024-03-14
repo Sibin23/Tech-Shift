@@ -27,6 +27,7 @@ class UiHelper {
     keyboardType = TextInputType.text,
   }) {
     return TextFormField(
+      textInputAction: TextInputAction.next,
         validator: (value) {
           if (value!.isEmpty) {
             return validate;
@@ -36,6 +37,7 @@ class UiHelper {
         keyboardType: keyboardType,
         controller: controller,
         decoration: InputDecoration(
+          
             prefixIcon: Icon(iconData),
             label: Text(labeltext, style: TextStyling.subtitleapptheme),
             border:

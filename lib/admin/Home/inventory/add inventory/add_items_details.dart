@@ -11,8 +11,11 @@ import 'package:prosample_1/admin/Home/inventory/Keyboard/list_keyboard.dart';
 import 'package:prosample_1/admin/Home/inventory/Monitor/monitor_list.dart';
 import 'package:prosample_1/admin/Home/inventory/MotherBoard/Motherboard_list.dart';
 import 'package:prosample_1/admin/Home/inventory/Mouse/mouse_list.dart';
+import 'package:prosample_1/admin/Home/inventory/PSU/add_psu.dart';
+import 'package:prosample_1/admin/Home/inventory/PSU/psu_list.dart';
 import 'package:prosample_1/admin/Home/inventory/RAM/ram_list.dart';
 import 'package:prosample_1/admin/Home/inventory/SSD/ssd_list.dart';
+import 'package:prosample_1/admin/Home/inventory/gpu/gpu_list.dart';
 import 'package:prosample_1/admin/Home/inventory/processor/details.dart';
 import 'package:prosample_1/admin/utils/colors.dart';
 import 'package:prosample_1/admin/utils/text_style.dart';
@@ -104,6 +107,11 @@ class _ScreenItemDetailsState extends State<ScreenItemDetails> {
                                   MaterialPageRoute(
                                       builder: (ctx) => const MouseDetails()),
                                 );
+                              } else if (document['categoryid'] == 'gpu') {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (ctx) => const GpuDetails()));
                               } else if (document['categoryid'] == 'monitor') {
                                 Navigator.push(
                                   context,
@@ -122,7 +130,7 @@ class _ScreenItemDetailsState extends State<ScreenItemDetails> {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (ctx) => const ListPsu()),
+                                      builder: (ctx) => const PsuDetails()),
                                 );
                               } else if (document['categoryid'] ==
                                   'processor') {

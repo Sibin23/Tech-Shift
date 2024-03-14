@@ -29,7 +29,7 @@ class _UpdateRamState extends State<UpdateRam> {
   final ramSize = TextEditingController();
   final ramType = TextEditingController();
   final clockSpeed = TextEditingController();
-  final voltage = TextEditingController();
+  final wattage = TextEditingController();
   final formFactor = TextEditingController();
   final country = TextEditingController();
   final itemWeight = TextEditingController();
@@ -74,7 +74,7 @@ class _UpdateRamState extends State<UpdateRam> {
       'ramsize': ramSize.text,
       'ramtype': ramType.text,
       'clockspeed': clockSpeed.text,
-      'voltage': voltage.text,
+      'wattage': wattage.text,
       'formfactor': formFactor.text,
       'country': country.text,
       'itemweight': itemWeight.text,
@@ -93,7 +93,7 @@ class _UpdateRamState extends State<UpdateRam> {
       ramSize.clear();
       ramType.clear();
       clockSpeed.clear();
-      voltage.clear();
+      wattage.clear();
       formFactor.clear();
       country.clear();
       itemWeight.clear();
@@ -126,7 +126,7 @@ class _UpdateRamState extends State<UpdateRam> {
         productDimension.text = data['productdimension'];
         ramType.text = data['ramtype'];
         clockSpeed.text = data['clockspeed'];
-        voltage.text = data['voltage'];
+        wattage.text = data['wattage'];
         formFactor.text = data['formfactor'];
         country.text = data['country'];
         itemWeight.text = data['itemweight'];
@@ -145,7 +145,7 @@ class _UpdateRamState extends State<UpdateRam> {
           child: StreamBuilder<QuerySnapshot>(
               stream: FirebaseFirestore.instance.collection('ram').snapshots(),
               builder: (context, snapshot) {
-                 if (snapshot.hasError) {
+                if (snapshot.hasError) {
                   return Text('Error: ${snapshot.error}');
                 }
                 if (!snapshot.hasData) {
@@ -368,11 +368,11 @@ class _UpdateRamState extends State<UpdateRam> {
                                 textcontroller: productDimension),
                             const SizedBox(height: 10),
                             AdminUi.admTextField(
-                                label: 'Voltage', textcontroller: voltage),
-                            const SizedBox(height: 10),
-                            AdminUi.admTextField(
                                 label: 'Form Factor',
                                 textcontroller: formFactor),
+                            const SizedBox(height: 10),
+                            AdminUi.admTextField(
+                                label: 'wattage', textcontroller: wattage),
                             const SizedBox(height: 10),
                             AdminUi.admTextField(
                                 label: 'Country', textcontroller: country),

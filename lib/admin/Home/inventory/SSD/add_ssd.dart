@@ -31,6 +31,7 @@ class _ScreenAddSsdState extends State<ScreenAddSsd> {
   final transferSpeed = TextEditingController();
   final connector = TextEditingController();
   final fromFactor = TextEditingController();
+  final wattage = TextEditingController();
   final country = TextEditingController();
   final itemWeight = TextEditingController();
   final warranty = TextEditingController();
@@ -77,6 +78,7 @@ class _ScreenAddSsdState extends State<ScreenAddSsd> {
       'transferspeed': transferSpeed.text,
       'connectivity': connector.text,
       'formfactor': fromFactor.text,
+      'wattage': wattage.text,
       'country': country.text,
       'itemweight': itemWeight.text,
       'warranty': warranty.text,
@@ -101,6 +103,7 @@ class _ScreenAddSsdState extends State<ScreenAddSsd> {
       transferSpeed.clear();
       connector.clear();
       fromFactor.clear();
+      wattage.clear();
       country.clear();
       itemWeight.clear();
       warranty.clear();
@@ -120,12 +123,12 @@ class _ScreenAddSsdState extends State<ScreenAddSsd> {
                       .collection('ssddetails')
                       .snapshots(),
                   builder: (context, snapshot) {
-                     if (snapshot.hasError) {
-                  return Text('Error: ${snapshot.error}');
-                }
-                if (!snapshot.hasData) {
-                  return const Center(child: CircularProgressIndicator());
-                }
+                    if (snapshot.hasError) {
+                      return Text('Error: ${snapshot.error}');
+                    }
+                    if (!snapshot.hasData) {
+                      return const Center(child: CircularProgressIndicator());
+                    }
                     final category = snapshot.data!.docs
                         .map((doc) => doc['category'] as String)
                         .toSet()
@@ -374,6 +377,9 @@ class _ScreenAddSsdState extends State<ScreenAddSsd> {
                                     textcontroller: fromFactor),
                                 const SizedBox(height: 10),
                                 AdminUi.admTextField(
+                                    label: 'Wattage', textcontroller: wattage),
+                                const SizedBox(height: 10),
+                                AdminUi.admTextField(
                                     label: 'Country', textcontroller: country),
                                 const SizedBox(height: 10),
                                 AdminUi.admTextField(
@@ -384,7 +390,7 @@ class _ScreenAddSsdState extends State<ScreenAddSsd> {
                                     label: 'Warranty',
                                     textcontroller: warranty),
                                 const SizedBox(height: 30),
-                              ])), 
+                              ])),
                           AdminUiHelper.customButton(context, () {
                             if (_formkey.currentState!.validate()) {
                               Navigator.pop(context);

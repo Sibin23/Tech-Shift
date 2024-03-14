@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
 class UpdatePsu extends StatefulWidget {
-  const UpdatePsu({super.key});
+  final String itemId;
+  const UpdatePsu({super.key,required this.itemId});
 
   @override
   State<UpdatePsu> createState() => _UpdatePsuState();

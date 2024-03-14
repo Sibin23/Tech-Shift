@@ -61,6 +61,7 @@ class _ScreenLoginState extends State<ScreenLogin> {
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
                         TextFormField(
+                            textInputAction: TextInputAction.next,
                             validator: (value) {
                               if (value!.isEmpty) {
                                 return 'Email address is required';
@@ -76,7 +77,7 @@ class _ScreenLoginState extends State<ScreenLogin> {
                                 border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(10)))),
                         const SizedBox(height: 20),
-                        TextFormField(
+                        TextFormField( 
                             validator: (value) {
                               if (value == null || value.isEmpty) {
                                 return 'Password is required.';
@@ -172,8 +173,6 @@ class _ScreenLoginState extends State<ScreenLogin> {
         MaterialPageRoute(builder: (ctx) => const AdminHome()),
         (route) => false);
   }
-
- 
 
   Future<void> signInWithEmailAndPassword(String email, String password) async {
     try {

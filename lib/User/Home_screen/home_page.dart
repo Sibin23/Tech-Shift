@@ -9,7 +9,6 @@ import 'package:prosample_1/User/Pre%20Builds/Screen%20prebuild/prebuild.dart';
 import 'package:prosample_1/User/Pre%20Builds/prebuild_screen.dart';
 import 'package:prosample_1/User/category/motherboard/motherboard_details.dart';
 import 'package:prosample_1/User/category/processor/processor_details.dart';
-import 'package:prosample_1/User/utils/colors.dart';
 import 'package:prosample_1/User/utils/widget2.dart';
 import 'package:prosample_1/login.dart';
 import 'package:prosample_1/User/utils/commonfile.dart';
@@ -243,99 +242,6 @@ class _ScreenHomeState extends State<ScreenHome> {
                 },
               )),
           const SizedBox(height: 20),
-          Container(
-            color: const Color.fromARGB(255, 190, 213, 198),
-            width: MediaQuery.of(context).size.width,
-            height: MediaQuery.of(context).size.height * 0.875,
-            child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Column(
-                  children: [
-                    Text(
-                      "This Weeks Special's",
-                      style: TextStyling.titleText,
-                    ),
-                    const Text(
-                        'All our New Arrivals in an exclusive brand selection'),
-                    const SizedBox(height: 10),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        SizedBox(
-                          width: MediaQuery.of(context).size.width * 0.47,
-                          height: MediaQuery.of(context).size.height * 0.34,
-                          child: UiHelper.itemCard(
-                              image:
-                                  'assets/Processors/Intel Core i9 14900KF.png',
-                              category: 'Intel Processor',
-                              subtitle:
-                                  'Intel Core i9 14700k Desktop Processor',
-                              oldamt: '84,999',
-                              currentamt: '54,469'),
-                        ),
-                        SizedBox(
-                          width: MediaQuery.of(context).size.width * 0.47,
-                          height: MediaQuery.of(context).size.height * 0.34,
-                          child: UiHelper.itemCard(
-                              image:
-                                  'assets/Processors/Intel Core i9 14900KF.png',
-                              category: 'Intel Processor',
-                              subtitle:
-                                  'Intel Core i9 14700k Desktop Processor',
-                              oldamt: '84,999',
-                              currentamt: '54,469'),
-                        ),
-                      ],
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        SizedBox(
-                          width: MediaQuery.of(context).size.width * 0.47,
-                          height: MediaQuery.of(context).size.height * 0.34,
-                          child: UiHelper.itemCard(
-                              image:
-                                  'assets/Processors/Intel Core i9 14900KF.png',
-                              category: 'Intel Processor',
-                              subtitle:
-                                  'Intel Core i9 14700k Desktop Processor',
-                              oldamt: '84,999',
-                              currentamt: '54,469'),
-                        ),
-                        SizedBox(
-                          width: MediaQuery.of(context).size.width * 0.47,
-                          height: MediaQuery.of(context).size.height * 0.34,
-                          child: UiHelper.itemCard(
-                              image:
-                                  'assets/Processors/Intel Core i9 14900KF.png',
-                              category: 'Intel Processor',
-                              subtitle:
-                                  'Intel Core i9 14700k Desktop Processor',
-                              oldamt: '84,999',
-                              currentamt: '54,469'),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 10),
-                    SizedBox(
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            Text('See All Deals', style: TextStyling.subtitle),
-                            Icon(
-                              Icons.arrow_forward_ios,
-                              color: AppColors.appTheme,
-                              size: 20,
-                            ),
-                          ],
-                        ),
-                      ),
-                    )
-                  ],
-                )),
-          ),
           Container(
             color: const Color.fromARGB(255, 224, 208, 226),
             width: MediaQuery.of(context).size.width,

@@ -6,55 +6,49 @@ import 'package:prosample_1/admin/utils/text_style.dart';
 import 'package:top_snackbar_flutter/custom_snack_bar.dart';
 import 'package:top_snackbar_flutter/top_snack_bar.dart';
 
-class ListSsd extends StatefulWidget {
-  const ListSsd({super.key});
+class ListGpu extends StatefulWidget {
+  const ListGpu({super.key});
 
   @override
-  State<ListSsd> createState() => _ListSsdState();
+  State<ListGpu> createState() => _ListGpuState();
 }
 
-class _ListSsdState extends State<ListSsd> {
-  final _idController = TextEditingController();
-  final _textController = TextEditingController();
-  final _speed = TextEditingController();
-  final _modelName = TextEditingController();
-  final _storage = TextEditingController();
-  final _genType = TextEditingController();
+class _ListGpuState extends State<ListGpu> {
+  final categoryName = TextEditingController();
+  final name = TextEditingController();
+  final modelName = TextEditingController();
+  final manufacturer = TextEditingController();
+  final support = TextEditingController();
 
   Future submit() async {
     final data = {
-      'category': _idController.text.trim().toLowerCase(),
-      'name': _textController.text.trim(),
-      'model': _modelName.text.trim(),
-      'gentype': _genType.text.trim(),
-      'speed': _speed.text.trim(),
-      'storage': _storage.text.trim(),
+      'category': categoryName.text.trim().toLowerCase(),
+      'name': name.text.trim(),
+      'model': modelName.text.trim(),
+      'manufacturer': manufacturer.text.trim(),
+      'support': support.text.trim(),
     };
-    FirebaseFirestore.instance.collection('ssddetails').doc().set(data);
+    FirebaseFirestore.instance.collection('gpudetails').doc().set(data);
     setState(() {
-      _textController.clear();
-      _idController.clear();
-      _genType.clear();
-      _storage.clear();
-      _speed.clear();
-      _modelName.clear();
+      name.clear();
+      categoryName.clear();
+      modelName.clear();
+      manufacturer.clear();
+      support.clear();
     });
-    showTopSnackBar(
-      Overlay.of(context),
-      const CustomSnackBar.success(
-        message: "Item Added Successfully",
-      ),
-    );
+    showTopSnackBar(Overlay.of(context),
+        const CustomSnackBar.success(message: "Item Added Successfully"));
   }
 
-  Future deleteItem(String documentId) async {
+  Future deleteItem(documentId) async {
     try {
       await FirebaseFirestore.instance
-          .collection('ssddetails')
+          .collection('headsetdetails')
           .doc(documentId)
           .delete();
       deleteMessage();
     } catch (error) {
+      // Handle errors gracefully
       errorMessage(error);
     }
   }
@@ -66,12 +60,8 @@ class _ListSsdState extends State<ListSsd> {
   }
 
   void deleteMessage() {
-    return showTopSnackBar(
-      Overlay.of(context),
-      const CustomSnackBar.error(
-        message: "Item Deleted Successfully",
-      ),
-    );
+    return showTopSnackBar(Overlay.of(context),
+        const CustomSnackBar.error(message: "Item Deleted Successfully"));
   }
 
   void addItem() {
@@ -87,27 +77,27 @@ class _ListSsdState extends State<ListSsd> {
                 children: [
                   Form(
                       key: formkey,
-                      child: Column(children: [
-                        AdminUi.admTextField(
-                            label: 'Product Category',
-                            textcontroller: _idController),
-                        const SizedBox(height: 10),
-                        AdminUi.admTextField(
-                            label: 'Product Name',
-                            textcontroller: _textController),
-                        const SizedBox(height: 10),
-                        AdminUi.admTextField(
-                            label: 'Model name', textcontroller: _modelName),
-                        const SizedBox(height: 10),
-                        AdminUi.admTextField(
-                            label: 'Gen Type', textcontroller: _genType),
-                        const SizedBox(height: 10),
-                        AdminUi.admTextField(
-                            label: 'Transfer Speed', textcontroller: _speed),
-                        const SizedBox(height: 10),
-                        AdminUi.admTextField(
-                            label: 'Storage Capacity', textcontroller: _storage)
-                      ])),
+                      child: Column(
+                        children: [
+                          AdminUi.admTextField(
+                              label: 'Product Category',
+                              textcontroller: categoryName),
+                          const SizedBox(height: 10),
+                          AdminUi.admTextField(
+                              label: 'Product Name', textcontroller: name),
+                          const SizedBox(height: 10),
+                          AdminUi.admTextField(
+                              label: 'Model Name', textcontroller: modelName),
+                          const SizedBox(height: 10),
+                          AdminUi.admTextField(
+                              label: 'Manufacturer',
+                              textcontroller: manufacturer),
+                          const SizedBox(height: 10),
+                          AdminUi.admTextField(
+                              label: 'Feature Support',
+                              textcontroller: support),
+                        ],
+                      )),
                 ],
               ),
             ),
@@ -134,9 +124,11 @@ class _ListSsdState extends State<ListSsd> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        foregroundColor: Colors.white,
+        centerTitle: true,
         backgroundColor: CustomColors.appTheme,
         title: Text(
-          'SSD',
+          'Graphics Card',
           style: CustomText.apptitle,
         ),
         actions: [
@@ -153,7 +145,7 @@ class _ListSsdState extends State<ListSsd> {
       body: SafeArea(
         child: StreamBuilder<QuerySnapshot>(
           stream:
-              FirebaseFirestore.instance.collection('ssddetails').snapshots(),
+              FirebaseFirestore.instance.collection('gpudetails').snapshots(),
           builder: (context, snapshot) {
             if (snapshot.hasError) {
               return Text('Error: ${snapshot.error}');
@@ -166,6 +158,7 @@ class _ListSsdState extends State<ListSsd> {
                   itemCount: snapshot.data!.docs.length,
                   itemBuilder: (ctx, index) {
                     final document = snapshot.data!.docs[index];
+                    final id = document.id;
                     String name = document['name'];
                     return Padding(
                       padding: const EdgeInsets.all(8.0),
@@ -189,15 +182,18 @@ class _ListSsdState extends State<ListSsd> {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Text(
-                                  name,
-                                  style: CustomText.title3,
+                                SizedBox(
+                                width: MediaQuery.of(context).size.width *.72,
+                                  child: Text(
+                                    name,overflow: TextOverflow.ellipsis,maxLines: 1, softWrap: false,
+                                    style: CustomText.title3,
+                                  ),
                                 ),
                                 IconButton(
                                   onPressed: () {
                                     AdminUi.customAlert(() {}, () {
                                       deleteItem(
-                                        document.id,
+                                        id,
                                       );
                                     }, context,
                                         text1: 'Cancel', text2: 'Delete');
@@ -208,7 +204,7 @@ class _ListSsdState extends State<ListSsd> {
                               ],
                             ),
                           )),
-                    ); 
+                    ); // Display the field value
                   },
                 );
             }

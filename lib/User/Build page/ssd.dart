@@ -1,13 +1,24 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:prosample_1/User/Build%20page/cabinet.dart';
+import 'package:prosample_1/User/Build%20page/details/fourth_detail.dart';
+import 'package:prosample_1/User/Build%20page/gpu.dart';
+import 'package:prosample_1/User/utils/colors.dart';
 import 'package:prosample_1/User/utils/text_decorations.dart';
 import 'package:prosample_1/User/utils/widget2.dart';
 
 class SsdConfig extends StatefulWidget {
+  final String power;
+  final String total;
+  final Map<String, dynamic> pc;
   final String ssdType;
   final Map<String, dynamic> config;
-  const SsdConfig({super.key, required this.ssdType, required this.config});
+  const SsdConfig(
+      {super.key,
+      required this.ssdType,
+      required this.total,
+      required this.power,
+      required this.pc,
+      required this.config});
 
   @override
   State<SsdConfig> createState() => _SsdConfigState();
@@ -15,20 +26,92 @@ class SsdConfig extends StatefulWidget {
 
 class _SsdConfigState extends State<SsdConfig> {
   String? selectedDocumentId;
+  String? selectedSsd;
+  String? selectedPrice;
+  String? selectedGen;
+  String? selectedPower;
   @override
   Widget build(BuildContext context) {
     final ssd = widget.ssdType;
+    selectedPower ??= 0.toString();
+    int totalPwr =
+        int.parse(widget.power) + int.parse(selectedPower.toString());
+    String amt = widget.total;
+    selectedPrice ??= 0.toString();
+    int total = int.parse(amt) + int.parse(selectedPrice.toString());
+    selectedPrice ??= 0.toString();
+    selectedSsd ??= 'Select a SSD (Storage)';
     return Scaffold(
+      appBar: AppBar(
+        surfaceTintColor: Colors.white,
+        actions: [
+          GestureDetector(
+            onTap: () {
+              final pc = Map<String, dynamic>.from(widget.pc);
+              pc['ssd'] = selectedSsd;
+              pc['ssdprice'] = selectedPrice;
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (ctx) => ConfigDetail4(
+                            pc: pc,
+                            total: total.toString(),
+                          )));
+            },
+            child: Padding(
+              padding: const EdgeInsets.only(right: 10),
+              child: Container(
+                decoration: BoxDecoration(color: Colors.white, boxShadow: [
+                  BoxShadow(color: AppColors.appTheme, spreadRadius: 2)
+                ]),
+                width: MediaQuery.of(context).size.width * 0.35,
+                height: MediaQuery.of(context).size.height * 0.06,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.info, color: AppColors.appTheme),
+                    const SizedBox(width: 5),
+                    Text(
+                        '₹ $total'.replaceAllMapped(
+                            RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
+                            (Match m) => "${m[1]},"),
+                        style: TextStyling.subtitleapptheme)
+                  ],
+                ),
+              ),
+            ),
+          )
+        ],
+      ),
       bottomNavigationBar: UiCustom.bottomNextButton(context, () {
         Navigator.pop(context);
       }, () {
-        final updatedConfig = Map<String, dynamic>.from(widget.config);
-        updatedConfig['ssd'] = selectedDocumentId;
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (ctx) => CabinetConfig(config: updatedConfig)));
-      }, amt: 'amt'),
+        if (selectedDocumentId == null) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              duration: const Duration(seconds: 3),
+              content: Center(
+                  child: Text(
+                'Please select a SSD (Storage)',
+                style: TextStyling.subtitleWhite,
+              )),
+              backgroundColor: const Color.fromARGB(255, 245, 62, 49),
+            ),
+          );
+        } else {
+          final updatedConfig = Map<String, dynamic>.from(widget.config);
+          updatedConfig['ssd'] = selectedDocumentId;
+
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (ctx) => GpuConfig(
+                        power: totalPwr.toString(),
+                        ssd: selectedGen.toString(),
+                        config: updatedConfig,
+                      )));
+        }
+      }),
       body: SafeArea(
           child: Padding(
         padding: const EdgeInsets.all(10.0),
@@ -56,6 +139,10 @@ class _SsdConfigState extends State<SsdConfig> {
                         String imageUrl = document['image'];
                         String name = document['name'];
                         String price = document['newprice'];
+                        String storage = document['storage'];
+                        String speed = document['transferspeed'];
+                        String gen = document['gentype'];
+                        String wattage = document['wattage'];
                         final bool isSelected =
                             document.id == selectedDocumentId;
                         return Padding(
@@ -63,6 +150,10 @@ class _SsdConfigState extends State<SsdConfig> {
                           child: GestureDetector(
                               onTap: () => setState(() {
                                     selectedDocumentId = document.id;
+                                    selectedSsd = name;
+                                    selectedPrice = price;
+                                    selectedGen = gen;
+                                    selectedPower = wattage;
                                   }),
                               child: Container(
                                 decoration: BoxDecoration(
@@ -79,7 +170,7 @@ class _SsdConfigState extends State<SsdConfig> {
                                   ],
                                   border: isSelected
                                       ? Border.all(
-                                          color: Colors.orange,
+                                          color: AppColors.appTheme,
                                           width: 2,
                                         )
                                       : null,
@@ -107,7 +198,7 @@ class _SsdConfigState extends State<SsdConfig> {
                                           height: MediaQuery.of(context)
                                                   .size
                                                   .height *
-                                              0.15,
+                                              0.11,
                                           child: Image.network(imageUrl,
                                               fit: BoxFit.cover),
                                         ),
@@ -116,9 +207,35 @@ class _SsdConfigState extends State<SsdConfig> {
                                             width: MediaQuery.of(context)
                                                 .size
                                                 .width,
-                                            child: Text(name,
-                                                style: TextStyling.subtitle2)),
-                                        const SizedBox(height: 10),
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Text(name,
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                    softWrap: false,
+                                                    maxLines: 1,
+                                                    style:
+                                                        TextStyling.subtitle2),
+                                                const SizedBox(height: 5),
+                                                Row(
+                                                  children: [
+                                                    Text('$storage,',
+                                                        style: TextStyling
+                                                            .categoryText),
+                                                    const SizedBox(width: 3),
+                                                    Text(gen,
+                                                        style: TextStyling
+                                                            .categoryText)
+                                                  ],
+                                                ),
+                                                Text(speed,
+                                                    style: TextStyling
+                                                        .categoryText),
+                                              ],
+                                            )),
+                                        const SizedBox(height: 8),
                                         Row(
                                           children: [
                                             const Text('₹'),

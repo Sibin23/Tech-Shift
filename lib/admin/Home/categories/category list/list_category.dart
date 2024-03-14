@@ -5,6 +5,7 @@ import 'package:prosample_1/admin/Home/categories/cabinet.dart';
 import 'package:prosample_1/admin/Home/categories/cables.dart';
 import 'package:prosample_1/admin/Home/categories/cooler.dart';
 import 'package:prosample_1/admin/Home/categories/chair.dart';
+import 'package:prosample_1/admin/Home/categories/gpu.dart';
 import 'package:prosample_1/admin/Home/categories/headset.dart';
 import 'package:prosample_1/admin/Home/categories/keyboard.dart';
 import 'package:prosample_1/admin/Home/categories/monitor.dart';
@@ -29,6 +30,7 @@ class _ListCategoryState extends State<ListCategory> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        foregroundColor: Colors.white,
         backgroundColor: CustomColors.appTheme,
        
       ),
@@ -102,7 +104,10 @@ class _ListCategoryState extends State<ListCategory> {
                                       builder: (ctx) =>
                                           const ListMouse()),
                                 );
-                              }else if(document.id == 'monitor'){
+                              }else if(document.id == 'gpu'){
+                                Navigator.push(context, MaterialPageRoute(builder: (ctx)=> const ListGpu()));
+                              }
+                              else if(document.id == 'monitor'){
                                  Navigator.push(
                                   context,
                                   MaterialPageRoute(

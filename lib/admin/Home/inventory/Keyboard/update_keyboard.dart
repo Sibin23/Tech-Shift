@@ -307,9 +307,10 @@ class _UpdateKeyboardState extends State<UpdateKeyboard> {
                   const SizedBox(height: 30),
                   AdminUiHelper.customButton(context, () {
                     if (_formkey.currentState!.validate()) {
+                      Navigator.pop(context);
                       updateData();
                       AdminUiHelper.customSnackbar(
-                          context, 'Item Added Successfully !');
+                          context, 'Item Updated Successfully !');
                     }
                   }, text: 'Save'),
                 ]),

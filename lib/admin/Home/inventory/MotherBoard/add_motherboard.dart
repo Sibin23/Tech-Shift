@@ -34,7 +34,7 @@ class __ScreenAddMotherboardState extends State<ScreenAddMotherboard> {
   final _ssdType = TextEditingController();
   final ports = TextEditingController();
   final maxClock = TextEditingController();
-  final _voltage = TextEditingController();
+  final wattage = TextEditingController();
   final _formFactor = TextEditingController();
   final _country = TextEditingController();
   final _itemWeight = TextEditingController();
@@ -88,7 +88,7 @@ class __ScreenAddMotherboardState extends State<ScreenAddMotherboard> {
       'productdimension': _productDimension.text,
       'features': _specialFeatures.text,
       'ports': ports.text,
-      'voltage': _voltage.text,
+      'wattage': wattage.text,
       'formfactor': _formFactor.text,
       'country': _country.text,
       'itemweight': _itemWeight.text,
@@ -117,7 +117,7 @@ class __ScreenAddMotherboardState extends State<ScreenAddMotherboard> {
       _slots.clear();
       _specialFeatures.clear();
       ports.clear();
-      _voltage.clear();
+      wattage.clear();
       _formFactor.clear();
       _country.clear();
       _itemWeight.clear();
@@ -462,11 +462,12 @@ class __ScreenAddMotherboardState extends State<ScreenAddMotherboard> {
                                   textcontroller: _specialFeatures),
                               const SizedBox(height: 10),
                               AdminUi.admTextField(
-                                  label: 'Voltage', textcontroller: _voltage),
-                              const SizedBox(height: 10),
-                              AdminUi.admTextField(
                                   label: 'Form Factor',
                                   textcontroller: _formFactor),
+                              const SizedBox(height: 10),
+                              AdminUi.admTextField(
+                                  label: 'Power Consumption (W)',
+                                  textcontroller: wattage),
                               const SizedBox(height: 10),
                               AdminUi.admTextField(
                                   label: 'Country', textcontroller: _country),

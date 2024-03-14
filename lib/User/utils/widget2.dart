@@ -77,65 +77,64 @@ class UiCustom {
     );
   }
 
-  static bottomNextButton(
-    BuildContext context,
-    VoidCallback voidCallbackprev,
-    VoidCallback voidCallbacknext,{required String amt}
-  ) {
+  static bottomNextButton(BuildContext context, VoidCallback voidCallbackprev,
+      VoidCallback voidCallbacknext
+      //,{required String amt}
+      ) {
     return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          GestureDetector(
-            onTap: () {
-              voidCallbackprev();
-            },
-            child: Container(
-              decoration: BoxDecoration(
+      padding: const EdgeInsets.only(left: 8, right: 8, bottom: 8),
+      child: SizedBox(
+        width: MediaQuery.of(context).size.width,
+        height: MediaQuery.of(context).size.height * 0.06,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            GestureDetector(
+              onTap: () {
+                voidCallbackprev();
+              },
+              child: Container(
+                decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(5),
                   color: Colors.white,
-                  boxShadow: const [
+                  boxShadow: [
                     BoxShadow(
-                        blurRadius: 2,
-                        spreadRadius: 2,
-                        color: Colors.grey,
-                        offset: Offset(2, 2))
-                  ]),
-              width: MediaQuery.of(context).size.width * .4,
-              height: MediaQuery.of(context).size.height * .07,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Icon(Icons.info_outline, color: AppColors.appTheme),
-                  Text(
-                    amt,
-                    style: TextStyling.details,
+                      spreadRadius: 1.2,
+                      color: AppColors.appTheme,
+                    )
+                  ],
+                ),
+                width: MediaQuery.of(context).size.width * .35,
+                height: MediaQuery.of(context).size.height * .07,
+                child: Center(
+                  child: Text(
+                    'Back',
+                    style: TextStyling.subtitleapptheme,
                   ),
-                ],
-              ),
-            ),
-          ),
-          GestureDetector(
-            onTap: () {
-              voidCallbacknext();
-            },
-            child: Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(5),
-                color: AppColors.appTheme,
-              ),
-              width: MediaQuery.of(context).size.width * .4,
-              height: MediaQuery.of(context).size.height * .07,
-              child: Center(
-                child: Text(
-                  'Next',
-                  style: TextStyling.subtitleWhite,
                 ),
               ),
             ),
-          )
-        ],
+            GestureDetector(
+              onTap: () {
+                voidCallbacknext();
+              },
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(5),
+                  color: AppColors.appTheme,
+                ),
+                width: MediaQuery.of(context).size.width * .35,
+                height: MediaQuery.of(context).size.height * .07,
+                child: Center(
+                  child: Text(
+                    'Next',
+                    style: TextStyling.subtitleWhite,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -147,5 +146,78 @@ class UiCustom {
       color: Colors.green,
       iconSize: 20,
     );
+  }
+
+  static configBox(BuildContext context) {
+    return Container(
+                decoration:
+                    const BoxDecoration(color: Colors.white, boxShadow: [
+                  BoxShadow(
+                      color: Colors.grey,
+                      spreadRadius: 1)
+                ]),
+                width: MediaQuery.of(context).size.width,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      child: SizedBox(
+                        width: MediaQuery.of(context).size.width * 0.6,
+                        child: const Center(
+                          child: Text('Not Required',
+                              style: TextStyle(color: Colors.transparent)),
+                        ),
+                      ),
+                    ),
+                    Container(
+                      width: MediaQuery.of(context).size.width * 0.3,
+                      height: MediaQuery.of(context).size.height * 0.06,
+                      decoration:
+                          const BoxDecoration(color: Colors.black),
+                      child: Center(
+                          child: Text(
+                              '₹ 0',
+                              style: TextStyling.subtitleWhite)),
+                    )
+                  ],
+                ),
+              );
+  }
+  static configDetail( BuildContext context,{required String name, required String price}){
+    return Container(
+                decoration:
+                    const BoxDecoration(color: Colors.white, boxShadow: [
+                  BoxShadow(
+                      color: Colors.grey,
+                      spreadRadius: 1)
+                ]),
+                width: MediaQuery.of(context).size.width,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      child: SizedBox(
+                        width: MediaQuery.of(context).size.width * 0.6,
+                        child: Center(
+                          child: Text(name.toString(),
+                              style: TextStyling.details),
+                        ),
+                      ),
+                    ),
+                    Container(
+                      width: MediaQuery.of(context).size.width * 0.3,
+                      height: MediaQuery.of(context).size.height * 0.06,
+                      decoration:
+                          const BoxDecoration(color: Colors.black),
+                      child: Center(
+                          child: Text(
+                              '₹ $price'.replaceAllMapped(
+                                  RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
+                                  (Match m) => "${m[1]},"),
+                              style: TextStyling.subtitleWhite)),
+                    )
+                  ],
+                ),
+              );
   }
 }

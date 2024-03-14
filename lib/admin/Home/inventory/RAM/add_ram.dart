@@ -28,7 +28,7 @@ class _ScreenAddRamState extends State<ScreenAddRam> {
   final _ramSize = TextEditingController();
   final _ramType = TextEditingController();
   final _clockSpeed = TextEditingController();
-  final _voltage = TextEditingController();
+  final wattage = TextEditingController();
   final _fromFactor = TextEditingController();
   final _country = TextEditingController();
   final _itemWeight = TextEditingController();
@@ -67,7 +67,7 @@ class _ScreenAddRamState extends State<ScreenAddRam> {
       'ramsize': _ramSize.text,
       'ramtype': _ramType.text,
       'clockspeed': _clockSpeed.text,
-      'voltage': _voltage.text,
+      'wattage': wattage.text,
       'formfactor': _fromFactor.text,
       'country': _country.text,
       'itemweight': _itemWeight.text,
@@ -90,19 +90,20 @@ class _ScreenAddRamState extends State<ScreenAddRam> {
       _ramSize.clear();
       _ramType.clear();
       _clockSpeed.clear();
-      _voltage.clear();
+      wattage.clear();
       _fromFactor.clear();
       _country.clear();
       _itemWeight.clear();
       _warranty.clear();
     });
   }
-String? selectedCategory;
-String? selectedRam;
-String? selectedModel;
-String? selectedRamType;
-String? selectedSpeed;
-String? selectedRamSize;
+
+  String? selectedCategory;
+  String? selectedRam;
+  String? selectedModel;
+  String? selectedRamType;
+  String? selectedSpeed;
+  String? selectedRamSize;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -118,12 +119,12 @@ String? selectedRamSize;
                     .collection('ramdetails')
                     .snapshots(),
                 builder: (context, snapshot) {
-                   if (snapshot.hasError) {
-                  return Text('Error: ${snapshot.error}');
-                }
-                if (!snapshot.hasData) {
-                  return const Center(child: CircularProgressIndicator());
-                }
+                  if (snapshot.hasError) {
+                    return Text('Error: ${snapshot.error}');
+                  }
+                  if (!snapshot.hasData) {
+                    return const Center(child: CircularProgressIndicator());
+                  }
                   final category = snapshot.data!.docs
                       .map((doc) => doc['category'] as String)
                       .toSet()
@@ -144,8 +145,8 @@ String? selectedRamSize;
                       .map((doc) => doc['speed'] as String)
                       .toSet()
                       .toList();
-                      final size = snapshot.data!.docs
-                      .map((doc)=> doc['ramsize'] as String)
+                  final size = snapshot.data!.docs
+                      .map((doc) => doc['ramsize'] as String)
                       .toSet()
                       .toList();
                   return Padding(
@@ -162,8 +163,7 @@ String? selectedRamSize;
                             key: _formkey,
                             child: Column(children: [
                               AdminUi.admTextField(
-                                  label:'Unique ID',
-                                  textcontroller: idNum),
+                                  label: 'Unique ID', textcontroller: idNum),
                               const SizedBox(height: 10),
                               DropdownMenu<String>(
                                   label: const Text('Select Category',
@@ -357,19 +357,16 @@ String? selectedRamSize;
                                   label: 'New Price',
                                   textcontroller: _newPrice),
                               const SizedBox(height: 10),
-                             
                               AdminUi.admTextField(
                                   label: 'Product Dimensions',
                                   textcontroller: _productDimension),
                               const SizedBox(height: 10),
-                             
-                              AdminUi.admTextField(
-                                  label: 'Voltage', textcontroller: _voltage),
-                              const SizedBox(height: 10),
-                              
                               AdminUi.admTextField(
                                   label: 'Form Factor',
                                   textcontroller: _fromFactor),
+                              const SizedBox(height: 10),
+                              AdminUi.admTextField(
+                                  label: 'Wattage', textcontroller: wattage),
                               const SizedBox(height: 10),
                               AdminUi.admTextField(
                                   label: 'Country', textcontroller: _country),

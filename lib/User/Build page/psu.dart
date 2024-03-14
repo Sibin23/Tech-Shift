@@ -1,130 +1,30 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:prosample_1/User/Build%20page/details/third_detail.dart';
-import 'package:prosample_1/User/Build%20page/ssd.dart';
 import 'package:prosample_1/User/utils/colors.dart';
 import 'package:prosample_1/User/utils/text_decorations.dart';
-import 'package:prosample_1/User/utils/widget2.dart';
 
-class RamConfig extends StatefulWidget {
-  final Map<String, dynamic> pc;
-  final String power;
-  final String ramType;
-  final String ssdType;
-  final String total;
-  final Map<String, dynamic> config;
-  const RamConfig(
-      {super.key,
-      required this.power,
-      required this.total,
-      required this.ramType,
-      required this.ssdType,
-      required this.pc,
-      required this.config});
+class PsuConfig extends StatefulWidget {
+  const PsuConfig({super.key});
 
   @override
-  State<RamConfig> createState() => _RamConfigState();
+  State<PsuConfig> createState() => _PsuConfigState();
 }
 
-class _RamConfigState extends State<RamConfig> {
+class _PsuConfigState extends State<PsuConfig> {
   String? selectedDocumentId;
+  String? selectedPsu;
   String? selectedPrice;
-  String? selectedRam;
   String? selectedPower;
   @override
   Widget build(BuildContext context) {
-    print(widget.power);
-    selectedPower ??= 0.toString();
-    int totalPwr =
-        int.parse(widget.power) + int.parse(selectedPower.toString());
-    final ram = widget.ramType;
-    String amt = widget.total;
-    selectedPrice ??= 0.toString();
-    int total = int.parse(amt) + int.parse(selectedPrice.toString());
-    selectedPrice ??= 0.toString();
-    selectedRam ??= 'Select a RAM';
     return Scaffold(
-      appBar: AppBar(
-        surfaceTintColor: Colors.white,
-        actions: [
-          GestureDetector(
-            onTap: () {
-              final pc = Map<String, dynamic>.from(widget.pc);
-              pc['ram'] = selectedRam;
-              pc['ramprice'] = selectedPrice;
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (ctx) => ConfigDetails3(
-                            pc: pc,
-                            total: total.toString(),
-                          )));
-            },
-            child: Padding(
-              padding: const EdgeInsets.only(right: 10),
-              child: Container(
-                decoration: BoxDecoration(color: Colors.white, boxShadow: [
-                  BoxShadow(color: AppColors.appTheme, spreadRadius: 2)
-                ]),
-                width: MediaQuery.of(context).size.width * 0.35,
-                height: MediaQuery.of(context).size.height * 0.06,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(Icons.info, color: AppColors.appTheme),
-                    const SizedBox(width: 5),
-                    Text(
-                        '₹ $total'.replaceAllMapped(
-                            RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
-                            (Match m) => "${m[1]},"),
-                        style: TextStyling.subtitleapptheme)
-                  ],
-                ),
-              ),
-            ),
-          )
-        ],
-      ),
-      bottomNavigationBar: UiCustom.bottomNextButton(context, () {
-        Navigator.pop(context);
-      }, () {
-        if (selectedDocumentId == null) {
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            duration: const Duration(seconds: 3),
-            content: Center(
-                child: Text(
-              'Please select a RAM (Memory)',
-              style: TextStyling.subtitleWhite,
-            )),
-            backgroundColor: const Color.fromARGB(255, 245, 62, 49),
-          ));
-        } else {
-          final updatedConfig = Map<String, dynamic>.from(widget.config);
-          updatedConfig['ram'] = selectedDocumentId;
-          final pc = Map<String, dynamic>.from(widget.pc);
-          pc['ram'] = selectedRam;
-          pc['ramprice'] = selectedPrice;
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (ctx) => SsdConfig(
-                      power: totalPwr.toString(),
-                      pc: pc,
-                      total: total.toString(),
-                      ssdType: widget.ssdType,
-                      config: updatedConfig)));
-        }
-      }),
       body: SafeArea(
           child: Padding(
         padding: const EdgeInsets.all(10.0),
         child: StreamBuilder<QuerySnapshot>(
-            stream: FirebaseFirestore.instance
-                .collection('ram')
-                .where('ramtype', isGreaterThanOrEqualTo: ram)
-                .where('ramtype', isLessThanOrEqualTo: '$ram.9')
-                .snapshots(),
+            stream:
+                FirebaseFirestore.instance.collection('psu').snapshots(),
             builder: (context, snapshot) {
               if (snapshot.hasData) {
                 return SizedBox(
@@ -134,7 +34,7 @@ class _RamConfigState extends State<RamConfig> {
                       gridDelegate:
                           const SliverGridDelegateWithFixedCrossAxisCount(
                         crossAxisCount: 2,
-                        mainAxisSpacing: 15,
+                        mainAxisSpacing: 5,
                         crossAxisSpacing: 5,
                         mainAxisExtent: 220,
                       ),
@@ -142,19 +42,23 @@ class _RamConfigState extends State<RamConfig> {
                         DocumentSnapshot document = snapshot.data!.docs[index];
                         String imageUrl = document['image'];
                         String name = document['name'];
-                        String speed = document['clockspeed'];
-                        String type = document['ramtype'];
-                        String size = document['ramsize'];
+                        String cores = document['cores'];
+                        String threads = document['threads'];
+                        String speed = document['speed'];
                         String price = document['newprice'];
+                        String socket = document['socket'];
+                        String power = document['tdp'];
                         final bool isSelected =
                             document.id == selectedDocumentId;
                         return Padding(
-                          padding: const EdgeInsets.only(left: 5, right: 5),
+                          padding: const EdgeInsets.only(
+                              left: 5, right: 5, top: 5, bottom: 5),
                           child: GestureDetector(
                               onTap: () => setState(() {
                                     selectedDocumentId = document.id;
-                                    selectedRam = name;
+                                    selectedPsu = name;
                                     selectedPrice = price;
+                                    selectedPower = power;
                                   }),
                               child: Container(
                                 decoration: BoxDecoration(
@@ -191,23 +95,32 @@ class _RamConfigState extends State<RamConfig> {
                                     padding: const EdgeInsets.all(8.0),
                                     child: Column(
                                       children: [
-                                        SizedBox(
-                                            width: MediaQuery.of(context)
-                                                    .size
-                                                    .width *
-                                                0.35,
-                                            height: MediaQuery.of(context)
-                                                    .size
-                                                    .height *
-                                                0.11,
-                                            child: CachedNetworkImage(
-                                              imageUrl: imageUrl,
-                                              fit: BoxFit.cover,
-                                              placeholder: (context, url) {
-                                                return Image.asset(
-                                                    'assets/RAM/Kingston Fury Beast.png');
-                                              },
-                                            )),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            SizedBox(
+                                              width: MediaQuery.of(context)
+                                                      .size
+                                                      .width *
+                                                  0.3,
+                                              height: MediaQuery.of(context)
+                                                      .size
+                                                      .height *
+                                                  0.11,
+                                              child: CachedNetworkImage(
+                                                imageUrl: imageUrl,
+                                                fit: BoxFit.cover,
+                                                placeholder: (context, url) {
+                                                  return Center(
+                                                    child: Image.asset(
+                                                        'assets/Processors/processor.png'),
+                                                  );
+                                                },
+                                              ),
+                                            ),
+                                          ],
+                                        ),
                                         SizedBox(
                                             width: MediaQuery.of(context)
                                                 .size
@@ -219,28 +132,32 @@ class _RamConfigState extends State<RamConfig> {
                                                 Text(name,
                                                     overflow:
                                                         TextOverflow.ellipsis,
-                                                    maxLines: 1,
                                                     softWrap: false,
+                                                    maxLines: 1,
                                                     style:
                                                         TextStyling.subtitle2),
                                                 const SizedBox(height: 5),
                                                 Row(
                                                   children: [
-                                                    Text('$size,',
+                                                    Text('$cores,',
                                                         style: TextStyling
                                                             .categoryText),
-                                                    const SizedBox(width: 3),
-                                                    Text(type,
+                                                    const SizedBox(width: 2),
+                                                    Text(threads,
                                                         style: TextStyling
-                                                            .categoryText),
+                                                            .categoryText)
                                                   ],
                                                 ),
                                                 Text(speed,
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                    maxLines: 1,
+                                                    softWrap: false,
                                                     style: TextStyling
-                                                        .categoryText),
+                                                        .categoryText)
                                               ],
                                             )),
-                                        const SizedBox(height: 10),
+                                        const SizedBox(height: 8),
                                         Row(
                                           children: [
                                             const Text('₹'),

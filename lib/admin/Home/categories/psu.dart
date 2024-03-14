@@ -4,7 +4,6 @@ import 'package:prosample_1/admin/utils/colors.dart';
 import 'package:prosample_1/admin/utils/common_widgets.dart';
 import 'package:prosample_1/admin/utils/text_style.dart';
 import 'package:top_snackbar_flutter/custom_snack_bar.dart';
-
 import 'package:top_snackbar_flutter/top_snack_bar.dart';
 
 class ListPsu extends StatefulWidget {
@@ -15,23 +14,21 @@ class ListPsu extends StatefulWidget {
 }
 
 class _ListPsuState extends State<ListPsu> {
-  final _idController = TextEditingController();
-  final _textController = TextEditingController();
-
-  final _modelName = TextEditingController();
+  final category = TextEditingController();
+  final name = TextEditingController();
+  final modelName = TextEditingController();
 
   Future submit() async {
     final data = {
-      'categoryid': _idController.text.toLowerCase(),
-      'name': _textController.text,
-      'modelname': _modelName.text,
+      'categoryid': category.text.toLowerCase(),
+      'name': name.text,
+      'modelname': modelName.text,
     };
     FirebaseFirestore.instance.collection('psudetails').doc().set(data);
     setState(() {
-      _textController.clear();
-      _idController.clear();
-
-      _modelName.clear();
+      name.clear();
+      category.clear();
+      modelName.clear();
     });
     showTopSnackBar(Overlay.of(context),
         const CustomSnackBar.success(message: "Item Added Successfully"));
@@ -74,15 +71,14 @@ class _ListPsuState extends State<ListPsu> {
                       key: formkey,
                       child: Column(children: [
                         AdminUi.admTextField(
-                            label: 'Product Name',
-                            textcontroller: _idController),
+                            label: 'Product Category',
+                            textcontroller: category),
                         const SizedBox(height: 10),
                         AdminUi.admTextField(
-                            label: 'Product Series',
-                            textcontroller: _textController),
+                            label: 'Product Name', textcontroller: name),
                         const SizedBox(height: 10),
                         AdminUi.admTextField(
-                            label: 'Model name', textcontroller: _modelName),
+                            label: 'Model name', textcontroller: modelName),
                         const SizedBox(height: 10),
                       ])),
                 ],
