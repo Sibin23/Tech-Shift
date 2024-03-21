@@ -13,53 +13,8 @@ class MotherboardInfo2 extends StatefulWidget {
 class _MotherboardInfo2State extends State<MotherboardInfo2> {
   @override
   Widget build(BuildContext context) {
-    String imageUrl = widget.itemInfo['image'];
-    String categoryName = widget.itemInfo['category'];
-    String idNum = widget.itemInfo['idnum'];
-    String name = widget.itemInfo['name'];
-    String maxClock = widget.itemInfo['maxclock'];
-    String model = widget.itemInfo['model'];
-    String manufacturer = widget.itemInfo['manufacturer'];
-    String processorSocket = widget.itemInfo['processorsocket'];
-    String ramType = widget.itemInfo['ramType'];
-    String ramSize = widget.itemInfo['ramsize'];
-    String ramSlots = widget.itemInfo['ramslots'];
-    String ssdType = widget.itemInfo['ssdtype'];
-    String ssdSlots = widget.itemInfo['ssdslots'];
-    String oldPrice = widget.itemInfo['oldprice'];
-    String newPrice = widget.itemInfo['newprice'];
-    String dimension = widget.itemInfo['productdimension'];
-    String features = widget.itemInfo['features'];
-    String voltage = widget.itemInfo['voltage'];
-    String formFactor = widget.itemInfo['formfactor'];
-    String country = widget.itemInfo['country'];
-    String weight = widget.itemInfo['itemweight'];
-    String warranty = widget.itemInfo['warranty'];
-
-    // final motherBoard = {
-    //   'idnum': idNum,
-    //   'category': categoryName,
-    //   'image': imageUrl,
-    //   'name': name,
-    //   'maxclock': maxClock,
-    //   'model': model,
-    //   'manufacturer': manufacturer,
-    //   'processorsocket': processorSocket,
-    //   'ramType': ramType,
-    //   'ramsize': ramSize,
-    //   'ramslots': ramSlots,
-    //   'ssdtype': ssdType,
-    //   'ssdslots': ssdSlots,
-    //   'oldprice': oldPrice,
-    //   'newprice': newPrice,
-    //   'productdimension': dimension,
-    //   'features': features,
-    //   'voltage': voltage,
-    //   'formfactor': formFactor,
-    //   'country': country,
-    //   'itemweight': weight,
-    //   'warranty': warranty,
-    // };
+    final item = widget.itemInfo;
+    const space = SizedBox(height: 10);
     return Scaffold(
       appBar: AppBar(
         surfaceTintColor: Colors.white,
@@ -77,68 +32,68 @@ class _MotherboardInfo2State extends State<MotherboardInfo2> {
             children: [
               Text('Product Name', style: TextStyling.subtitle2),
               const SizedBox(height: 2),
-              Text(name, style: TextStyling.subtitle),
-              const SizedBox(height: 10),
+              Text(item['name'], style: TextStyling.subtitle),
+              space,
               Text('Model Name', style: TextStyling.subtitle2),
               const SizedBox(height: 2),
-              Text(model, style: TextStyling.subtitle),
-              const SizedBox(height: 10),
+              Text(item['model'], style: TextStyling.subtitle),
+              space,
               Text('Manufacturer', style: TextStyling.subtitle2),
               const SizedBox(height: 2),
-              Text(manufacturer, style: TextStyling.subtitle),
-              const SizedBox(height: 10),
+              Text(item['manufacturer'], style: TextStyling.subtitle),
+              space,
               Text('Processor Socket', style: TextStyling.subtitle2),
               const SizedBox(height: 2),
-              Text(processorSocket, style: TextStyling.subtitle),
-              const SizedBox(height: 10),
+              Text(item['processorsocket'], style: TextStyling.subtitle),
+              space,
               Text('RAM Type', style: TextStyling.subtitle2),
               const SizedBox(height: 2),
-              Text(ramType, style: TextStyling.subtitle),
-              const SizedBox(height: 10),
+              Text(item['ramType'], style: TextStyling.subtitle),
+              space,
               Text('RAM Size', style: TextStyling.subtitle2),
               const SizedBox(height: 2),
-              Text(ramSize, style: TextStyling.subtitle),
-              const SizedBox(height: 10),
+              Text(item['ramsize'], style: TextStyling.subtitle),
+              space,
               Text('RAM Slots', style: TextStyling.subtitle2),
               const SizedBox(height: 2),
-              Text(ramSlots, style: TextStyling.subtitle),
-              const SizedBox(height: 10),
+              Text(item['ramslots'], style: TextStyling.subtitle),
+              space,
               Text('Storage Type', style: TextStyling.subtitle2),
               const SizedBox(height: 2),
-              Text(ssdType, style: TextStyling.subtitle),
-              const SizedBox(height: 10),
+              Text(item['ssdtype'], style: TextStyling.subtitle),
+              space,
               Text('Storage Slots', style: TextStyling.subtitle2),
               const SizedBox(height: 2),
-              Text(ssdSlots, style: TextStyling.subtitle),
-              const SizedBox(height: 10),
+              Text(item['ssdslots'], style: TextStyling.subtitle),
+              space,
               Text('Product Dimensions', style: TextStyling.subtitle2),
               const SizedBox(height: 2),
-              Text(dimension, style: TextStyling.subtitle),
-              const SizedBox(height: 10),
+              Text(item['productdimension'], style: TextStyling.subtitle),
+              space,
               Text('Product Features', style: TextStyling.subtitle2),
               const SizedBox(height: 2),
-              Text(features, style: TextStyling.subtitle),
-              const SizedBox(height: 10),
-              Text('Voltage', style: TextStyling.subtitle2),
+              Text(item['features'], style: TextStyling.subtitle),
+              space,
+              Text('Wattage', style: TextStyling.subtitle2),
               const SizedBox(height: 2),
-              Text(voltage, style: TextStyling.subtitle),
-              const SizedBox(height: 10),
+              Text(item['wattage'], style: TextStyling.subtitle),
+              space,
               Text('Form Factor', style: TextStyling.subtitle2),
               const SizedBox(height: 2),
-              Text(formFactor, style: TextStyling.subtitle),
-              const SizedBox(height: 10),
+              Text(item['formfactor'], style: TextStyling.subtitle),
+              space,
               Text('Country', style: TextStyling.subtitle2),
               const SizedBox(height: 2),
-              Text(country, style: TextStyling.subtitle),
-              const SizedBox(height: 10),
+              Text(item['country'], style: TextStyling.subtitle),
+              space,
               Text('Item Weight', style: TextStyling.subtitle2),
               const SizedBox(height: 2),
-              Text(weight, style: TextStyling.subtitle),
-              const SizedBox(height: 10),
+              Text(item['itemweight'], style: TextStyling.subtitle),
+              space,
               Text('Warranty', style: TextStyling.subtitle2),
               const SizedBox(height: 2),
-              Text(warranty, style: TextStyling.subtitle),
-              const SizedBox(height: 10),
+              Text(item['warranty'], style: TextStyling.subtitle),
+              space,
             ],
           ),
         ),

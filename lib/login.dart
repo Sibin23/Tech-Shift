@@ -8,7 +8,7 @@ import 'package:prosample_1/User/utils/colors.dart';
 import 'package:prosample_1/User/utils/commonfile.dart';
 import 'package:prosample_1/admin/screens/admin_home.dart';
 
-const saveKeyName = 'adminLoggedOut';
+
 
 class ScreenLogin extends StatefulWidget {
   const ScreenLogin({super.key});
@@ -77,7 +77,7 @@ class _ScreenLoginState extends State<ScreenLogin> {
                                 border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(10)))),
                         const SizedBox(height: 20),
-                        TextFormField( 
+                        TextFormField(
                             validator: (value) {
                               if (value == null || value.isEmpty) {
                                 return 'Password is required.';
@@ -180,8 +180,6 @@ class _ScreenLoginState extends State<ScreenLogin> {
         email: email,
         password: password,
       );
-
-      // Navigate to HomeInfo screen
       goToHome();
     } on FirebaseAuthException catch (ex) {
       error(ex);
@@ -193,9 +191,9 @@ class _ScreenLoginState extends State<ScreenLogin> {
   }
 
   void goToHome() {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (ctx) => const HomeInfo()),
-    );
+    Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (ctx) => const HomeInfo()),
+        (route) => false);
   }
 }

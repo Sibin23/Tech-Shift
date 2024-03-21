@@ -1,11 +1,18 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:prosample_1/User/Build%20page/configdetails.dart';
+import 'package:prosample_1/User/Build%20page/details/psu_details.dart';
 import 'package:prosample_1/User/utils/colors.dart';
 import 'package:prosample_1/User/utils/text_decorations.dart';
+import 'package:prosample_1/User/utils/widget2.dart';
 
 class PsuConfig extends StatefulWidget {
-  const PsuConfig({super.key});
+  final String power;
+  final Map<String, dynamic> pc;
+  final String price;
+  const PsuConfig(
+      {super.key, required this.pc, required this.power, required this.price});
 
   @override
   State<PsuConfig> createState() => _PsuConfigState();
@@ -18,13 +25,80 @@ class _PsuConfigState extends State<PsuConfig> {
   String? selectedPower;
   @override
   Widget build(BuildContext context) {
+    selectedPrice ??= 0.toString();
+    selectedPsu ??= 'Select a PSU';
+    int totalAmt =
+        int.parse(widget.price) + int.parse(selectedPrice.toString());
     return Scaffold(
+      appBar: AppBar(
+        surfaceTintColor: Colors.white,
+        actions: [
+          GestureDetector(
+            onTap: () {
+              final pc = Map<String, dynamic>.from(widget.pc);
+              pc['psu'] = selectedPsu;
+              pc['psuprice'] = selectedPrice;
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (ctx) => ConfigDetail8(
+                          pc: pc, totalAmt: totalAmt.toString())));
+            },
+            child: Padding(
+              padding: const EdgeInsets.only(right: 10),
+              child: Container(
+                decoration: BoxDecoration(color: Colors.white, boxShadow: [
+                  BoxShadow(color: AppColors.appTheme, spreadRadius: 2)
+                ]),
+                width: MediaQuery.of(context).size.width * 0.35,
+                height: MediaQuery.of(context).size.height * 0.06,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.info, color: AppColors.appTheme),
+                    const SizedBox(width: 5),
+                    Text(
+                        '₹ $totalAmt'.replaceAllMapped(
+                            RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
+                            (Match m) => "${m[1]},"),
+                        style: TextStyling.subtitleapptheme)
+                  ],
+                ),
+              ),
+            ),
+          )
+        ],
+      ),
+      bottomNavigationBar: UiCustom.bottomNextButton(context, () {
+        Navigator.pop(context);
+      }, () {
+        if (selectedDocumentId == null) {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              duration: const Duration(seconds: 3),
+              content: Text(
+                'Please select a Power Supply Unit',
+                style: TextStyling.subtitleWhite,
+              ),
+              backgroundColor: const Color.fromARGB(255, 245, 62, 49)));
+        } else {
+          final pc = Map<String, dynamic>.from(widget.pc);
+          pc['psu'] = selectedPsu;
+          pc['psuprice'] = selectedPrice;
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (ctx) =>
+                      ConfigDetail(pc: pc, totalAmt: totalAmt.toString())));
+        }
+      }),
       body: SafeArea(
           child: Padding(
         padding: const EdgeInsets.all(10.0),
         child: StreamBuilder<QuerySnapshot>(
-            stream:
-                FirebaseFirestore.instance.collection('psu').snapshots(),
+            stream: FirebaseFirestore.instance
+                .collection('psu')
+                .where('wattage', isGreaterThan: widget.power)
+                .snapshots(),
             builder: (context, snapshot) {
               if (snapshot.hasData) {
                 return SizedBox(
@@ -42,12 +116,8 @@ class _PsuConfigState extends State<PsuConfig> {
                         DocumentSnapshot document = snapshot.data!.docs[index];
                         String imageUrl = document['image'];
                         String name = document['name'];
-                        String cores = document['cores'];
-                        String threads = document['threads'];
-                        String speed = document['speed'];
                         String price = document['newprice'];
-                        String socket = document['socket'];
-                        String power = document['tdp'];
+                        String power = document['wattage'];
                         final bool isSelected =
                             document.id == selectedDocumentId;
                         return Padding(
@@ -55,10 +125,17 @@ class _PsuConfigState extends State<PsuConfig> {
                               left: 5, right: 5, top: 5, bottom: 5),
                           child: GestureDetector(
                               onTap: () => setState(() {
-                                    selectedDocumentId = document.id;
+                                   if(isSelected){
+                                     selectedDocumentId = null;
+                                    selectedPsu = null;
+                                    selectedPrice = null;
+                                    selectedPower = null;
+                                   }else{
+                                     selectedDocumentId = document.id;
                                     selectedPsu = name;
                                     selectedPrice = price;
                                     selectedPower = power;
+                                   }
                                   }),
                               child: Container(
                                 decoration: BoxDecoration(
@@ -111,12 +188,9 @@ class _PsuConfigState extends State<PsuConfig> {
                                               child: CachedNetworkImage(
                                                 imageUrl: imageUrl,
                                                 fit: BoxFit.cover,
-                                                placeholder: (context, url) {
-                                                  return Center(
-                                                    child: Image.asset(
-                                                        'assets/Processors/processor.png'),
-                                                  );
-                                                },
+                                                placeholder: (context, url) => Image.asset(
+                                                      'assets/Categories/psu.png',fit: BoxFit.cover)
+                                                
                                               ),
                                             ),
                                           ],
@@ -137,24 +211,6 @@ class _PsuConfigState extends State<PsuConfig> {
                                                     style:
                                                         TextStyling.subtitle2),
                                                 const SizedBox(height: 5),
-                                                Row(
-                                                  children: [
-                                                    Text('$cores,',
-                                                        style: TextStyling
-                                                            .categoryText),
-                                                    const SizedBox(width: 2),
-                                                    Text(threads,
-                                                        style: TextStyling
-                                                            .categoryText)
-                                                  ],
-                                                ),
-                                                Text(speed,
-                                                    overflow:
-                                                        TextOverflow.ellipsis,
-                                                    maxLines: 1,
-                                                    softWrap: false,
-                                                    style: TextStyling
-                                                        .categoryText)
                                               ],
                                             )),
                                         const SizedBox(height: 8),

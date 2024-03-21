@@ -1,6 +1,7 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:prosample_1/User/Build%20page/details/fourth_detail.dart';
+import 'package:prosample_1/User/Build%20page/details/ssd_details.dart';
 import 'package:prosample_1/User/Build%20page/gpu.dart';
 import 'package:prosample_1/User/utils/colors.dart';
 import 'package:prosample_1/User/utils/text_decorations.dart';
@@ -11,14 +12,13 @@ class SsdConfig extends StatefulWidget {
   final String total;
   final Map<String, dynamic> pc;
   final String ssdType;
-  final Map<String, dynamic> config;
-  const SsdConfig(
-      {super.key,
-      required this.ssdType,
-      required this.total,
-      required this.power,
-      required this.pc,
-      required this.config});
+  const SsdConfig({
+    super.key,
+    required this.ssdType,
+    required this.total,
+    required this.power,
+    required this.pc,
+  });
 
   @override
   State<SsdConfig> createState() => _SsdConfigState();
@@ -28,17 +28,16 @@ class _SsdConfigState extends State<SsdConfig> {
   String? selectedDocumentId;
   String? selectedSsd;
   String? selectedPrice;
-  String? selectedGen;
   String? selectedPower;
   @override
   Widget build(BuildContext context) {
     final ssd = widget.ssdType;
     selectedPower ??= 0.toString();
     int totalPwr =
-        int.parse(widget.power) + int.parse(selectedPower.toString());
+        int.parse(widget.power) + int.parse(selectedPower.toString()) + 30;
     String amt = widget.total;
     selectedPrice ??= 0.toString();
-    int total = int.parse(amt) + int.parse(selectedPrice.toString());
+    int totalamt = int.parse(amt) + int.parse(selectedPrice.toString());
     selectedPrice ??= 0.toString();
     selectedSsd ??= 'Select a SSD (Storage)';
     return Scaffold(
@@ -55,7 +54,7 @@ class _SsdConfigState extends State<SsdConfig> {
                   MaterialPageRoute(
                       builder: (ctx) => ConfigDetail4(
                             pc: pc,
-                            total: total.toString(),
+                            total: totalamt.toString(),
                           )));
             },
             child: Padding(
@@ -72,7 +71,7 @@ class _SsdConfigState extends State<SsdConfig> {
                     Icon(Icons.info, color: AppColors.appTheme),
                     const SizedBox(width: 5),
                     Text(
-                        '₹ $total'.replaceAllMapped(
+                        '₹ $totalamt'.replaceAllMapped(
                             RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
                             (Match m) => "${m[1]},"),
                         style: TextStyling.subtitleapptheme)
@@ -99,169 +98,211 @@ class _SsdConfigState extends State<SsdConfig> {
             ),
           );
         } else {
-          final updatedConfig = Map<String, dynamic>.from(widget.config);
-          updatedConfig['ssd'] = selectedDocumentId;
+          final updatedConfig = Map<String, dynamic>.from(widget.pc);
+          updatedConfig['ssd'] = selectedSsd;
+          updatedConfig['ssdprice'] = selectedPrice;
 
           Navigator.push(
               context,
               MaterialPageRoute(
                   builder: (ctx) => GpuConfig(
+                        price: totalamt.toString(),
+                        pc: updatedConfig,
                         power: totalPwr.toString(),
-                        ssd: selectedGen.toString(),
-                        config: updatedConfig,
+                        ssd: widget.ssdType,
                       )));
         }
       }),
       body: SafeArea(
-          child: Padding(
-        padding: const EdgeInsets.all(10.0),
-        child: StreamBuilder<QuerySnapshot>(
-            stream: FirebaseFirestore.instance
-                .collection('ssd')
-                .where('gentype', isGreaterThanOrEqualTo: ssd)
-                .where('gentype', isLessThanOrEqualTo: '$ssd.9')
-                .snapshots(),
-            builder: (context, snapshot) {
-              if (snapshot.hasData) {
-                return SizedBox(
-                  child: GridView.builder(
-                      itemCount: snapshot.data!.docs.length,
-                      shrinkWrap: true,
-                      gridDelegate:
-                          const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2,
-                        mainAxisSpacing: 15,
-                        crossAxisSpacing: 5,
-                        mainAxisExtent: 220,
-                      ),
-                      itemBuilder: ((context, index) {
-                        DocumentSnapshot document = snapshot.data!.docs[index];
-                        String imageUrl = document['image'];
-                        String name = document['name'];
-                        String price = document['newprice'];
-                        String storage = document['storage'];
-                        String speed = document['transferspeed'];
-                        String gen = document['gentype'];
-                        String wattage = document['wattage'];
-                        final bool isSelected =
-                            document.id == selectedDocumentId;
-                        return Padding(
-                          padding: const EdgeInsets.only(left: 5, right: 5),
-                          child: GestureDetector(
-                              onTap: () => setState(() {
-                                    selectedDocumentId = document.id;
-                                    selectedSsd = name;
-                                    selectedPrice = price;
-                                    selectedGen = gen;
-                                    selectedPower = wattage;
-                                  }),
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: const BorderRadius.all(
-                                      Radius.circular(5)),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      offset: const Offset(2, 2),
-                                      spreadRadius: 1,
-                                      blurRadius: 2,
-                                      color: Colors.grey.withOpacity(0.3),
-                                    )
-                                  ],
-                                  border: isSelected
-                                      ? Border.all(
-                                          color: AppColors.appTheme,
-                                          width: 2,
-                                        )
-                                      : null,
-                                ),
-                                child: Container(
-                                  decoration: const BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius:
-                                          BorderRadius.all(Radius.circular(5)),
-                                      boxShadow: [
-                                        BoxShadow(
-                                            spreadRadius: 1,
-                                            blurRadius: 2,
-                                            color: Colors.grey)
-                                      ]),
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Column(
-                                      children: [
-                                        SizedBox(
-                                          width: MediaQuery.of(context)
-                                                  .size
-                                                  .width *
-                                              0.35,
-                                          height: MediaQuery.of(context)
-                                                  .size
-                                                  .height *
-                                              0.11,
-                                          child: Image.network(imageUrl,
-                                              fit: BoxFit.cover),
+          child: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(10.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('Solid State Drive (SSD)', style: TextStyling.titleText),
+              const SizedBox(height: 20),
+              SizedBox(
+                width: MediaQuery.of(context).size.width,
+                height: MediaQuery.of(context).size.height,
+                child: StreamBuilder<QuerySnapshot>(
+                    stream: FirebaseFirestore.instance
+                        .collection('ssd')
+                        .where('gentype', isGreaterThanOrEqualTo: ssd)
+                        .where('gentype', isLessThanOrEqualTo: '$ssd.9')
+                        .snapshots(),
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData) {
+                        return SizedBox(
+                          child: GridView.builder(
+                              physics: const NeverScrollableScrollPhysics(),
+                              itemCount: snapshot.data!.docs.length,
+                              shrinkWrap: true,
+                              gridDelegate:
+                                  const SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 2,
+                                mainAxisSpacing: 15,
+                                crossAxisSpacing: 5,
+                                mainAxisExtent: 220,
+                              ),
+                              itemBuilder: ((context, index) {
+                                DocumentSnapshot document =
+                                    snapshot.data!.docs[index];
+                                String imageUrl = document['image'];
+                                String name = document['name'];
+                                String price = document['newprice'];
+                                String storage = document['storage'];
+                                String speed = document['transferspeed'];
+                                String gen = document['gentype'];
+                                String wattage = document['wattage'];
+                                bool isSelected =
+                                    document.id == selectedDocumentId;
+                                return Padding(
+                                  padding:
+                                      const EdgeInsets.only(left: 5, right: 5),
+                                  child: GestureDetector(
+                                      onTap: () {
+                                        setState(() {
+                                          if (isSelected) {
+                                            selectedDocumentId = null;
+                                            selectedPower = null;
+                                            selectedSsd = null;
+                                            selectedPrice = null;
+                                          } else {
+                                            selectedDocumentId = document.id;
+                                            selectedSsd = name;
+                                            selectedPrice = price;
+                                            selectedPower = wattage;
+                                          }
+                                          isSelected = !isSelected;
+                                        });
+                                      },
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          borderRadius: const BorderRadius.all(
+                                              Radius.circular(5)),
+                                          boxShadow: [
+                                            BoxShadow(
+                                              offset: const Offset(2, 2),
+                                              spreadRadius: 1,
+                                              blurRadius: 2,
+                                              color:
+                                                  Colors.grey.withOpacity(0.3),
+                                            )
+                                          ],
+                                          border: isSelected
+                                              ? Border.all(
+                                                  color: AppColors.appTheme,
+                                                  width: 2,
+                                                )
+                                              : null,
                                         ),
-                                        const SizedBox(height: 10),
-                                        SizedBox(
-                                            width: MediaQuery.of(context)
-                                                .size
-                                                .width,
+                                        child: Container(
+                                          decoration: const BoxDecoration(
+                                              color: Colors.white,
+                                              borderRadius: BorderRadius.all(
+                                                  Radius.circular(5)),
+                                              boxShadow: [
+                                                BoxShadow(
+                                                    spreadRadius: 1,
+                                                    blurRadius: 2,
+                                                    color: Colors.grey)
+                                              ]),
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(8.0),
                                             child: Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
                                               children: [
-                                                Text(name,
-                                                    overflow:
-                                                        TextOverflow.ellipsis,
-                                                    softWrap: false,
-                                                    maxLines: 1,
-                                                    style:
-                                                        TextStyling.subtitle2),
-                                                const SizedBox(height: 5),
+                                                SizedBox(
+                                                  width: MediaQuery.of(context)
+                                                          .size
+                                                          .width *
+                                                      0.35,
+                                                  height: MediaQuery.of(context)
+                                                          .size
+                                                          .height *
+                                                      0.11,
+                                                  child: CachedNetworkImage(
+                                                      imageUrl: imageUrl,
+                                                      fit: BoxFit.cover,
+                                                      placeholder: (context,
+                                                              url) =>
+                                                          Image.asset(
+                                                              'assets/Categories/ssd.png',
+                                                              fit: BoxFit
+                                                                  .cover)),
+                                                ),
+                                                const SizedBox(height: 10),
+                                                SizedBox(
+                                                    width:
+                                                        MediaQuery.of(context)
+                                                            .size
+                                                            .width,
+                                                    child: Column(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        Text(name,
+                                                            overflow:
+                                                                TextOverflow
+                                                                    .ellipsis,
+                                                            softWrap: false,
+                                                            maxLines: 1,
+                                                            style: TextStyling
+                                                                .subtitle2),
+                                                        const SizedBox(
+                                                            height: 5),
+                                                        Row(
+                                                          children: [
+                                                            Text('$storage,',
+                                                                style: TextStyling
+                                                                    .categoryText),
+                                                            const SizedBox(
+                                                                width: 3),
+                                                            Text(gen,
+                                                                style: TextStyling
+                                                                    .categoryText)
+                                                          ],
+                                                        ),
+                                                        Text(speed,
+                                                            style: TextStyling
+                                                                .categoryText),
+                                                      ],
+                                                    )),
+                                                const SizedBox(height: 8),
                                                 Row(
                                                   children: [
-                                                    Text('$storage,',
-                                                        style: TextStyling
-                                                            .categoryText),
-                                                    const SizedBox(width: 3),
-                                                    Text(gen,
-                                                        style: TextStyling
-                                                            .categoryText)
+                                                    const Text('₹'),
+                                                    const SizedBox(width: 2),
+                                                    Text(
+                                                        price.replaceAllMapped(
+                                                            RegExp(
+                                                                r'(\d{1,3})(?=(\d{3})+(?!\d))'),
+                                                            (Match m) =>
+                                                                "${m[1]},"),
+                                                        style:
+                                                            TextStyling.newP),
                                                   ],
                                                 ),
-                                                Text(speed,
-                                                    style: TextStyling
-                                                        .categoryText),
                                               ],
-                                            )),
-                                        const SizedBox(height: 8),
-                                        Row(
-                                          children: [
-                                            const Text('₹'),
-                                            const SizedBox(width: 2),
-                                            Text(
-                                                price.replaceAllMapped(
-                                                    RegExp(
-                                                        r'(\d{1,3})(?=(\d{3})+(?!\d))'),
-                                                    (Match m) => "${m[1]},"),
-                                                style: TextStyling.newP),
-                                          ],
+                                            ),
+                                          ),
                                         ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              )),
+                                      )),
+                                );
+                              })),
                         );
-                      })),
-                );
-              } else {
-                return const Center(
-                  child: CircularProgressIndicator(),
-                );
-              }
-            }),
+                      } else {
+                        return const Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      }
+                    }),
+              ),
+            ],
+          ),
+        ),
       )),
     );
   }

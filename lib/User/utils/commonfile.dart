@@ -92,7 +92,30 @@ class UiHelper {
       ),
     );
   }
-
+  static buttonSml(BuildContext context, VoidCallback voidCallback,
+      {required String text}) {
+    return GestureDetector(
+      onTap: () {
+        voidCallback();
+      },
+      child: Container(
+        width: MediaQuery.of(context).size.width *.7,
+        height: MediaQuery.of(context).size.height * .07,
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10),
+            color: AppColors.appTheme,
+            boxShadow: const [
+              BoxShadow(
+                color: Colors.grey,
+                blurRadius: 4.0,
+                spreadRadius: 1.0,
+                offset: Offset(4.0, 4.0),
+              )
+            ]),
+        child: Center(child: Text(text, style: TextStyling.subtitleWhite)),
+      ),
+    );
+  }
 // itemcard
   static itemCard({
     required String image,

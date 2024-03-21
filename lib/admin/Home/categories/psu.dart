@@ -17,12 +17,14 @@ class _ListPsuState extends State<ListPsu> {
   final category = TextEditingController();
   final name = TextEditingController();
   final modelName = TextEditingController();
+  final wattage = TextEditingController();
 
   Future submit() async {
     final data = {
-      'categoryid': category.text.toLowerCase(),
+      'category': category.text.trim().toLowerCase(),
       'name': name.text,
-      'modelname': modelName.text,
+      'model': modelName.text,
+      'wattage': wattage.text.trim(),
     };
     FirebaseFirestore.instance.collection('psudetails').doc().set(data);
     setState(() {
@@ -80,6 +82,9 @@ class _ListPsuState extends State<ListPsu> {
                         AdminUi.admTextField(
                             label: 'Model name', textcontroller: modelName),
                         const SizedBox(height: 10),
+                        AdminUi.admTextField(
+                            label: 'Wattage', textcontroller: wattage),
+                        const SizedBox(height: 10)
                       ])),
                 ],
               ),

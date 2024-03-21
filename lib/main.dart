@@ -1,10 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:hive/hive.dart';
+import 'package:flutter/services.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:lottie/lottie.dart';
-import 'package:prosample_1/User/db/user_model.dart';
+import 'package:prosample_1/User/Details/db/user_model.dart';
 import 'package:prosample_1/User/home.dart';
 import 'package:prosample_1/User/utils/text_decorations.dart';
 import 'package:prosample_1/onboardScreens/onboard1.dart';
@@ -20,6 +20,7 @@ Future<void> main() async {
   if (!Hive.isAdapterRegistered(UserModelAdapter().typeId)) {
     Hive.registerAdapter(UserModelAdapter());
   }
+  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   runApp(const MyApp());
 }
 

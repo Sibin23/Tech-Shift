@@ -28,6 +28,7 @@ class _EditCoolerState extends State<EditCooler> {
   final _voltage = TextEditingController();
   final _wattage = TextEditingController();
   final _coolingMethod = TextEditingController();
+  final size = TextEditingController();
   final _fans = TextEditingController();
   final _speed = TextEditingController();
   final features = TextEditingController();
@@ -81,6 +82,7 @@ class _EditCoolerState extends State<EditCooler> {
       'voltage': _voltage.text,
       'wattage': _wattage.text,
       'cooling': _coolingMethod.text,
+      'size': size.text.trim(),
       'features': features.text,
       'fans': _fans.text,
       'noise': _noiseLevel.text,
@@ -105,6 +107,7 @@ class _EditCoolerState extends State<EditCooler> {
       _wattage.clear();
       _fans.clear();
       _coolingMethod.clear();
+      size.clear();
       _noiseLevel.clear();
       _productDimension.clear();
       _material.clear();
@@ -139,6 +142,7 @@ class _EditCoolerState extends State<EditCooler> {
         _wattage.text = data['wattage'];
         _speed.text = data['speed'];
         _fans.text = data['fans'];
+        size.text = data['size'];
         features.text = data['features'];
         _coolingMethod.text = data['cooling'];
         _noiseLevel.text = data['noise'];
@@ -155,6 +159,7 @@ class _EditCoolerState extends State<EditCooler> {
 
   @override
   Widget build(BuildContext context) {
+    final space = const SizedBox(height: 10);
     return Scaffold(
       appBar: AppBar(
         surfaceTintColor: Colors.white,
@@ -209,11 +214,11 @@ class _EditCoolerState extends State<EditCooler> {
                                     AdminUi.admTextField(
                                         label: 'Unique ID',
                                         textcontroller: uniqueId),
-                                    const SizedBox(height: 10),
+                                    space,
                                     AdminUi.admTextField(
                                         label: 'Category',
                                         textcontroller: categoryName),
-                                    const SizedBox(height: 10),
+                                    space,
                                     DropdownMenu<String>(
                                         controller: _productName,
                                         menuStyle: const MenuStyle(
@@ -247,7 +252,7 @@ class _EditCoolerState extends State<EditCooler> {
                                           return DropdownMenuEntry<String>(
                                               value: value, label: value);
                                         }).toList()),
-                                    const SizedBox(height: 10),
+                                    space,
                                     DropdownMenu<String>(
                                         controller: _manufacturer,
                                         menuStyle: const MenuStyle(
@@ -281,7 +286,7 @@ class _EditCoolerState extends State<EditCooler> {
                                           return DropdownMenuEntry<String>(
                                               value: value, label: value);
                                         }).toList()),
-                                    const SizedBox(height: 10),
+                                    space,
                                     DropdownMenu<String>(
                                         controller: _coolingMethod,
                                         menuStyle: const MenuStyle(
@@ -315,7 +320,7 @@ class _EditCoolerState extends State<EditCooler> {
                                           return DropdownMenuEntry<String>(
                                               value: value, label: value);
                                         }).toList()),
-                                    const SizedBox(height: 10),
+                                    space,
                                     DropdownMenu<String>(
                                         controller: _speed,
                                         menuStyle: const MenuStyle(
@@ -349,7 +354,7 @@ class _EditCoolerState extends State<EditCooler> {
                                           return DropdownMenuEntry<String>(
                                               value: value, label: value);
                                         }).toList()),
-                                    const SizedBox(height: 10),
+                                    space,
                                     DropdownMenu<String>(
                                         controller: _fans,
                                         menuStyle: const MenuStyle(
@@ -383,51 +388,54 @@ class _EditCoolerState extends State<EditCooler> {
                                           return DropdownMenuEntry<String>(
                                               value: value, label: value);
                                         }).toList()),
-                                    const SizedBox(height: 10),
+                                    space,
                                     AdminUi.admTextField(
                                         label: 'Old Price',
                                         textcontroller: _oldPrice),
-                                    const SizedBox(height: 10),
+                                    space,
                                     AdminUi.admTextField(
                                         label: 'New Price',
                                         textcontroller: _newPrice),
-                                    const SizedBox(height: 10),
+                                    space,
+                                    AdminUi.admTextField(
+                                        label: 'Size', textcontroller: size),
+                                    space,
                                     AdminUi.admTextField(
                                         label: 'Connector Type',
                                         textcontroller: _connector),
-                                    const SizedBox(height: 10),
+                                    space,
                                     AdminUi.admTextField(
                                         label: 'Voltage',
                                         textcontroller: _voltage),
-                                    const SizedBox(height: 10),
+                                    space,
                                     AdminUi.admTextField(
                                         label: 'Wattage',
                                         textcontroller: _wattage),
-                                    const SizedBox(height: 10),
+                                    space,
                                     AdminUi.admTextField(
                                         label: 'Noise Level',
                                         textcontroller: _noiseLevel),
-                                    const SizedBox(height: 10),
+                                    space,
                                     AdminUi.admTextField(
                                         label: 'Product Dimensions',
                                         textcontroller: _productDimension),
-                                    const SizedBox(height: 10),
+                                    space,
                                     AdminUi.admTextField(
                                         label: 'Features',
                                         textcontroller: features),
-                                    const SizedBox(height: 10),
+                                    space,
                                     AdminUi.admTextField(
                                         label: 'Material',
                                         textcontroller: _material),
-                                    const SizedBox(height: 10),
+                                    space,
                                     AdminUi.admTextField(
                                         label: 'Country',
                                         textcontroller: _country),
-                                    const SizedBox(height: 10),
+                                    space,
                                     AdminUi.admTextField(
                                         label: 'Item Weight',
                                         textcontroller: _itemWeight),
-                                    const SizedBox(height: 10),
+                                    space,
                                     AdminUi.admTextField(
                                         label: 'Warranty',
                                         textcontroller: _warranty)
@@ -435,9 +443,10 @@ class _EditCoolerState extends State<EditCooler> {
                               const SizedBox(height: 30),
                               AdminUiHelper.customButton(context, () {
                                 if (_formkey.currentState!.validate()) {
+                                  Navigator.pop(context);
                                   updateData();
                                   AdminUiHelper.customSnackbar(
-                                      context, 'Item Added Successfully !');
+                                      context, 'Item Updated Successfully !');
                                 }
                               }, text: 'Save'),
                               const SizedBox(height: 30)

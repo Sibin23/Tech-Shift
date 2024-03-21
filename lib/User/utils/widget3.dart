@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:prosample_1/User/Build%20page/build_details.dart';
+import 'package:prosample_1/User/Build%20page/build%20screen/build_details.dart';
 import 'package:prosample_1/User/utils/colors.dart';
 import 'package:prosample_1/User/utils/text_decorations.dart';
 
@@ -48,6 +48,7 @@ class UiCustom2 {
         ),
       ),
     );
+    
   }
 
   static deleteAlertBox(BuildContext context) {
@@ -57,7 +58,7 @@ class UiCustom2 {
         return AlertDialog(
           title: const Text('Delete !'),
           content: const Text(
-              'Do you want to delete? This will remove all configurations.'),
+              'Do you want to delete? This will remove all your configurations.'),
           actions: [
             TextButton(
               onPressed: () =>
@@ -66,11 +67,8 @@ class UiCustom2 {
             ),
             TextButton(
               onPressed: () {
-                Navigator.pushAndRemoveUntil(
-                  context,
-                  MaterialPageRoute(builder: (ctx) => const ScreenBuild()),
-                  (route) => false,
-                );
+               Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (ctx)=> const ScreenBuild()), ((route) => false));
+                
               },
               child: const Text('Delete'),
             ),
@@ -78,5 +76,21 @@ class UiCustom2 {
         );
       },
     );
+  }
+    static profileImage(VoidCallback voidCallback, {required imageurl}) {
+    return GestureDetector(
+        onTap: () {
+          voidCallback();
+        },
+        child: Container(
+          width: 150.0,
+          height: 150.0,
+          decoration: BoxDecoration(
+              border: Border.all(color: Colors.grey),
+              borderRadius: BorderRadius.circular(10.0)),
+          child: imageurl.isEmpty
+              ? const Center(child: Text('Pick an Image'))
+              : Image.network(imageurl),
+        ));
   }
 }

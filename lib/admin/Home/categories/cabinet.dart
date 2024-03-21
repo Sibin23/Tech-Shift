@@ -14,18 +14,21 @@ class ListCabinet extends StatefulWidget {
 }
 
 class _ListCabinetState extends State<ListCabinet> {
+  final categoryName = TextEditingController();
   final _productName = TextEditingController();
   final _manufacturer = TextEditingController();
   final _model = TextEditingController();
 
   Future submit() async {
     final data = {
+      'category': categoryName.text.trim().toLowerCase(),
       'name': _productName.text,
       'manufacturer': _manufacturer.text,
       'model': _model.text,
     };
     FirebaseFirestore.instance.collection('cabinetdetails').doc().set(data);
     setState(() {
+      categoryName.clear();
       _productName.clear();
       _manufacturer.clear();
       _model.clear();
@@ -75,6 +78,10 @@ class _ListCabinetState extends State<ListCabinet> {
                       key: formkey,
                       child: Column(
                         children: [
+                          AdminUi.admTextField(
+                              label: 'Category Name',
+                              textcontroller: categoryName),
+                          const SizedBox(height: 10),
                           AdminUi.admTextField(
                               label: 'Product Name',
                               textcontroller: _productName),

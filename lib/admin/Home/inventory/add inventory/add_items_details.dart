@@ -1,7 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:prosample_1/admin/Home/categories/psu.dart';
 import 'package:prosample_1/admin/Home/inventory/Cabinet/cabinet_list.dart';
 import 'package:prosample_1/admin/Home/inventory/Cables/cable_list.dart';
 import 'package:prosample_1/admin/Home/inventory/Chairs/chair_list.dart';
@@ -11,7 +10,6 @@ import 'package:prosample_1/admin/Home/inventory/Keyboard/list_keyboard.dart';
 import 'package:prosample_1/admin/Home/inventory/Monitor/monitor_list.dart';
 import 'package:prosample_1/admin/Home/inventory/MotherBoard/Motherboard_list.dart';
 import 'package:prosample_1/admin/Home/inventory/Mouse/mouse_list.dart';
-import 'package:prosample_1/admin/Home/inventory/PSU/add_psu.dart';
 import 'package:prosample_1/admin/Home/inventory/PSU/psu_list.dart';
 import 'package:prosample_1/admin/Home/inventory/RAM/ram_list.dart';
 import 'package:prosample_1/admin/Home/inventory/SSD/ssd_list.dart';

@@ -4,44 +4,48 @@ import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:prosample_1/User/Details/process.dart';
 import 'package:prosample_1/User/Home_screen/home_page.dart';
 import 'package:prosample_1/User/cart/cart.dart';
-import 'package:prosample_1/User/user%20profile/profile.dart';
+import 'package:prosample_1/User/Profile/profile.dart';
 import 'package:prosample_1/login.dart';
 
 class HomeInfo extends StatefulWidget {
-  const HomeInfo({super.key});
+  final int? initialIndex;
+  const HomeInfo({super.key, this.initialIndex});
 
   @override
   State<HomeInfo> createState() => _HomeInfo();
 }
 
 class _HomeInfo extends State<HomeInfo> {
-  _checkLoginStatus(){
-    final Stream<User?> authStateChanges = FirebaseAuth.instance.authStateChanges();
+  _checkLoginStatus() {
+    final Stream<User?> authStateChanges =
+        FirebaseAuth.instance.authStateChanges();
     StreamBuilder<User?>(
-    stream: authStateChanges,
-    builder: (context, snapshot) {
-      if (snapshot.hasData) {
-        // User is signed in
-        return const HomeInfo(); // Display your app's home screen
-      } else {
-        // User is not signed in
-        return const ScreenLogin(); // Redirect to the login screen
-      }
-    },
-  );
+      stream: authStateChanges,
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          return const HomeInfo();
+        } else {
+          return const ScreenLogin();
+        }
+      },
+    );
   }
+
   List pages = [
     const ScreenHome(),
     const UserProfile(),
     const ScreenCart(),
     const ScreenProcess(),
   ];
-  int _myindex = 0;
+  int myindex = 0;
+
   @override
   void initState() {
     _checkLoginStatus();
+    myindex = myindex;
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -60,7 +64,7 @@ class _HomeInfo extends State<HomeInfo> {
             padding: const EdgeInsets.all(10),
             onTabChange: (value) {
               setState(() {
-                _myindex = value;
+                myindex = value;
               });
             },
             gap: 8,
@@ -85,9 +89,7 @@ class _HomeInfo extends State<HomeInfo> {
           ),
         ),
       ),
-      body: pages[_myindex],
+      body: pages[myindex],
     );
   }
 }
-
-

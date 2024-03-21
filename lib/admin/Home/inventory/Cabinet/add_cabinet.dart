@@ -23,6 +23,8 @@ class _ScreenAddCabinetState extends State<ScreenAddCabinet> {
   final _manufacturer = TextEditingController();
   final _oldPrice = TextEditingController();
   final _newPrice = TextEditingController();
+  final topCoolerMin = TextEditingController();
+  final topCoolerMax = TextEditingController();
   final _model = TextEditingController();
   final _usb2 = TextEditingController();
   final _usb3 = TextEditingController();
@@ -34,15 +36,15 @@ class _ScreenAddCabinetState extends State<ScreenAddCabinet> {
   final _fancount = TextEditingController();
   final _warranty = TextEditingController();
   String? selectedCabinet;
+  String? selectedCategory;
   String? selectedManufacturer;
   String? selectedModel;
   // add image
   late String imageurl = '';
   String? image;
   Future<void> pickImage() async {
-    // ignore: no_leading_underscores_for_local_identifiers
-    final ImagePicker _picker = ImagePicker();
-    final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+    final ImagePicker picker = ImagePicker();
+    final XFile? image = await picker.pickImage(source: ImageSource.gallery);
     if (image != null) {
       imageurl = await uploadImage(image);
       setState(() {});
@@ -64,11 +66,13 @@ class _ScreenAddCabinetState extends State<ScreenAddCabinet> {
     final data = {
       'image': imageurl.toString(),
       'name': _productName.text,
-      'idnum': idNum.text,
+      'idnum': idNum.text.trim().toLowerCase(),
       'category': categoryName.text,
       'manufacturer': _manufacturer.text,
       'oldprice': _oldPrice.text,
       'newprice': _newPrice.text,
+      'topcoolermin': topCoolerMin.text.trim().toLowerCase(),
+      'topcoolermax': topCoolerMax.text.trim().toLowerCase(),
       'model': _model.text,
       'productdimension': _productDimension.text,
       'material': _material.text,
@@ -82,7 +86,7 @@ class _ScreenAddCabinetState extends State<ScreenAddCabinet> {
     };
     FirebaseFirestore.instance
         .collection('cabinet')
-        .doc(_productName.text)
+        .doc(idNum.text.trim().toLowerCase())
         .set(data);
     setState(() {
       imageurl = '';
@@ -92,6 +96,8 @@ class _ScreenAddCabinetState extends State<ScreenAddCabinet> {
       _manufacturer.clear();
       _oldPrice.clear();
       _newPrice.clear();
+      topCoolerMax.clear();
+      topCoolerMin.clear();
       _model.clear();
       _productDimension.clear();
       _material.clear();
@@ -107,8 +113,9 @@ class _ScreenAddCabinetState extends State<ScreenAddCabinet> {
 
   @override
   Widget build(BuildContext context) {
+    const space = SizedBox(height: 10);
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(surfaceTintColor: Colors.white),
       body: SafeArea(
           child: StreamBuilder<QuerySnapshot>(
               stream: FirebaseFirestore.instance
@@ -121,6 +128,10 @@ class _ScreenAddCabinetState extends State<ScreenAddCabinet> {
                 if (!snapshot.hasData) {
                   return const Center(child: CircularProgressIndicator());
                 }
+                final category = snapshot.data!.docs
+                    .map((doc) => doc['category'] as String)
+                    .toSet()
+                    .toList();
                 final cabinet = snapshot.data!.docs
                     .map((doc) => doc['name'] as String)
                     .toSet()
@@ -152,11 +163,41 @@ class _ScreenAddCabinetState extends State<ScreenAddCabinet> {
                                     AdminUi.admTextField(
                                         label: 'Unique ID',
                                         textcontroller: idNum),
-                                    const SizedBox(height: 10),
-                                    AdminUi.admTextField(
-                                        label: 'Category',
-                                        textcontroller: categoryName),
-                                    const SizedBox(height: 10), 
+                                    space,
+                                    DropdownMenu<String>(
+                                        controller: categoryName,
+                                        menuStyle: const MenuStyle(
+                                            surfaceTintColor:
+                                                MaterialStatePropertyAll(
+                                                    Colors.white)),
+                                        hintText: 'Select Category',
+                                        width:
+                                            MediaQuery.of(context).size.width *
+                                                .93,
+                                        menuHeight: 300,
+                                        inputDecorationTheme:
+                                            InputDecorationTheme(
+                                                hintStyle: const TextStyle(
+                                                    color:
+                                                        CustomColors.appTheme),
+                                                border: OutlineInputBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            8)),
+                                                fillColor: Colors.white,
+                                                filled: true),
+                                        onSelected: (value) {
+                                          setState(() {
+                                            selectedCategory = value;
+                                          });
+                                        },
+                                        dropdownMenuEntries: category
+                                            .map<DropdownMenuEntry<String>>(
+                                                (String value) {
+                                          return DropdownMenuEntry<String>(
+                                              value: value, label: value);
+                                        }).toList()),
+                                    space,
                                     DropdownMenu<String>(
                                         controller: _productName,
                                         menuStyle: const MenuStyle(
@@ -190,7 +231,7 @@ class _ScreenAddCabinetState extends State<ScreenAddCabinet> {
                                           return DropdownMenuEntry<String>(
                                               value: value, label: value);
                                         }).toList()),
-                                    const SizedBox(height: 10),
+                                    space,
                                     DropdownMenu<String>(
                                         controller: _manufacturer,
                                         menuStyle: const MenuStyle(
@@ -224,7 +265,7 @@ class _ScreenAddCabinetState extends State<ScreenAddCabinet> {
                                           return DropdownMenuEntry<String>(
                                               value: value, label: value);
                                         }).toList()),
-                                    const SizedBox(height: 10),
+                                    space,
                                     DropdownMenu<String>(
                                         controller: _model,
                                         menuStyle: const MenuStyle(
@@ -258,51 +299,65 @@ class _ScreenAddCabinetState extends State<ScreenAddCabinet> {
                                           return DropdownMenuEntry<String>(
                                               value: value, label: value);
                                         }).toList()),
-                                    const SizedBox(height: 10),
+                                    space,
                                     AdminUi.admTextField(
                                         label: 'Number of ports USB 2.0',
                                         textcontroller: _usb2),
-                                    const SizedBox(height: 10),
+                                    space,
                                     AdminUi.admTextField(
                                         label: 'Number of Ports USB 3.0',
                                         textcontroller: _usb3),
-                                    const SizedBox(height: 10),
+                                    space,
                                     AdminUi.admTextField(
                                         label: 'Fan Size',
                                         textcontroller: _fanSize),
-                                    const SizedBox(height: 10),
+                                    space,
                                     AdminUi.admTextField(
                                         label: 'Fan Count',
                                         textcontroller: _fancount),
-                                    const SizedBox(height: 10),
+                                    space,
                                     AdminUi.admTextField(
                                         label: 'Old Price',
                                         textcontroller: _oldPrice),
-                                    const SizedBox(height: 10),
+                                    space,
                                     AdminUi.admTextField(
                                         label: 'New Price',
                                         textcontroller: _newPrice),
-                                    const SizedBox(height: 10),
+                                    space,
+                                    AdminUi.admTextField(
+                                        label:
+                                            'Top Cooler Minimum (in Millimeters)',
+                                        textcontroller: topCoolerMin),
+                                    space,
+                                    AdminUi.admTextField(
+                                        label:
+                                            'Top Cooler Maximun (in Millimeters)',
+                                        textcontroller: topCoolerMax),
+                                    space,
                                     AdminUi.admTextField(
                                         label: 'Product Dimension',
                                         textcontroller: _productDimension),
-                                    const SizedBox(height: 10),
+                                    space,
                                     AdminUi.admTextField(
                                         label: 'Material',
                                         textcontroller: _material),
-                                    const SizedBox(height: 10),
+                                    space,
                                     AdminUi.admTextField(
                                         label: 'Country',
                                         textcontroller: _country),
-                                    const SizedBox(height: 10),
+                                    space,
                                     AdminUi.admTextField(
                                         label: 'Item Weight',
                                         textcontroller: _itemWeight),
-                                    const SizedBox(height: 10),
+                                    space,
+                                    AdminUi.admTextField(
+                                        label: 'Warranty',
+                                        textcontroller: _warranty)
                                   ])),
                               const SizedBox(height: 30),
                               AdminUiHelper.customButton(context, () {
                                 if (_formkey.currentState!.validate()) {
+                                  Navigator.pop(context);
                                   submitData();
                                   AdminUiHelper.customSnackbar(
                                       context, 'Item Added Successfully !');

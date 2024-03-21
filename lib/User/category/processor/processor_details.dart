@@ -2,6 +2,8 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
+import 'package:prosample_1/User/category/processor/info.dart';
+import 'package:prosample_1/User/utils/colors.dart';
 import 'package:prosample_1/User/utils/text_decorations.dart';
 
 class DetailsProcessor extends StatefulWidget {
@@ -12,6 +14,8 @@ class DetailsProcessor extends StatefulWidget {
 }
 
 class _DetailsProcessorState extends State<DetailsProcessor> {
+  final Map<String, bool> favorites = {};
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -20,9 +24,9 @@ class _DetailsProcessorState extends State<DetailsProcessor> {
         ),
         body: SafeArea(
             child: Container(
-              color: Colors.white,
-                      width: MediaQuery.of(context).size.width,
-                      child: StreamBuilder<QuerySnapshot>(
+          color: Colors.white,
+          width: MediaQuery.of(context).size.width,
+          child: StreamBuilder<QuerySnapshot>(
               stream: FirebaseFirestore.instance
                   .collection('processor')
                   .orderBy('name')
@@ -36,24 +40,41 @@ class _DetailsProcessorState extends State<DetailsProcessor> {
                         itemCount: snapshot.data!.docs.length,
                         gridDelegate:
                             const SliverGridDelegateWithFixedCrossAxisCount(
-                                mainAxisSpacing: 15,
+                                mainAxisSpacing: 5,
                                 crossAxisSpacing: 5,
                                 mainAxisExtent: 230,
                                 crossAxisCount: 2),
                         itemBuilder: (context, index) {
-                          DocumentSnapshot document =
-                              snapshot.data!.docs[index];
-                                  
-                          String imageUrl = document['image'];
-                          String categoryName = document['category'];
-                          String name = document['name'];
-                          String oldPrice = document['oldprice'];
-                          String newPrice = document['newprice'];
-                                  
+                          final document = snapshot.data!.docs[index];
+                          Map<String, dynamic> cpu = {
+                            'image': document['image'],
+                            'name': document['name'],
+                            'oldprice': document['oldprice'],
+                            'newprice': document['newprice'],
+                            'cache': document['cache'],
+                            'category': document['category'],
+                            'cooler': document['cooler'],
+                            'cores': document['cores'],
+                            'graghics': document['graphics'],
+                            'idnum': document['idnum'],
+                            'socket': document['socket'],
+                            'speed': document['speed'],
+                            'tdp': document['tdp'],
+                            'threads': document['threads'],
+                            'unlocked': document['unlocked'],
+                            'warranty': document['warranty'],
+                          };
                           return Padding(
-                            padding: const EdgeInsets.only(left: 5 , right: 5),
+                            padding: const EdgeInsets.only(
+                                left: 5, right: 5, top: 5, bottom: 5),
                             child: GestureDetector(
-                              onTap: () {},
+                              onTap: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (ctx) =>
+                                            ProcessorDetailScreen(cpu: cpu)));
+                              },
                               child: Container(
                                   decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(8),
@@ -65,7 +86,8 @@ class _DetailsProcessorState extends State<DetailsProcessor> {
                                             spreadRadius: 1.0,
                                             offset: Offset(2.0, 2.0))
                                       ]),
-                                  width: MediaQuery.of(context).size.width * 0.02,
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.02,
                                   height:
                                       MediaQuery.of(context).size.height * 0.1,
                                   child: Padding(
@@ -74,53 +96,86 @@ class _DetailsProcessorState extends State<DetailsProcessor> {
                                           crossAxisAlignment:
                                               CrossAxisAlignment.start,
                                           children: [
-                                            Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.center,
+                                            SizedBox(
+                                              width: MediaQuery.of(context)
+                                                      .size
+                                                      .width *
+                                                  0.35,
+                                              height: MediaQuery.of(context)
+                                                      .size
+                                                      .height *
+                                                  0.13,
+                                              child: CachedNetworkImage(
+                                                  imageUrl: document['image'],
+                                                  fit: BoxFit.cover,
+                                                  placeholder: (context, url) =>
+                                                      Image.asset(
+                                                          'assets/Categories/processor.png',
+                                                          fit: BoxFit.cover)),
+                                            ),
+                                            Text(document['category'],
+                                                style:
+                                                    TextStyling.categoryText),
+                                            SizedBox(
+                                              width: MediaQuery.of(context)
+                                                      .size
+                                                      .width *
+                                                  .13,
+                                              child: Row(
                                                 children: [
-                                                  SizedBox(
-                                                    width: MediaQuery.of(context)
-                                                            .size
-                                                            .width *
-                                                        0.35,
-                                                    height: MediaQuery.of(context)
-                                                            .size
-                                                            .height *
-                                                        0.15,
-                                                    child: CachedNetworkImage(
-                                                      imageUrl: imageUrl,
-                                                      fit: BoxFit.cover,
-                                                      placeholder:
-                                                          (context, url) {
-                                                        return const Center(
-                                                            child:
-                                                                CircularProgressIndicator());
-                                                      },
-                                                    ),
+                                                  Text('4.0',
+                                                      style:
+                                                          TextStyling.rating),
+                                                  Icon(
+                                                    Icons.star,
+                                                    color: AppColors.appTheme,
+                                                    size: 20,
                                                   )
-                                                ]),
-                                            Text(categoryName,
-                                                style: TextStyling.categoryText),
-                                            Text(name,
+                                                ],
+                                              ),
+                                            ),
+                                            const SizedBox(height: 3),
+                                            Text(document['name'],
                                                 softWrap: false,
                                                 maxLines: 1,
-                                                overflow: TextOverflow.ellipsis),
-                                            Text('****',
-                                                style: TextStyling.subtitle),
+                                                overflow:
+                                                    TextOverflow.ellipsis),
+                                            const SizedBox(height: 3),
                                             Row(children: [
                                               Row(children: [
-                                                Text(
+                                                const Text(
                                                   '₹',
-                                                  style: TextStyling.subtitle3,
                                                 ),
-                                                const SizedBox(width: 5),
-                                                Text(oldPrice,
-                                                    style:
-                                                        TextStyling.lineThrough),
+                                                const SizedBox(width: 2),
+                                                Text(
+                                                    document['oldprice']
+                                                        .replaceAllMapped(
+                                                            RegExp(
+                                                                r'(\d{1,3})(?=(\d{3})+(?!\d))'),
+                                                            (Match m) =>
+                                                                "${m[1]},"),
+                                                    style: TextStyling
+                                                        .lineThrough),
                                               ]),
                                               const SizedBox(width: 10),
-                                              Text(newPrice,
-                                                  style: TextStyling.newP)
+                                              Row(
+                                                children: [
+                                                  const Text(
+                                                    '₹',
+                                                    style: TextStyle(
+                                                        color: Colors.green),
+                                                  ),
+                                                  const SizedBox(width: 2),
+                                                  Text(
+                                                      document['newprice']
+                                                          .replaceAllMapped(
+                                                              RegExp(
+                                                                  r'(\d{1,3})(?=(\d{3})+(?!\d))'),
+                                                              (Match m) =>
+                                                                  "${m[1]},"),
+                                                      style: TextStyling.newP),
+                                                ],
+                                              )
                                             ])
                                           ]))),
                             ),
@@ -136,6 +191,6 @@ class _DetailsProcessorState extends State<DetailsProcessor> {
                           'assets/Animations/Animation - 1708393071899.json')),
                 );
               }),
-                    )));
+        )));
   }
 }

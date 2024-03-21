@@ -148,7 +148,7 @@ class _UpdateGpuState extends State<UpdateGpu> {
         recPsu.text = data['recpsu'];
         wattage.text = data['wattage'];
         country.text = data['country'];
-        weight.text = data['country'];
+        weight.text = data['itemweight'];
         warranty.text = data['warranty'];
       }
     });

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_launcher_icons/xml_templates.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
 import 'package:prosample_1/User/utils/colors.dart';

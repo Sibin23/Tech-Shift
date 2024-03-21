@@ -42,7 +42,7 @@ class _PreBuildSectionState extends State<PreBuildSection> {
                         itemBuilder: (context, index) {
                           DocumentSnapshot document =
                               snapshot.data!.docs[index];
-
+                              String id = document.id;
                           String imageUrl = document['image'];
                           String idNum = document['idnum'];
                           String categoryName = document['categoryid'];
@@ -64,6 +64,7 @@ class _PreBuildSectionState extends State<PreBuildSection> {
                             context,
                             () {
                               Map<String, dynamic> prebuild = {
+                                'docid': id,
                                 'image': imageUrl,
                                 'idnum': idNum,
                                 'categoryid': categoryName,

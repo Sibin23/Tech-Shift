@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:prosample_1/admin/utils/colors.dart';
 import 'package:prosample_1/admin/utils/common2.dart';
 import 'package:prosample_1/admin/utils/common_widgets.dart';
 import 'package:prosample_1/admin/utils/text_style.dart';
@@ -32,6 +33,10 @@ class _ScreenAddPsuState extends State<ScreenAddPsu> {
   final itemWeight = TextEditingController();
   final warranty = TextEditingController();
   late String imageurl = '';
+  String? selectedCategory;
+  String? selectedPsu;
+  String? selectedModel;
+  String? selectedWatt;
   Future<void> pickImage() async {
     final ImagePicker picker = ImagePicker();
     final XFile? image = await picker.pickImage(source: ImageSource.gallery);
@@ -93,88 +98,248 @@ class _ScreenAddPsuState extends State<ScreenAddPsu> {
 
   @override
   Widget build(BuildContext context) {
+    const space = SizedBox(height: 10);
     return Scaffold(
       appBar: AppBar(surfaceTintColor: Colors.white),
       body: SafeArea(
-          child: SingleChildScrollView(
-              child: SizedBox(
-                  width: MediaQuery.of(context).size.width,
-                  child: Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: Column(children: [
-                        Text('PSU', style: CustomText.title),
-                        const SizedBox(height: 20),
-                        AdminUiHelper.customImageBox(() {
-                          pickImage();
-                        }, imageurl: imageurl),
-                        const SizedBox(height: 20),
-                        Form(
-                            key: formkey,
+          child: StreamBuilder<QuerySnapshot>(
+              stream: FirebaseFirestore.instance
+                  .collection('psudetails')
+                  .snapshots(),
+              builder: (context, snapshot) {
+                if (snapshot.hasError) {
+                  return Text('Error: ${snapshot.error}');
+                }
+                if (!snapshot.hasData) {
+                  return const Center(child: CircularProgressIndicator());
+                }
+                final category = snapshot.data!.docs
+                    .map((doc) => doc['category'] as String)
+                    .toSet()
+                    .toList();
+                final psu = snapshot.data!.docs
+                    .map((doc) => doc['name'] as String)
+                    .toSet()
+                    .toList();
+                final model = snapshot.data!.docs
+                    .map((doc) => doc['model'] as String)
+                    .toSet()
+                    .toList();
+                final watt = snapshot.data!.docs
+                    .map((doc) => doc['wattage'] as String)
+                    .toSet()
+                    .toList();
+                return SingleChildScrollView(
+                    child: SizedBox(
+                        width: MediaQuery.of(context).size.width,
+                        child: Padding(
+                            padding: const EdgeInsets.all(10.0),
                             child: Column(children: [
-                              AdminUi.admTextField(label: 'Unique Id', textcontroller: idNum),
-                              const SizedBox(height: 10),
-                              AdminUi.admTextField(
-                                  label: 'Category Name',
-                                  textcontroller: productCategory),
-                              const SizedBox(height: 10),
-                              AdminUi.admTextField(
-                                  label: 'Product Name',
-                                  textcontroller: productName),
-                              const SizedBox(height: 10),
-                              AdminUi.admTextField(
-                                  label: 'Manufacturer',
-                                  textcontroller: manufacturer),
-                              const SizedBox(height: 10),
-                              AdminUi.admTextField(
-                                  label: 'Old Price', textcontroller: oldPrice),
-                              const SizedBox(height: 10),
-                              AdminUi.admTextField(
-                                  label: 'New Price', textcontroller: newPrice),
-                              const SizedBox(height: 10),
-                              AdminUi.admTextField(
-                                  label: 'Model Name',
-                                  textcontroller: modelName),
-                              const SizedBox(height: 10),
-                              AdminUi.admTextField(
-                                  label: 'Product Dimensions',
-                                  textcontroller: productDimension),
-                              const SizedBox(height: 10),
-                              AdminUi.admTextField(
-                                  label: 'Features',
-                                  textcontroller: specialFeatures),
-                              const SizedBox(height: 10),
-                              AdminUi.admTextField(
-                                  label: 'Wattage', textcontroller: wattage),
-                              const SizedBox(height: 10),
-                              AdminUi.admTextField(
-                                  label: 'Cooling Method',
-                                  textcontroller: coolingMethod),
-                              const SizedBox(height: 10),
-                              AdminUi.admTextField(
-                                  label: 'Form Factor',
-                                  textcontroller: fromFactor),
-                              const SizedBox(height: 10),
-                              AdminUi.admTextField(
-                                  label: 'Country', textcontroller: country),
-                              const SizedBox(height: 10),
-                              AdminUi.admTextField(
-                                  label: 'Item Weight',
-                                  textcontroller: itemWeight),
-                              const SizedBox(height: 10),
-                              AdminUi.admTextField(
-                                  label: 'Warranty', textcontroller: warranty),
-                              const SizedBox(height: 30),
-                              
-                            ])), // TextFormFeild
-                        AdminUiHelper.customButton(context, () {
-                          if (formkey.currentState!.validate()) {
-                            submitData();
-                            AdminUiHelper.customSnackbar(
-                                context, 'Item Added Successfully !');
-                          }
-                        }, text: 'Save'),
-                        const SizedBox(height: 30)
-                      ]))))),
+                              Text('PSU', style: CustomText.title),
+                              const SizedBox(height: 20),
+                              AdminUiHelper.customImageBox(() {
+                                pickImage();
+                              }, imageurl: imageurl),
+                              const SizedBox(height: 20),
+                              Form(
+                                  key: formkey,
+                                  child: Column(children: [
+                                    AdminUi.admTextField(
+                                        label: 'Unique Id',
+                                        textcontroller: idNum),
+                                    space,
+                                    DropdownMenu<String>(
+                                        label: const Text(
+                                          'Select Category',
+                                          style: TextStyle(
+                                              color: CustomColors.appTheme),
+                                        ),
+                                        controller: productCategory,
+                                        menuStyle: const MenuStyle(
+                                            surfaceTintColor:
+                                                MaterialStatePropertyAll(
+                                                    Colors.white)),
+                                        width:
+                                            MediaQuery.of(context).size.width *
+                                                .93,
+                                        menuHeight: 300,
+                                        inputDecorationTheme:
+                                            InputDecorationTheme(
+                                                border: OutlineInputBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            8)),
+                                                fillColor: Colors.white,
+                                                filled: true),
+                                        onSelected: (value) {
+                                          setState(() {
+                                            selectedCategory = value;
+                                          });
+                                        },
+                                        dropdownMenuEntries: category
+                                            .map<DropdownMenuEntry<String>>(
+                                                (String value) {
+                                          return DropdownMenuEntry<String>(
+                                              value: value, label: value);
+                                        }).toList()),
+                                    space,
+                                    DropdownMenu<String>(
+                                        label: const Text(
+                                          'Select PSU',
+                                          style: TextStyle(
+                                              color: CustomColors.appTheme),
+                                        ),
+                                        controller: productName,
+                                        menuStyle: const MenuStyle(
+                                            surfaceTintColor:
+                                                MaterialStatePropertyAll(
+                                                    Colors.white)),
+                                        width:
+                                            MediaQuery.of(context).size.width *
+                                                .93,
+                                        menuHeight: 300,
+                                        inputDecorationTheme:
+                                            InputDecorationTheme(
+                                                border: OutlineInputBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            8)),
+                                                fillColor: Colors.white,
+                                                filled: true),
+                                        onSelected: (value) {
+                                          setState(() {
+                                            selectedPsu = value;
+                                          });
+                                        },
+                                        dropdownMenuEntries: psu
+                                            .map<DropdownMenuEntry<String>>(
+                                                (String value) {
+                                          return DropdownMenuEntry<String>(
+                                              value: value, label: value);
+                                        }).toList()),
+                                    space,
+                                    DropdownMenu<String>(
+                                        label: const Text(
+                                          'Select Model Name',
+                                          style: TextStyle(
+                                              color: CustomColors.appTheme),
+                                        ),
+                                        controller: modelName,
+                                        menuStyle: const MenuStyle(
+                                            surfaceTintColor:
+                                                MaterialStatePropertyAll(
+                                                    Colors.white)),
+                                        width:
+                                            MediaQuery.of(context).size.width *
+                                                .93,
+                                        menuHeight: 300,
+                                        inputDecorationTheme:
+                                            InputDecorationTheme(
+                                                border: OutlineInputBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            8)),
+                                                fillColor: Colors.white,
+                                                filled: true),
+                                        onSelected: (value) {
+                                          setState(() {
+                                            selectedModel = value;
+                                          });
+                                        },
+                                        dropdownMenuEntries: model
+                                            .map<DropdownMenuEntry<String>>(
+                                                (String value) {
+                                          return DropdownMenuEntry<String>(
+                                              value: value, label: value);
+                                        }).toList()),
+                                    space,
+                                    DropdownMenu<String>(
+                                        label: const Text(
+                                          'Select Wattage',
+                                          style: TextStyle(
+                                              color: CustomColors.appTheme),
+                                        ),
+                                        controller: wattage,
+                                        menuStyle: const MenuStyle(
+                                            surfaceTintColor:
+                                                MaterialStatePropertyAll(
+                                                    Colors.white)),
+                                        width:
+                                            MediaQuery.of(context).size.width *
+                                                .93,
+                                        menuHeight: 300,
+                                        inputDecorationTheme:
+                                            InputDecorationTheme(
+                                                border: OutlineInputBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            8)),
+                                                fillColor: Colors.white,
+                                                filled: true),
+                                        onSelected: (value) {
+                                          setState(() {
+                                            selectedWatt = value;
+                                          });
+                                        },
+                                        dropdownMenuEntries: watt
+                                            .map<DropdownMenuEntry<String>>(
+                                                (String value) {
+                                          return DropdownMenuEntry<String>(
+                                              value: value, label: value);
+                                        }).toList()),
+                                    space,
+                                    AdminUi.admTextField(
+                                        label: 'Manufacturer',
+                                        textcontroller: manufacturer),
+                                    space,
+                                    AdminUi.admTextField(
+                                        label: 'Old Price',
+                                        textcontroller: oldPrice),
+                                    space,
+                                    AdminUi.admTextField(
+                                        label: 'New Price',
+                                        textcontroller: newPrice),
+                                    space,
+                                    AdminUi.admTextField(
+                                        label: 'Product Dimensions',
+                                        textcontroller: productDimension),
+                                    space,
+                                    AdminUi.featuresTextfield(
+                                        label: 'Features',
+                                        textcontroller: specialFeatures),
+                                    space,
+                                    AdminUi.admTextField(
+                                        label: 'Cooling Method',
+                                        textcontroller: coolingMethod),
+                                    space,
+                                    AdminUi.admTextField(
+                                        label: 'Form Factor',
+                                        textcontroller: fromFactor),
+                                    space,
+                                    AdminUi.admTextField(
+                                        label: 'Country',
+                                        textcontroller: country),
+                                    space,
+                                    AdminUi.admTextField(
+                                        label: 'Item Weight',
+                                        textcontroller: itemWeight),
+                                    space,
+                                    AdminUi.admTextField(
+                                        label: 'Warranty',
+                                        textcontroller: warranty),
+                                    const SizedBox(height: 30),
+                                  ])),
+                              AdminUiHelper.customButton(context, () {
+                                if (formkey.currentState!.validate()) {
+                                  Navigator.pop(context);
+                                  submitData();
+                                  AdminUiHelper.customSnackbar(
+                                      context, 'Item Added Successfully !');
+                                }
+                              }, text: 'Save'),
+                              const SizedBox(height: 30)
+                            ]))));
+              })),
     );
   }
 }

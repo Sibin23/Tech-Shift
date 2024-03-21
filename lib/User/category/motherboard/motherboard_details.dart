@@ -3,8 +3,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:prosample_1/User/category/motherboard/motherboard.dart';
+import 'package:prosample_1/User/utils/colors.dart';
 import 'package:prosample_1/User/utils/text_decorations.dart';
-import 'package:rate_in_stars/rate_in_stars.dart';
 
 class DetailsMotherboard extends StatefulWidget {
   const DetailsMotherboard({super.key});
@@ -44,52 +44,29 @@ class _DetailsMotherboardState extends State<DetailsMotherboard> {
                       itemBuilder: (context, index) {
                         DocumentSnapshot document = snapshot.data!.docs[index];
 
-                        String imageUrl = document['image'];
-                        String categoryName = document['category'];
-                        String idNum = document['idnum'];
-                        String name = document['name'];
-                        String maxClock = document['maxclock'];
-                        String model = document['model'];
-                        String manufacturer = document['manufacturer'];
-                        String processorSocket = document['processorsocket'];
-                        String ramType = document['ramType'];
-                        String ramSize = document['ramsize'];
-                        String ramSlots = document['ramslots'];
-                        String ssdType = document['ssdtype'];
-                        String ssdSlots = document['ssdslots'];
-                        String oldPrice = document['oldprice'];
-                        String newPrice = document['newprice'];
-                        String dimension = document['productdimension'];
-                        String features = document['features'];
-                        String voltage = document['voltage'];
-                        String formFactor = document['formfactor'];
-                        String country = document['country'];
-                        String weight = document['itemweight'];
-                        String warranty = document['warranty'];
-
                         final motherBoard = {
-                          'idnum': idNum,
-                          'category': categoryName,
-                          'image': imageUrl,
-                          'name': name,
-                          'maxclock': maxClock,
-                          'model': model,
-                          'manufacturer': manufacturer,
-                          'processorsocket': processorSocket,
-                          'ramType': ramType,
-                          'ramsize': ramSize,
-                          'ramslots': ramSlots,
-                          'ssdtype': ssdType,
-                          'ssdslots': ssdSlots,
-                          'oldprice': oldPrice,
-                          'newprice': newPrice,
-                          'productdimension': dimension,
-                          'features': features,
-                          'voltage': voltage,
-                          'formfactor': formFactor,
-                          'country': country,
-                          'itemweight': weight,
-                          'warranty': warranty,
+                          'idnum': document['idnum'],
+                          'category': document['category'],
+                          'image': document['image'],
+                          'name': document['name'],
+                          'maxclock': document['maxclock'],
+                          'model': document['model'],
+                          'manufacturer': document['manufacturer'],
+                          'processorsocket': document['processorsocket'],
+                          'ramType': document['ramType'],
+                          'ramsize': document['ramsize'],
+                          'ramslots': document['ramslots'],
+                          'ssdtype': document['ssdtype'],
+                          'ssdslots': document['ssdslots'],
+                          'oldprice': document['oldprice'],
+                          'newprice': document['newprice'],
+                          'productdimension': document['productdimension'],
+                          'features': document['features'],
+                          'formfactor': document['formfactor'],
+                          'country': document['country'],
+                          'wattage': document['wattage'],
+                          'itemweight': document['itemweight'],
+                          'warranty': document['warranty'],
                         };
 
                         return Padding(
@@ -109,87 +86,93 @@ class _DetailsMotherboardState extends State<DetailsMotherboard> {
                                     boxShadow: const [
                                       BoxShadow(
                                           color: Colors.grey,
-                                          blurRadius: 4.0,
+                                          blurRadius: 2.0,
                                           spreadRadius: 1.0,
-                                          offset: Offset(4.0, 4.0))
+                                          offset: Offset(2.0, 2.0))
                                     ]),
                                 width: MediaQuery.of(context).size.width * 0.02,
-                                height: MediaQuery.of(context).size.height * 0.1,
+                                height:
+                                    MediaQuery.of(context).size.height * 0.1,
                                 child: Padding(
                                     padding: const EdgeInsets.all(8.0),
                                     child: Column(
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
                                         children: [
-                                          Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              children: [
-                                                SizedBox(
-                                                  width: MediaQuery.of(context)
-                                                          .size
-                                                          .width *
-                                                      0.35,
-                                                  height: MediaQuery.of(context)
-                                                          .size
-                                                          .height *
-                                                      0.15,
-                                                  child: CachedNetworkImage(
-                                                    imageUrl: imageUrl,
-                                                    fit: BoxFit.cover,
-                                                    placeholder: (context, url) {
-                                                      return const Center(
-                                                          child:
-                                                              CircularProgressIndicator());
-                                                    },
-                                                  ),
-                                                )
-                                              ]),
-                                          Text(categoryName,
+                                          SizedBox(
+                                            width: MediaQuery.of(context)
+                                                    .size
+                                                    .width *
+                                                0.35,
+                                            height: MediaQuery.of(context)
+                                                    .size
+                                                    .height *
+                                                0.13,
+                                            child: CachedNetworkImage(
+                                                imageUrl: document['image'],
+                                                fit: BoxFit.cover,
+                                                placeholder: (context, url) =>
+                                                    Image.asset(
+                                                        'assets/Categories/motherboard.png',
+                                                        fit: BoxFit.cover)),
+                                          ),
+                                          Text(document['category'],
                                               style: TextStyling.categoryText),
-                                          Text(name,
+                                          SizedBox(
+                                            width: MediaQuery.of(context)
+                                                    .size
+                                                    .width *
+                                                .13,
+                                            child: Row(
+                                              children: [
+                                                Text('4.0',
+                                                    style: TextStyling.rating),
+                                                Icon(
+                                                  Icons.star,
+                                                  color: AppColors.appTheme,
+                                                  size: 20,
+                                                )
+                                              ],
+                                            ),
+                                          ),
+                                          const SizedBox(height: 3),
+                                          Text(document['name'],
                                               softWrap: false,
                                               maxLines: 1,
                                               overflow: TextOverflow.ellipsis),
-                                              const SizedBox(height: 8),
-                                          Row(
-                                            children: [
-                                              RatingStars(
-                                                editable: false,
-                                                rating: 3.5,
-                                                color: Colors.green,
-                                                iconSize: 10,
-                                              ),
-                                            ],
-                                          ),
-                                          const SizedBox(height: 8),
+                                          const SizedBox(height: 3),
                                           Row(children: [
                                             Row(children: [
-                                              Text(
+                                              const Text(
                                                 '₹',
-                                                style: TextStyling.subtitle2,
                                               ),
                                               const SizedBox(width: 2),
                                               Text(
-                                                  oldPrice.replaceAllMapped(
-                                                      RegExp(
-                                                          r'(\d{1,3})(?=(\d{3})+(?!\d))'),
-                                                      (Match m) => "${m[1]},"),
-                                                  style: TextStyling.lineThrough),
+                                                  document['oldprice']
+                                                      .replaceAllMapped(
+                                                          RegExp(
+                                                              r'(\d{1,3})(?=(\d{3})+(?!\d))'),
+                                                          (Match m) =>
+                                                              "${m[1]},"),
+                                                  style:
+                                                      TextStyling.lineThrough),
                                             ]),
                                             const SizedBox(width: 10),
                                             Row(
                                               children: [
-                                                Text(
+                                                const Text(
                                                   '₹',
-                                                  style: TextStyling.subtitle2,
+                                                  style: TextStyle(
+                                                      color: Colors.green),
                                                 ),
                                                 const SizedBox(width: 2),
                                                 Text(
-                                                    newPrice.replaceAllMapped(
-                                                        RegExp(
-                                                            r'(\d{1,3})(?=(\d{3})+(?!\d))'),
-                                                        (Match m) => "${m[1]},"),
+                                                    document['newprice']
+                                                        .replaceAllMapped(
+                                                            RegExp(
+                                                                r'(\d{1,3})(?=(\d{3})+(?!\d))'),
+                                                            (Match m) =>
+                                                                "${m[1]},"),
                                                     style: TextStyling.newP),
                                               ],
                                             )

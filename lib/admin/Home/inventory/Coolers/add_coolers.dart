@@ -20,6 +20,7 @@ class _ScreenAddCoolersState extends State<ScreenAddCoolers> {
   final categoryName = TextEditingController();
   final features = TextEditingController();
   final uniqueId = TextEditingController();
+  final size = TextEditingController();
   final _productName = TextEditingController();
   final _manufacturer = TextEditingController();
   final _oldPrice = TextEditingController();
@@ -74,6 +75,7 @@ class _ScreenAddCoolersState extends State<ScreenAddCoolers> {
       'voltage': _voltage.text,
       'wattage': _wattage.text,
       'cooling': _coolingMethod.text,
+      'size': size.text,
       'noise': _noiseLevel.text,
       'fans': _fans.text,
       'productdimension': _productDimension.text,
@@ -101,6 +103,7 @@ class _ScreenAddCoolersState extends State<ScreenAddCoolers> {
       _fans.clear();
       _coolingMethod.clear();
       _noiseLevel.clear();
+      size.clear();
       _productDimension.clear();
       _material.clear();
       _speed.clear();
@@ -112,6 +115,7 @@ class _ScreenAddCoolersState extends State<ScreenAddCoolers> {
 
   @override
   Widget build(BuildContext context) {
+    final space = const SizedBox(height: 10);
     return Scaffold(
       appBar: AppBar(
         surfaceTintColor: Colors.white,
@@ -166,11 +170,11 @@ class _ScreenAddCoolersState extends State<ScreenAddCoolers> {
                                     AdminUi.admTextField(
                                         label: 'Unique ID',
                                         textcontroller: uniqueId),
-                                    const SizedBox(height: 10),
+                                    space,
                                     AdminUi.admTextField(
                                         label: 'Category',
                                         textcontroller: categoryName),
-                                    const SizedBox(height: 10),
+                                    space,
                                     DropdownMenu<String>(
                                         controller: _productName,
                                         menuStyle: const MenuStyle(
@@ -204,7 +208,7 @@ class _ScreenAddCoolersState extends State<ScreenAddCoolers> {
                                           return DropdownMenuEntry<String>(
                                               value: value, label: value);
                                         }).toList()),
-                                    const SizedBox(height: 10),
+                                    space,
                                     DropdownMenu<String>(
                                         controller: _manufacturer,
                                         menuStyle: const MenuStyle(
@@ -238,7 +242,7 @@ class _ScreenAddCoolersState extends State<ScreenAddCoolers> {
                                           return DropdownMenuEntry<String>(
                                               value: value, label: value);
                                         }).toList()),
-                                    const SizedBox(height: 10),
+                                    space,
                                     DropdownMenu<String>(
                                         controller: _coolingMethod,
                                         menuStyle: const MenuStyle(
@@ -272,7 +276,7 @@ class _ScreenAddCoolersState extends State<ScreenAddCoolers> {
                                           return DropdownMenuEntry<String>(
                                               value: value, label: value);
                                         }).toList()),
-                                    const SizedBox(height: 10),
+                                    space,
                                     DropdownMenu<String>(
                                         controller: _speed,
                                         menuStyle: const MenuStyle(
@@ -306,7 +310,7 @@ class _ScreenAddCoolersState extends State<ScreenAddCoolers> {
                                           return DropdownMenuEntry<String>(
                                               value: value, label: value);
                                         }).toList()),
-                                    const SizedBox(height: 10),
+                                    space,
                                     DropdownMenu<String>(
                                         controller: _fans,
                                         menuStyle: const MenuStyle(
@@ -340,49 +344,54 @@ class _ScreenAddCoolersState extends State<ScreenAddCoolers> {
                                           return DropdownMenuEntry<String>(
                                               value: value, label: value);
                                         }).toList()),
-                                    const SizedBox(height: 10),
+                                    space,
                                     AdminUi.admTextField(
                                         label: 'Old Price',
                                         textcontroller: _oldPrice),
-                                    const SizedBox(height: 10),
+                                    space,
                                     AdminUi.admTextField(
                                         label: 'New Price',
                                         textcontroller: _newPrice),
-                                    const SizedBox(height: 10),
+                                    space,
+                                    AdminUi.admTextField(
+                                        label: 'Size', textcontroller: size),
+                                    space,
                                     AdminUi.admTextField(
                                         label: 'Connector Type',
                                         textcontroller: _connector),
-                                    const SizedBox(height: 10),
+                                    space,
                                     AdminUi.admTextField(
                                         label: 'Voltage',
                                         textcontroller: _voltage),
-                                    const SizedBox(height: 10),
+                                    space,
                                     AdminUi.admTextField(
                                         label: 'Wattage',
                                         textcontroller: _wattage),
-                                    const SizedBox(height: 10),
+                                    space,
                                     AdminUi.admTextField(
                                         label: 'Noise Level',
                                         textcontroller: _noiseLevel),
-                                    const SizedBox(height: 10),
+                                    space,
                                     AdminUi.admTextField(
                                         label: 'Product Dimensions',
                                         textcontroller: _productDimension),
-                                        const SizedBox(height: 10),
-                                        AdminUi.admTextField(label: 'Features', textcontroller: features),
-                                    const SizedBox(height: 10),
+                                    space,
+                                    AdminUi.admTextField(
+                                        label: 'Features',
+                                        textcontroller: features),
+                                    space,
                                     AdminUi.admTextField(
                                         label: 'Material',
                                         textcontroller: _material),
-                                    const SizedBox(height: 10),
+                                    space,
                                     AdminUi.admTextField(
                                         label: 'Country',
                                         textcontroller: _country),
-                                    const SizedBox(height: 10),
+                                    space,
                                     AdminUi.admTextField(
                                         label: 'Item Weight',
                                         textcontroller: _itemWeight),
-                                    const SizedBox(height: 10),
+                                    space,
                                     AdminUi.admTextField(
                                         label: 'Warranty',
                                         textcontroller: _warranty)
@@ -390,6 +399,7 @@ class _ScreenAddCoolersState extends State<ScreenAddCoolers> {
                               const SizedBox(height: 30),
                               AdminUiHelper.customButton(context, () {
                                 if (_formkey.currentState!.validate()) {
+                                  Navigator.pop(context);
                                   submitData();
                                   AdminUiHelper.customSnackbar(
                                       context, 'Item Added Successfully !');

@@ -4,9 +4,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:prosample_1/User/Build%20page/build_details.dart';
+import 'package:prosample_1/User/Build%20page/build%20screen/build_details.dart';
 import 'package:prosample_1/User/Pre%20Builds/Screen%20prebuild/prebuild.dart';
 import 'package:prosample_1/User/Pre%20Builds/prebuild_screen.dart';
+import 'package:prosample_1/User/category/cabinet/details_cabinet.dart';
 import 'package:prosample_1/User/category/motherboard/motherboard_details.dart';
 import 'package:prosample_1/User/category/processor/processor_details.dart';
 import 'package:prosample_1/User/utils/widget2.dart';
@@ -24,6 +25,12 @@ class ScreenHome extends StatefulWidget {
 class _ScreenHomeState extends State<ScreenHome> {
   CarouselController buttonCarouselController = CarouselController();
   final _scaffoldKey = GlobalKey<ScaffoldState>();
+ void signOut() {
+    Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (ctx) => const ScreenLogin()),
+        (route) => false);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -46,12 +53,7 @@ class _ScreenHomeState extends State<ScreenHome> {
                 leading: IconButton(
                   onPressed: () async {
                     await FirebaseAuth.instance.signOut();
-                    // ignore: use_build_context_synchronously
-                    Navigator.pushAndRemoveUntil(
-                        context,
-                        MaterialPageRoute(
-                            builder: (ctx) => const ScreenLogin()),
-                        (route) => false);
+                    signOut();
                   },
                   icon: const Icon(Icons.exit_to_app_outlined),
                 ),
@@ -199,6 +201,12 @@ class _ScreenHomeState extends State<ScreenHome> {
                                     MaterialPageRoute(
                                         builder: (ctx) =>
                                             const DetailsMotherboard()));
+                              } else if (document['categoryid'] == 'cabinet') {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (ctx) =>
+                                            const CabinetDetailScreen()));
                               }
                             },
                             child: Container(
@@ -275,7 +283,7 @@ class _ScreenHomeState extends State<ScreenHome> {
                                 itemBuilder: (ctx, index) {
                                   DocumentSnapshot document =
                                       snapshot.data!.docs[index];
-
+                                      String id = document.id;
                                   String imageUrl = document['image'];
                                   String name = document['name'];
                                   String idNum = document['idnum'];
@@ -294,6 +302,7 @@ class _ScreenHomeState extends State<ScreenHome> {
                                   String psu = document['psu'];
                                   String warranty = document['warranty'];
                                   Map<String, dynamic> prebuild = {
+                                    'docid': id,
                                     'image': imageUrl,
                                     'idnum': idNum,
                                     'categoryid': categoryName,

@@ -1,5 +1,3 @@
-// ignore_for_file: file_names
-
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:prosample_1/User/utils/colors.dart';
@@ -13,11 +11,14 @@ class TextStyling {
   static final appTitle = GoogleFonts.roboto(fontSize: 25, color: Colors.black);
   static final titleText2 =
       GoogleFonts.crimsonText(color: Colors.black, fontSize: 20);
-  static final subtitle2 = GoogleFonts.roboto(color: Colors.black, fontSize: 14);
+  static final subtitle2 =
+      GoogleFonts.roboto(color: Colors.black, fontSize: 14);
   static final subtitle =
       GoogleFonts.abyssinicaSil(color: Colors.black, fontSize: 13);
   static final subtitleWhite =
       GoogleFonts.abyssinicaSil(color: Colors.white, fontSize: 16);
+  static final rating = GoogleFonts.notoSansLaoLooped(
+      color: Colors.purple.shade800, fontSize: 16);
   static final subtitleapptheme =
       GoogleFonts.abyssinicaSil(color: Colors.purple.shade800, fontSize: 16);
   static final categoryText =
@@ -28,15 +29,14 @@ class TextStyling {
       color: Colors.grey.shade700,
       decoration: TextDecoration.lineThrough,
       fontSize: 15);
-  static final newP =
-      GoogleFonts.ptSerif(fontSize: 15, color: Colors.green);
+  static final newP = GoogleFonts.ptSerif(fontSize: 15, color: Colors.green);
   static final oldGreyinfo = GoogleFonts.ptSerif(
       fontSize: 16,
       color: Colors.grey.shade500,
       decoration: TextDecoration.lineThrough);
-  static final newPbig =
-      GoogleFonts.ptSerif(fontSize: 20, color: Colors.black);
+  static final newPbig = GoogleFonts.ptSerif(fontSize: 20, color: Colors.black);
   static final details = GoogleFonts.roboto(color: Colors.black, fontSize: 17);
   static final buttonW = GoogleFonts.roboto(fontSize: 17, color: Colors.white);
-  static final buttonB = GoogleFonts.roboto(fontSize: 17, color: AppColors.appTheme);
+  static final buttonB =
+      GoogleFonts.roboto(fontSize: 17, color: AppColors.appTheme);
 }
