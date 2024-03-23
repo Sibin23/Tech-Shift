@@ -15,7 +15,6 @@ class PreBuildCart extends StatefulWidget {
 class _PreBuildCartState extends State<PreBuildCart> {
   Future<List<Map<String, dynamic>>> getCartItems() async {
     final userUid = FirebaseAuth.instance.currentUser!.uid;
-
     final userDocRef =
         FirebaseFirestore.instance.collection('User').doc(userUid);
     final cartCollectionRef = userDocRef.collection('PreBuildCart');
@@ -26,20 +25,31 @@ class _PreBuildCartState extends State<PreBuildCart> {
   }
 
   Future<void> deleteCartItem(String cartItemId) async {
-    
     try {
       final userUid = FirebaseAuth.instance.currentUser!.uid;
-    final userDocRef =
-        FirebaseFirestore.instance.collection('User').doc(userUid);
-    final cartCollectionRef = userDocRef.collection('PreBuildCart');
-    final cartItemRef = cartCollectionRef.doc(cartItemId);
-    await cartItemRef.delete();
+      final userDocRef =
+          FirebaseFirestore.instance.collection('User').doc(userUid);
+      final cartCollectionRef = userDocRef.collection('PreBuildCart');
+      final cartItemRef = cartCollectionRef.doc(cartItemId);
+      await cartItemRef.delete();
     } catch (error) {
       alert(error);
     }
   }
-  alert(error){
+
+  alert(error) {
     UiHelper.customTextAlert(context, 'Error Occured: ${error.toString()}');
+  }
+
+  Future<void> deleteUserCartDetails(String id) async {
+    try {
+      final user = FirebaseAuth.instance.currentUser!.uid;
+      final docId =
+          FirebaseFirestore.instance.collection('UserDetails').doc(user);
+      await docId.delete();
+    } catch (e) {
+      alert(e);
+    }
   }
 
   @override
@@ -56,11 +66,10 @@ class _PreBuildCartState extends State<PreBuildCart> {
           final cartItems = snapshot.data!.docs;
 
           return ListView.builder(
-            shrinkWrap: true, 
+            shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
             itemCount: cartItems.length,
             itemBuilder: (context, index) {
-              
               final document = snapshot.data!.docs[index];
               final cartId = document.id;
 
@@ -110,8 +119,10 @@ class _PreBuildCartState extends State<PreBuildCart> {
                                     children: [
                                       Text(document['name']),
                                       IconButton(
-                                          onPressed: () =>
-                                              deleteCartItem(cartId),
+                                          onPressed: () {
+                                            deleteCartItem(cartId);
+                                            deleteUserCartDetails(cartId);
+                                          },
                                           icon: const Icon(Icons.close))
                                     ],
                                   ),

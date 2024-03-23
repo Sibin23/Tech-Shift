@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -20,6 +19,7 @@ class _UpdateProfileState extends State<UpdateProfile> {
   final _phoneNumberController = TextEditingController();
   final _cityController = TextEditingController();
   final _stateController = TextEditingController();
+  final locality = TextEditingController();
   final _pincodeController = TextEditingController();
   final _addressController = TextEditingController();
   final area = TextEditingController();
@@ -67,6 +67,7 @@ class _UpdateProfileState extends State<UpdateProfile> {
         _addressController.text = data['home'];
         _cityController.text = data['city'];
         _stateController.text = data['state'];
+        locality.text = data['locality'];
         _pincodeController.text = data['pincode'];
         area.text = data['street'];
       }
@@ -87,6 +88,7 @@ class _UpdateProfileState extends State<UpdateProfile> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        surfaceTintColor: Colors.white,
         title: const Text('Update Profile'),
       ),
       body: SafeArea(
@@ -142,6 +144,12 @@ class _UpdateProfileState extends State<UpdateProfile> {
                             labeltext: 'House No., Building Name',
                             iconData: Icons.home_rounded,
                             validate: 'Address is reqired'),
+                        const SizedBox(height: 10),
+                        UiHelper.customTextField(
+                            controller: locality,
+                            labeltext: 'Locality',
+                            iconData: Icons.location_city,
+                            validate: 'Locality is required'),
                         const SizedBox(height: 10),
                         UiHelper.customTextField(
                             controller: area,

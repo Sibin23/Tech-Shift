@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:prosample_1/User/Build%20page/build%20screen/build_details.dart';
 import 'package:prosample_1/User/utils/colors.dart';
+import 'package:prosample_1/User/utils/commonfile.dart';
 import 'package:prosample_1/User/utils/text_decorations.dart';
 import 'package:prosample_1/User/utils/widget2.dart';
 
@@ -29,6 +30,8 @@ class _ConfigDetailState extends State<ConfigDetail> {
     if (custom['cooler'] == fan) {
       custom['cooler'] = notNeed;
     }
+
+    String cofig = widget.pc['processor'];
     return Scaffold(
       appBar: AppBar(
         surfaceTintColor: Colors.white,
@@ -40,6 +43,7 @@ class _ConfigDetailState extends State<ConfigDetail> {
         child: GestureDetector(
           onTap: () {
             addToCart(custom);
+            userDetails(cofig);
             showSnackbarWithAnimation();
           },
           child: Padding(
@@ -150,6 +154,25 @@ class _ConfigDetailState extends State<ConfigDetail> {
     );
   }
 
+  Future<void> userDetails(String name) async {
+    try {
+      final user = FirebaseAuth.instance.currentUser!.uid;
+      final data = {
+        'uid': user,
+        'cart': name};
+      await FirebaseFirestore.instance
+          .collection('UserDetails')
+          .doc(user)
+          .set(data);
+    } catch (e) {
+      alertMsg(e);
+    }
+  }
+
+  alertMsg(e) {
+    UiHelper.userSnackbar(context, e.toString());
+  }
+
   Future<void> addToCart(Map<String, dynamic> pc) async {
     final updatedConfig = Map<String, dynamic>.from(widget.pc);
     updatedConfig['totalprice'] = widget.totalAmt;
@@ -164,7 +187,7 @@ class _ConfigDetailState extends State<ConfigDetail> {
       final cartCollectionRef = userDocRef.collection('Configuration').doc();
       await cartCollectionRef.set(updatedConfig);
     } catch (error) {
-      print('Error adding item to cart: $error');
+      alertMsg(error);
     }
   }
 

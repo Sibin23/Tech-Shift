@@ -4,19 +4,23 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:prosample_1/User/Profile/Account/add_account.dart';
+import 'package:prosample_1/User/Profile/Account/contact_button.dart';
+import 'package:prosample_1/User/Profile/Account/logout.dart';
+import 'package:prosample_1/User/Profile/Account/terms_button.dart';
 import 'package:prosample_1/User/Profile/Account/update_profile.dart';
+import 'package:prosample_1/User/Profile/Account/warranty_button.dart';
 import 'package:prosample_1/User/utils/Text_decorations.dart';
 import 'package:prosample_1/User/utils/colors.dart';
 import 'package:prosample_1/User/utils/commonfile.dart';
 
-class NoUser extends StatefulWidget {
-  const NoUser({super.key});
+class Profile extends StatefulWidget {
+  const Profile({super.key});
 
   @override
-  State<NoUser> createState() => _NoUserState();
+  State<Profile> createState() => _ProfileState();
 }
 
-class _NoUserState extends State<NoUser> {
+class _ProfileState extends State<Profile> {
   alert(e) {
     UiHelper.customTextAlert(context, 'Error Occured: ${e.toString()}');
   }
@@ -29,31 +33,6 @@ class _NoUserState extends State<NoUser> {
         extendBodyBehindAppBar: true,
         appBar: AppBar(
           toolbarHeight: MediaQuery.of(context).size.height * .1,
-          actions: [
-            GestureDetector(
-              onTap: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (ctx) => const UpdateProfile()));
-              },
-              child: SizedBox(
-                width: MediaQuery.of(context).size.width * .2,
-                height: MediaQuery.of(context).size.height,
-                child: Column(
-                  children: [
-                    SizedBox(
-                        width: MediaQuery.of(context).size.width * .3,
-                        height: MediaQuery.of(context).size.height * .06,
-                        child: Image.asset('assets/icons/Edit_icon.png',
-                            color: Colors.white)),
-                    const Text(
-                      'Edit',
-                      style: TextStyle(color: Colors.white),
-                    )
-                  ],
-                ),
-              ),
-            )
-          ],
           foregroundColor: Colors.white,
           elevation: 0,
           backgroundColor: Colors.transparent,
@@ -159,77 +138,87 @@ class _NoUserState extends State<NoUser> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(userData['name'],
-                                  style: TextStyling.appTitle),
-                              Text(email.toString())
-                            ],
-                          ),
+                          Text(userData['name'], style: TextStyling.appTitle),
+                          IconButton(
+                              onPressed: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (ctx) =>
+                                            const UpdateProfile()));
+                              },
+                              icon: Image.asset('assets/icons/Edit_icon.png',
+                                  width:
+                                      MediaQuery.of(context).size.width * .12,
+                                  color: Colors.black)),
                         ],
                       ),
                       const SizedBox(height: 10),
                       Padding(
                         padding: const EdgeInsets.all(10.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text('PHONE', style: TextStyling.subtitleapptheme),
-                            const SizedBox(height: 10),
-                            Container(
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(8),
-                                  color: Colors.white,
-                                  boxShadow: [
-                                    BoxShadow(
-                                        spreadRadius: 0.4,
-                                        color: AppColors.appTheme)
-                                  ]),
-                              width: MediaQuery.of(context).size.width,
-                              height: MediaQuery.of(context).size.height * .07,
-                              child: Padding(
-                                padding: const EdgeInsets.all(15),
-                                child: Text(userData['phNum'],
+                        child: Container(
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(8),
+                              color: Colors.white,
+                              boxShadow: [
+                                BoxShadow(
+                                    spreadRadius: 0.6,
+                                    color: AppColors.appTheme)
+                              ]),
+                          width: MediaQuery.of(context).size.width,
+                          height: MediaQuery.of(context).size.height * .07,
+                          child: Padding(
+                            padding: const EdgeInsets.only(left: 20, right: 20),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text('Email', style: TextStyling.subtitle),
+                                Text(email.toString(),
                                     style: TextStyling.subtitleapptheme),
-                              ),
+                              ],
                             ),
-                            const SizedBox(height: 10),
-                            Text('ADDRESS',
-                                style: TextStyling.subtitleapptheme),
-                            const SizedBox(height: 10),
-                            Container(
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(8),
-                                  color: Colors.white,
-                                  boxShadow: [
-                                    BoxShadow(
-                                        spreadRadius: 0.4,
-                                        color: AppColors.appTheme)
-                                  ]),
-                              width: MediaQuery.of(context).size.width,
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Text(
-                                    "${userData['home']}, ${userData['street']}, ${userData['city']},${userData['state']}, ${userData['pincode']}.",
-                                    style: TextStyling.subtitleapptheme),
-                              ),
-                            ),
-                          ],
+                          ),
                         ),
                       ),
-                      const SizedBox(height: 40),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          UiHelper.buttonSml(context, () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (ctx) => const UpdateProfile()));
-                          }, text: 'Edit Profile')
-                        ],
-                      )
+                      Padding(
+                        padding: const EdgeInsets.only(
+                          left: 10,
+                          right: 10,
+                        ),
+                        child: Container(
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(8),
+                              color: Colors.white,
+                              boxShadow: [
+                                BoxShadow(
+                                    spreadRadius: 0.6,
+                                    color: AppColors.appTheme)
+                              ]),
+                          width: MediaQuery.of(context).size.width,
+                          height: MediaQuery.of(context).size.height * .07,
+                          child: Padding(
+                            padding: const EdgeInsets.only(left: 20, right: 20),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text('Mobile No.', style: TextStyling.subtitle),
+                                Text(userData['phNum'],
+                                    style: TextStyling.subtitleapptheme)
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                      const Divider(),
+                      const ContactButton(),
+                      const Divider(),
+                      const TermsButton(),
+                      const Divider(),
+                      const WarrantyButton(),
+                      const Divider(),
+                      const LogOut(),
+                      const Divider()
                     ],
                   );
                 }

@@ -20,6 +20,7 @@ class _AddUserScreenState extends State<AddUserScreen> {
   final _cityController = TextEditingController();
   final _stateController = TextEditingController();
   final _pincodeController = TextEditingController();
+  final locality = TextEditingController();
   final _addressController = TextEditingController();
   final _roadNameController = TextEditingController();
   final _formkey = GlobalKey<FormState>();
@@ -104,6 +105,12 @@ class _AddUserScreenState extends State<AddUserScreen> {
                               validate: 'Pincode is reqired'),
                           const SizedBox(height: 10),
                           UiHelper.customTextField(
+                              controller: locality,
+                              labeltext: 'Locality',
+                              iconData: Icons.location_city,
+                              validate: 'Locality is required'),
+                          const SizedBox(height: 10),
+                          UiHelper.customTextField(
                               controller: _addressController,
                               labeltext: 'House No., Building Name',
                               iconData: Icons.home_rounded,
@@ -126,6 +133,7 @@ class _AddUserScreenState extends State<AddUserScreen> {
                         'phNum': _phoneNumberController.text.trim(),
                         'city': _cityController.text.trim(),
                         'state': _stateController.text.trim(),
+                        'locality': locality.text.trim(),
                         'pincode': _pincodeController.text.trim(),
                         'home': _addressController.text.trim(),
                         'street': _roadNameController.text.trim(),

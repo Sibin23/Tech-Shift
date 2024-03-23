@@ -2,9 +2,9 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:hive/hive.dart';
 import 'package:lottie/lottie.dart';
-import 'package:prosample_1/User/Details/db/user_model.dart';
+import 'package:prosample_1/User/Favorites/db/functions.dart';
+import 'package:prosample_1/User/Favorites/db/model.dart';
 import 'package:prosample_1/User/Pre%20Builds/details.dart';
 import 'package:prosample_1/User/home.dart';
 import 'package:prosample_1/User/utils/colors.dart';
@@ -21,27 +21,41 @@ class PreBuildInfo extends StatefulWidget {
 }
 
 class _PreBuildInfoState extends State<PreBuildInfo> {
-  bool isFavorite = true;
+  bool isFavorite = false;
+    @override
+  void initState() {
+    super.initState();
+    _checkIfFavorite(); // Check favorite status on widget initialization
+  }
+
+  Future<void> _checkIfFavorite() async {
+    // Check if the item is already favorited (assuming you have a unique ID)
+    final isFavorited = await DatabaseHelper.instance.isFavorited(widget.prebuild['docid']);
+    setState(() {
+      isFavorite = isFavorited;
+    });
+  }
   @override
   Widget build(BuildContext context) {
     String id = widget.prebuild['docid'];
-    String name = widget.prebuild['name'];
-    String imageUrl = widget.prebuild['image'];
-    String idNum = widget.prebuild['idnum'];
-    String categoryName = widget.prebuild['categoryid'];
-    String cabinet = widget.prebuild['case'];
-    String oldPrice = widget.prebuild['oldprice'];
-    String newPrice = widget.prebuild['newprice'];
-    String processor = widget.prebuild['processor'];
-    String board = widget.prebuild['motherboard'];
-    String ram = widget.prebuild['ram'];
-    String ssd = widget.prebuild['ssd'];
-    String expstorage = widget.prebuild['expstorage'];
-    String gpu = widget.prebuild['gpu'];
-    String features = widget.prebuild['features'];
-    String cooler = widget.prebuild['cooler'];
-    String psu = widget.prebuild['psu'];
-    String warranty = widget.prebuild['warranty'];
+    final item = widget.prebuild;
+    String name = item['name'];
+    String imageUrl = item['image'];
+    String idNum = item['idnum'];
+    String categoryName = item['categoryid'];
+    String cabinet = item['case'];
+    String oldPrice = item['oldprice'];
+    String newPrice = item['newprice'];
+    String processor = item['processor'];
+    String board = item['motherboard'];
+    String ram = item['ram'];
+    String ssd = item['ssd'];
+    String expstorage = item['expstorage'];
+    String gpu = item['gpu'];
+    String features = item['features'];
+    String cooler = item['cooler'];
+    String psu = item['psu'];
+    String warranty = item['warranty'];
     Map<String, dynamic> prebuild = {
       'image': imageUrl,
       'idnum': idNum,
@@ -61,7 +75,7 @@ class _PreBuildInfoState extends State<PreBuildInfo> {
       'case': cabinet,
       'warranty': warranty
     };
-    
+
     return Scaffold(
         bottomNavigationBar: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -80,6 +94,7 @@ class _PreBuildInfoState extends State<PreBuildInfo> {
               GestureDetector(
                 onTap: () {
                   addToCart();
+                  userDetails(name);
                   showSnackbarWithAnimation();
                 },
                 child: Container(
@@ -135,28 +150,28 @@ class _PreBuildInfoState extends State<PreBuildInfo> {
                           width: 40,
                           height: 40,
                           child: GestureDetector(
-                              onTap: () {
+                              onTap: () async {
                                 setState(() {
                                   isFavorite = !isFavorite;
-                                  if (isFavorite) {
-                                    final data = UserModel(
-                                        id: id,
-                                        name: name,
-                                        category: categoryName,
-                                        oldPrice: oldPrice,
-                                        newPrice: newPrice,
-                                        imageUrl: imageUrl);
-                                    _saveToHive(id, data);
-                                  } else {
-                                    _removeFromFavorites(id);
-                                  }
                                 });
+                                if (isFavorite == true) {
+                                  final item = FavModel(
+                                      id: id,
+                                      image: imageUrl,
+                                      name: name,
+                                      oldPrice: oldPrice,
+                                      newPrice: newPrice,
+                                      fav: isFavorite);
+                                  await DatabaseHelper.instance.insertFav(item);
+                                } else {
+                                  await DatabaseHelper.instance.deleteFav(id);
+                                }
                               },
                               child: isFavorite
-                                  ? const Icon(Icons.favorite_border_outlined,
-                                      size: 30, color: Colors.black)
-                                  : const Icon(Icons.favorite,
-                                      size: 30, color: Colors.red)),
+                                  ? const Icon(Icons.favorite,
+                                      size: 30, color: Colors.red)
+                                  : const Icon(Icons.favorite_border_outlined,
+                                      size: 30, color: Colors.black)),
                         ),
                       ),
                       Column(
@@ -308,6 +323,19 @@ class _PreBuildInfoState extends State<PreBuildInfo> {
                 ]))));
   }
 
+  Future<void> userDetails(String name) async {
+    try {
+      final user = FirebaseAuth.instance.currentUser!.uid;
+      final data = {'uid': user, 'cart': name};
+      await FirebaseFirestore.instance
+          .collection('UserDetails')
+          .doc(user)
+          .set(data);
+    } catch (e) {
+      alertMsg(e);
+    }
+  }
+
   Future<void> addToCart() async {
     try {
       final user = FirebaseAuth.instance.currentUser!;
@@ -391,41 +419,7 @@ class _PreBuildInfoState extends State<PreBuildInfo> {
         (route) => false);
   }
 
-  Future<void> _saveToHive(String id, UserModel favorite) async {
-    try {
-      final box = await Hive.openBox<UserModel>('userBox');
-
-      await box.put(id, favorite); // Use ID as unique key
-
-      setState(() {
-        isFavorite = true;
-      });
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Item added to Favorites'),
-          duration: Duration(seconds: 2),
-        ),
-      );
-    } catch (e) {
-      print(e); // Handle errors appropriately
-    }
-  }
-
-  Future<void> _removeFromFavorites(String id) async {
-    try {
-      final box = await Hive.openBox<UserModel>('userBox');
-      await box.delete(id);
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Item Deleted'),
-          duration: Duration(seconds: 2),
-        ),
-      );
-      setState(() {
-        isFavorite = false;
-      });
-    } catch (e) {
-      print(e); // Handle errors appropriately
-    }
+  alertMsg(e) {
+    UiHelper.userSnackbar(context, e.toString());
   }
 }
