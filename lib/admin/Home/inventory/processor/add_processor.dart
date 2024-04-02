@@ -25,9 +25,13 @@ class _ScreenAddProcessorState extends State<ScreenAddProcessor> {
   final _oldPrice = TextEditingController();
   final _newPrice = TextEditingController();
   final _cores = TextEditingController();
+  final manufacturer = TextEditingController();
   final _threads = TextEditingController();
   final _socket = TextEditingController();
   final _speed = TextEditingController();
+  final dimension = TextEditingController();
+  final country = TextEditingController();
+  final weight = TextEditingController();
   final _cache = TextEditingController();
   final _integratedGraphics = TextEditingController();
   final _includedCPUCooler = TextEditingController();
@@ -70,10 +74,14 @@ class _ScreenAddProcessorState extends State<ScreenAddProcessor> {
       'name': _productName.text,
       'oldprice': _oldPrice.text,
       'newprice': _newPrice.text,
+      'manufacturer': manufacturer.text,
       'cores': _cores.text,
       'threads': _threads.text,
       'socket': _socket.text,
       'speed': _speed.text,
+      'productdimension': dimension.text,
+      'itemweight': weight.text,
+      'country': country.text,
       'cache': _cache.text,
       'graphics': _integratedGraphics.text.toUpperCase(),
       'cooler': _includedCPUCooler.text.toUpperCase(),
@@ -92,10 +100,14 @@ class _ScreenAddProcessorState extends State<ScreenAddProcessor> {
       _productName.clear();
       _oldPrice.clear();
       _newPrice.clear();
+      manufacturer.clear();
       _cores.clear();
       _threads.clear();
       _socket.clear();
       _speed.clear();
+      dimension.clear();
+      weight.clear();
+      country.clear();
       _cache.clear();
       _integratedGraphics.clear();
       _includedCPUCooler.clear();
@@ -365,6 +377,10 @@ class _ScreenAddProcessorState extends State<ScreenAddProcessor> {
                                     }).toList()),
                                 const SizedBox(height: 10),
                                 AdminUi.admTextField(
+                                    label: 'Manufacturer',
+                                    textcontroller: manufacturer),
+                                AdminUi.space,
+                                AdminUi.admTextField(
                                     label: 'Old Price',
                                     textcontroller: _oldPrice),
                                 const SizedBox(height: 10),
@@ -390,6 +406,16 @@ class _ScreenAddProcessorState extends State<ScreenAddProcessor> {
                                 AdminUi.admTextField(
                                     label: 'TDP in (W)', textcontroller: _tdp),
                                 const SizedBox(height: 10),
+                                AdminUi.admTextField(
+                                    label: 'Product Dimension',
+                                    textcontroller: dimension),
+                                AdminUi.space,
+                                AdminUi.admTextField(
+                                    label: 'Item Weight',
+                                    textcontroller: weight),
+                                AdminUi.space,
+                                AdminUi.admTextField(label: 'Country of Origin', textcontroller: country),
+                                AdminUi.space,
                                 AdminUi.admTextField(
                                     label: 'Warranty',
                                     textcontroller: _warranty),

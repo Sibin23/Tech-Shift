@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:prosample_1/admin/Home/categories/category%20list/list_category.dart';
 import 'package:prosample_1/admin/Home/inventory/add%20inventory/add_items_details.dart';
-import 'package:prosample_1/admin/Home/promo_banner.dart';
+import 'package:prosample_1/admin/screens/screen_userguide.dart';
 import 'package:prosample_1/admin/utils/colors.dart';
 import 'package:prosample_1/admin/utils/text_style.dart';
 import 'package:prosample_1/login.dart';
@@ -68,45 +68,30 @@ class _AdminHomePageState extends State<AdminHomePage> {
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text('Hi, Welcome Admin', style: CustomText.title),
             const SizedBox(height: 30),
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.42,
-                  height: MediaQuery.of(context).size.height * 0.2,
-                  child: InkWell(
-                    onTap: () {
+                Text(
+                  'User Guide',
+                  style: CustomText.title3,
+                ),
+                TextButton(
+                    onPressed: () {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (ctx) => const ScreenItemDetails()));
+                              builder: (ctx) => const UserGuide()));
                     },
-                    child: Card(
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            const Icon(
-                              Icons.add_circle_outline,
-                              size: 30,
-                            ),
-                            Text(
-                              'Add Items',
-                              style: CustomText.title2,
-                            )
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
+                    child: const Text('Click here',
+                        style: TextStyle(
+                            color: CustomColors.appTheme, fontSize: 18)))
               ],
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 30),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
@@ -143,25 +128,25 @@ class _AdminHomePageState extends State<AdminHomePage> {
                 SizedBox(
                   width: MediaQuery.of(context).size.width * 0.42,
                   height: MediaQuery.of(context).size.height * 0.2,
-                  child: Card(
-                    child: InkWell(
-                      onTap: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (ctx) => const ScreenPromo()));
-                      },
+                  child: InkWell(
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (ctx) => const ScreenItemDetails()));
+                    },
+                    child: Card(
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
                             const Icon(
-                              Icons.add_chart,
+                              Icons.add_circle_outline,
                               size: 30,
                             ),
                             Text(
-                              'Add Promotions',
+                              'Add Items',
                               style: CustomText.title2,
                             )
                           ],
@@ -169,7 +154,7 @@ class _AdminHomePageState extends State<AdminHomePage> {
                       ),
                     ),
                   ),
-                )
+                ),
               ],
             ),
           ],

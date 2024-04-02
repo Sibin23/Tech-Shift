@@ -14,20 +14,23 @@ class ListHeadset extends StatefulWidget {
 }
 
 class _ListHeadsetState extends State<ListHeadset> {
-  final _idController = TextEditingController();
-  final _textController = TextEditingController();
+  final category = TextEditingController();
+  final productName = TextEditingController();
   final _modelName = TextEditingController();
+  final manufacturer = TextEditingController();
 
   Future submit() async {
     final data = {
-      'categoryid': _idController.text.toLowerCase(),
-      'name': _textController.text,
+      'category': category.text.toLowerCase(),
+      'name': productName.text,
       'model': _modelName.text,
+      'manufacturer': manufacturer.text
     };
     FirebaseFirestore.instance.collection('headsetdetails').doc().set(data);
     setState(() {
-      _textController.clear();
-      _idController.clear();
+      productName.clear();
+      category.clear();
+      manufacturer.clear();
       _modelName.clear();
     });
     showTopSnackBar(Overlay.of(context),
@@ -43,10 +46,11 @@ class _ListHeadsetState extends State<ListHeadset> {
       deleteMessage();
     } catch (error) {
       // Handle errors gracefully
-     errorMessage(error);
+      errorMessage(error);
     }
   }
- void errorMessage(error) {
+
+  void errorMessage(error) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text('Error deleting item: $error')),
     );
@@ -60,6 +64,7 @@ class _ListHeadsetState extends State<ListHeadset> {
       ),
     );
   }
+
   void addItem() {
     final formkey = GlobalKey<FormState>();
     showDialog(
@@ -76,15 +81,19 @@ class _ListHeadsetState extends State<ListHeadset> {
                       child: Column(
                         children: [
                           AdminUi.admTextField(
+                              label: 'Product Category',
+                              textcontroller: category),
+                          const SizedBox(height: 10),
+                          AdminUi.admTextField(
                               label: 'Product Name',
-                              textcontroller: _idController),
+                              textcontroller: productName),
                           const SizedBox(height: 10),
                           AdminUi.admTextField(
-                              label: 'Product Series',
-                              textcontroller: _textController),
-                          const SizedBox(height: 10),
+                              label: 'Model Name', textcontroller: _modelName),
+                          AdminUi.space,
                           AdminUi.admTextField(
-                              label: 'Model Name', textcontroller: _modelName)
+                              label: 'Manufacturer',
+                              textcontroller: manufacturer)
                         ],
                       )),
                 ],
@@ -132,8 +141,9 @@ class _ListHeadsetState extends State<ListHeadset> {
       ),
       body: SafeArea(
         child: StreamBuilder<QuerySnapshot>(
-          stream:
-              FirebaseFirestore.instance.collection('headsetdetails').snapshots(),
+          stream: FirebaseFirestore.instance
+              .collection('headsetdetails')
+              .snapshots(),
           builder: (context, snapshot) {
             if (snapshot.hasError) {
               return Text('Error: ${snapshot.error}');

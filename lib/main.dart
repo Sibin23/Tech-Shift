@@ -3,9 +3,9 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:lottie/lottie.dart';
+import 'package:prosample_1/User/Onboarding/onboard1.dart';
 import 'package:prosample_1/User/home.dart';
 import 'package:prosample_1/User/utils/text_decorations.dart';
-import 'package:prosample_1/onboardScreens/onboard1.dart';
 
 import 'firebase_options.dart';
 

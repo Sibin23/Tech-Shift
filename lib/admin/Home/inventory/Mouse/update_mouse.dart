@@ -108,7 +108,6 @@ class _UpdateMouseState extends State<UpdateMouse> {
 
   @override
   void initState() {
-    print(widget.itemId);
     FirebaseFirestore.instance
         .collection('mouse')
         .doc(widget.itemId)

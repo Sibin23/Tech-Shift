@@ -35,6 +35,7 @@ class _MyWidgetState extends State<UpdateCable> {
   final _country = TextEditingController();
   final _warranty = TextEditingController();
   late String imageurl = '';
+  String? selectedCategory;
   String? image;
   String? selectedCable;
   String? selectedModel;
@@ -70,7 +71,7 @@ class _MyWidgetState extends State<UpdateCable> {
       'newprice': _newPrice.text,
       'color': _color.text,
       'pins': _pinNumbers.text,
-      'modelname': _modelName.text,
+      'model': _modelName.text,
       'wattage': _wattage.text,
       'voltage': _voltage.text,
       'speed': _speed.text,
@@ -153,6 +154,10 @@ class _MyWidgetState extends State<UpdateCable> {
                 if (!snapshot.hasData) {
                   return const Center(child: CircularProgressIndicator());
                 }
+                final category = snapshot.data!.docs
+                    .map((doc) => doc['category'] as String)
+                    .toSet()
+                    .toList();
                 final cable = snapshot.data!.docs
                     .map((doc) => doc['name'] as String)
                     .toSet()
@@ -189,9 +194,39 @@ class _MyWidgetState extends State<UpdateCable> {
                                         label: 'Unique ID',
                                         textcontroller: idNum),
                                     const SizedBox(height: 10),
-                                    AdminUi.admTextField(
-                                        label: 'Category',
-                                        textcontroller: categoryName),
+                                    DropdownMenu<String>(
+                                        controller: categoryName,
+                                        menuStyle: const MenuStyle(
+                                            surfaceTintColor:
+                                                MaterialStatePropertyAll(
+                                                    Colors.white)),
+                                        hintText: 'Select Category',
+                                        width:
+                                            MediaQuery.of(context).size.width *
+                                                .93,
+                                        menuHeight: 300,
+                                        inputDecorationTheme:
+                                            InputDecorationTheme(
+                                                hintStyle: const TextStyle(
+                                                    color:
+                                                        CustomColors.appTheme),
+                                                border: OutlineInputBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            8)),
+                                                fillColor: Colors.white,
+                                                filled: true),
+                                        onSelected: (value) {
+                                          setState(() {
+                                            selectedCategory = value;
+                                          });
+                                        },
+                                        dropdownMenuEntries: category
+                                            .map<DropdownMenuEntry<String>>(
+                                                (String value) {
+                                          return DropdownMenuEntry<String>(
+                                              value: value, label: value);
+                                        }).toList()),
                                     const SizedBox(height: 10),
                                     DropdownMenu<String>(
                                         controller: _productName,

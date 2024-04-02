@@ -1,12 +1,11 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
-import 'package:prosample_1/User/Build%20page/build%20screen/build_details.dart';
+import 'package:prosample_1/User/home.dart';
 import 'package:prosample_1/User/utils/colors.dart';
 import 'package:prosample_1/User/utils/commonfile.dart';
 import 'package:prosample_1/User/utils/text_decorations.dart';
 import 'package:prosample_1/User/utils/widget2.dart';
+import 'package:prosample_1/functions/fuctions.dart';
 
 class ConfigDetail extends StatefulWidget {
   final Map<String, dynamic> pc;
@@ -31,7 +30,6 @@ class _ConfigDetailState extends State<ConfigDetail> {
       custom['cooler'] = notNeed;
     }
 
-    String cofig = widget.pc['processor'];
     return Scaffold(
       appBar: AppBar(
         surfaceTintColor: Colors.white,
@@ -42,8 +40,18 @@ class _ConfigDetailState extends State<ConfigDetail> {
         padding: const EdgeInsets.all(8.0),
         child: GestureDetector(
           onTap: () {
-            addToCart(custom);
-            userDetails(cofig);
+            final time = DateTime.now().toString();
+            final id =
+                DateTime.now().toString().replaceAll(RegExp(r'[^\d]'), '');
+            final customPc = Map<String, dynamic>.from(widget.pc);
+            customPc['totalprice'] = widget.totalAmt;
+            toCustomCart(customPc, time);
+            addAmount(
+                newPrice: widget.totalAmt,
+                oldPrice: widget.totalAmt,
+                idNum: id,
+                time: time);
+            userDetails(idNum: id, time: time);
             showSnackbarWithAnimation();
           },
           child: Padding(
@@ -154,41 +162,8 @@ class _ConfigDetailState extends State<ConfigDetail> {
     );
   }
 
-  Future<void> userDetails(String name) async {
-    try {
-      final user = FirebaseAuth.instance.currentUser!.uid;
-      final data = {
-        'uid': user,
-        'cart': name};
-      await FirebaseFirestore.instance
-          .collection('UserDetails')
-          .doc(user)
-          .set(data);
-    } catch (e) {
-      alertMsg(e);
-    }
-  }
-
   alertMsg(e) {
     UiHelper.userSnackbar(context, e.toString());
-  }
-
-  Future<void> addToCart(Map<String, dynamic> pc) async {
-    final updatedConfig = Map<String, dynamic>.from(widget.pc);
-    updatedConfig['totalprice'] = widget.totalAmt;
-    try {
-      if (updatedConfig['gpu'] == 'Select a Graphics Card') {
-        updatedConfig['gpu'] = notNeed;
-      }
-      final user = FirebaseAuth.instance.currentUser!;
-      final userUid = user.uid;
-      final userDocRef =
-          FirebaseFirestore.instance.collection('User').doc(userUid);
-      final cartCollectionRef = userDocRef.collection('Configuration').doc();
-      await cartCollectionRef.set(updatedConfig);
-    } catch (error) {
-      alertMsg(error);
-    }
   }
 
   void showSnackbarWithAnimation() {
@@ -234,7 +209,7 @@ class _ConfigDetailState extends State<ConfigDetail> {
   Future<void> navigate() async {
     await Navigator.pushAndRemoveUntil(
         context,
-        MaterialPageRoute(builder: (ctx) => const ScreenBuild()),
+        MaterialPageRoute(builder: (ctx) => const HomeInfo()),
         (route) => false);
   }
 }

@@ -4,6 +4,7 @@ import 'package:prosample_1/admin/utils/colors.dart';
 import 'package:prosample_1/admin/utils/text_style.dart';
 
 class AdminUi {
+  static const space = SizedBox(height: 10);
   static customNavBar() {
     return BottomNavigationBar(
         backgroundColor: Colors.black,

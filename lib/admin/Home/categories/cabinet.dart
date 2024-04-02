@@ -152,7 +152,6 @@ class _ListCabinetState extends State<ListCabinet> {
                 return ListView.builder(
                   itemCount: snapshot.data!.docs.length,
                   itemBuilder: (ctx, index) {
-                    // Access the document and the desired field
                     final document = snapshot.data!.docs[index];
                     final id = document.id;
                     String name = document['name'];

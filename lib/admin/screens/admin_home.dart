@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
-import 'package:prosample_1/admin/details/details.dart';
+import 'package:prosample_1/admin/Configured%20orders/custompc_order_history.dart';
 import 'package:prosample_1/admin/pc%20builds/prebuild_list.dart';
 import 'package:prosample_1/admin/screens/home_details.dart';
 import 'package:prosample_1/admin/screens/orders_history.dart';
@@ -17,13 +17,13 @@ class _AdminHomeState extends State<AdminHome> {
     const AdminHomePage(),
     const ScreenOrdersList(),
     const ListPreBuildState(),
-    const ScreenDetails(),
+    const OrderConfiguration(),
   ];
   bool isadmin = false;
   int _myindex = 0;
   @override
   Widget build(BuildContext context) {
-    return  Scaffold(
+    return Scaffold(
       resizeToAvoidBottomInset: false,
       bottomNavigationBar: Container(
         decoration: const BoxDecoration(
@@ -58,8 +58,8 @@ class _AdminHomeState extends State<AdminHome> {
                 text: 'PC Build',
               ),
               GButton(
-                icon: Icons.info,
-                text: 'Info',
+                icon: Icons.category_outlined,
+                text: 'Custom PC',
               )
             ],
           ),

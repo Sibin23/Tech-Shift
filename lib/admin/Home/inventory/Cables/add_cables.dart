@@ -34,21 +34,21 @@ class _ScreenAddCablesState extends State<ScreenAddCables> {
   final _country = TextEditingController();
   final _warranty = TextEditingController();
   late String imageurl = '';
+  String? selectedCategory;
   String? selectedCable;
   String? selectedModel;
   String? selectedManufacturer;
   String? selectedSpeed;
   Future<void> pickImage() async {
-    // ignore: no_leading_underscores_for_local_identifiers
-    final ImagePicker _picker = ImagePicker();
-    final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+    final ImagePicker picker = ImagePicker();
+    final XFile? image = await picker.pickImage(source: ImageSource.gallery);
     if (image != null) {
       imageurl = await uploadImage(image);
       setState(() {});
     }
   }
 
-  // add to firefase
+  
   Future<String> uploadImage(var image) async {
     final Reference ref =
         FirebaseStorage.instance.ref().child('Cables/${image.name}');
@@ -61,7 +61,6 @@ class _ScreenAddCablesState extends State<ScreenAddCables> {
   // submit
   Future submitData() async {
     final data = {
-      
       'image': imageurl.toString(),
       'name': _productName.text,
       'category': categoryName.text,
@@ -71,7 +70,7 @@ class _ScreenAddCablesState extends State<ScreenAddCables> {
       'newprice': _newPrice.text,
       'color': _color.text,
       'pins': _pinNumbers.text,
-      'modelname': _modelName.text,
+      'model': _modelName.text,
       'wattage': _wattage.text,
       'voltage': _voltage.text,
       'speed': _speed.text,
@@ -85,7 +84,6 @@ class _ScreenAddCablesState extends State<ScreenAddCables> {
         .doc(_productName.text)
         .set(data);
     setState(() {
-      
       imageurl = '';
       _productName.clear();
       idNum.clear();
@@ -125,6 +123,10 @@ class _ScreenAddCablesState extends State<ScreenAddCables> {
                 if (!snapshot.hasData) {
                   return const Center(child: CircularProgressIndicator());
                 }
+                final category = snapshot.data!.docs
+                    .map((doc) => doc['category'] as String)
+                    .toSet()
+                    .toList();
                 final cable = snapshot.data!.docs
                     .map((doc) => doc['name'] as String)
                     .toSet()
@@ -157,9 +159,43 @@ class _ScreenAddCablesState extends State<ScreenAddCables> {
                               Form(
                                   key: _formkey,
                                   child: Column(children: [
-                                    AdminUi.admTextField(label: 'Unique ID', textcontroller: idNum),
+                                    AdminUi.admTextField(
+                                        label: 'Unique ID',
+                                        textcontroller: idNum),
                                     const SizedBox(height: 10),
-                                    AdminUi.admTextField(label: 'Category', textcontroller: categoryName),
+                                    DropdownMenu<String>(
+                                        controller: categoryName,
+                                        menuStyle: const MenuStyle(
+                                            surfaceTintColor:
+                                                MaterialStatePropertyAll(
+                                                    Colors.white)),
+                                        hintText: 'Select Category',
+                                        width:
+                                            MediaQuery.of(context).size.width *
+                                                .93,
+                                        menuHeight: 300,
+                                        inputDecorationTheme:
+                                            InputDecorationTheme(
+                                                hintStyle: const TextStyle(
+                                                    color:
+                                                        CustomColors.appTheme),
+                                                border: OutlineInputBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            8)),
+                                                fillColor: Colors.white,
+                                                filled: true),
+                                        onSelected: (value) {
+                                          setState(() {
+                                            selectedCategory = value;
+                                          });
+                                        },
+                                        dropdownMenuEntries: category
+                                            .map<DropdownMenuEntry<String>>(
+                                                (String value) {
+                                          return DropdownMenuEntry<String>(
+                                              value: value, label: value);
+                                        }).toList()),
                                     const SizedBox(height: 10),
                                     DropdownMenu<String>(
                                         controller: _productName,
@@ -305,7 +341,6 @@ class _ScreenAddCablesState extends State<ScreenAddCables> {
                                         label: 'New Price',
                                         textcontroller: _newPrice),
                                     const SizedBox(height: 10),
-                                    
                                     AdminUi.admTextField(
                                         label: 'Item Colour',
                                         textcontroller: _color),

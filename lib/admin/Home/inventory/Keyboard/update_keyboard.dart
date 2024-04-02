@@ -124,7 +124,7 @@ class _UpdateKeyboardState extends State<UpdateKeyboard> {
         _connector.text = data['connector'];
         _material.text = data['material'];
         _country.text = data['country'];
-        _itemWeight.text = data['country'];
+        _itemWeight.text = data['itemweight'];
         _warranty.text = data['warranty'];
       }
     });

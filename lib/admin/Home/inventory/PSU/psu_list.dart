@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:prosample_1/admin/Home/inventory/PSU/add_psu.dart';
-import 'package:prosample_1/admin/Home/inventory/PSU/update_Psu.dart';
+import 'package:prosample_1/admin/Home/inventory/PSU/update_psu.dart';
 import 'package:prosample_1/admin/utils/colors.dart';
 import 'package:prosample_1/admin/utils/common2.dart';
 import 'package:prosample_1/admin/utils/common_widgets.dart';

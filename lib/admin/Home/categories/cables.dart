@@ -14,6 +14,7 @@ class ListCables extends StatefulWidget {
 }
 
 class _ListCablesState extends State<ListCables> {
+  final category = TextEditingController();
   final _productName = TextEditingController();
   final _manufacturer = TextEditingController();
   final _model = TextEditingController();
@@ -21,6 +22,7 @@ class _ListCablesState extends State<ListCables> {
 
   Future submit() async {
     final data = {
+      'category': category.text,
       'name': _productName.text,
       'manufacturer': _manufacturer.text,
       'speed': _speed.text,
@@ -28,6 +30,7 @@ class _ListCablesState extends State<ListCables> {
     };
     FirebaseFirestore.instance.collection('cabledetails').doc().set(data);
     setState(() {
+      category.clear();
       _productName.clear();
       _manufacturer.clear();
       _speed.clear();
@@ -37,7 +40,7 @@ class _ListCablesState extends State<ListCables> {
   }
 
   void success() {
-     showTopSnackBar(
+    showTopSnackBar(
       Overlay.of(context),
       const CustomSnackBar.success(
         message: "Item Added Successfully",
@@ -49,14 +52,16 @@ class _ListCablesState extends State<ListCables> {
     ScaffoldMessenger.of(context)
         .showSnackBar(SnackBar(content: Text('Error deleting item: $error')));
   }
-void deleteMessage(){
-  showTopSnackBar(
+
+  void deleteMessage() {
+    showTopSnackBar(
       Overlay.of(context),
       const CustomSnackBar.error(
         message: "Item Deleted Successfully",
       ),
     );
-}
+  }
+
   Future deleteItem(documentId) async {
     try {
       await FirebaseFirestore.instance
@@ -85,9 +90,13 @@ void deleteMessage(){
                       child: Column(
                         children: [
                           AdminUi.admTextField(
+                              label: 'Product Category',
+                              textcontroller: category),
+                          AdminUi.space,
+                          AdminUi.admTextField(
                               label: 'Product Name',
                               textcontroller: _productName),
-                                const SizedBox(height: 10),
+                          const SizedBox(height: 10),
                           AdminUi.admTextField(
                               label: 'Manufacturer',
                               textcontroller: _manufacturer),
@@ -97,7 +106,6 @@ void deleteMessage(){
                           const SizedBox(height: 10),
                           AdminUi.admTextField(
                               label: 'Transfer Rate', textcontroller: _speed),
-                        
                         ],
                       )),
                 ],

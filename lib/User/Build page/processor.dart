@@ -1,9 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:prosample_1/User/Build%20page/build%20screen/build_details.dart';
-import 'package:prosample_1/User/Build%20page/details/cpu_details.dart';
-import 'package:prosample_1/User/Build%20page/motherboard.dart';
+import 'package:prosample_1/User/Build%20Page/build%20screen/build_details.dart';
+import 'package:prosample_1/User/Build%20Page/details/cpu_details.dart';
+import 'package:prosample_1/User/Build%20Page/motherboard.dart';
 import 'package:prosample_1/User/utils/Text_decorations.dart';
 import 'package:prosample_1/User/utils/colors.dart';
 import 'package:prosample_1/User/utils/widget2.dart';

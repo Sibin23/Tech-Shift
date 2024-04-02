@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:prosample_1/User/Build%20page/build%20screen/build_details.dart';
+import 'package:lottie/lottie.dart';
+import 'package:prosample_1/User/home.dart';
 import 'package:prosample_1/User/utils/colors.dart';
 import 'package:prosample_1/User/utils/text_decorations.dart';
 
@@ -48,7 +49,6 @@ class UiCustom2 {
         ),
       ),
     );
-    
   }
 
   static deleteAlertBox(BuildContext context) {
@@ -62,13 +62,15 @@ class UiCustom2 {
           actions: [
             TextButton(
               onPressed: () =>
-                  Navigator.pop(context), // Close dialog without deleting
+                  Navigator.pop(context), 
               child: const Text('Cancel'),
             ),
             TextButton(
               onPressed: () {
-               Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (ctx)=> const ScreenBuild()), ((route) => false));
-                
+                Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(builder: (ctx) => const HomeInfo()),
+                    ((route) => false));
               },
               child: const Text('Delete'),
             ),
@@ -77,7 +79,8 @@ class UiCustom2 {
       },
     );
   }
-    static profileImage(VoidCallback voidCallback, {required imageurl}) {
+
+  static profileImage(VoidCallback voidCallback, {required imageurl}) {
     return GestureDetector(
         onTap: () {
           voidCallback();
@@ -91,6 +94,55 @@ class UiCustom2 {
           child: imageurl.isEmpty
               ? const Center(child: Text('Pick an Image'))
               : Image.network(imageurl),
+        ));
+  }
+
+  static cartSnackBar(BuildContext context) {
+    return ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Container(
+          decoration: BoxDecoration(boxShadow: const [
+            BoxShadow(spreadRadius: 2, blurRadius: 2, color: Colors.grey)
+          ], color: Colors.white, borderRadius: BorderRadius.circular(5)),
+          child: Column(
+            children: [
+              Lottie.asset('assets/Animations/cart.json',
+                  width: 100, height: 100),
+              const SizedBox(width: 10),
+              Text('Added To Cart',
+                  style:
+                      TextStyle(color: Colors.purple.shade800, fontSize: 16)),
+            ],
+          ),
+        ),
+        elevation: 5,
+        backgroundColor: const Color.fromARGB(255, 255, 255, 255),
+        duration: const Duration(seconds: 3),
+        action: SnackBarAction(
+          textColor: AppColors.appTheme,
+          label: 'Dismiss',
+          onPressed: () => ScaffoldMessenger.of(context).hideCurrentSnackBar(),
+        ),
+      ),
+    );
+  }
+  static itemDetails(
+    BuildContext context,{required String title, required String subtitle}
+  ){
+    return  SizedBox(
+        width: MediaQuery.of(context).size.width,
+        
+        child: Row(
+          children: [
+            Text(title,style: TextStyling.subtitle2),
+            Expanded(
+              flex: 1,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(subtitle,style: TextStyling.details),
+              ),
+            ),
+          ],
         ));
   }
 }

@@ -163,23 +163,20 @@ class _UpdateHeadsetState extends State<UpdateHeadset> {
                   .map((doc) => doc['name'] as String)
                   .toSet()
                   .toList();
-              final manufacturer = snapshot.data!.docs
-                  .map((doc) => doc['manufacturer'] as String)
-                  .toSet()
-                  .toList();
+
               final model = snapshot.data!.docs
                   .map((doc) => doc['model'] as String)
                   .toSet()
                   .toList();
-              final series = snapshot.data!.docs
-                  .map((doc) => doc['series'] as String)
-                  .toSet()
-                  .toList();
+
               final category = snapshot.data!.docs
                   .map((doc) => doc['category'] as String)
                   .toSet()
                   .toList();
-
+                  final manufactured = snapshot.data!.docs
+                  .map((doc) => doc['manufacturer'] as String)
+                  .toSet()
+                  .toList();
               return Padding(
                 padding: const EdgeInsets.all(10.0),
                 child: Column(children: [
@@ -194,7 +191,7 @@ class _UpdateHeadsetState extends State<UpdateHeadset> {
                       child: Column(children: [
                         AdminUi.admTextField(
                             label: 'Unique ID', textcontroller: idNum),
-                        const SizedBox(height: 10),
+                        AdminUi.space,
                         DropdownMenu<String>(
                             controller: categoryName,
                             label: const Text(
@@ -224,7 +221,7 @@ class _UpdateHeadsetState extends State<UpdateHeadset> {
                               return DropdownMenuEntry<String>(
                                   value: value, label: value);
                             }).toList()),
-                        const SizedBox(height: 10),
+                        AdminUi.space,
                         DropdownMenu<String>(
                             controller: _productName,
                             menuStyle: const MenuStyle(
@@ -253,63 +250,7 @@ class _UpdateHeadsetState extends State<UpdateHeadset> {
                               return DropdownMenuEntry<String>(
                                   value: value, label: value);
                             }).toList()),
-                        const SizedBox(height: 10),
-                        DropdownMenu<String>(
-                            label: const Text(
-                              'Select Manufacturer',
-                              style: TextStyle(color: CustomColors.appTheme),
-                            ),
-                            controller: _manufacturer,
-                            menuStyle: const MenuStyle(
-                                surfaceTintColor:
-                                    MaterialStatePropertyAll(Colors.white)),
-                            hintText: 'Select Manufacturer',
-                            width: MediaQuery.of(context).size.width * .93,
-                            menuHeight: 300,
-                            inputDecorationTheme: InputDecorationTheme(
-                                hintStyle: const TextStyle(
-                                    color: CustomColors.appTheme),
-                                border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(8)),
-                                fillColor: Colors.white,
-                                filled: true),
-                            onSelected: (value) {
-                              setState(() {
-                                selectedManufacturer = value;
-                              });
-                            },
-                            dropdownMenuEntries: manufacturer
-                                .map<DropdownMenuEntry<String>>((String value) {
-                              return DropdownMenuEntry<String>(
-                                  value: value, label: value);
-                            }).toList()),
-                        const SizedBox(height: 10),
-                        DropdownMenu<String>(
-                            controller: _series,
-                            menuStyle: const MenuStyle(
-                                surfaceTintColor:
-                                    MaterialStatePropertyAll(Colors.white)),
-                            hintText: 'Select Series',
-                            width: MediaQuery.of(context).size.width * .93,
-                            menuHeight: 300,
-                            inputDecorationTheme: InputDecorationTheme(
-                                hintStyle: const TextStyle(
-                                    color: CustomColors.appTheme),
-                                border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(8)),
-                                fillColor: Colors.white,
-                                filled: true),
-                            onSelected: (value) {
-                              setState(() {
-                                selectedCategory = value;
-                              });
-                            },
-                            dropdownMenuEntries: series
-                                .map<DropdownMenuEntry<String>>((String value) {
-                              return DropdownMenuEntry<String>(
-                                  value: value, label: value);
-                            }).toList()),
-                        const SizedBox(height: 10),
+                        AdminUi.space,
                         DropdownMenu<String>(
                             controller: _modelName,
                             menuStyle: const MenuStyle(
@@ -335,40 +276,73 @@ class _UpdateHeadsetState extends State<UpdateHeadset> {
                               return DropdownMenuEntry<String>(
                                   value: value, label: value);
                             }).toList()),
-                        const SizedBox(height: 10),
+                            AdminUi.space,
+                            DropdownMenu<String>(
+                                  controller: _manufacturer,
+                                  menuStyle: const MenuStyle(
+                                      surfaceTintColor:
+                                          MaterialStatePropertyAll(
+                                              Colors.white)),
+                                  hintText: 'Select Manufacturer',
+                                  width:
+                                      MediaQuery.of(context).size.width * .93,
+                                  menuHeight: 300,
+                                  inputDecorationTheme: InputDecorationTheme(
+                                      hintStyle: const TextStyle(
+                                          color: CustomColors.appTheme),
+                                      border: OutlineInputBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(8)),
+                                      fillColor: Colors.white,
+                                      filled: true),
+                                  onSelected: (value) {
+                                    setState(() {
+                                      selectedManufacturer = value;
+                                    });
+                                  },
+                                  dropdownMenuEntries: manufactured
+                                      .map<DropdownMenuEntry<String>>(
+                                          (String value) {
+                                    return DropdownMenuEntry<String>(
+                                        value: value, label: value);
+                                  }).toList()),
+                        AdminUi.space,
+                        AdminUi.admTextField(
+                            label: 'Series', textcontroller: _series),
+                        AdminUi.space,
                         AdminUi.admTextField(
                             label: 'Old Price', textcontroller: _oldPrice),
-                        const SizedBox(height: 10),
+                        AdminUi.space,
                         AdminUi.admTextField(
                             label: 'New Price', textcontroller: _newPrice),
-                        const SizedBox(height: 10),
+                        AdminUi.space,
                         AdminUi.admTextField(
                             label: 'Colour', textcontroller: _color),
-                        const SizedBox(height: 10),
+                        AdminUi.space,
                         AdminUi.admTextField(
                             label: 'Model Name', textcontroller: _modelName),
-                        const SizedBox(height: 10),
+                        AdminUi.space,
                         AdminUi.admTextField(
                             label: 'Sound Features',
                             textcontroller: soundFeatures),
-                        const SizedBox(height: 10),
+                        AdminUi.space,
                         AdminUi.admTextField(
                             label: 'Features',
                             textcontroller: _specialFeatures),
-                        const SizedBox(height: 10),
+                        AdminUi.space,
                         AdminUi.admTextField(
                             label: 'Product Dimensions',
                             textcontroller: _productDimension),
-                        const SizedBox(height: 10),
+                        AdminUi.space,
                         AdminUi.admTextField(
                             label: 'Connectivity', textcontroller: _connector),
-                        const SizedBox(height: 10),
+                        AdminUi.space,
                         AdminUi.admTextField(
                             label: 'Country', textcontroller: _country),
-                        const SizedBox(height: 10),
+                        AdminUi.space,
                         AdminUi.admTextField(
                             label: 'Item Weight', textcontroller: _itemWeight),
-                        const SizedBox(height: 10),
+                        AdminUi.space,
                         AdminUi.admTextField(
                             label: 'Warranty', textcontroller: _warranty),
                         const SizedBox(height: 30),

@@ -15,4 +15,10 @@ class CustomText {
       GoogleFonts.poppins(color: Colors.black54, fontSize: 13);
   static final categoryTitleText =
       GoogleFonts.lato(color: Colors.black87, fontSize: 15);
+      static final subtitle2 =
+      GoogleFonts.roboto(color: Colors.black, fontSize: 16);
+      static final subtitle =
+      GoogleFonts.crimsonText(color: Colors.black, fontSize: 20);
+       static final subtitleG =
+      GoogleFonts.roboto(color: Colors.green, fontSize: 18);
 }

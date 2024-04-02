@@ -86,7 +86,7 @@ class _ScreenAddCabinetState extends State<ScreenAddCabinet> {
     };
     FirebaseFirestore.instance
         .collection('cabinet')
-        .doc(idNum.text.trim().toLowerCase())
+        .doc()
         .set(data);
     setState(() {
       imageurl = '';

@@ -15,8 +15,10 @@ class TextStyling {
       GoogleFonts.roboto(color: Colors.black, fontSize: 14);
   static final subtitle =
       GoogleFonts.abyssinicaSil(color: Colors.black, fontSize: 13);
-  static final subtitleWhite =
-      GoogleFonts.abyssinicaSil(color: Colors.white, fontSize: 16);
+      static final subtitleWhite =
+      GoogleFonts.roboto(color: Colors.white, fontSize: 16);
+  static final buttonWhite =
+      GoogleFonts.roboto(color: Colors.white, fontSize: 18);
   static final rating = GoogleFonts.notoSansLaoLooped(
       color: Colors.purple.shade800, fontSize: 16);
   static final subtitleapptheme =
@@ -39,4 +41,6 @@ class TextStyling {
   static final buttonW = GoogleFonts.roboto(fontSize: 17, color: Colors.white);
   static final buttonB =
       GoogleFonts.roboto(fontSize: 17, color: AppColors.appTheme);
+  static final buttonApptheme =
+      GoogleFonts.abyssinicaSil(color: Colors.purple.shade800, fontSize: 23);
 }

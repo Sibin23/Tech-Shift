@@ -30,6 +30,8 @@ class _ListCategoryState extends State<ListCategory> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        centerTitle: true,
+        title: Text('Select Category',style: CustomText.apptitle),
         foregroundColor: Colors.white,
         backgroundColor: CustomColors.appTheme,
        

@@ -21,13 +21,19 @@ class __ListPreBuildStateState extends State<ListPreBuildState> {
       appBar: AppBar(
         centerTitle: true,
         backgroundColor: CustomColors.appTheme,
-        title: Text('List Pre-Builds',style: CustomText.apptitle),
-         actions: [
+        title: Text('List Pre-Builds', style: CustomText.apptitle),
+        actions: [
           Padding(
             padding: const EdgeInsets.only(right: 10),
-            child: IconButton(onPressed: (){
-              Navigator.push(context, MaterialPageRoute(builder: (ctx)=> const ScreenPreBuild()));
-            }, icon: Image.asset('assets/icons/add.png',width: 30,color: Colors.white)),
+            child: IconButton(
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (ctx) => const ScreenPreBuild()));
+                },
+                icon: Image.asset('assets/icons/add.png',
+                    width: 30, color: Colors.white)),
           )
         ],
       ),
@@ -54,12 +60,9 @@ class __ListPreBuildStateState extends State<ListPreBuildState> {
                         return AdminUiHelper.updatelist(context, () {
                           AdminUi.customAlert(text1: 'Edit', text2: 'Delete',
                               () {
-                                print(itemId);
-                            
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  
                                     builder: (ctx) => EditPC(
                                           itemId: itemId,
                                         )));

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:prosample_1/User/Build%20page/build%20screen/bottom.dart';
-import 'package:prosample_1/User/home.dart';
+import 'package:prosample_1/User/Build%20Page/build%20screen/bottom.dart';
 import 'package:prosample_1/User/utils/text_decorations.dart';
 
 class ScreenBuild extends StatefulWidget {
@@ -15,11 +14,7 @@ class _ScreenBuildState extends State<ScreenBuild> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          leading: IconButton(
-              icon: const Icon(Icons.arrow_back),
-              onPressed: () {
-               Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (ctx)=> const HomeInfo()), (route) => false);
-              }),
+          
           surfaceTintColor: Colors.white),
       bottomNavigationBar: const BuildDetailBottom(),
       body: SafeArea(

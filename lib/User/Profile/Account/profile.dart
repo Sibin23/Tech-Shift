@@ -121,14 +121,20 @@ class _ProfileState extends State<Profile> {
                                   ],
                                 ),
                                 child: ClipOval(
-                                  child: CachedNetworkImage(
-                                    imageUrl: userData['imageUrl'],
-                                    fit: BoxFit.cover,
-                                    filterQuality: FilterQuality.high,
-                                    placeholder: (context, url) => const Center(
-                                      child: CircularProgressIndicator(),
-                                    ),
-                                  ),
+                                  child: userData['imageUrl'] != null
+                                      ? CachedNetworkImage(
+                                          imageUrl: userData[
+                                              'imageUrl']!, 
+                                          fit: BoxFit.cover,
+                                          filterQuality: FilterQuality.high,
+                                          placeholder: (context, url) =>
+                                              const Center(
+                                            child: CircularProgressIndicator(),
+                                          ),
+                                          errorWidget: (context, url, error) =>
+                                              const Text('No Profile Image'),
+                                        )
+                                      : const Text('No Profile Image'),
                                 ),
                               ),
                             ),

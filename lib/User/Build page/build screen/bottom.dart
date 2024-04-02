@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:prosample_1/User/Build%20page/build%20screen/process.dart';
-import 'package:prosample_1/User/Build%20page/processor.dart';
+import 'package:prosample_1/User/Build%20Page/build%20screen/process.dart';
+import 'package:prosample_1/User/Build%20Page/processor.dart';
 import 'package:prosample_1/User/utils/colors.dart';
 import 'package:prosample_1/User/utils/text_decorations.dart';
 

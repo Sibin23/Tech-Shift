@@ -27,7 +27,7 @@ class UiHelper {
     keyboardType = TextInputType.text,
   }) {
     return TextFormField(
-      textInputAction: TextInputAction.next,
+        textInputAction: TextInputAction.next,
         validator: (value) {
           if (value!.isEmpty) {
             return validate;
@@ -37,11 +37,40 @@ class UiHelper {
         keyboardType: keyboardType,
         controller: controller,
         decoration: InputDecoration(
-          
             prefixIcon: Icon(iconData),
             label: Text(labeltext, style: TextStyling.subtitleapptheme),
             border:
                 OutlineInputBorder(borderRadius: BorderRadius.circular(10))));
+  }
+
+  static profileTextField(
+    BuildContext context, {
+    required String text,
+    required TextEditingController controller,
+    required String validate,
+  }) {
+    return TextFormField(
+      validator: (value) {
+        if (value!.isEmpty) {
+          return validate;
+        }
+        return null;
+      },
+      controller: controller,
+      decoration: InputDecoration(
+        hoverColor: Colors.black,
+        enabled: true,
+        label: Text(text, style: TextStyling.categoryText),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(5),
+          borderSide: const BorderSide(color: Colors.black),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(5),
+          borderSide: const BorderSide(color: Colors.grey),
+        ),
+      ),
+    );
   }
 
   // alert dialogue
@@ -92,6 +121,7 @@ class UiHelper {
       ),
     );
   }
+
   static buttonSml(BuildContext context, VoidCallback voidCallback,
       {required String text}) {
     return GestureDetector(
@@ -99,7 +129,7 @@ class UiHelper {
         voidCallback();
       },
       child: Container(
-        width: MediaQuery.of(context).size.width *.7,
+        width: MediaQuery.of(context).size.width * .7,
         height: MediaQuery.of(context).size.height * .07,
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),
@@ -112,10 +142,11 @@ class UiHelper {
                 offset: Offset(4.0, 4.0),
               )
             ]),
-        child: Center(child: Text(text, style: TextStyling.subtitleWhite)),
+        child: Center(child: Text(text, style: TextStyling.buttonWhite)),
       ),
     );
   }
+
 // itemcard
   static itemCard({
     required String image,

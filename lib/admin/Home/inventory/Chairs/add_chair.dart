@@ -32,14 +32,15 @@ class _ScreenAddChairsState extends State<ScreenAddChairs> {
   final _country = TextEditingController();
   final _itemWeight = TextEditingController();
   final _warranty = TextEditingController();
+  String? selectedCategory;
   String? selectedChair;
   String? selectedManufacturer;
   String? selectedModel;
   late String imageurl = '';
   Future<void> pickImage() async {
     // ignore: no_leading_underscores_for_local_identifiers
-    final ImagePicker _picker = ImagePicker();
-    final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+    final ImagePicker picker = ImagePicker();
+    final XFile? image = await picker.pickImage(source: ImageSource.gallery);
     if (image != null) {
       imageurl = await uploadImage(image);
       setState(() {});
@@ -117,6 +118,10 @@ class _ScreenAddChairsState extends State<ScreenAddChairs> {
               if (!snapshot.hasData) {
                 return const Center(child: CircularProgressIndicator());
               }
+              final category = snapshot.data!.docs
+                  .map((doc) => doc['category'] as String)
+                  .toSet()
+                  .toList();
               final chair = snapshot.data!.docs
                   .map((doc) => doc['name'] as String)
                   .toSet()
@@ -148,11 +153,37 @@ class _ScreenAddChairsState extends State<ScreenAddChairs> {
                             child: Column(children: [
                               AdminUi.admTextField(
                                   label: 'Unique ID', textcontroller: _idNum),
-                              const SizedBox(height: 20),
-                              AdminUi.admTextField(
-                                  label: 'Category',
-                                  textcontroller: categoryName),
-                              const SizedBox(height: 10),
+                              AdminUi.space,
+                              DropdownMenu<String>(
+                                  controller: categoryName,
+                                  menuStyle: const MenuStyle(
+                                      surfaceTintColor:
+                                          MaterialStatePropertyAll(
+                                              Colors.white)),
+                                  hintText: 'Select Category',
+                                  width:
+                                      MediaQuery.of(context).size.width * .93,
+                                  menuHeight: 300,
+                                  inputDecorationTheme: InputDecorationTheme(
+                                      hintStyle: const TextStyle(
+                                          color: CustomColors.appTheme),
+                                      border: OutlineInputBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(8)),
+                                      fillColor: Colors.white,
+                                      filled: true),
+                                  onSelected: (value) {
+                                    setState(() {
+                                      selectedCategory = value;
+                                    });
+                                  },
+                                  dropdownMenuEntries: category
+                                      .map<DropdownMenuEntry<String>>(
+                                          (String value) {
+                                    return DropdownMenuEntry<String>(
+                                        value: value, label: value);
+                                  }).toList()),
+                              AdminUi.space,
                               DropdownMenu<String>(
                                   controller: _productName,
                                   menuStyle: const MenuStyle(
@@ -182,7 +213,7 @@ class _ScreenAddChairsState extends State<ScreenAddChairs> {
                                     return DropdownMenuEntry<String>(
                                         value: value, label: value);
                                   }).toList()),
-                              const SizedBox(height: 10),
+                              AdminUi.space,
                               DropdownMenu<String>(
                                   controller: _manufacturer,
                                   menuStyle: const MenuStyle(
@@ -212,7 +243,7 @@ class _ScreenAddChairsState extends State<ScreenAddChairs> {
                                     return DropdownMenuEntry<String>(
                                         value: value, label: value);
                                   }).toList()),
-                              const SizedBox(height: 10),
+                              AdminUi.space,
                               DropdownMenu<String>(
                                   controller: _model,
                                   menuStyle: const MenuStyle(
@@ -242,40 +273,40 @@ class _ScreenAddChairsState extends State<ScreenAddChairs> {
                                     return DropdownMenuEntry<String>(
                                         value: value, label: value);
                                   }).toList()),
-                              const SizedBox(height: 10),
+                              AdminUi.space,
                               AdminUi.admTextField(
                                   label: 'Old Price',
                                   textcontroller: _oldPrice),
-                              const SizedBox(height: 10),
+                              AdminUi.space,
                               AdminUi.admTextField(
                                   label: 'New Price',
                                   textcontroller: _newPrice),
-                              const SizedBox(height: 10),
+                              AdminUi.space,
                               AdminUi.admTextField(
                                   label: 'Item Color', textcontroller: _color),
-                              const SizedBox(height: 10),
+                              AdminUi.space,
                               AdminUi.admTextField(
                                   label: 'Material', textcontroller: _material),
-                              const SizedBox(height: 10),
+                              AdminUi.space,
                               AdminUi.admTextField(
                                   label: 'Special Features',
                                   textcontroller: _specialFeatures),
-                              const SizedBox(height: 10),
+                              AdminUi.space,
                               AdminUi.admTextField(
                                   label: 'Product Dimension',
                                   textcontroller: _productDimension),
-                              const SizedBox(height: 10),
+                              AdminUi.space,
                               AdminUi.admTextField(
                                   label: 'Fill Material',
                                   textcontroller: _fillMaterial),
-                              const SizedBox(height: 10),
+                              AdminUi.space,
                               AdminUi.admTextField(
                                   label: 'Country', textcontroller: _country),
-                              const SizedBox(height: 10),
+                              AdminUi.space,
                               AdminUi.admTextField(
                                   label: 'Item Weight',
                                   textcontroller: _itemWeight),
-                              const SizedBox(height: 10),
+                              AdminUi.space,
                               AdminUi.admTextField(
                                   label: 'Warranty', textcontroller: _warranty),
                             ])),

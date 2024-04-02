@@ -11,5 +11,5 @@ class AppColors {
       color: Colors.red,
       fontSize: 40,
       decoration: TextDecoration.lineThrough);
-      static final subtitle1 = Color(0xFF000000);
+      static const subtitle1 = Color(0xFF000000);
 }

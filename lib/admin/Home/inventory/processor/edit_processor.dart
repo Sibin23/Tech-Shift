@@ -23,11 +23,15 @@ class _EditProcessorState extends State<EditProcessor> {
   final _productName = TextEditingController();
   final _oldPrice = TextEditingController();
   final _newPrice = TextEditingController();
+  final manufacturer = TextEditingController();
   final _cores = TextEditingController();
   final _threads = TextEditingController();
   final _socket = TextEditingController();
   final _speed = TextEditingController();
   final _cache = TextEditingController();
+  final dimension = TextEditingController();
+  final weight = TextEditingController();
+  final country = TextEditingController();
   final _integratedGraphics = TextEditingController();
   final _includedCPUCooler = TextEditingController();
   final _unlocked = TextEditingController();
@@ -70,6 +74,7 @@ class _EditProcessorState extends State<EditProcessor> {
       'image': imageurl.toString(),
       'name': _productName.text,
       'idnum': _idNum.text,
+      'manufacturer': manufacturer.text,
       'category': _productCategory.text,
       'oldprice': _oldPrice.text,
       'newprice': _newPrice.text,
@@ -77,6 +82,9 @@ class _EditProcessorState extends State<EditProcessor> {
       'threads': _threads.text,
       'socket': _socket.text,
       'speed': _speed.text,
+      'productdimension': dimension.text,
+      'itemweight': weight.text,
+      'country': country.text,
       'cache': _cache.text,
       'graphics': _integratedGraphics.text.toUpperCase(),
       'cooler': _includedCPUCooler.text.toUpperCase(),
@@ -94,6 +102,10 @@ class _EditProcessorState extends State<EditProcessor> {
       _cache.clear();
       _oldPrice.clear();
       _newPrice.clear();
+      country.clear();
+      dimension.clear();
+      weight.clear();
+      manufacturer.clear();
       _integratedGraphics.clear();
       _includedCPUCooler.clear();
       _unlocked.clear();
@@ -124,6 +136,10 @@ class _EditProcessorState extends State<EditProcessor> {
         _threads.text = data['threads'];
         _cache.text = data['cache'];
         _socket.text = data['socket'];
+        dimension.text = data['productdimension'];
+        country.text = data['country'];
+        weight.text = data['itemweight'];
+        manufacturer.text = data['manufacturer'];
         _speed.text = data['speed'];
         _integratedGraphics.text = data['graphics'];
         _includedCPUCooler.text = data['cooler'];
@@ -162,9 +178,9 @@ class _EditProcessorState extends State<EditProcessor> {
                                     color: CustomColors.appTheme));
                           }
                           final category = snapshot.data!.docs
-                  .map((doc) => doc['category'] as String)
-                  .toSet()
-                  .toList();
+                              .map((doc) => doc['category'] as String)
+                              .toSet()
+                              .toList();
                           final processor = snapshot.data!.docs
                               .map((doc) => doc['name'] as String)
                               .toSet()
@@ -204,36 +220,46 @@ class _EditProcessorState extends State<EditProcessor> {
                                             AdminUi.admTextField(
                                                 label: 'Unique ID',
                                                 textcontroller: _idNum),
-                                             const SizedBox(height: 10),
-                                DropdownMenu<String>(
-                                    controller: _productCategory,
-                                    menuStyle: const MenuStyle(
-                                        surfaceTintColor:
-                                            MaterialStatePropertyAll(
-                                                Colors.white)),
-                                    hintText: 'Select Category',
-                                    width:
-                                        MediaQuery.of(context).size.width * .93,
-                                    menuHeight: 300,
-                                    inputDecorationTheme: InputDecorationTheme(
-                                        hintStyle: const TextStyle(
-                                            color: CustomColors.appTheme),
-                                        border: OutlineInputBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(8)),
-                                        fillColor: Colors.white,
-                                        filled: true),
-                                    onSelected: (value) {
-                                      setState(() {
-                                        selectedCategory = value;
-                                      });
-                                    },
-                                    dropdownMenuEntries: category
-                                        .map<DropdownMenuEntry<String>>(
-                                            (String value) {
-                                      return DropdownMenuEntry<String>(
-                                          value: value, label: value);
-                                    }).toList()),
+                                            const SizedBox(height: 10),
+                                            DropdownMenu<String>(
+                                                controller: _productCategory,
+                                                menuStyle: const MenuStyle(
+                                                    surfaceTintColor:
+                                                        MaterialStatePropertyAll(
+                                                            Colors.white)),
+                                                hintText: 'Select Category',
+                                                width: MediaQuery.of(context)
+                                                        .size
+                                                        .width *
+                                                    .93,
+                                                menuHeight: 300,
+                                                inputDecorationTheme:
+                                                    InputDecorationTheme(
+                                                        hintStyle: const TextStyle(
+                                                            color:
+                                                                CustomColors
+                                                                    .appTheme),
+                                                        border:
+                                                            OutlineInputBorder(
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            8)),
+                                                        fillColor: Colors.white,
+                                                        filled: true),
+                                                onSelected: (value) {
+                                                  setState(() {
+                                                    selectedCategory = value;
+                                                  });
+                                                },
+                                                dropdownMenuEntries: category
+                                                    .map<DropdownMenuEntry<String>>(
+                                                        (String value) {
+                                                  return DropdownMenuEntry<
+                                                          String>(
+                                                      value: value,
+                                                      label: value);
+                                                }).toList()),
                                             const SizedBox(height: 10),
                                             DropdownMenu<String>(
                                                 controller: _productName,
@@ -434,6 +460,10 @@ class _EditProcessorState extends State<EditProcessor> {
                                                       value: value,
                                                       label: value);
                                                 }).toList()),
+                                            AdminUi.space,
+                                            AdminUi.admTextField(
+                                                label: 'Manufacturer',
+                                                textcontroller: manufacturer),
                                             const SizedBox(height: 10),
                                             AdminUi.admTextField(
                                                 label: 'Old Price',
@@ -465,6 +495,9 @@ class _EditProcessorState extends State<EditProcessor> {
                                                 label: 'TDP in (W)',
                                                 textcontroller: _tdp),
                                             const SizedBox(height: 10),
+                                            AdminUi.admTextField(
+                                                label: 'Warranty',
+                                                textcontroller: _warranty),
                                           ],
                                         )),
                                     const SizedBox(height: 30),

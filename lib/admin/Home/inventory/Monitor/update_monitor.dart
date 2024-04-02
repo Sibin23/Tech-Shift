@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -48,9 +47,8 @@ class _UpdateMonitorState extends State<UpdateMonitor> {
   String? selectedModel;
   String? selectedMonitor;
   Future<void> pickImage() async {
-    // ignore: no_leading_underscores_for_local_identifiers
-    final ImagePicker _picker = ImagePicker();
-    final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+    final ImagePicker picker = ImagePicker();
+    final XFile? image = await picker.pickImage(source: ImageSource.gallery);
     if (image != null) {
       imageurl = await uploadImage(image);
       setState(() {});
@@ -67,10 +65,7 @@ class _UpdateMonitorState extends State<UpdateMonitor> {
   }
 
   updateData() {
-    FirebaseFirestore.instance
-        .collection('monitor')
-        .doc(widget.itemId) // Use the itemId
-        .update({
+    FirebaseFirestore.instance.collection('monitor').doc(widget.itemId).update({
       'category': categoryName.text.toLowerCase(),
       'image': imageurl.toString(),
       'idnum': idNum.text,
@@ -122,7 +117,6 @@ class _UpdateMonitorState extends State<UpdateMonitor> {
 
   @override
   void initState() {
-    print(widget.itemId);
     FirebaseFirestore.instance
         .collection('monitor')
         .doc(widget.itemId)

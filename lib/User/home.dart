@@ -1,10 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
-import 'package:prosample_1/User/Favorites/favorites.dart';
-import 'package:prosample_1/User/Home_screen/home_page.dart';
+import 'package:prosample_1/User/Favorites/favourites.dart';
+import 'package:prosample_1/User/Home/home_page.dart';
 import 'package:prosample_1/User/Profile/Account/profile.dart';
-import 'package:prosample_1/User/cart/cart.dart';
+import 'package:prosample_1/User/cart/cart_main.dart';
 import 'package:prosample_1/login.dart';
 
 class HomeInfo extends StatefulWidget {
@@ -35,7 +35,7 @@ class _HomeInfo extends State<HomeInfo> {
     const ScreenHome(),
     const Profile(),
     const ScreenCart(),
-    const ScreenProcess(),
+    const ScreenFavorites(),
   ];
   int myindex = 0;
 

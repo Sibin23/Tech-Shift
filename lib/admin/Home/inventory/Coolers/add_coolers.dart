@@ -38,6 +38,7 @@ class _ScreenAddCoolersState extends State<ScreenAddCoolers> {
   final _country = TextEditingController();
   final _itemWeight = TextEditingController();
   late String imageurl = '';
+  String? selectedCategory;
   String? selectedCooler;
   String? selectedFans;
   String? selectedManufacturer;
@@ -115,7 +116,7 @@ class _ScreenAddCoolersState extends State<ScreenAddCoolers> {
 
   @override
   Widget build(BuildContext context) {
-    final space = const SizedBox(height: 10);
+    const space = SizedBox(height: 10);
     return Scaffold(
       appBar: AppBar(
         surfaceTintColor: Colors.white,
@@ -132,6 +133,10 @@ class _ScreenAddCoolersState extends State<ScreenAddCoolers> {
                 if (!snapshot.hasData) {
                   return const Center(child: CircularProgressIndicator());
                 }
+                final category = snapshot.data!.docs
+                    .map((doc) => doc['category'] as String)
+                    .toSet()
+                    .toList();
                 final cooler = snapshot.data!.docs
                     .map((doc) => doc['name'] as String)
                     .toSet()
@@ -171,9 +176,39 @@ class _ScreenAddCoolersState extends State<ScreenAddCoolers> {
                                         label: 'Unique ID',
                                         textcontroller: uniqueId),
                                     space,
-                                    AdminUi.admTextField(
-                                        label: 'Category',
-                                        textcontroller: categoryName),
+                                    DropdownMenu<String>(
+                                        controller: categoryName,
+                                        menuStyle: const MenuStyle(
+                                            surfaceTintColor:
+                                                MaterialStatePropertyAll(
+                                                    Colors.white)),
+                                        hintText: 'Select Category',
+                                        width:
+                                            MediaQuery.of(context).size.width *
+                                                .93,
+                                        menuHeight: 300,
+                                        inputDecorationTheme:
+                                            InputDecorationTheme(
+                                                hintStyle: const TextStyle(
+                                                    color:
+                                                        CustomColors.appTheme),
+                                                border: OutlineInputBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            8)),
+                                                fillColor: Colors.white,
+                                                filled: true),
+                                        onSelected: (value) {
+                                          setState(() {
+                                            selectedCategory = value;
+                                          });
+                                        },
+                                        dropdownMenuEntries: category
+                                            .map<DropdownMenuEntry<String>>(
+                                                (String value) {
+                                          return DropdownMenuEntry<String>(
+                                              value: value, label: value);
+                                        }).toList()),
                                     space,
                                     DropdownMenu<String>(
                                         controller: _productName,

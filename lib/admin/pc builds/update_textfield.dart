@@ -66,7 +66,7 @@ class _EditPCState extends State<EditPC> {
         
         Map<String, dynamic> data = snapshot.data()!;
 
-        _productCategory.text = data['categoryid'];
+        _productCategory.text = data['category'];
         setState(() {
           image = imageurl;
         });

@@ -58,7 +58,7 @@ class __ScreenPreBuildStateState extends State<ScreenPreBuild> {
   Future submitData() async {
     final data = {
       'idnum': _idNum.text,
-      'categoryid': _productCategory.text.toLowerCase(),
+      'category': _productCategory.text.toLowerCase(),
       'image': imageurl.toString(),
       'name': _productName.text,
       'oldprice': _oldPrice.text,

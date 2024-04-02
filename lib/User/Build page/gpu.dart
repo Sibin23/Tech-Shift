@@ -1,8 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:prosample_1/User/Build%20page/cabinet.dart';
-import 'package:prosample_1/User/Build%20page/details/gpu_details.dart';
+import 'package:prosample_1/User/Build%20Page/cabinet.dart';
+import 'package:prosample_1/User/Build%20Page/details/gpu_details.dart';
 import 'package:prosample_1/User/utils/colors.dart';
 import 'package:prosample_1/User/utils/text_decorations.dart';
 import 'package:prosample_1/User/utils/widget2.dart';

@@ -15,7 +15,6 @@ class ConfigDetail6 extends StatefulWidget {
 class _ConfigDetail6State extends State<ConfigDetail6> {
   @override
   Widget build(BuildContext context) {
-    print(widget.pc);
     final custom = widget.pc;
     String cpu = custom['processor'];
     String cpuPrice = custom['processorprice'];

@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -57,7 +56,7 @@ class _UpdateCabinetState extends State<UpdateCabinet> {
   updateData() {
     FirebaseFirestore.instance
         .collection('cabinet')
-        .doc(widget.itemId) // Use the itemId
+        .doc(widget.itemId) 
         .update({
       'image': imageurl.toString(),
       'name': _productName.text,
@@ -140,7 +139,7 @@ class _UpdateCabinetState extends State<UpdateCabinet> {
         _productDimension.text = data['productdimension'];
         _material.text = data['material'];
         _country.text = data['country'];
-        _itemWeight.text = data['country'];
+        _itemWeight.text = data['itemweight'];
         _warranty.text = data['warranty'];
       }
     });

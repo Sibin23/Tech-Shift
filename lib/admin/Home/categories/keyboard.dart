@@ -77,13 +77,14 @@ class _ListKeyboardState extends State<ListKeyboard> {
                           AdminUi.admTextField(
                               label: 'Product Category',
                               textcontroller: categoryName),
-                          const SizedBox(height: 10),
+                         AdminUi.space,
                           AdminUi.admTextField(
                               label: 'Product Name',
                               textcontroller: productName),
-                          const SizedBox(height: 10),
+                         AdminUi.space,
                           AdminUi.admTextField(
                               label: 'Model Name', textcontroller: modelName),
+                             AdminUi.space,
                               AdminUi.admTextField(label: 'Manufacturer', textcontroller: manufacturer),
                         ],
                       )),

@@ -1,3 +1,4 @@
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:prosample_1/User/utils/colors.dart';
@@ -10,7 +11,9 @@ class UiCustom {
       required String categoryName,
       required String oldPrice,
       required String newPrice,
-      required String cabinet}) {
+      required String cabinet,
+     
+      }) {
     return GestureDetector(
       onTap: () {
         voidCallback();

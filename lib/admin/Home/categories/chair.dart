@@ -1,7 +1,7 @@
-// ignore_for_file: use_build_context_synchronously
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:prosample_1/admin/utils/colors.dart';
+import 'package:prosample_1/admin/utils/common2.dart';
 import 'package:prosample_1/admin/utils/common_widgets.dart';
 import 'package:prosample_1/admin/utils/text_style.dart';
 import 'package:top_snackbar_flutter/custom_snack_bar.dart';
@@ -15,18 +15,21 @@ class ListChair extends StatefulWidget {
 }
 
 class _ListChairState extends State<ListChair> {
+  final category = TextEditingController();
   final _productName = TextEditingController();
   final _manufacturer = TextEditingController();
   final _model = TextEditingController();
 
   Future submit() async {
     final data = {
+      'category': category.text,
       'name': _productName.text,
       'manufacturer': _manufacturer.text,
       'model': _model.text,
     };
     FirebaseFirestore.instance.collection('chairdetails').doc().set(data);
     setState(() {
+      category.clear();
       _productName.clear();
       _manufacturer.clear();
       _model.clear();
@@ -41,13 +44,16 @@ class _ListChairState extends State<ListChair> {
           .collection('chairdetails')
           .doc(documentId)
           .delete();
-      showTopSnackBar(Overlay.of(context),
-          const CustomSnackBar.error(message: "Item Deleted Successfully"));
+      deleteMsg();
     } catch (error) {
-      // Handle errors gracefully
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text('Error deleting item: $error')));
+      errorMsg(error);
     }
+  }
+errorMsg(error){
+  return AdminUiHelper.customSnackbar(context, 'Error deleting item: ${error.toString()}');
+}
+  deleteMsg() {
+   return AdminUiHelper.customSnackbar(context, 'Item Added Successfully !');
   }
 
   void addItem() {
@@ -66,13 +72,17 @@ class _ListChairState extends State<ListChair> {
                       child: Column(
                         children: [
                           AdminUi.admTextField(
+                              label: 'Product Category',
+                              textcontroller: category),
+                          AdminUi.space,
+                          AdminUi.admTextField(
                               label: 'Product Name',
                               textcontroller: _productName),
-                          const SizedBox(height: 10),
+                          AdminUi.space,
                           AdminUi.admTextField(
                               label: 'Manufacturer',
                               textcontroller: _manufacturer),
-                          const SizedBox(height: 10),
+                          AdminUi.space,
                           AdminUi.admTextField(
                               label: 'Model Name', textcontroller: _model)
                         ],
@@ -135,7 +145,6 @@ class _ListChairState extends State<ListChair> {
                 return ListView.builder(
                   itemCount: snapshot.data!.docs.length,
                   itemBuilder: (ctx, index) {
-                    // Access the document and the desired field
                     final document = snapshot.data!.docs[index];
                     final id = document.id;
                     String name = document['name'];
@@ -161,10 +170,14 @@ class _ListChairState extends State<ListChair> {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Container(
-                                  width: MediaQuery.of(context).size.width * 0.75,
+                                SizedBox(
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.75,
                                   child: Text(
-                                    name, overflow: TextOverflow.ellipsis,softWrap: false,maxLines: 1,
+                                    name,
+                                    overflow: TextOverflow.ellipsis,
+                                    softWrap: false,
+                                    maxLines: 1,
                                     style: CustomText.title3,
                                   ),
                                 ),

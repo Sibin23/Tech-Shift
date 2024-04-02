@@ -15,6 +15,7 @@ class ListCooler extends StatefulWidget {
 }
 
 class _ListCoolerState extends State<ListCooler> {
+  final category = TextEditingController();
   final _manufacturer = TextEditingController();
   final _productName = TextEditingController();
   final _coolingMethod = TextEditingController();
@@ -23,6 +24,7 @@ class _ListCoolerState extends State<ListCooler> {
 
   Future submit() async {
     final data = {
+      'category': category.text,
       'name': _productName.text,
       'manufacturer': _manufacturer.text,
       'method': _coolingMethod.text,
@@ -34,6 +36,7 @@ class _ListCoolerState extends State<ListCooler> {
         .doc(_productName.text)
         .set(data);
     setState(() {
+      category.clear();
       _productName.clear();
       _coolingMethod.clear();
       _fans.clear();
@@ -93,6 +96,10 @@ class _ListCoolerState extends State<ListCooler> {
                       key: formkey,
                       child: Column(
                         children: [
+                          AdminUi.admTextField(
+                              label: 'Product Category',
+                              textcontroller: category),
+                          const SizedBox(height: 10),
                           AdminUi.admTextField(
                               label: 'Product Name',
                               textcontroller: _productName),

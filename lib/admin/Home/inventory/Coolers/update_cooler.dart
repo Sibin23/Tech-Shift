@@ -40,6 +40,7 @@ class _EditCoolerState extends State<EditCooler> {
   final _itemWeight = TextEditingController();
   late String imageurl = '';
   String image = '';
+  String? selectedCategory;
   String? selectedCooler;
   String? selectedFans;
   String? selectedManufacturer;
@@ -159,7 +160,7 @@ class _EditCoolerState extends State<EditCooler> {
 
   @override
   Widget build(BuildContext context) {
-    final space = const SizedBox(height: 10);
+    const space = SizedBox(height: 10);
     return Scaffold(
       appBar: AppBar(
         surfaceTintColor: Colors.white,
@@ -176,6 +177,10 @@ class _EditCoolerState extends State<EditCooler> {
                 if (!snapshot.hasData) {
                   return const Center(child: CircularProgressIndicator());
                 }
+                final category = snapshot.data!.docs
+                    .map((doc) => doc['name'] as String)
+                    .toSet()
+                    .toList();
                 final cooler = snapshot.data!.docs
                     .map((doc) => doc['name'] as String)
                     .toSet()
@@ -215,9 +220,39 @@ class _EditCoolerState extends State<EditCooler> {
                                         label: 'Unique ID',
                                         textcontroller: uniqueId),
                                     space,
-                                    AdminUi.admTextField(
-                                        label: 'Category',
-                                        textcontroller: categoryName),
+                                    DropdownMenu<String>(
+                                        controller: categoryName,
+                                        menuStyle: const MenuStyle(
+                                            surfaceTintColor:
+                                                MaterialStatePropertyAll(
+                                                    Colors.white)),
+                                        hintText: 'Select Category',
+                                        width:
+                                            MediaQuery.of(context).size.width *
+                                                .93,
+                                        menuHeight: 300,
+                                        inputDecorationTheme:
+                                            InputDecorationTheme(
+                                                hintStyle: const TextStyle(
+                                                    color:
+                                                        CustomColors.appTheme),
+                                                border: OutlineInputBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            8)),
+                                                fillColor: Colors.white,
+                                                filled: true),
+                                        onSelected: (value) {
+                                          setState(() {
+                                            selectedCategory = value;
+                                          });
+                                        },
+                                        dropdownMenuEntries: category
+                                            .map<DropdownMenuEntry<String>>(
+                                                (String value) {
+                                          return DropdownMenuEntry<String>(
+                                              value: value, label: value);
+                                        }).toList()),
                                     space,
                                     DropdownMenu<String>(
                                         controller: _productName,

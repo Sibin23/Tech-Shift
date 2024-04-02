@@ -128,7 +128,6 @@ class _UpdateMotherboardState extends State<UpdateMotherboard> {
 
   @override
   void initState() {
-    print(widget.itemId);
     FirebaseFirestore.instance
         .collection('motherboard')
         .doc(widget.itemId)

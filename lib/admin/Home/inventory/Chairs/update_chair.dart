@@ -33,6 +33,7 @@ class _UpdateChairState extends State<UpdateChair> {
   final _country = TextEditingController();
   final _itemWeight = TextEditingController();
   final _warranty = TextEditingController();
+  String? selectedCategory;
   String? selectedChair;
   String? selectedManufacturer;
   String? selectedModel;
@@ -141,7 +142,7 @@ class _UpdateChairState extends State<UpdateChair> {
       body: SafeArea(
         child: StreamBuilder<QuerySnapshot>(
             stream: FirebaseFirestore.instance
-                .collection('chairdetails')
+                .collection('chairs')
                 .snapshots(),
             builder: (context, snapshot) {
               if (snapshot.hasError) {
@@ -150,6 +151,10 @@ class _UpdateChairState extends State<UpdateChair> {
               if (!snapshot.hasData) {
                 return const Center(child: CircularProgressIndicator());
               }
+              final category = snapshot.data!.docs
+                  .map((doc) => doc['category'] as String)
+                  .toSet()
+                  .toList();
               final chair = snapshot.data!.docs
                   .map((doc) => doc['name'] as String)
                   .toSet()
@@ -182,9 +187,35 @@ class _UpdateChairState extends State<UpdateChair> {
                               AdminUi.admTextField(
                                   label: 'Unique ID', textcontroller: _idNum),
                               const SizedBox(height: 10),
-                              AdminUi.admTextField(
-                                  label: 'Category',
-                                  textcontroller: categoryName),
+                              DropdownMenu<String>(
+                                  controller: categoryName,
+                                  menuStyle: const MenuStyle(
+                                      surfaceTintColor:
+                                          MaterialStatePropertyAll(
+                                              Colors.white)),
+                                  hintText: 'Select Category',
+                                  width:
+                                      MediaQuery.of(context).size.width * .93,
+                                  menuHeight: 300,
+                                  inputDecorationTheme: InputDecorationTheme(
+                                      hintStyle: const TextStyle(
+                                          color: CustomColors.appTheme),
+                                      border: OutlineInputBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(8)),
+                                      fillColor: Colors.white,
+                                      filled: true),
+                                  onSelected: (value) {
+                                    setState(() {
+                                      selectedCategory = value;
+                                    });
+                                  },
+                                  dropdownMenuEntries: category
+                                      .map<DropdownMenuEntry<String>>(
+                                          (String value) {
+                                    return DropdownMenuEntry<String>(
+                                        value: value, label: value);
+                                  }).toList()),
                               const SizedBox(height: 10),
                               DropdownMenu<String>(
                                   controller: _productName,
@@ -317,7 +348,7 @@ class _UpdateChairState extends State<UpdateChair> {
                           if (_formkey.currentState!.validate()) {
                             updateData();
                             AdminUiHelper.customSnackbar(
-                                context, 'Item Added Successfully !');
+                                context, 'Item Updated Successfully !');
                           }
                         }, text: 'Save'),
                         const SizedBox(height: 30)
