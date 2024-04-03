@@ -7,7 +7,6 @@ import 'package:lottie/lottie.dart';
 import 'package:prosample_1/User/Profile/terms_policies.dart';
 import 'package:prosample_1/User/cart/cart_total_amount.dart';
 import 'package:prosample_1/User/home.dart';
-import 'package:prosample_1/User/utils/colors.dart';
 import 'package:prosample_1/User/utils/commonfile.dart';
 import 'package:prosample_1/User/utils/text_decorations.dart';
 import 'package:prosample_1/functions/fuctions.dart';
@@ -36,10 +35,10 @@ class _PaymentsState extends State<Payments> {
   }
 
   Future<void> loading() async {
-    Future.delayed(const Duration(seconds: 2), () {
+    Future.delayed(const Duration(seconds: 3), () {
+      orderSuccess(priceDifference!);
       setState(() {
-        isLoading = true;
-        orderSuccess(priceDifference!);
+        isLoading = false;
       });
     });
   }
@@ -55,7 +54,6 @@ class _PaymentsState extends State<Payments> {
     final custom = await getConfigure();
     setState(() {
       hasConfigure = custom.isNotEmpty;
-      orderSuccess(priceDifference!);
     });
   }
 
@@ -167,15 +165,15 @@ class _PaymentsState extends State<Payments> {
                     context,
                     () {
                       setState(() {
-                        isLoading = true;
+                        if (isChecked == true) {
+                          isLoading = true;
+                          loading();
+                          addToOrders();
+                        } else if (isChecked == false) {
+                          UiHelper.userSnackbar(
+                              context, 'Please Select Cash On Delivery');
+                        }
                       });
-                      if (isChecked) {
-                        loading();
-                        addToOrders();
-                      } else {
-                        UiHelper.userSnackbar(
-                            context, 'Please Select Cash On Delivery');
-                      }
                     },
                     text: 'Confirm Order',
                   ),
@@ -194,21 +192,38 @@ class _PaymentsState extends State<Payments> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Icon(
-                      Icons.send_to_mobile_outlined,
-                      size: 150,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
+                    Stack(
                       children: [
-                        Text('Loading',
-                            style: GoogleFonts.roboto(
-                                color: AppColors.appTheme, fontSize: 20)),
-                        SizedBox(
-                            width: MediaQuery.of(context).size.width * .3,
-                            height: MediaQuery.of(context).size.height * .07,
-                            child:
-                                Lottie.asset('assets/Animations/order.json')),
+                        Positioned(
+                          bottom: 0,
+                          child: SizedBox(
+                            width: MediaQuery.of(context).size.width,
+                            child: Center(
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text('Loading',
+                                      style: GoogleFonts.roboto(
+                                          color: Colors.grey, fontSize: 23)),
+                                  SizedBox(
+                                      width: MediaQuery.of(context).size.width *
+                                          .3,
+                                      height:
+                                          MediaQuery.of(context).size.height *
+                                              .07,
+                                      child: Lottie.asset(
+                                          'assets/Animations/order_loading.json')),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                        Lottie.asset('assets/Animations/order2.json',
+                            fit: BoxFit.contain,
+                            height: MediaQuery.of(context).size.height * .4,
+                            width: MediaQuery.of(context).size.width,
+                            filterQuality: FilterQuality.high,
+                            frameRate: FrameRate.max),
                       ],
                     ),
                   ],
@@ -266,12 +281,11 @@ class _PaymentsState extends State<Payments> {
                                 Row(
                                   children: [
                                     Checkbox(
-                                        value: isChecked,
-                                        onChanged: (newValue) {
-                                          setState(() {
-                                            isChecked = newValue!;
-                                          });
-                                        }),
+                                      value: isChecked,
+                                      onChanged: (newValue) => setState(() {
+                                        isChecked = !isChecked;
+                                      }),
+                                    ),
                                     Text('Cash on delivery',
                                         style: TextStyling.subtitle3),
                                   ],
@@ -314,12 +328,11 @@ class _PaymentsState extends State<Payments> {
       'Order Confirmed Successfully',
       'You Saved ₹ ${priceDifference.toStringAsFixed(2)}',
       type: AnimatedSnackBarType.success,
+      animationCurve: Curves.easeInOut,
+      duration: const Duration(seconds: 2),
       brightness: Brightness.light,
     ).show(context);
-
-    Future.delayed(const Duration(seconds: 1), () {
-      toHome();
-    });
+    toHome();
   }
 
   toHome() {

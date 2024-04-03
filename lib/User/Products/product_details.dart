@@ -62,9 +62,7 @@ class _CheckDetailsState extends State<CheckDetails> {
         .get();
 
     final querySnapshot = await favRef;
-    final fetchedData = querySnapshot.docs
-        .map((doc) => doc.data() as Map<String, dynamic>)
-        .toList();
+    final fetchedData = querySnapshot.docs.map((doc) => doc.data()).toList();
     return fetchedData;
   }
 
@@ -116,6 +114,7 @@ class _CheckDetailsState extends State<CheckDetails> {
                     idNum: item['idnum'],
                     time: time);
                 addInventoryCart(item, time);
+
                 showSnackbarWithAnimation();
               },
               child: Container(
@@ -235,11 +234,15 @@ class _CheckDetailsState extends State<CheckDetails> {
   void showSnackbarWithAnimation() {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
+        animation: CurvedAnimation(
+            parent: AnimationMax(
+                kAlwaysCompleteAnimation, kAlwaysDismissedAnimation),
+            curve: Curves.easeInOutCirc),
         content: Container(
           decoration: BoxDecoration(boxShadow: const [
-            BoxShadow(spreadRadius: 2, blurRadius: 2, color: Colors.grey)
+            BoxShadow(spreadRadius: 1, blurRadius: 1, color: Colors.grey)
           ], color: Colors.white, borderRadius: BorderRadius.circular(5)),
-          child: Column(
+          child: Row(
             children: [
               Lottie.asset('assets/Animations/cart.json',
                   width: 100, height: 100),
@@ -252,12 +255,7 @@ class _CheckDetailsState extends State<CheckDetails> {
         ),
         elevation: 5,
         backgroundColor: const Color.fromARGB(255, 255, 255, 255),
-        duration: const Duration(seconds: 3),
-        action: SnackBarAction(
-          textColor: AppColors.appTheme,
-          label: 'Dismiss',
-          onPressed: () => ScaffoldMessenger.of(context).hideCurrentSnackBar(),
-        ),
+        duration: const Duration(seconds: 2),
       ),
     );
   }

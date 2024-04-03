@@ -4,7 +4,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:prosample_1/User/cart/address.dart';
 import 'package:prosample_1/User/utils/colors.dart';
-import 'package:prosample_1/User/utils/commonfile.dart';
 import 'package:prosample_1/User/utils/text_decorations.dart';
 
 class ProceedButton extends StatefulWidget {
@@ -51,6 +50,7 @@ class _ProceedButtonState extends State<ProceedButton> {
     fetchConfigure();
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -64,7 +64,7 @@ class _ProceedButtonState extends State<ProceedButton> {
           noItem();
         }
         if (hasUser == false) {
-          UiHelper.userSnackbar(context, 'Please Add Profile Details');
+          noUser();
         }
       },
       child: Container(
@@ -81,9 +81,21 @@ class _ProceedButtonState extends State<ProceedButton> {
     );
   }
 
+  void noUser() {
+    AnimatedSnackBar.rectangle('No User Data!!', 'Please Add Profile Details',
+            type: AnimatedSnackBarType.warning,
+            brightness: Brightness.light,
+            animationCurve: Curves.easeInOut,
+            duration: const Duration(seconds: 3))
+        .show(context);
+  }
+
   void noItem() {
-    AnimatedSnackBar.rectangle('Please Add Any Item', 'To Continue',
-            type: AnimatedSnackBarType.success, brightness: Brightness.light,animationCurve: Curves.easeInOut ,duration: const Duration(seconds: 3))
+    AnimatedSnackBar.rectangle('No Cart Items!!', 'Please Any Item',
+            type: AnimatedSnackBarType.warning,
+            brightness: Brightness.light,
+            animationCurve: Curves.easeInOut,
+            duration: const Duration(seconds: 3))
         .show(context);
   }
 }
