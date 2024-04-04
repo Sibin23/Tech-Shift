@@ -42,7 +42,7 @@ class _CabinetDetailsState extends State<CabinetDetails> {
                       MaterialPageRoute(
                           builder: (ctx) => const ScreenAddCabinet()));
                 },
-                icon: Image.asset('assets/icons/add.png',
+                icon: Image.asset('assets/Icons/add.png',
                     width: 30, color: Colors.white)),
           )
         ],

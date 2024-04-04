@@ -19,7 +19,7 @@ class EditProcessor extends StatefulWidget {
 class _EditProcessorState extends State<EditProcessor> {
   final _formkey = GlobalKey<FormState>();
   final _productCategory = TextEditingController();
-  final _idNum = TextEditingController();
+  String? idnum;
   final _productName = TextEditingController();
   final _oldPrice = TextEditingController();
   final _newPrice = TextEditingController();
@@ -73,7 +73,7 @@ class _EditProcessorState extends State<EditProcessor> {
         .update({
       'image': imageurl.toString(),
       'name': _productName.text,
-      'idnum': _idNum.text,
+      'idnum': idnum,
       'manufacturer': manufacturer.text,
       'category': _productCategory.text,
       'oldprice': _oldPrice.text,
@@ -128,7 +128,7 @@ class _EditProcessorState extends State<EditProcessor> {
           image = imageurl;
         });
         imageurl = data['image'];
-        _idNum.text = data['idnum'];
+        idnum = data['idnum'];
         _productCategory.text = data['category'];
         _oldPrice.text = data['oldprice'];
         _newPrice.text = data['newprice'];
@@ -217,10 +217,6 @@ class _EditProcessorState extends State<EditProcessor> {
                                         key: _formkey,
                                         child: Column(
                                           children: [
-                                            AdminUi.admTextField(
-                                                label: 'Unique ID',
-                                                textcontroller: _idNum),
-                                            const SizedBox(height: 10),
                                             DropdownMenu<String>(
                                                 controller: _productCategory,
                                                 menuStyle: const MenuStyle(

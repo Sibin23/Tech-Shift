@@ -1,21 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:prosample_1/User/Profile/warranty_policy.dart';
+import 'package:prosample_1/User/Profile/profile_terms_policies.dart';
 import 'package:prosample_1/User/utils/colors.dart';
 import 'package:prosample_1/User/utils/text_decorations.dart';
 
-class WarrantyButton extends StatefulWidget {
-  const WarrantyButton({super.key});
+class TermsButton extends StatefulWidget {
+  const TermsButton({super.key});
 
   @override
-  State<WarrantyButton> createState() => _WarrantyButtonState();
+  State<TermsButton> createState() => _TermsButtonState();
 }
 
-class _WarrantyButtonState extends State<WarrantyButton> {
+class _TermsButtonState extends State<TermsButton> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () => Navigator.push(
-          context, MaterialPageRoute(builder: (ctx) => const WarrantyPolicy())),
+          context, MaterialPageRoute(builder: (ctx) => const TermsAndPolicy())),
       child: SizedBox(
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height * .05,
@@ -26,10 +26,10 @@ class _WarrantyButtonState extends State<WarrantyButton> {
             children: [
               Row(
                 children: [
-                  Image.asset('assets/icons/warranty.png',
+                  Image.asset('assets/Icons/terms&conditions.png',
                       width: MediaQuery.of(context).size.width * .1),
                   const SizedBox(width: 10),
-                  Text('Warranty Policy', style: TextStyling.subtitle2),
+                  Text('Terms & Conditions', style: TextStyling.subtitle2),
                 ],
               ),
               Icon(Icons.arrow_forward_ios, color: AppColors.appTheme)

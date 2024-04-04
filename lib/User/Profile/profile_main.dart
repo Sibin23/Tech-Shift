@@ -2,13 +2,12 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:lottie/lottie.dart';
-import 'package:prosample_1/User/Profile/Account/add_account.dart';
-import 'package:prosample_1/User/Profile/Account/contact_button.dart';
-import 'package:prosample_1/User/Profile/Account/logout.dart';
-import 'package:prosample_1/User/Profile/Account/terms_button.dart';
-import 'package:prosample_1/User/Profile/Account/update_profile.dart';
-import 'package:prosample_1/User/Profile/Account/warranty_button.dart';
+import 'package:prosample_1/User/Profile/profile_nouser.dart';
+import 'package:prosample_1/User/Profile/profile_contact_button.dart';
+import 'package:prosample_1/User/Profile/logout.dart';
+import 'package:prosample_1/User/Profile/profile_terms_policies_button.dart';
+import 'package:prosample_1/User/Profile/profile_update_account.dart';
+import 'package:prosample_1/User/Profile/profile_warranty_button.dart';
 import 'package:prosample_1/User/utils/Text_decorations.dart';
 import 'package:prosample_1/User/utils/colors.dart';
 import 'package:prosample_1/User/utils/commonfile.dart';
@@ -56,23 +55,7 @@ class _ProfileState extends State<Profile> {
                 final userDocs = snapshot.data!.docs;
 
                 if (userDocs.isEmpty) {
-                  return Column(
-                    children: [
-                      const SizedBox(height: 60),
-                      Center(
-                          child: Lottie.asset(
-                              'assets/Animations/Animation - 1708060808685.json',
-                              fit: BoxFit.cover)),
-                      const Text('No user profile found. Add user'),
-                      const SizedBox(height: 30),
-                      UiHelper.buttonSml(context, () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (ctx) => const AddUserScreen()));
-                      }, text: 'Add Profile')
-                    ],
-                  );
+                  return const AccountNoUser();
                 }
                 if (userDocs.isNotEmpty) {
                   final userDoc = userDocs.first;
@@ -101,7 +84,7 @@ class _ProfileState extends State<Profile> {
                               child: Container(
                                 width: MediaQuery.of(context).size.width * 3,
                                 height:
-                                    MediaQuery.of(context).size.height * .23,
+                                    MediaQuery.of(context).size.height * .232,
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(110),
                                   color: Colors.white,
@@ -123,18 +106,16 @@ class _ProfileState extends State<Profile> {
                                 child: ClipOval(
                                   child: userData['imageUrl'] != null
                                       ? CachedNetworkImage(
-                                          imageUrl: userData[
-                                              'imageUrl']!, 
+                                          imageUrl: userData['imageUrl']!,
                                           fit: BoxFit.cover,
                                           filterQuality: FilterQuality.high,
                                           placeholder: (context, url) =>
-                                              const Center(
-                                            child: CircularProgressIndicator(),
-                                          ),
+                                              Image.asset(
+                                                  'assets/Icons/profile.png'),
                                           errorWidget: (context, url, error) =>
-                                              const Text('No Profile Image'),
+                                              Image.asset('assets/Icons/profile.png'),
                                         )
-                                      : const Text('No Profile Image'),
+                                      : Image.asset('assets/Icons/profile.png'),
                                 ),
                               ),
                             ),
@@ -153,7 +134,7 @@ class _ProfileState extends State<Profile> {
                                         builder: (ctx) =>
                                             const UpdateProfile()));
                               },
-                              icon: Image.asset('assets/icons/Edit_icon.png',
+                              icon: Image.asset('assets/Icons/Edit_icon.png',
                                   width:
                                       MediaQuery.of(context).size.width * .12,
                                   color: Colors.black)),

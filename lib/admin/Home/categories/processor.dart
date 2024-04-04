@@ -26,8 +26,8 @@ class _ListProcessorState extends State<ListProcessor> {
       'category': _idController.text.trim().toLowerCase(),
       'name': _textController.text,
       'socket': _socket.text.toUpperCase(),
-      'cores': _cores.text,
-      'threads': _threades.text,
+      'cores': _cores.text.trim(),
+      'threads': _threades.text.trim(),
       'speed': _speed.text,
     };
     FirebaseFirestore.instance.collection('cpudetails').doc().set(data);

@@ -45,7 +45,7 @@ class _LogOutState extends State<LogOut> {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        // Alert box content and functionality
+        
         return AlertDialog(surfaceTintColor: Colors.white,
           title: Text('Logout',style: TextStyling.appTitle,),
           content: Text('Are You Sure You Want To Logout?', style: TextStyling.details,),

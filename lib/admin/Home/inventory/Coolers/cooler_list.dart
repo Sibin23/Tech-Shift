@@ -36,7 +36,7 @@ class _CoolerDetailsState extends State<CoolerDetails> {
             padding: const EdgeInsets.only(right: 10),
             child: IconButton(onPressed: (){
               Navigator.push(context, MaterialPageRoute(builder: (ctx)=> const ScreenAddCoolers()));
-            }, icon: Image.asset('assets/icons/add.png',width: 30,color: Colors.white)),
+            }, icon: Image.asset('assets/Icons/add.png',width: 30,color: Colors.white)),
           )
         ],
       ),

@@ -101,12 +101,12 @@ class _AddressState extends State<Address> {
                   space,
                   Text('Contact information', style: TextStyling.subtitle3),
                   space,
-                  UiHelper.profileTextField(context,
+                  UiHelper.profileTextField(
                       controller: name,
                       text: 'Full Name*',
                       validate: 'Name is required'),
                   space,
-                  UiHelper.profileTextField(context,
+                  UiHelper.profileTextField(
                       controller: phNum,
                       text: 'Mobile No*',
                       validate: 'Mobile No. is required'),
@@ -114,22 +114,22 @@ class _AddressState extends State<Address> {
                   space,
                   Text('Shipping Address', style: TextStyling.subtitle3),
                   space,
-                  UiHelper.profileTextField(context,
+                  UiHelper.profileTextField(
                       controller: pincode,
                       text: 'Pincode*',
                       validate: 'Pincode is required'),
                   space,
-                  UiHelper.profileTextField(context,
+                  UiHelper.profileTextField(
                       text: 'House No./Building No*',
                       controller: houseNum,
                       validate: 'House No. is required'),
                   space,
-                  UiHelper.profileTextField(context,
+                  UiHelper.profileTextField(
                       controller: area,
                       text: 'Street/Area*',
                       validate: 'Pincode is required'),
                   space,
-                  UiHelper.profileTextField(context,
+                  UiHelper.profileTextField(
                       controller: locality,
                       text: 'Locality/Town*',
                       validate: 'Locality is required'),
@@ -137,14 +137,14 @@ class _AddressState extends State<Address> {
                   Row(
                     children: <Widget>[
                       Flexible(
-                        child: UiHelper.profileTextField(context,
+                        child: UiHelper.profileTextField(
                             controller: city,
                             text: 'City*',
                             validate: 'City is required'),
                       ),
                       const SizedBox(width: 10),
                       Flexible(
-                        child: UiHelper.profileTextField(context,
+                        child: UiHelper.profileTextField(
                             controller: state,
                             text: 'State*',
                             validate: 'State is required'),

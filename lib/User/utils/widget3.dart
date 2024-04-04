@@ -61,8 +61,7 @@ class UiCustom2 {
               'Do you want to delete? This will remove all your configurations.'),
           actions: [
             TextButton(
-              onPressed: () =>
-                  Navigator.pop(context), 
+              onPressed: () => Navigator.pop(context),
               child: const Text('Cancel'),
             ),
             TextButton(
@@ -82,19 +81,24 @@ class UiCustom2 {
 
   static profileImage(VoidCallback voidCallback, {required imageurl}) {
     return GestureDetector(
-        onTap: () {
-          voidCallback();
-        },
+      onTap: voidCallback,
+      child: ClipOval(
+        clipBehavior: Clip.antiAlias, // Ensures smooth edges
         child: Container(
           width: 150.0,
           height: 150.0,
           decoration: BoxDecoration(
-              border: Border.all(color: Colors.grey),
-              borderRadius: BorderRadius.circular(10.0)),
+            border: Border.all(color: Colors.grey), // Optional border
+            borderRadius: BorderRadius.circular(100.0), // Circular shape
+          ),
           child: imageurl.isEmpty
-              ? const Center(child: Text('Pick an Image'))
-              : Image.network(imageurl),
-        ));
+              ? Image.asset(
+                'assets/Icons/profile.png', color: Colors.black,
+              )
+              : Image.network(imageurl, fit: BoxFit.cover),
+        ),
+      ),
+    );
   }
 
   static cartSnackBar(BuildContext context) {
@@ -126,20 +130,19 @@ class UiCustom2 {
       ),
     );
   }
-  static itemDetails(
-    BuildContext context,{required String title, required String subtitle}
-  ){
-    return  SizedBox(
+
+  static itemDetails(BuildContext context,
+      {required String title, required String subtitle}) {
+    return SizedBox(
         width: MediaQuery.of(context).size.width,
-        
         child: Row(
           children: [
-            Text(title,style: TextStyling.subtitle2),
+            Text(title, style: TextStyling.subtitle2),
             Expanded(
               flex: 1,
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: Text(subtitle,style: TextStyling.details),
+                child: Text(subtitle, style: TextStyling.details),
               ),
             ),
           ],

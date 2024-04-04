@@ -89,157 +89,184 @@ class _CoolerConfigState extends State<CoolerConfig> {
         ],
       ),
       body: SafeArea(
-          child: Padding(
-        padding: const EdgeInsets.all(10.0),
-        child: StreamBuilder<QuerySnapshot>(
-            stream: FirebaseFirestore.instance.collection('cooler').snapshots(),
-            builder: (context, snapshot) {
-              if (snapshot.hasData) {
-                return SizedBox(
-                  child: GridView.builder(
-                      itemCount: snapshot.data!.docs.length,
-                      shrinkWrap: true,
-                      gridDelegate:
-                          const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2,
-                        mainAxisSpacing: 15,
-                        crossAxisSpacing: 5,
-                        mainAxisExtent: 230,
-                      ),
-                      itemBuilder: ((context, index) {
-                        DocumentSnapshot document = snapshot.data!.docs[index];
-                        String imageUrl = document['image'];
-                        String name = document['name'];
-                        String price = document['newprice'];
-                        String size = document['size'];
-                        String wattage = document['wattage'];
-                        bool isSelected = document.id == selectedDocumentId;
-                        return Padding(
-                            padding: const EdgeInsets.only(
-                                left: 5, right: 5, top: 5, bottom: 5),
-                            child: GestureDetector(
-                                onTap: () => setState(() {
-                                      if (isSelected) {
-                                        selectedDocumentId = null;
-                                        selectedPower = null;
-                                        selectedPrice = null;
-                                        selectedCooler = null;
-                                      } else {
-                                        selectedDocumentId = document.id;
-                                        selectedCooler = name;
-                                        selectedPrice = price;
-                                        selectedPower = wattage;
-                                      }
-                                      isSelected = !isSelected;
-                                    }),
-                                child: Container(
-                                    decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        borderRadius: const BorderRadius.all(
-                                            Radius.circular(5)),
-                                        boxShadow: [
-                                          BoxShadow(
-                                              offset: const Offset(2, 2),
-                                              spreadRadius: 1,
-                                              blurRadius: 2,
-                                              color:
-                                                  Colors.grey.withOpacity(0.3))
-                                        ],
-                                        border: isSelected
-                                            ? Border.all(
-                                                color: AppColors.appTheme,
-                                                width: 2,
-                                              )
-                                            : null),
-                                    child: Container(
-                                        decoration: const BoxDecoration(
-                                            color: Colors.white,
-                                            borderRadius: BorderRadius.all(
-                                                Radius.circular(5)),
-                                            boxShadow: [
-                                              BoxShadow(
-                                                  spreadRadius: 1,
-                                                  blurRadius: 2,
-                                                  color: Colors.grey)
-                                            ]),
-                                        child: Padding(
-                                            padding: const EdgeInsets.all(8.0),
-                                            child: Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  Row(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .center,
-                                                      children: [
-                                                        SizedBox(
-                                                            width: MediaQuery.of(
-                                                                        context)
-                                                                    .size
-                                                                    .width *
-                                                                0.3,
-                                                            height: MediaQuery.of(
-                                                                        context)
-                                                                    .size
-                                                                    .height *
-                                                                0.11,
-                                                            child:
-                                                                CachedNetworkImage(
-                                                                    imageUrl:
-                                                                        imageUrl,
-                                                                    fit: BoxFit
-                                                                        .cover,
-                                                                    placeholder:
-                                                                        (context,
-                                                                            url) =>
-                                                                       Image.asset(
-                                                                          'assets/Categories/cooler.jpg',
-                                                                          fit: BoxFit.cover)
-                                                                    ))
-                                                      ]),
-                                                  SizedBox(
-                                                      width:
-                                                          MediaQuery.of(context)
-                                                              .size
-                                                              .width,
-                                                      child: Text(name,
-                                                          overflow: TextOverflow
-                                                              .ellipsis,
-                                                          softWrap: false,
-                                                          maxLines: 1,
-                                                          style: TextStyling
-                                                              .subtitle2)),
-                                                  const SizedBox(height: 5),
-                                                  Row(
-                                                    children: [
-                                                      const SizedBox(width: 3),
-                                                      Text(size,
-                                                          style: TextStyling
-                                                              .categoryText)
-                                                    ],
-                                                  ),
-                                                  const SizedBox(height: 8),
-                                                  Row(children: [
-                                                    const Text('₹'),
-                                                    const SizedBox(width: 2),
-                                                    Text(
-                                                        price.replaceAllMapped(
-                                                            RegExp(
-                                                                r'(\d{1,3})(?=(\d{3})+(?!\d))'),
-                                                            (Match m) =>
-                                                                "${m[1]},"),
-                                                        style: TextStyling.newP)
-                                                  ])
-                                                ]))))));
-                      })),
-                );
-              } else {
-                return const Center(
-                  child: CircularProgressIndicator(),
-                );
-              }
-            }),
+          child: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(10.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('CPU Coolers', style: TextStyling.titleText),
+              SizedBox(
+                width: MediaQuery.of(context).size.width,
+                height: MediaQuery.of(context).size.height,
+                child: StreamBuilder<QuerySnapshot>(
+                    stream: FirebaseFirestore.instance
+                        .collection('cooler')
+                        .snapshots(),
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData) {
+                        return SizedBox(
+                          child: GridView.builder(
+                              itemCount: snapshot.data!.docs.length,
+                              shrinkWrap: true,
+                              gridDelegate:
+                                  const SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 2,
+                                mainAxisSpacing: 15,
+                                crossAxisSpacing: 5,
+                                mainAxisExtent: 230,
+                              ),
+                              itemBuilder: ((context, index) {
+                                DocumentSnapshot document =
+                                    snapshot.data!.docs[index];
+                                String imageUrl = document['image'];
+                                String name = document['name'];
+                                String price = document['newprice'];
+                                String size = document['size'];
+                                String wattage = document['wattage'];
+                                bool isSelected =
+                                    document.id == selectedDocumentId;
+                                return Padding(
+                                    padding: const EdgeInsets.only(
+                                        left: 5, right: 5, top: 5, bottom: 5),
+                                    child: GestureDetector(
+                                        onTap: () => setState(() {
+                                              if (isSelected) {
+                                                selectedDocumentId = null;
+                                                selectedPower = null;
+                                                selectedPrice = null;
+                                                selectedCooler = null;
+                                              } else {
+                                                selectedDocumentId =
+                                                    document.id;
+                                                selectedCooler = name;
+                                                selectedPrice = price;
+                                                selectedPower = wattage;
+                                              }
+                                              isSelected = !isSelected;
+                                            }),
+                                        child: Container(
+                                            decoration: BoxDecoration(
+                                                color: Colors.white,
+                                                borderRadius:
+                                                    const BorderRadius.all(
+                                                        Radius.circular(5)),
+                                                boxShadow: [
+                                                  BoxShadow(
+                                                      offset:
+                                                          const Offset(2, 2),
+                                                      spreadRadius: 1,
+                                                      blurRadius: 2,
+                                                      color: Colors.grey
+                                                          .withOpacity(0.3))
+                                                ],
+                                                border: isSelected
+                                                    ? Border.all(
+                                                        color:
+                                                            AppColors.appTheme,
+                                                        width: 2,
+                                                      )
+                                                    : null),
+                                            child: Container(
+                                                decoration: const BoxDecoration(
+                                                    color: Colors.white,
+                                                    borderRadius:
+                                                        BorderRadius.all(
+                                                            Radius.circular(5)),
+                                                    boxShadow: [
+                                                      BoxShadow(
+                                                          spreadRadius: 1,
+                                                          blurRadius: 2,
+                                                          color: Colors.grey)
+                                                    ]),
+                                                child: Padding(
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                            8.0),
+                                                    child: Column(
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .start,
+                                                        children: [
+                                                          Row(
+                                                              mainAxisAlignment:
+                                                                  MainAxisAlignment
+                                                                      .center,
+                                                              children: [
+                                                                SizedBox(
+                                                                    width: MediaQuery.of(context)
+                                                                            .size
+                                                                            .width *
+                                                                        0.3,
+                                                                    height: MediaQuery.of(context)
+                                                                            .size
+                                                                            .height *
+                                                                        0.11,
+                                                                    child: CachedNetworkImage(
+                                                                        imageUrl:
+                                                                            imageUrl,
+                                                                        fit: BoxFit
+                                                                            .cover,
+                                                                        placeholder: (context, url) => Image.asset(
+                                                                            'assets/Categories/cooler.jpg',
+                                                                            fit:
+                                                                                BoxFit.cover)))
+                                                              ]),
+                                                          SizedBox(
+                                                              width:
+                                                                  MediaQuery.of(
+                                                                          context)
+                                                                      .size
+                                                                      .width,
+                                                              child: Text(name,
+                                                                  overflow:
+                                                                      TextOverflow
+                                                                          .ellipsis,
+                                                                  softWrap:
+                                                                      false,
+                                                                  maxLines: 1,
+                                                                  style: TextStyling
+                                                                      .subtitle2)),
+                                                          const SizedBox(
+                                                              height: 5),
+                                                          Row(
+                                                            children: [
+                                                              const SizedBox(
+                                                                  width: 3),
+                                                              Text(size,
+                                                                  style: TextStyling
+                                                                      .categoryText)
+                                                            ],
+                                                          ),
+                                                          const SizedBox(
+                                                              height: 8),
+                                                          Row(children: [
+                                                            const Text('₹'),
+                                                            const SizedBox(
+                                                                width: 2),
+                                                            Text(
+                                                                price.replaceAllMapped(
+                                                                    RegExp(
+                                                                        r'(\d{1,3})(?=(\d{3})+(?!\d))'),
+                                                                    (Match m) =>
+                                                                        "${m[1]},"),
+                                                                style:
+                                                                    TextStyling
+                                                                        .newP)
+                                                          ])
+                                                        ]))))));
+                              })),
+                        );
+                      } else {
+                        return const Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      }
+                    }),
+              ),
+            ],
+          ),
+        ),
       )),
     );
   }

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:prosample_1/User/Favorites/favourites.dart';
 import 'package:prosample_1/User/Home/home_page.dart';
-import 'package:prosample_1/User/Profile/Account/profile.dart';
+import 'package:prosample_1/User/Profile/profile_main.dart';
 import 'package:prosample_1/User/cart/cart_main.dart';
 import 'package:prosample_1/login.dart';
 

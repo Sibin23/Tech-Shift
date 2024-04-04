@@ -29,41 +29,13 @@ class _AdminHomePageState extends State<AdminHomePage> {
       key: _scaffoldKey,
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        leading: IconButton(
-          onPressed: () => _scaffoldKey.currentState!.openDrawer(),
-          icon: const Icon(
-            Icons.menu,
-            color: CustomColors.appTheme,
-          ),
-        ),
-      ),
-      drawer: Drawer(
-        child: ListView(
-          // Add your drawer content here
-          children: [
-            ListTile(
-              leading: IconButton(
-                  onPressed: () {
-                    signOut();
-                  },
-                  icon: const Icon(
-                    Icons.exit_to_app_rounded,
-                  )),
-              title: const Text('Item 1'),
-              onTap: () {
-                // Handle item 1 tap
-                Navigator.pop(context); // Close the drawer
+        actions: [
+          IconButton(
+              onPressed: () {
+                signOut();
               },
-            ),
-            ListTile(
-              title: const Text('Item 2'),
-              onTap: () {
-                // Handle item 2 tap
-                Navigator.pop(context); // Close the drawer
-              },
-            ),
-          ],
-        ),
+              icon: const Icon(Icons.exit_to_app))
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),

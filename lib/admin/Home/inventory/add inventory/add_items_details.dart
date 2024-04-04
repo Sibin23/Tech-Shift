@@ -1,7 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:prosample_1/admin/Home/inventory/Cabinet/cabinet_list.dart';
 import 'package:prosample_1/admin/Home/inventory/Cables/cable_list.dart';
 import 'package:prosample_1/admin/Home/inventory/Chairs/chair_list.dart';

@@ -17,6 +17,7 @@ class _ProductPsuState extends State<ProductPsu> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(surfaceTintColor: Colors.white),
       body: SafeArea(
           child: Container(
         color: Colors.white,
@@ -31,7 +32,6 @@ class _ProductPsuState extends State<ProductPsu> {
                 return Padding(
                   padding: const EdgeInsets.all(10.0),
                   child: GridView.builder(
-                     
                       itemCount: snapshot.data!.docs.length,
                       gridDelegate:
                           const SliverGridDelegateWithFixedCrossAxisCount(
@@ -41,7 +41,7 @@ class _ProductPsuState extends State<ProductPsu> {
                               crossAxisCount: 2),
                       itemBuilder: (context, index) {
                         final document = snapshot.data!.docs[index];
-                        
+
                         return Padding(
                           padding: const EdgeInsets.only(
                               left: 5, right: 5, top: 5, bottom: 5),
@@ -50,8 +50,9 @@ class _ProductPsuState extends State<ProductPsu> {
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (ctx) =>
-                                          CheckDetails(collection: document['category'], idNum: document['idnum'])));
+                                      builder: (ctx) => CheckDetails(
+                                          collection: document['category'],
+                                          idNum: document['idnum'])));
                             },
                             child: Container(
                                 decoration: BoxDecoration(
@@ -87,7 +88,7 @@ class _ProductPsuState extends State<ProductPsu> {
                                                 fit: BoxFit.cover,
                                                 placeholder: (context, url) =>
                                                     Image.asset(
-                                                        'assets/Categories/processor.png',
+                                                        'assets/Categories/psu.png',
                                                         fit: BoxFit.cover)),
                                           ),
                                           Text(document['category'],

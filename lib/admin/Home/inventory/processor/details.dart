@@ -43,52 +43,52 @@ class _UpdateProcessorState extends State<UpdateProcessor> {
                       MaterialPageRoute(
                           builder: (ctx) => const ScreenAddProcessor()));
                 },
-                icon: Image.asset('assets/icons/add.png',
+                icon: Image.asset('assets/Icons/add.png',
                     width: 30, color: Colors.white)),
           )
         ],
       ),
       body: SafeArea(
-        child: SizedBox(
-            width: MediaQuery.of(context).size.width,
-            height: MediaQuery.of(context).size.height,
-            child: StreamBuilder(
-              stream: FirebaseFirestore.instance
-                  .collection('processor')
-                  .orderBy('name')
-                  .snapshots(),
-              builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-                if (snapshot.hasData) {
-                  return ListView.builder(
-                    itemCount: snapshot.data!.docs.length,
-                    itemBuilder: (context, index) {
-                      DocumentSnapshot document = snapshot.data!.docs[index];
-                      String imageUrl = document['image'];
-                      String name = document['name'];
-                      String itemId = document.id;
-
-                      return AdminUiHelper.updatelist(context, () {
-                        AdminUi.customAlert(text1: 'Edit', text2: 'Delete', () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (ctx) =>
-                                      EditProcessor(itemId: itemId)));
-                        }, () {
-                          deleteData(itemId);
-                          AdminUiHelper.customSnackbar(
-                              context, 'Item Deleted Successfully !');
-                        }, context);
-                      }, imageUrl: imageUrl, categoryName: name);
-                    },
-                  );
-                } else {
-                  return const Center(
-                      child: CircularProgressIndicator(
-                          color: CustomColors.appTheme));
-                }
-              },
-            )),
+        child: Padding(
+          padding: const EdgeInsets.only(top: 10, bottom: 10),
+          child: StreamBuilder(
+            stream: FirebaseFirestore.instance
+                .collection('processor')
+                .orderBy('name')
+                .snapshots(),
+            builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+              if (snapshot.hasData) {
+                return ListView.builder(
+                  itemCount: snapshot.data!.docs.length,
+                  itemBuilder: (context, index) {
+                    DocumentSnapshot document = snapshot.data!.docs[index];
+                    String imageUrl = document['image'];
+                    String name = document['name'];
+                    String itemId = document.id;
+          
+                    return AdminUiHelper.updatelist(context, () {
+                      AdminUi.customAlert(text1: 'Edit', text2: 'Delete', () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (ctx) =>
+                                    EditProcessor(itemId: itemId)));
+                      }, () {
+                        deleteData(itemId);
+                        AdminUiHelper.customSnackbar(
+                            context, 'Item Deleted Successfully !');
+                      }, context);
+                    }, imageUrl: imageUrl, categoryName: name);
+                  },
+                );
+              } else {
+                return const Center(
+                    child: CircularProgressIndicator(
+                        color: CustomColors.appTheme));
+              }
+            },
+          ),
+        ),
       ),
     );
   }

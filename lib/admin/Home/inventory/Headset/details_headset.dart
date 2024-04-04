@@ -37,7 +37,7 @@ class _HeadsetDetailsState extends State<HeadsetDetails> {
                       MaterialPageRoute(
                           builder: (ctx) => const ScreenAddHeadset()));
                 },
-                icon: Image.asset('assets/icons/add.png',
+                icon: Image.asset('assets/Icons/add.png',
                     width: 30, color: Colors.white)),
           )
         ],

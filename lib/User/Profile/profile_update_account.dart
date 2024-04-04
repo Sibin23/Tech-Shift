@@ -1,4 +1,5 @@
 import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -86,6 +87,7 @@ class _UpdateProfileState extends State<UpdateProfile> {
 
   @override
   Widget build(BuildContext context) {
+    const space = SizedBox(height: 10);
     return Scaffold(
       appBar: AppBar(
         surfaceTintColor: Colors.white,
@@ -97,64 +99,91 @@ class _UpdateProfileState extends State<UpdateProfile> {
           width: MediaQuery.of(context).size.width,
           child: Column(
             children: [
-              UiCustom2.profileImage(() {
-                pickImage();
-              }, imageurl: imageurl),
-              const SizedBox(height: 10),
+              SizedBox(
+                width: MediaQuery.of(context).size.width,
+                height: MediaQuery.of(context).size.height * .22,
+                child: Stack(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        UiCustom2.profileImage(() {
+                          pickImage();
+                        }, imageurl: imageurl),
+                      ],
+                    ),
+                    Positioned(
+                        bottom: 0,
+                        right: MediaQuery.of(context).size.width * .28,
+                        child: GestureDetector(
+                          onTap: () {
+                            pickImage();
+                          },
+                          child: SizedBox(
+                              width: 50,
+                              height: 50,
+                              child: Image.asset(
+                                'assets/Icons/Edit_icon.png',
+                                color: Colors.black,
+                                fit: BoxFit.cover,
+                              )),
+                        )),
+                  ],
+                ),
+              ),
+              space,
               Form(
                   key: _formkey,
                   child: Padding(
                     padding: const EdgeInsets.all(10.0),
                     child: Column(
                       children: [
-                        UiHelper.customTextField(
+                        UiHelper.profileTextField(
+                            text: 'Full Name*',
                             controller: _nameController,
-                            labeltext: 'Full Name',
-                            iconData: Icons.person,
-                            validate: 'Name is reqired'),
-                        const SizedBox(height: 10),
-                        UiHelper.customTextField(
+                            validate: 'Name is required'),
+                        space,
+                        UiHelper.profileTextField(
                             controller: _phoneNumberController,
-                            labeltext: 'Phone Number',
-                            iconData: Icons.phone,
+                            text: 'Phone Number',
                             keyboardType: TextInputType.number,
                             validate: 'Contact Number is required'),
-                        const SizedBox(height: 10),
-                        UiHelper.customTextField(
-                            controller: _cityController,
-                            labeltext: 'City',
-                            iconData: Icons.location_city_rounded,
-                            validate: 'City Name is reqired'),
-                        const SizedBox(height: 10),
-                        UiHelper.customTextField(
-                            controller: _stateController,
-                            labeltext: 'State',
-                            iconData: Icons.location_city,
-                            validate: 'State Name is required'),
-                        const SizedBox(height: 10),
-                        UiHelper.customTextField(
+                        space,
+                        Row(
+                          children: [
+                            Flexible(
+                                child: UiHelper.profileTextField(
+                                    text: 'City',
+                                    controller: _cityController,
+                                    validate: 'City is required')),
+                            const SizedBox(width: 10),
+                            Flexible(
+                                child: UiHelper.profileTextField(
+                                    text: 'State',
+                                    controller: _stateController,
+                                    validate: 'State is required'))
+                          ],
+                        ),
+                        space,
+                        UiHelper.profileTextField(
                             controller: _pincodeController,
-                            labeltext: "Pincode",
-                            iconData: Icons.post_add_outlined,
+                            text: "Pincode",
                             keyboardType: TextInputType.number,
                             validate: 'Pincode is required'),
-                        const SizedBox(height: 10),
-                        UiHelper.customTextField(
+                        space,
+                        UiHelper.profileTextField(
                             controller: _addressController,
-                            labeltext: 'House No., Building Name',
-                            iconData: Icons.home_rounded,
+                            text: 'House No., Building Name',
                             validate: 'Address is reqired'),
-                        const SizedBox(height: 10),
-                        UiHelper.customTextField(
+                        space,
+                        UiHelper.profileTextField(
                             controller: locality,
-                            labeltext: 'Locality',
-                            iconData: Icons.location_city,
+                            text: 'Locality',
                             validate: 'Locality is required'),
-                        const SizedBox(height: 10),
-                        UiHelper.customTextField(
+                        space,
+                        UiHelper.profileTextField(
                             controller: area,
-                            labeltext: 'Road Name, Area',
-                            iconData: Icons.location_on,
+                            text: 'Road Name, Area',
                             validate: 'This field is required')
                       ],
                     ),
@@ -166,7 +195,7 @@ class _UpdateProfileState extends State<UpdateProfile> {
                   if (_formkey.currentState!.validate()) {
                     Navigator.pop(context);
 
-                    updatedUser();
+                    await updatedUser();
                   }
                 }, text: 'Update Profile'),
               ),
@@ -189,6 +218,7 @@ class _UpdateProfileState extends State<UpdateProfile> {
       'state': _stateController.text,
       'pincode': _pincodeController.text,
       'home': _addressController.text,
+      'locality': locality.text,
       'street': area.text,
       'imageUrl': imageurl,
     };

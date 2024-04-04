@@ -26,11 +26,16 @@ class _AddUserScreenState extends State<AddUserScreen> {
   final _formkey = GlobalKey<FormState>();
   String? id;
   late String imageurl = '';
+  String? imageNew;
   Future<void> pickImage() async {
     final ImagePicker picker = ImagePicker();
     final XFile? image = await picker.pickImage(source: ImageSource.gallery);
+
     if (image != null) {
       imageurl = await uploadImage(image);
+      setState(() {
+        imageNew = imageurl.toString();
+      });
     }
   }
 
@@ -57,16 +62,48 @@ class _AddUserScreenState extends State<AddUserScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(backgroundColor: Colors.white),
+        appBar: AppBar(
+            centerTitle: true,
+            title: const Text('Profile'),
+            surfaceTintColor: Colors.white),
         body: SafeArea(
           child: SingleChildScrollView(
             child: Padding(
               padding: const EdgeInsets.all(16.0),
               child: Column(
                 children: [
-                  UiCustom2.profileImage(() {
-                    pickImage();
-                  }, imageurl: imageurl),
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width,
+                    height: MediaQuery.of(context).size.height * .22,
+                    child: Stack(
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            UiCustom2.profileImage(() {
+                              pickImage();
+                            }, imageurl: imageurl),
+                          ],
+                        ),
+                        Positioned(
+                            bottom: 0,
+                            right: MediaQuery.of(context).size.width * .28,
+                            child: GestureDetector(
+                              onTap: () {
+                                pickImage();
+                              },
+                              child: SizedBox(
+                                  width: 50,
+                                  height: 50,
+                                  child: Image.asset(
+                                    'assets/Icons/Edit_icon.png',
+                                    color: Colors.black,
+                                    fit: BoxFit.cover,
+                                  )),
+                            )),
+                      ],
+                    ),
+                  ),
                   const SizedBox(height: 30),
                   Form(
                       key: _formkey,

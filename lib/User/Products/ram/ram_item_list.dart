@@ -89,7 +89,7 @@ class _ProductRamState extends State<ProductRam> {
                                                 fit: BoxFit.cover,
                                                 placeholder: (context, url) =>
                                                     Image.asset(
-                                                        'assets/Categories/ssd.png',
+                                                        'assets/Categories/ram.png',
                                                         fit: BoxFit.cover)),
                                           ),
                                           Text(document['category'],

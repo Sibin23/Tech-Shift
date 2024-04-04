@@ -17,7 +17,6 @@ class ScreenAddMotherboard extends StatefulWidget {
 
 class __ScreenAddMotherboardState extends State<ScreenAddMotherboard> {
   final _formkey = GlobalKey<FormState>();
-  final idNum = TextEditingController();
   final ramSlots = TextEditingController();
   final _productCategory = TextEditingController();
   final _productName = TextEditingController();
@@ -39,7 +38,7 @@ class __ScreenAddMotherboardState extends State<ScreenAddMotherboard> {
   final _country = TextEditingController();
   final _itemWeight = TextEditingController();
   final _warranty = TextEditingController();
-
+  String idnum = DateTime.now().toString().replaceAll(RegExp(r'[^\d]'), '');
   late String imageurl = '';
   String? selectedCategory;
   String? selectedManufacturer;
@@ -70,7 +69,7 @@ class __ScreenAddMotherboardState extends State<ScreenAddMotherboard> {
 // submit
   Future submitData() async {
     final data = {
-      'idnum': idNum.text,
+      'idnum': idnum,
       'category': _productCategory.text.toLowerCase(),
       'image': imageurl.toString(),
       'name': _productName.text,
@@ -94,12 +93,8 @@ class __ScreenAddMotherboardState extends State<ScreenAddMotherboard> {
       'itemweight': _itemWeight.text,
       'warranty': _warranty.text,
     };
-    FirebaseFirestore.instance
-        .collection('motherboard')
-        .doc(idNum.text.toLowerCase())
-        .set(data);
+    FirebaseFirestore.instance.collection('motherboard').doc(idnum).set(data);
     setState(() {
-      idNum.clear();
       _productCategory.clear();
       imageurl = '';
       _productName.clear();
@@ -189,9 +184,6 @@ class __ScreenAddMotherboardState extends State<ScreenAddMotherboard> {
                           key: _formkey,
                           child: Column(
                             children: [
-                              AdminUi.admTextField(
-                                  label: 'Unique ID', textcontroller: idNum),
-                              const SizedBox(height: 10),
                               DropdownMenu<String>(
                                   label: const Text('Select Category',
                                       style: TextStyle(

@@ -19,7 +19,7 @@ class ScreenAddProcessor extends StatefulWidget {
 
 class _ScreenAddProcessorState extends State<ScreenAddProcessor> {
   final _formkey = GlobalKey<FormState>();
-  final _idNum = TextEditingController();
+  String idnum = DateTime.now().toString().replaceAll(RegExp(r'[^\d]'), '');
   final _productCategory = TextEditingController();
   final _productName = TextEditingController();
   final _oldPrice = TextEditingController();
@@ -38,14 +38,12 @@ class _ScreenAddProcessorState extends State<ScreenAddProcessor> {
   final _unlocked = TextEditingController();
   final _tdp = TextEditingController();
   final _warranty = TextEditingController();
-  // add image
+
   late String imageurl = '';
-  // Dropdown
 
   Future<void> pickImage() async {
-    // ignore: no_leading_underscores_for_local_identifiers
-    final ImagePicker _picker = ImagePicker();
-    final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+    final ImagePicker picker = ImagePicker();
+    final XFile? image = await picker.pickImage(source: ImageSource.gallery);
 
     if (image != null) {
       imageurl = await uploadImage(image);
@@ -53,7 +51,6 @@ class _ScreenAddProcessorState extends State<ScreenAddProcessor> {
     }
   }
 
-  // add to firefase
   Future<String> uploadImage(var image) async {
     final Reference ref =
         FirebaseStorage.instance.ref().child('Processor/${image.name}');
@@ -65,11 +62,10 @@ class _ScreenAddProcessorState extends State<ScreenAddProcessor> {
     return imageurl = downloadUrl;
   }
 
-  //submit fuction
   Future submitData() async {
     final data = {
       'image': imageurl.toString(),
-      'idnum': _idNum.text,
+      'idnum': idnum,
       'category': _productCategory.text,
       'name': _productName.text,
       'oldprice': _oldPrice.text,
@@ -89,14 +85,10 @@ class _ScreenAddProcessorState extends State<ScreenAddProcessor> {
       'tdp': _tdp.text,
       'warranty': _warranty.text,
     };
-    FirebaseFirestore.instance
-        .collection('processor')
-        .doc(_idNum.text.toLowerCase())
-        .set(data);
+    FirebaseFirestore.instance.collection('processor').doc(idnum).set(data);
 
     setState(() {
       _productCategory.clear();
-      _idNum.clear();
       _productName.clear();
       _oldPrice.clear();
       _newPrice.clear();
@@ -192,9 +184,6 @@ class _ScreenAddProcessorState extends State<ScreenAddProcessor> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                const SizedBox(height: 10),
-                                AdminUi.admTextField(
-                                    label: 'Unique ID', textcontroller: _idNum),
                                 const SizedBox(height: 10),
                                 DropdownMenu<String>(
                                     controller: _productCategory,
@@ -414,7 +403,9 @@ class _ScreenAddProcessorState extends State<ScreenAddProcessor> {
                                     label: 'Item Weight',
                                     textcontroller: weight),
                                 AdminUi.space,
-                                AdminUi.admTextField(label: 'Country of Origin', textcontroller: country),
+                                AdminUi.admTextField(
+                                    label: 'Country of Origin',
+                                    textcontroller: country),
                                 AdminUi.space,
                                 AdminUi.admTextField(
                                     label: 'Warranty',

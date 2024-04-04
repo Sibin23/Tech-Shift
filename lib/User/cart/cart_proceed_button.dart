@@ -64,7 +64,7 @@ class _ProceedButtonState extends State<ProceedButton> {
           noItem();
         }
         if (hasUser == false) {
-          noUser();
+          noUser(context);
         }
       },
       child: Container(
@@ -81,17 +81,28 @@ class _ProceedButtonState extends State<ProceedButton> {
     );
   }
 
-  void noUser() {
-    AnimatedSnackBar.rectangle('No User Data!!', 'Please Add Profile Details',
-            type: AnimatedSnackBarType.warning,
-            brightness: Brightness.light,
-            animationCurve: Curves.easeInOut,
-            duration: const Duration(seconds: 3))
-        .show(context);
+  noUser(BuildContext context) {
+    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+      backgroundColor: Colors.orange,
+      duration: Duration(seconds: 2),
+      content: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          Icon(Icons.info, color: Colors.white),
+          Column(
+            children: [
+              Text('Missing User Profile!!'),
+              Text('Please complete your profile to proceed')
+            ],
+          ),
+        ],
+      ),
+    ));
   }
 
-  void noItem() {
-    AnimatedSnackBar.rectangle('No Cart Items!!', 'Please Any Item',
+  noItem() {
+    AnimatedSnackBar.rectangle(
+            'No Items in Cart!!', 'Please add something to proceed',
             type: AnimatedSnackBarType.warning,
             brightness: Brightness.light,
             animationCurve: Curves.easeInOut,

@@ -3,11 +3,6 @@ import 'package:prosample_1/User/utils/colors.dart';
 import 'package:prosample_1/User/utils/text_decorations.dart';
 
 class Pics {
-  // Banners
-  static const String promoBanner1 = 'assets/Ads section/caliber-r3.webp';
-  static const String promoBanner2 = 'assets/Ads section/Logitech.webp';
-  static const String promoBanner3 = 'assets/Ads section/Lianli.jpg';
-
 // Promo Text
 
   static const String promoText1 = '// Gaming //';
@@ -43,11 +38,11 @@ class UiHelper {
                 OutlineInputBorder(borderRadius: BorderRadius.circular(10))));
   }
 
-  static profileTextField(
-    BuildContext context, {
+  static profileTextField({
     required String text,
     required TextEditingController controller,
     required String validate,
+    keyboardType = TextInputType.text,
   }) {
     return TextFormField(
       validator: (value) {
@@ -56,6 +51,7 @@ class UiHelper {
         }
         return null;
       },
+      keyboardType: keyboardType,
       controller: controller,
       decoration: InputDecoration(
         hoverColor: Colors.black,

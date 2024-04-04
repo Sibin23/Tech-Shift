@@ -13,9 +13,7 @@ class _ScreenBuildState extends State<ScreenBuild> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-          
-          surfaceTintColor: Colors.white),
+      appBar: AppBar(surfaceTintColor: Colors.white),
       bottomNavigationBar: const BuildDetailBottom(),
       body: SafeArea(
         child: Column(
@@ -38,7 +36,7 @@ class _ScreenBuildState extends State<ScreenBuild> {
                   ),
                   const SizedBox(height: 10),
                   Text(
-                      'The PC configurator of Pc Components is the perfect tool for you to choose one by one the parts of your computer and try different configurations and budgets. Its use is very simple and intuitive, and in a few steps you can assemble a computer by parts completely to your liking. Get your basic, gaming or professional desktop pc at the best price and for you. Can you ask for more? You can check the characteristics of the article and its availability by clicking on its name.',
+                      "The PC Configurator from Pc Components is the perfect tool to build your dream PC. Choose individual components, experiment with different configurations, and stay within your budget. It's a simple and intuitive process that lets you customize your desktop PC, whether you need a basic setup, a powerful gaming rig, or a professional workstation. Why settle for anything less? Click the \"Details\" button to learn more.",
                       style: TextStyling.subtitle2)
                 ],
               ),

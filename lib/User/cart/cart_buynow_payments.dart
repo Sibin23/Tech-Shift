@@ -4,7 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
-import 'package:prosample_1/User/Profile/terms_policies.dart';
+import 'package:prosample_1/User/Profile/profile_terms_policies.dart';
 import 'package:prosample_1/User/cart/cart_total_amount.dart';
 import 'package:prosample_1/User/home.dart';
 import 'package:prosample_1/User/utils/commonfile.dart';
@@ -227,7 +227,7 @@ class _CartBuyNowPaymentsState extends State<CartBuyNowPayments> {
                                             MediaQuery.of(context).size.height *
                                                 .06,
                                         child: Image.asset(
-                                            'assets/icons/images.jpeg.jpg',
+                                            'assets/Icons/images.jpeg.jpg',
                                             fit: BoxFit.contain,
                                             filterQuality: FilterQuality.high))
                                   ],

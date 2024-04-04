@@ -19,30 +19,26 @@ class UserGuide extends StatelessWidget {
       ),
       body: SafeArea(
         child: ListView.builder(
-          itemCount: guide.length, // Use the length of the guide list
+          itemCount: guide.length,
           itemBuilder: (BuildContext context, int index) {
             return Padding(
               padding: const EdgeInsets.all(10.0),
               child: Container(
-                padding: EdgeInsets.all(8.0), // Add some padding for aesthetics
+                padding: const EdgeInsets.all(8.0),
                 child: Stack(
                   children: [
                     Align(
-                      // Align the numbering text to the left
                       alignment: Alignment.centerLeft,
                       child: Text(
                         '${index + 1}',
-                        style: TextStyle(
-                            fontWeight:
-                                FontWeight.bold), // Make numbering text bold
+                        style: const TextStyle(fontWeight: FontWeight.bold),
                       ),
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         SizedBox(
-                          width: MediaQuery.of(context).size.width *
-                              0.85, // Adjust width as needed
+                          width: MediaQuery.of(context).size.width * 0.85,
                           child: Text(
                             guide[index],
                           ),

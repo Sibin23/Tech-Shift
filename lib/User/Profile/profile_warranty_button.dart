@@ -1,21 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:prosample_1/User/Profile/contact_page.dart';
+import 'package:prosample_1/User/Profile/profile_warranty_policy.dart';
 import 'package:prosample_1/User/utils/colors.dart';
 import 'package:prosample_1/User/utils/text_decorations.dart';
 
-class ContactButton extends StatefulWidget {
-  const ContactButton({super.key});
+class WarrantyButton extends StatefulWidget {
+  const WarrantyButton({super.key});
 
   @override
-  State<ContactButton> createState() => _ContactButtonState();
+  State<WarrantyButton> createState() => _WarrantyButtonState();
 }
 
-class _ContactButtonState extends State<ContactButton> {
+class _WarrantyButtonState extends State<WarrantyButton> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () => Navigator.push(
-          context, MaterialPageRoute(builder: (ctx) => const ScreenContact())),
+          context, MaterialPageRoute(builder: (ctx) => const WarrantyPolicy())),
       child: SizedBox(
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height * .05,
@@ -26,10 +26,10 @@ class _ContactButtonState extends State<ContactButton> {
             children: [
               Row(
                 children: [
-                  Image.asset('assets/icons/contact_us.png',
+                  Image.asset('assets/Icons/warranty.png',
                       width: MediaQuery.of(context).size.width * .1),
                   const SizedBox(width: 10),
-                  Text('Contact Us', style: TextStyling.subtitle2),
+                  Text('Warranty Policy', style: TextStyling.subtitle2),
                 ],
               ),
               Icon(Icons.arrow_forward_ios, color: AppColors.appTheme)

@@ -1,5 +1,4 @@
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:prosample_1/User/Home/build.dart';
@@ -8,6 +7,7 @@ import 'package:prosample_1/User/Home/prebuid_pc.dart';
 import 'package:prosample_1/User/Home/promo1.dart';
 import 'package:prosample_1/User/Home/promo2.dart';
 import 'package:prosample_1/User/Home/promo3.dart';
+import 'package:prosample_1/User/Profile/profile_contact_page.dart';
 import 'package:prosample_1/User/utils/commonfile.dart';
 import 'package:prosample_1/User/utils/text_decorations.dart';
 import 'package:prosample_1/login.dart';
@@ -46,14 +46,18 @@ class _ScreenHomeState extends State<ScreenHome> {
                 ),
               ),
               ListTile(
-                title: const Text('Signout'),
-                leading: IconButton(
-                  onPressed: () async {
-                    await FirebaseAuth.instance.signOut();
-                    signOut();
-                  },
-                  icon: const Icon(Icons.exit_to_app_outlined),
+                leading: Image.asset(
+                  'assets/Icons/contact_us.png',
+                  width: 30,
+                  height: 30,
                 ),
+                title: Text('Contact Us', style: TextStyling.subtitle2),
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (ctx) => const ScreenContact()));
+                },
               ),
             ],
           ),
@@ -79,9 +83,9 @@ class _ScreenHomeState extends State<ScreenHome> {
               ),
             ],
           ),
-          actions: [
-            IconButton(onPressed: () {}, icon: const Icon(Icons.search_sharp))
-          ],
+          // actions: [
+          //   IconButton(onPressed: () {}, icon: const Icon(Icons.search_sharp))
+          // ],
         ),
         body: SafeArea(
             child: SingleChildScrollView(
