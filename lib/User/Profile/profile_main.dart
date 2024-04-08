@@ -2,15 +2,14 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:prosample_1/User/Profile/profile_nouser.dart';
-import 'package:prosample_1/User/Profile/profile_contact_button.dart';
-import 'package:prosample_1/User/Profile/logout.dart';
-import 'package:prosample_1/User/Profile/profile_terms_policies_button.dart';
-import 'package:prosample_1/User/Profile/profile_update_account.dart';
-import 'package:prosample_1/User/Profile/profile_warranty_button.dart';
-import 'package:prosample_1/User/utils/Text_decorations.dart';
-import 'package:prosample_1/User/utils/colors.dart';
-import 'package:prosample_1/User/utils/commonfile.dart';
+import 'package:prosample_1/User/profile/profile_logout_button.dart';
+import 'package:prosample_1/User/profile/profiel_custompc_order_button.dart';
+import 'package:prosample_1/User/profile/profile_nouser.dart';
+import 'package:prosample_1/User/profile/profile_order_history_button.dart';
+import 'package:prosample_1/User/profile/profile_update_account.dart';
+import 'package:prosample_1/User/utils/utils_colors.dart';
+import 'package:prosample_1/User/utils/utils_text_decorations.dart';
+import 'package:prosample_1/User/utils/utils_widget1.dart';
 
 class Profile extends StatefulWidget {
   const Profile({super.key});
@@ -73,7 +72,7 @@ class _ProfileState extends State<Profile> {
                               width: MediaQuery.of(context).size.width,
                               height: MediaQuery.of(context).size.height * .27,
                               child: Image.asset(
-                                'assets/Ads section/profilebg.png',
+                                'assets/ads/profilebg.png',
                                 fit: BoxFit.cover,
                               ),
                             ),
@@ -110,12 +109,20 @@ class _ProfileState extends State<Profile> {
                                           fit: BoxFit.cover,
                                           filterQuality: FilterQuality.high,
                                           placeholder: (context, url) =>
-                                              Image.asset(
-                                                  'assets/Icons/profile.png'),
+                                              const Image(
+                                            image: AssetImage(
+                                                'assets/icons/profile.png'),
+                                          ),
                                           errorWidget: (context, url, error) =>
-                                              Image.asset('assets/Icons/profile.png'),
+                                              const Image(
+                                            image: AssetImage(
+                                                'assets/icons/profile.png'),
+                                          ),
                                         )
-                                      : Image.asset('assets/Icons/profile.png'),
+                                      : const Image(
+                                          image: AssetImage(
+                                              'assets/icons/profile.png'),
+                                        ),
                                 ),
                               ),
                             ),
@@ -134,7 +141,7 @@ class _ProfileState extends State<Profile> {
                                         builder: (ctx) =>
                                             const UpdateProfile()));
                               },
-                              icon: Image.asset('assets/Icons/Edit_icon.png',
+                              icon: Image.asset('assets/icons/Edit_icon.png',
                                   width:
                                       MediaQuery.of(context).size.width * .12,
                                   color: Colors.black)),
@@ -198,14 +205,12 @@ class _ProfileState extends State<Profile> {
                       ),
                       const SizedBox(height: 20),
                       const Divider(),
-                      const ContactButton(),
+                      const OrdersHistoryButto(),
                       const Divider(),
-                      const TermsButton(),
-                      const Divider(),
-                      const WarrantyButton(),
+                      const CustomPcButton(),
                       const Divider(),
                       const LogOut(),
-                      const Divider()
+                      const Divider(),
                     ],
                   );
                 }

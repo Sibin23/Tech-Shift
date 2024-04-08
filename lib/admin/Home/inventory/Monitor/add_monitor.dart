@@ -3,10 +3,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:prosample_1/admin/utils/colors.dart';
-import 'package:prosample_1/admin/utils/common2.dart';
-import 'package:prosample_1/admin/utils/common_widgets.dart';
-import 'package:prosample_1/admin/utils/text_style.dart';
+import 'package:prosample_1/admin/utils/utils_colors.dart';
+import 'package:prosample_1/admin/utils/utils_text_style.dart';
+import 'package:prosample_1/admin/utils/utils_widget2.dart';
+import 'package:prosample_1/admin/utils/utils_widgets2.dart';
 
 class ScreenAddMonitor extends StatefulWidget {
   const ScreenAddMonitor({super.key});
@@ -17,7 +17,6 @@ class ScreenAddMonitor extends StatefulWidget {
 
 class _ScreenAddMonitorState extends State<ScreenAddMonitor> {
   final _formkey = GlobalKey<FormState>();
-  final idNum = TextEditingController();
   final _productCategory = TextEditingController();
   final _productName = TextEditingController();
   final _manufacturer = TextEditingController();
@@ -37,7 +36,7 @@ class _ScreenAddMonitorState extends State<ScreenAddMonitor> {
   final _country = TextEditingController();
   final _itemWeight = TextEditingController();
   final _warranty = TextEditingController();
-
+  String idnum = DateTime.now().toString().replaceAll(RegExp(r'[^\d]'), '');
   late String imageurl = '';
   String? selectedCategory;
   String? selectedManufacturer;
@@ -67,7 +66,7 @@ class _ScreenAddMonitorState extends State<ScreenAddMonitor> {
     final data = {
       'category': _productCategory.text.toLowerCase(),
       'image': imageurl.toString(),
-      'idnum': idNum.text,
+      'idnum': idnum,
       'name': _productName.text,
       'manufacturer': _manufacturer.text,
       'oldprice': _oldPrice.text,
@@ -87,14 +86,10 @@ class _ScreenAddMonitorState extends State<ScreenAddMonitor> {
       'itemweight': _itemWeight.text,
       'warranty': _warranty.text,
     };
-    FirebaseFirestore.instance
-        .collection('monitor')
-        .doc(idNum.text.toLowerCase())
-        .set(data);
+    FirebaseFirestore.instance.collection('monitor').doc(idnum).set(data);
     setState(() {
       _productCategory.clear();
       imageurl = '';
-      idNum.clear();
       _productName.clear();
       _manufacturer.clear();
       _oldPrice.clear();
@@ -118,6 +113,7 @@ class _ScreenAddMonitorState extends State<ScreenAddMonitor> {
 
   @override
   Widget build(BuildContext context) {
+    const space = SizedBox(height: 10);
     return Scaffold(
       appBar: AppBar(
         surfaceTintColor: Colors.white,
@@ -161,191 +157,203 @@ class _ScreenAddMonitorState extends State<ScreenAddMonitor> {
                           }, imageurl: imageurl),
                           const SizedBox(height: 20),
                           Form(
-                            key: _formkey,
+                              key: _formkey,
                               child: Column(children: [
-                            AdminUi.admTextField(
-                                label: 'Unique ID', textcontroller: idNum),
-                            const SizedBox(height: 10),
-                            DropdownMenu<String>(
-                                label: const Text('Select Category',
-                                    style: TextStyle(
-                                        color: CustomColors.appTheme)),
-                                controller: _productCategory,
-                                menuStyle: const MenuStyle(
-                                    surfaceTintColor:
-                                        MaterialStatePropertyAll(Colors.white)),
-                                width: MediaQuery.of(context).size.width * .93,
-                                menuHeight: 300,
-                                inputDecorationTheme: InputDecorationTheme(
-                                    border: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(8)),
-                                    fillColor: Colors.white,
-                                    filled: true),
-                                onSelected: (value) {
-                                  setState(() {
-                                    selectedCategory = value;
-                                  });
-                                },
-                                dropdownMenuEntries: category
-                                    .map<DropdownMenuEntry<String>>(
-                                        (String value) {
-                                  return DropdownMenuEntry<String>(
-                                      value: value, label: value);
-                                }).toList()),
-                            const SizedBox(height: 10),
-                            DropdownMenu<String>(
-                                label: const Text('Select Monitor',
-                                    style: TextStyle(
-                                        color: CustomColors.appTheme)),
-                                controller: _productName,
-                                menuStyle: const MenuStyle(
-                                    surfaceTintColor:
-                                        MaterialStatePropertyAll(Colors.white)),
-                                width: MediaQuery.of(context).size.width * .93,
-                                menuHeight: 300,
-                                inputDecorationTheme: InputDecorationTheme(
-                                    border: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(8)),
-                                    fillColor: Colors.white,
-                                    filled: true),
-                                onSelected: (value) {
-                                  setState(() {
-                                    selectedMonitor = value;
-                                  });
-                                },
-                                dropdownMenuEntries: monitor
-                                    .map<DropdownMenuEntry<String>>(
-                                        (String value) {
-                                  return DropdownMenuEntry<String>(
-                                      value: value, label: value);
-                                }).toList()),
-                            const SizedBox(height: 10),
-                            DropdownMenu<String>(
-                                label: const Text('Select Model',
-                                    style: TextStyle(
-                                        color: CustomColors.appTheme)),
-                                controller: _modelName,
-                                menuStyle: const MenuStyle(
-                                    surfaceTintColor:
-                                        MaterialStatePropertyAll(Colors.white)),
-                                width: MediaQuery.of(context).size.width * .93,
-                                menuHeight: 300,
-                                inputDecorationTheme: InputDecorationTheme(
-                                    border: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(8)),
-                                    fillColor: Colors.white,
-                                    filled: true),
-                                onSelected: (value) {
-                                  setState(() {
-                                    selectedModel = value;
-                                  });
-                                },
-                                dropdownMenuEntries: model
-                                    .map<DropdownMenuEntry<String>>(
-                                        (String value) {
-                                  return DropdownMenuEntry<String>(
-                                      value: value, label: value);
-                                }).toList()),
-                            const SizedBox(height: 10),
-                            DropdownMenu<String>(
-                                label: const Text('Select Manufacturer',
-                                    style: TextStyle(
-                                        color: CustomColors.appTheme)),
-                                controller: _manufacturer,
-                                menuStyle: const MenuStyle(
-                                    surfaceTintColor:
-                                        MaterialStatePropertyAll(Colors.white)),
-                                width: MediaQuery.of(context).size.width * .93,
-                                menuHeight: 300,
-                                inputDecorationTheme: InputDecorationTheme(
-                                    border: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(8)),
-                                    fillColor: Colors.white,
-                                    filled: true),
-                                onSelected: (value) {
-                                  setState(() {
-                                    selectedManufacturer = value;
-                                  });
-                                },
-                                dropdownMenuEntries: manufactured
-                                    .map<DropdownMenuEntry<String>>(
-                                        (String value) {
-                                  return DropdownMenuEntry<String>(
-                                      value: value, label: value);
-                                }).toList()),
-                            const SizedBox(height: 10),
-                            AdminUi.admTextField(
-                                label: 'Category Name',
-                                textcontroller: _productCategory),
-                            const SizedBox(height: 10),
-                            AdminUi.admTextField(
-                                label: 'Product Name',
-                                textcontroller: _productName),
-                            const SizedBox(height: 10),
-                            AdminUi.admTextField(
-                                label: 'Manufacturer',
-                                textcontroller: _manufacturer),
-                            const SizedBox(height: 10),
-                            AdminUi.admTextField(
-                                label: 'Old Price', textcontroller: _oldPrice),
-                            const SizedBox(height: 10),
-                            AdminUi.admTextField(
-                                label: 'New Price', textcontroller: _newPrice),
-                            const SizedBox(height: 10),
-                            AdminUi.admTextField(
-                                label: 'Model Name',
-                                textcontroller: _modelName),
-                            const SizedBox(height: 10),
-                            AdminUi.admTextField(
-                                label: 'Product Dimensions',
-                                textcontroller: _productDimension),
-                            const SizedBox(height: 10),
-                            AdminUi.admTextField(
-                                label: 'Viewing Angle',
-                                textcontroller: _veiwingAngle),
-                            const SizedBox(height: 10),
-                            AdminUi.admTextField(
-                                label: 'Display Type',
-                                textcontroller: _displayType),
-                            const SizedBox(height: 10),
-                            AdminUi.admTextField(
-                                label: 'Display Size',
-                                textcontroller: _displaySize),
-                            const SizedBox(height: 10),
-                            AdminUi.admTextField(
-                                label: 'Response Time',
-                                textcontroller: _responseTime),
-                            const SizedBox(height: 10),
-                            AdminUi.admTextField(
-                                label: 'Resolution',
-                                textcontroller: _resolution),
-                            const SizedBox(height: 10),
-                            AdminUi.admTextField(
-                                label: 'Refresh Rate',
-                                textcontroller: _refreshRate),
-                            const SizedBox(height: 10),
-                            AdminUi.admTextField(
-                                label: 'Features',
-                                textcontroller: _specialFeatures),
-                            const SizedBox(height: 10),
-                            AdminUi.admTextField(
-                                label: 'Voltage', textcontroller: _voltage),
-                            const SizedBox(height: 10),
-                            AdminUi.admTextField(
-                                label: 'Hardware Interface',
-                                textcontroller: _hdwInterface),
-                            const SizedBox(height: 10),
-                            AdminUi.admTextField(
-                                label: 'Country', textcontroller: _country),
-                            const SizedBox(height: 10),
-                            AdminUi.admTextField(
-                                label: 'Item Weight',
-                                textcontroller: _itemWeight),
-                            const SizedBox(height: 10),
-                            AdminUi.admTextField(
-                                label: 'Warranty', textcontroller: _warranty),
-                            const SizedBox(height: 10),
-                          ])),
+                                DropdownMenu<String>(
+                                    label: const Text('Select Category',
+                                        style: TextStyle(
+                                            color: CustomColors.appTheme)),
+                                    controller: _productCategory,
+                                    menuStyle: const MenuStyle(
+                                        surfaceTintColor:
+                                            MaterialStatePropertyAll(
+                                                Colors.white)),
+                                    width:
+                                        MediaQuery.of(context).size.width * .93,
+                                    menuHeight: 300,
+                                    inputDecorationTheme: InputDecorationTheme(
+                                        border: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(8)),
+                                        fillColor: Colors.white,
+                                        filled: true),
+                                    onSelected: (value) {
+                                      setState(() {
+                                        selectedCategory = value;
+                                      });
+                                    },
+                                    dropdownMenuEntries: category
+                                        .map<DropdownMenuEntry<String>>(
+                                            (String value) {
+                                      return DropdownMenuEntry<String>(
+                                          value: value, label: value);
+                                    }).toList()),
+                                space,
+                                DropdownMenu<String>(
+                                    label: const Text('Select Monitor',
+                                        style: TextStyle(
+                                            color: CustomColors.appTheme)),
+                                    controller: _productName,
+                                    menuStyle: const MenuStyle(
+                                        surfaceTintColor:
+                                            MaterialStatePropertyAll(
+                                                Colors.white)),
+                                    width:
+                                        MediaQuery.of(context).size.width * .93,
+                                    menuHeight: 300,
+                                    inputDecorationTheme: InputDecorationTheme(
+                                        border: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(8)),
+                                        fillColor: Colors.white,
+                                        filled: true),
+                                    onSelected: (value) {
+                                      setState(() {
+                                        selectedMonitor = value;
+                                      });
+                                    },
+                                    dropdownMenuEntries: monitor
+                                        .map<DropdownMenuEntry<String>>(
+                                            (String value) {
+                                      return DropdownMenuEntry<String>(
+                                          value: value, label: value);
+                                    }).toList()),
+                                space,
+                                DropdownMenu<String>(
+                                    label: const Text('Select Model',
+                                        style: TextStyle(
+                                            color: CustomColors.appTheme)),
+                                    controller: _modelName,
+                                    menuStyle: const MenuStyle(
+                                        surfaceTintColor:
+                                            MaterialStatePropertyAll(
+                                                Colors.white)),
+                                    width:
+                                        MediaQuery.of(context).size.width * .93,
+                                    menuHeight: 300,
+                                    inputDecorationTheme: InputDecorationTheme(
+                                        border: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(8)),
+                                        fillColor: Colors.white,
+                                        filled: true),
+                                    onSelected: (value) {
+                                      setState(() {
+                                        selectedModel = value;
+                                      });
+                                    },
+                                    dropdownMenuEntries: model
+                                        .map<DropdownMenuEntry<String>>(
+                                            (String value) {
+                                      return DropdownMenuEntry<String>(
+                                          value: value, label: value);
+                                    }).toList()),
+                                space,
+                                DropdownMenu<String>(
+                                    label: const Text('Select Manufacturer',
+                                        style: TextStyle(
+                                            color: CustomColors.appTheme)),
+                                    controller: _manufacturer,
+                                    menuStyle: const MenuStyle(
+                                        surfaceTintColor:
+                                            MaterialStatePropertyAll(
+                                                Colors.white)),
+                                    width:
+                                        MediaQuery.of(context).size.width * .93,
+                                    menuHeight: 300,
+                                    inputDecorationTheme: InputDecorationTheme(
+                                        border: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(8)),
+                                        fillColor: Colors.white,
+                                        filled: true),
+                                    onSelected: (value) {
+                                      setState(() {
+                                        selectedManufacturer = value;
+                                      });
+                                    },
+                                    dropdownMenuEntries: manufactured
+                                        .map<DropdownMenuEntry<String>>(
+                                            (String value) {
+                                      return DropdownMenuEntry<String>(
+                                          value: value, label: value);
+                                    }).toList()),
+                                space,
+                                AdminUi.admTextField(
+                                    label: 'Category Name',
+                                    textcontroller: _productCategory),
+                                space,
+                                AdminUi.admTextField(
+                                    label: 'Product Name',
+                                    textcontroller: _productName),
+                                space,
+                                AdminUi.admTextField(
+                                    label: 'Manufacturer',
+                                    textcontroller: _manufacturer),
+                                space,
+                                AdminUi.admTextField(
+                                    label: 'Old Price',
+                                    textcontroller: _oldPrice),
+                                space,
+                                AdminUi.admTextField(
+                                    label: 'New Price',
+                                    textcontroller: _newPrice),
+                                space,
+                                AdminUi.admTextField(
+                                    label: 'Model Name',
+                                    textcontroller: _modelName),
+                                space,
+                                AdminUi.admTextField(
+                                    label: 'Product Dimensions',
+                                    textcontroller: _productDimension),
+                                space,
+                                AdminUi.admTextField(
+                                    label: 'Viewing Angle',
+                                    textcontroller: _veiwingAngle),
+                                space,
+                                AdminUi.admTextField(
+                                    label: 'Display Type',
+                                    textcontroller: _displayType),
+                                space,
+                                AdminUi.admTextField(
+                                    label: 'Display Size',
+                                    textcontroller: _displaySize),
+                                space,
+                                AdminUi.admTextField(
+                                    label: 'Response Time',
+                                    textcontroller: _responseTime),
+                                space,
+                                AdminUi.admTextField(
+                                    label: 'Resolution',
+                                    textcontroller: _resolution),
+                                space,
+                                AdminUi.admTextField(
+                                    label: 'Refresh Rate',
+                                    textcontroller: _refreshRate),
+                                space,
+                                AdminUi.admTextField(
+                                    label: 'Features',
+                                    textcontroller: _specialFeatures),
+                                space,
+                                AdminUi.admTextField(
+                                    label: 'Voltage', textcontroller: _voltage),
+                                space,
+                                AdminUi.admTextField(
+                                    label: 'Hardware Interface',
+                                    textcontroller: _hdwInterface),
+                                space,
+                                AdminUi.admTextField(
+                                    label: 'Country', textcontroller: _country),
+                                space,
+                                AdminUi.admTextField(
+                                    label: 'Item Weight',
+                                    textcontroller: _itemWeight),
+                                space,
+                                AdminUi.admTextField(
+                                    label: 'Warranty',
+                                    textcontroller: _warranty),
+                                space,
+                              ])),
                           const SizedBox(height: 30),
                           AdminUiHelper.customButton(context, () {
                             if (_formkey.currentState!.validate()) {

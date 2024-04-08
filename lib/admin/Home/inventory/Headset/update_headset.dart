@@ -3,10 +3,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:prosample_1/admin/utils/colors.dart';
-import 'package:prosample_1/admin/utils/common2.dart';
-import 'package:prosample_1/admin/utils/common_widgets.dart';
-import 'package:prosample_1/admin/utils/text_style.dart';
+import 'package:prosample_1/admin/utils/utils_colors.dart';
+import 'package:prosample_1/admin/utils/utils_text_style.dart';
+import 'package:prosample_1/admin/utils/utils_widget2.dart';
+import 'package:prosample_1/admin/utils/utils_widgets2.dart';
 
 class UpdateHeadset extends StatefulWidget {
   final String itemId;
@@ -19,7 +19,6 @@ class UpdateHeadset extends StatefulWidget {
 class _UpdateHeadsetState extends State<UpdateHeadset> {
   final _formkey = GlobalKey<FormState>();
   final categoryName = TextEditingController();
-  final idNum = TextEditingController();
   final _productName = TextEditingController();
   final _manufacturer = TextEditingController();
   final _series = TextEditingController();
@@ -67,6 +66,7 @@ class _UpdateHeadsetState extends State<UpdateHeadset> {
         .update({
       'category': categoryName.text.trim().toLowerCase(),
       'image': imageurl.toString(),
+      'idnum': widget.itemId,
       'name': _productName.text,
       'manufacturer': _manufacturer.text,
       'oldprice': _oldPrice.text,
@@ -117,7 +117,6 @@ class _UpdateHeadsetState extends State<UpdateHeadset> {
           image = imageurl;
         });
         imageurl = data['image'];
-        idNum.text = data['idnum'];
         categoryName.text = data['category'];
         _oldPrice.text = data['oldprice'];
         _newPrice.text = data['newprice'];
@@ -173,7 +172,7 @@ class _UpdateHeadsetState extends State<UpdateHeadset> {
                   .map((doc) => doc['category'] as String)
                   .toSet()
                   .toList();
-                  final manufactured = snapshot.data!.docs
+              final manufactured = snapshot.data!.docs
                   .map((doc) => doc['manufacturer'] as String)
                   .toSet()
                   .toList();
@@ -189,9 +188,6 @@ class _UpdateHeadsetState extends State<UpdateHeadset> {
                   Form(
                       key: _formkey,
                       child: Column(children: [
-                        AdminUi.admTextField(
-                            label: 'Unique ID', textcontroller: idNum),
-                        AdminUi.space,
                         DropdownMenu<String>(
                             controller: categoryName,
                             label: const Text(
@@ -276,36 +272,32 @@ class _UpdateHeadsetState extends State<UpdateHeadset> {
                               return DropdownMenuEntry<String>(
                                   value: value, label: value);
                             }).toList()),
-                            AdminUi.space,
-                            DropdownMenu<String>(
-                                  controller: _manufacturer,
-                                  menuStyle: const MenuStyle(
-                                      surfaceTintColor:
-                                          MaterialStatePropertyAll(
-                                              Colors.white)),
-                                  hintText: 'Select Manufacturer',
-                                  width:
-                                      MediaQuery.of(context).size.width * .93,
-                                  menuHeight: 300,
-                                  inputDecorationTheme: InputDecorationTheme(
-                                      hintStyle: const TextStyle(
-                                          color: CustomColors.appTheme),
-                                      border: OutlineInputBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(8)),
-                                      fillColor: Colors.white,
-                                      filled: true),
-                                  onSelected: (value) {
-                                    setState(() {
-                                      selectedManufacturer = value;
-                                    });
-                                  },
-                                  dropdownMenuEntries: manufactured
-                                      .map<DropdownMenuEntry<String>>(
-                                          (String value) {
-                                    return DropdownMenuEntry<String>(
-                                        value: value, label: value);
-                                  }).toList()),
+                        AdminUi.space,
+                        DropdownMenu<String>(
+                            controller: _manufacturer,
+                            menuStyle: const MenuStyle(
+                                surfaceTintColor:
+                                    MaterialStatePropertyAll(Colors.white)),
+                            hintText: 'Select Manufacturer',
+                            width: MediaQuery.of(context).size.width * .93,
+                            menuHeight: 300,
+                            inputDecorationTheme: InputDecorationTheme(
+                                hintStyle: const TextStyle(
+                                    color: CustomColors.appTheme),
+                                border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(8)),
+                                fillColor: Colors.white,
+                                filled: true),
+                            onSelected: (value) {
+                              setState(() {
+                                selectedManufacturer = value;
+                              });
+                            },
+                            dropdownMenuEntries: manufactured
+                                .map<DropdownMenuEntry<String>>((String value) {
+                              return DropdownMenuEntry<String>(
+                                  value: value, label: value);
+                            }).toList()),
                         AdminUi.space,
                         AdminUi.admTextField(
                             label: 'Series', textcontroller: _series),

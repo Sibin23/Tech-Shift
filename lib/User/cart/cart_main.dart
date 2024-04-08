@@ -7,7 +7,7 @@ import 'package:prosample_1/User/cart/cart_other_items_page.dart';
 import 'package:prosample_1/User/cart/cart_prebuild_items_page.dart';
 import 'package:prosample_1/User/cart/cart_proceed_button.dart';
 import 'package:prosample_1/User/cart/cart_total_amount.dart';
-import 'package:prosample_1/User/utils/Text_decorations.dart';
+import 'package:prosample_1/User/utils/utils_text_decorations.dart';
 
 class ScreenCart extends StatefulWidget {
   const ScreenCart({super.key});
@@ -64,7 +64,7 @@ class _ScreenCartState extends State<ScreenCart> {
                           height: MediaQuery.of(context).size.height * .6,
                           child: Stack(
                             children: [
-                              Lottie.asset('assets/Animations/noCart.json',
+                              Lottie.asset('assets/animations/noCart.json',
                                   fit: BoxFit.cover),
                               Positioned(
                                   left: MediaQuery.of(context).size.width * .25,

@@ -2,9 +2,9 @@ import 'package:animated_snack_bar/animated_snack_bar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:prosample_1/User/cart/address.dart';
-import 'package:prosample_1/User/utils/colors.dart';
-import 'package:prosample_1/User/utils/text_decorations.dart';
+import 'package:prosample_1/User/cart/cart_address.dart';
+import 'package:prosample_1/User/utils/utils_colors.dart';
+import 'package:prosample_1/User/utils/utils_text_decorations.dart';
 
 class ProceedButton extends StatefulWidget {
   const ProceedButton({super.key});
@@ -49,7 +49,7 @@ class _ProceedButtonState extends State<ProceedButton> {
     checkUser();
     fetchConfigure();
     super.initState();
-  }
+}
 
   @override
   Widget build(BuildContext context) {
@@ -90,6 +90,7 @@ class _ProceedButtonState extends State<ProceedButton> {
         children: [
           Icon(Icons.info, color: Colors.white),
           Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text('Missing User Profile!!'),
               Text('Please complete your profile to proceed')

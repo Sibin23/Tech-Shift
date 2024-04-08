@@ -3,10 +3,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:prosample_1/admin/utils/colors.dart';
-import 'package:prosample_1/admin/utils/common2.dart';
-import 'package:prosample_1/admin/utils/common_widgets.dart';
-import 'package:prosample_1/admin/utils/text_style.dart';
+import 'package:prosample_1/admin/utils/utils_colors.dart';
+import 'package:prosample_1/admin/utils/utils_text_style.dart';
+import 'package:prosample_1/admin/utils/utils_widget2.dart';
+import 'package:prosample_1/admin/utils/utils_widgets2.dart';
 
 class ScreenAddPsu extends StatefulWidget {
   const ScreenAddPsu({super.key});
@@ -17,7 +17,6 @@ class ScreenAddPsu extends StatefulWidget {
 
 class _ScreenAddPsuState extends State<ScreenAddPsu> {
   final formkey = GlobalKey<FormState>();
-  final idNum = TextEditingController();
   final productCategory = TextEditingController();
   final productName = TextEditingController();
   final manufacturer = TextEditingController();
@@ -32,6 +31,7 @@ class _ScreenAddPsuState extends State<ScreenAddPsu> {
   final country = TextEditingController();
   final itemWeight = TextEditingController();
   final warranty = TextEditingController();
+  String idnum = DateTime.now().toString().replaceAll(RegExp(r'[^\d]'), '');
   late String imageurl = '';
   String? selectedCategory;
   String? selectedPsu;
@@ -58,7 +58,7 @@ class _ScreenAddPsuState extends State<ScreenAddPsu> {
   Future submitData() async {
     final data = {
       'category': productCategory.text.toLowerCase(),
-      'idnum': idNum.text.trim().toString(),
+      'idnum': idnum,
       'image': imageurl.toString(),
       'name': productName.text,
       'manufacturer': manufacturer.text,
@@ -74,10 +74,7 @@ class _ScreenAddPsuState extends State<ScreenAddPsu> {
       'itemweight': itemWeight.text,
       'warranty': warranty.text,
     };
-    FirebaseFirestore.instance
-        .collection('psu')
-        .doc(idNum.text.trim().toLowerCase())
-        .set(data);
+    FirebaseFirestore.instance.collection('psu').doc(idnum).set(data);
     setState(() {
       productCategory.clear();
       imageurl = '';
@@ -144,10 +141,6 @@ class _ScreenAddPsuState extends State<ScreenAddPsu> {
                               Form(
                                   key: formkey,
                                   child: Column(children: [
-                                    AdminUi.admTextField(
-                                        label: 'Unique Id',
-                                        textcontroller: idNum),
-                                    space,
                                     DropdownMenu<String>(
                                         label: const Text(
                                           'Select Category',

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
-import 'package:prosample_1/admin/Configured%20orders/custompc_order_history.dart';
-import 'package:prosample_1/admin/pc%20builds/prebuild_list.dart';
+import 'package:prosample_1/admin/screens/custompc_order_history.dart';
+import 'package:prosample_1/admin/prebuild_pc/prebuild_list.dart';
 import 'package:prosample_1/admin/screens/home_details.dart';
 import 'package:prosample_1/admin/screens/orders_history.dart';
 

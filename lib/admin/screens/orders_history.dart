@@ -1,10 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:lottie/lottie.dart';
 import 'package:prosample_1/admin/orders/order_buttons.dart';
 import 'package:prosample_1/admin/orders/order_details.dart';
-import 'package:prosample_1/admin/utils/text_style.dart';
+import 'package:prosample_1/admin/utils/utils_text_style.dart';
 
 class ScreenOrdersList extends StatefulWidget {
   const ScreenOrdersList({super.key});
@@ -124,7 +123,7 @@ class _ScreenOrdersListState extends State<ScreenOrdersList> {
                                                             placeholder: (context,
                                                                     url) =>
                                                                 Image.asset(
-                                                                    'assets/Categories/ssd.png',
+                                                                    'assets/categories/ssd.png',
                                                                     fit: BoxFit
                                                                         .cover)),
                                                       ),
@@ -177,13 +176,7 @@ class _ScreenOrdersListState extends State<ScreenOrdersList> {
                         }),
                   );
                 }
-                return SizedBox(
-                  height: MediaQuery.of(context).size.height,
-                  width: MediaQuery.of(context).size.width,
-                  child: Center(
-                      child: Lottie.asset(
-                          'assets/Animations/Animation - 1708393071899.json')),
-                );
+                return const Center(child: CircularProgressIndicator());
               }),
         ),
       ),

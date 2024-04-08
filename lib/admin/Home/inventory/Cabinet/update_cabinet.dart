@@ -3,10 +3,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:prosample_1/admin/utils/colors.dart';
-import 'package:prosample_1/admin/utils/common2.dart';
-import 'package:prosample_1/admin/utils/common_widgets.dart';
-import 'package:prosample_1/admin/utils/text_style.dart';
+import 'package:prosample_1/admin/utils/utils_colors.dart';
+import 'package:prosample_1/admin/utils/utils_text_style.dart';
+import 'package:prosample_1/admin/utils/utils_widget2.dart';
+import 'package:prosample_1/admin/utils/utils_widgets2.dart';
 
 class UpdateCabinet extends StatefulWidget {
   final String itemId;
@@ -18,7 +18,6 @@ class UpdateCabinet extends StatefulWidget {
 
 class _UpdateCabinetState extends State<UpdateCabinet> {
   final _formkey = GlobalKey<FormState>();
-  final idNum = TextEditingController();
   final categoryName = TextEditingController();
   final _productName = TextEditingController();
   final _manufacturer = TextEditingController();
@@ -40,13 +39,12 @@ class _UpdateCabinetState extends State<UpdateCabinet> {
   String? selectedManufacturer;
   String? selectedModel;
   String? selectedCategory;
-  // add image
+
   late String imageurl = '';
   String? image;
   Future<void> pickImage() async {
-    // ignore: no_leading_underscores_for_local_identifiers
-    final ImagePicker _picker = ImagePicker();
-    final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+    final ImagePicker picker = ImagePicker();
+    final XFile? image = await picker.pickImage(source: ImageSource.gallery);
     if (image != null) {
       imageurl = await uploadImage(image);
       setState(() {});
@@ -54,13 +52,10 @@ class _UpdateCabinetState extends State<UpdateCabinet> {
   }
 
   updateData() {
-    FirebaseFirestore.instance
-        .collection('cabinet')
-        .doc(widget.itemId) 
-        .update({
+    FirebaseFirestore.instance.collection('cabinet').doc(widget.itemId).update({
       'image': imageurl.toString(),
       'name': _productName.text,
-      'idnum': idNum.text,
+      'idnum': widget.itemId,
       'manufacturer': _manufacturer.text,
       'oldprice': _oldPrice.text,
       'newprice': _newPrice.text,
@@ -81,7 +76,6 @@ class _UpdateCabinetState extends State<UpdateCabinet> {
       imageurl = '';
       _productName.clear();
       categoryName.clear();
-      idNum.clear();
       _manufacturer.clear();
       _oldPrice.clear();
       _newPrice.clear();
@@ -124,7 +118,6 @@ class _UpdateCabinetState extends State<UpdateCabinet> {
           image = imageurl;
         });
         imageurl = data['image'];
-        idNum.text = data['idnum'];
         categoryName.text = data['category'];
         _oldPrice.text = data['oldprice'];
         _newPrice.text = data['newprice'];
@@ -196,10 +189,6 @@ class _UpdateCabinetState extends State<UpdateCabinet> {
                               Form(
                                   key: _formkey,
                                   child: Column(children: [
-                                    AdminUi.admTextField(
-                                        label: 'Unique ID',
-                                        textcontroller: idNum),
-                                    space,
                                     DropdownMenu<String>(
                                         controller: categoryName,
                                         menuStyle: const MenuStyle(

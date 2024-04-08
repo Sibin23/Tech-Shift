@@ -3,8 +3,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
-import 'package:prosample_1/User/utils/commonfile.dart';
-import 'package:prosample_1/User/utils/text_decorations.dart';
+import 'package:prosample_1/User/utils/utils_widget1.dart';
+import 'package:prosample_1/User/utils/utils_text_decorations.dart';
 
 class ScreenPassword extends StatefulWidget {
   const ScreenPassword({super.key});
@@ -57,7 +57,7 @@ class _ScreenPasswordState extends State<ScreenPassword> {
                   width: MediaQuery.of(context).size.width * 0.9,
                   height: MediaQuery.of(context).size.height * 0.14,
                   child: Lottie.asset(
-                      'assets/forgot pasword/Animation - 1706880370842.json'),
+                      'assets/forgot_pasword/Animation - 1706880370842.json'),
                 ),
                 const SizedBox(height: 30),
                 UiHelper.customTextField(

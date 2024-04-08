@@ -3,7 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:prosample_1/User/Products/product_details.dart';
-import 'package:prosample_1/User/utils/text_decorations.dart';
+import 'package:prosample_1/User/utils/utils_text_decorations.dart';
 import 'package:prosample_1/functions/fav_function.dart';
 
 class ScreenFavorites extends StatefulWidget {

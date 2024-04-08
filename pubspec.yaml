@@ -76,14 +76,13 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/login/
-    - assets/OnboardScreen/
-    - assets/Splash/
-    - assets/Ads section/
-    - assets/Categories/
-    - assets/forgot pasword/
-    - assets/Chairs/
-    - assets/Animations/
-    - assets/Icons/
+    - assets/onboarding/
+    - assets/splash/
+    - assets/ads/
+    - assets/categories/
+    - assets/forgot_pasword/
+    - assets/animations/
+    - assets/icons/
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
   # For details regarding adding assets from package dependencies, see

@@ -3,10 +3,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:prosample_1/admin/utils/colors.dart';
-import 'package:prosample_1/admin/utils/common2.dart';
-import 'package:prosample_1/admin/utils/common_widgets.dart';
-import 'package:prosample_1/admin/utils/text_style.dart';
+import 'package:prosample_1/admin/utils/utils_colors.dart';
+import 'package:prosample_1/admin/utils/utils_text_style.dart';
+import 'package:prosample_1/admin/utils/utils_widget2.dart';
+import 'package:prosample_1/admin/utils/utils_widgets2.dart';
 
 class ScreenAddHeadset extends StatefulWidget {
   const ScreenAddHeadset({super.key});
@@ -17,7 +17,6 @@ class ScreenAddHeadset extends StatefulWidget {
 
 class _ScreenAddHeadsetState extends State<ScreenAddHeadset> {
   final _formkey = GlobalKey<FormState>();
-  final idNum = TextEditingController();
   final soundFeatures = TextEditingController();
   final categoryName = TextEditingController();
   final _productName = TextEditingController();
@@ -33,6 +32,7 @@ class _ScreenAddHeadsetState extends State<ScreenAddHeadset> {
   final _country = TextEditingController();
   final _itemWeight = TextEditingController();
   final _warranty = TextEditingController();
+  String idnum = DateTime.now().toString().replaceAll(RegExp(r'[^\d]'), '');
   String? selectedHeadset;
   String? selectedCategory;
   String? selectedSeries;
@@ -62,7 +62,7 @@ class _ScreenAddHeadsetState extends State<ScreenAddHeadset> {
   Future submitData() async {
     final data = {
       'category': categoryName.text,
-      'idnum': idNum.text,
+      'idnum': idnum,
       'soundfeatures': soundFeatures.text,
       'image': imageurl.toString(),
       'name': _productName.text,
@@ -80,10 +80,7 @@ class _ScreenAddHeadsetState extends State<ScreenAddHeadset> {
       'itemweight': _itemWeight.text,
       'warranty': _warranty.text,
     };
-    FirebaseFirestore.instance
-        .collection('headsets')
-        .doc(idNum.text.trim().toLowerCase())
-        .set(data);
+    FirebaseFirestore.instance.collection('headsets').doc(idnum).set(data);
     setState(() {
       categoryName.clear();
       imageurl = '';
@@ -154,9 +151,6 @@ class _ScreenAddHeadsetState extends State<ScreenAddHeadset> {
                           Form(
                               key: _formkey,
                               child: Column(children: [
-                                AdminUi.admTextField(
-                                    label: 'Unique ID', textcontroller: idNum),
-                                AdminUi.space,
                                 DropdownMenu<String>(
                                     controller: categoryName,
                                     label: const Text(

@@ -3,10 +3,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:prosample_1/admin/utils/colors.dart';
-import 'package:prosample_1/admin/utils/common2.dart';
-import 'package:prosample_1/admin/utils/common_widgets.dart';
-import 'package:prosample_1/admin/utils/text_style.dart';
+import 'package:prosample_1/admin/utils/utils_colors.dart';
+import 'package:prosample_1/admin/utils/utils_widget2.dart';
+import 'package:prosample_1/admin/utils/utils_widgets2.dart';
+import '../../../utils/utils_text_style.dart';
 
 class ScreenAddCoolers extends StatefulWidget {
   const ScreenAddCoolers({super.key});
@@ -19,7 +19,6 @@ class _ScreenAddCoolersState extends State<ScreenAddCoolers> {
   final _formkey = GlobalKey<FormState>();
   final categoryName = TextEditingController();
   final features = TextEditingController();
-  final uniqueId = TextEditingController();
   final size = TextEditingController();
   final _productName = TextEditingController();
   final _manufacturer = TextEditingController();
@@ -37,6 +36,7 @@ class _ScreenAddCoolersState extends State<ScreenAddCoolers> {
   final _material = TextEditingController();
   final _country = TextEditingController();
   final _itemWeight = TextEditingController();
+  String idnum = DateTime.now().toString().replaceAll(RegExp(r'[^\d]'), '');
   late String imageurl = '';
   String? selectedCategory;
   String? selectedCooler;
@@ -67,7 +67,7 @@ class _ScreenAddCoolersState extends State<ScreenAddCoolers> {
     final data = {
       'image': imageurl.toString(),
       'category': categoryName.text.trim(),
-      'idnum': uniqueId.text.trim(),
+      'idnum': idnum,
       'name': _productName.text,
       'manufacturer': _manufacturer.text,
       'oldprice': _oldPrice.text,
@@ -87,10 +87,7 @@ class _ScreenAddCoolersState extends State<ScreenAddCoolers> {
       'itemweight': _itemWeight.text,
       'warranty': _warranty.text,
     };
-    FirebaseFirestore.instance
-        .collection('cooler')
-        .doc(_productName.text)
-        .set(data);
+    FirebaseFirestore.instance.collection('cooler').doc(idnum).set(data);
     setState(() {
       imageurl = '';
       _productName.clear();
@@ -172,9 +169,6 @@ class _ScreenAddCoolersState extends State<ScreenAddCoolers> {
                               Form(
                                   key: _formkey,
                                   child: Column(children: [
-                                    AdminUi.admTextField(
-                                        label: 'Unique ID',
-                                        textcontroller: uniqueId),
                                     space,
                                     DropdownMenu<String>(
                                         controller: categoryName,

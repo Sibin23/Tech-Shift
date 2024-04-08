@@ -4,8 +4,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:prosample_1/User/Products/product_details.dart';
 import '../../../functions/fuctions.dart';
-import 'package:prosample_1/User/utils/commonfile.dart';
-import 'package:prosample_1/User/utils/text_decorations.dart';
+import 'package:prosample_1/User/utils/utils_widget1.dart';
+import 'package:prosample_1/User/utils/utils_text_decorations.dart';
 
 class OthersCart extends StatefulWidget {
   const OthersCart({super.key});

@@ -2,27 +2,26 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
-import 'package:prosample_1/User/Pre%20Builds/prebuild_item_details.dart';
-import 'package:prosample_1/User/Products/Chair/chairs_item_details.dart';
-import 'package:prosample_1/User/Products/Monitor/monitor_item_details.dart';
-import 'package:prosample_1/User/Products/Mouse/mouse_item_details.dart';
-import 'package:prosample_1/User/Products/cabinet/cabinet_item_details.dart';
-import 'package:prosample_1/User/Products/cables/cable_item_details.dart';
-import 'package:prosample_1/User/Products/cooler/cooler_item_details.dart';
-import 'package:prosample_1/User/Products/gpu/gpu_item_details.dart';
-import 'package:prosample_1/User/Products/headset/headset_item_details.dart';
-import 'package:prosample_1/User/Products/keyboard/keyboard_item_details.dart';
-import 'package:prosample_1/User/Products/motherboard/motherboard_item_details.dart';
-import 'package:prosample_1/User/Products/processor/processor_item_details.dart';
-import 'package:prosample_1/User/Products/psu/psu_item_details.dart';
-import 'package:prosample_1/User/Products/ram/ram_item_details.dart';
-import 'package:prosample_1/User/Products/ssd/ssd_item_details.dart';
+import 'package:prosample_1/User/pre_builds/prebuild_item_details.dart';
+import 'package:prosample_1/User/products/chairs/chairs_item_details.dart';
+import 'package:prosample_1/User/products/monitor/monitor_item_details.dart';
+import 'package:prosample_1/User/products/mouse/mouse_item_details.dart';
+import 'package:prosample_1/User/products/cabinet/cabinet_item_details.dart';
+import 'package:prosample_1/User/products/cables/cable_item_details.dart';
+import 'package:prosample_1/User/products/cooler/cooler_item_details.dart';
+import 'package:prosample_1/User/products/gpu/gpu_item_details.dart';
+import 'package:prosample_1/User/products/headset/headset_item_details.dart';
+import 'package:prosample_1/User/products/keyboard/keyboard_item_details.dart';
+import 'package:prosample_1/User/products/motherboard/motherboard_item_details.dart';
+import 'package:prosample_1/User/products/processor/processor_item_details.dart';
+import 'package:prosample_1/User/products/psu/psu_item_details.dart';
+import 'package:prosample_1/User/products/ram/ram_item_details.dart';
+import 'package:prosample_1/User/products/ssd/ssd_item_details.dart';
 import 'package:prosample_1/User/cart/cart_buynow_address.dart';
-import 'package:prosample_1/User/utils/Text_decorations.dart';
-import 'package:prosample_1/User/utils/colors.dart';
-import 'package:prosample_1/User/utils/product_info1.dart';
+import 'package:prosample_1/User/utils/utils_colors.dart';
+import 'package:prosample_1/User/utils/utils_product_info1.dart';
+import 'package:prosample_1/User/utils/utils_text_decorations.dart';
 import 'package:prosample_1/functions/fav_function.dart';
-
 import '../../../functions/fuctions.dart';
 
 class CheckDetails extends StatefulWidget {
@@ -244,7 +243,7 @@ class _CheckDetailsState extends State<CheckDetails> {
           ], color: Colors.white, borderRadius: BorderRadius.circular(5)),
           child: Row(
             children: [
-              Lottie.asset('assets/Animations/cart.json',
+              Lottie.asset('assets/animations/cart.json',
                   width: 100, height: 100),
               const SizedBox(width: 10),
               Text('Added To Cart',

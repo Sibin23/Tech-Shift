@@ -3,10 +3,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:prosample_1/admin/utils/colors.dart';
-import 'package:prosample_1/admin/utils/common2.dart';
-import 'package:prosample_1/admin/utils/common_widgets.dart';
-import 'package:prosample_1/admin/utils/text_style.dart';
+import 'package:prosample_1/admin/utils/utils_colors.dart';
+import 'package:prosample_1/admin/utils/utils_text_style.dart';
+import 'package:prosample_1/admin/utils/utils_widget2.dart';
+import 'package:prosample_1/admin/utils/utils_widgets2.dart';
 
 class UpdateChair extends StatefulWidget {
   final String itemId;
@@ -18,7 +18,6 @@ class UpdateChair extends StatefulWidget {
 
 class _UpdateChairState extends State<UpdateChair> {
   final _formkey = GlobalKey<FormState>();
-  final _idNum = TextEditingController();
   final categoryName = TextEditingController();
   final _productName = TextEditingController();
   final _manufacturer = TextEditingController();
@@ -63,7 +62,7 @@ class _UpdateChairState extends State<UpdateChair> {
         .doc(widget.itemId) // Use the itemId
         .update({
       'image': imageurl.toString(),
-      'idnum': _idNum.text,
+      'idnum': widget.itemId,
       'category': categoryName.text,
       'name': _productName.text,
       'manufacturer': _manufacturer.text,
@@ -83,7 +82,6 @@ class _UpdateChairState extends State<UpdateChair> {
       imageurl = '';
       _productName.clear();
       categoryName.clear();
-      _idNum.clear();
       _manufacturer.clear();
       _oldPrice.clear();
       _newPrice.clear();
@@ -113,7 +111,6 @@ class _UpdateChairState extends State<UpdateChair> {
           image = imageurl;
         });
         imageurl = data['image'];
-        _idNum.text = data['idnum'];
         categoryName.text = data['category'];
         _oldPrice.text = data['oldprice'];
         _newPrice.text = data['newprice'];
@@ -134,16 +131,14 @@ class _UpdateChairState extends State<UpdateChair> {
 
   @override
   Widget build(BuildContext context) {
+    const space = SizedBox(height: 10);
     return Scaffold(
       appBar: AppBar(
-
         surfaceTintColor: Colors.white,
       ),
       body: SafeArea(
         child: StreamBuilder<QuerySnapshot>(
-            stream: FirebaseFirestore.instance
-                .collection('chairs')
-                .snapshots(),
+            stream: FirebaseFirestore.instance.collection('chairs').snapshots(),
             builder: (context, snapshot) {
               if (snapshot.hasError) {
                 return Text('Error: ${snapshot.error}');
@@ -184,9 +179,7 @@ class _UpdateChairState extends State<UpdateChair> {
                         Form(
                             key: _formkey,
                             child: Column(children: [
-                              AdminUi.admTextField(
-                                  label: 'Unique ID', textcontroller: _idNum),
-                              const SizedBox(height: 10),
+                              space,
                               DropdownMenu<String>(
                                   controller: categoryName,
                                   menuStyle: const MenuStyle(
@@ -216,7 +209,7 @@ class _UpdateChairState extends State<UpdateChair> {
                                     return DropdownMenuEntry<String>(
                                         value: value, label: value);
                                   }).toList()),
-                              const SizedBox(height: 10),
+                              space,
                               DropdownMenu<String>(
                                   controller: _productName,
                                   menuStyle: const MenuStyle(
@@ -246,7 +239,7 @@ class _UpdateChairState extends State<UpdateChair> {
                                     return DropdownMenuEntry<String>(
                                         value: value, label: value);
                                   }).toList()),
-                              const SizedBox(height: 10),
+                              space,
                               DropdownMenu<String>(
                                   controller: _manufacturer,
                                   menuStyle: const MenuStyle(
@@ -276,7 +269,7 @@ class _UpdateChairState extends State<UpdateChair> {
                                     return DropdownMenuEntry<String>(
                                         value: value, label: value);
                                   }).toList()),
-                              const SizedBox(height: 10),
+                              space,
                               DropdownMenu<String>(
                                   controller: _model,
                                   menuStyle: const MenuStyle(
@@ -306,46 +299,47 @@ class _UpdateChairState extends State<UpdateChair> {
                                     return DropdownMenuEntry<String>(
                                         value: value, label: value);
                                   }).toList()),
-                              const SizedBox(height: 10),
+                              space,
                               AdminUi.admTextField(
                                   label: 'Old Price',
                                   textcontroller: _oldPrice),
-                              const SizedBox(height: 10),
+                              space,
                               AdminUi.admTextField(
                                   label: 'New Price',
                                   textcontroller: _newPrice),
-                              const SizedBox(height: 10),
+                              space,
                               AdminUi.admTextField(
                                   label: 'Item Color', textcontroller: _color),
-                              const SizedBox(height: 10),
+                              space,
                               AdminUi.admTextField(
                                   label: 'Material', textcontroller: _material),
-                              const SizedBox(height: 10),
+                              space,
                               AdminUi.admTextField(
                                   label: 'Special Features',
                                   textcontroller: _specialFeatures),
-                              const SizedBox(height: 10),
+                              space,
                               AdminUi.admTextField(
                                   label: 'Product Dimension',
                                   textcontroller: _productDimension),
-                              const SizedBox(height: 10),
+                              space,
                               AdminUi.admTextField(
                                   label: 'Fill Material',
                                   textcontroller: _fillMaterial),
-                              const SizedBox(height: 10),
+                              space,
                               AdminUi.admTextField(
                                   label: 'Country', textcontroller: _country),
-                              const SizedBox(height: 10),
+                              space,
                               AdminUi.admTextField(
                                   label: 'Item Weight',
                                   textcontroller: _itemWeight),
-                              const SizedBox(height: 10),
+                              space,
                               AdminUi.admTextField(
                                   label: 'Warranty', textcontroller: _warranty),
                             ])),
                         const SizedBox(height: 30),
                         AdminUiHelper.customButton(context, () {
                           if (_formkey.currentState!.validate()) {
+                            Navigator.pop(context);
                             updateData();
                             AdminUiHelper.customSnackbar(
                                 context, 'Item Updated Successfully !');

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:prosample_1/User/utils/Text_decorations.dart';
-import 'package:prosample_1/User/utils/colors.dart';
+import 'package:prosample_1/User/utils/utils_colors.dart';
+import 'package:prosample_1/User/utils/utils_text_decorations.dart';
 
 class ScreenCoolerInfo extends StatefulWidget {
   final Map<String, dynamic> cooler;

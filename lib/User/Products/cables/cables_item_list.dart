@@ -1,10 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:lottie/lottie.dart';
 import 'package:prosample_1/User/Products/product_details.dart';
-import 'package:prosample_1/User/utils/colors.dart';
-import 'package:prosample_1/User/utils/text_decorations.dart';
+import 'package:prosample_1/User/utils/utils_colors.dart';
+import 'package:prosample_1/User/utils/utils_text_decorations.dart';
 
 class ProductCable extends StatefulWidget {
   const ProductCable({super.key});
@@ -44,7 +43,7 @@ class _ProductCableState extends State<ProductCable> {
                                 crossAxisCount: 2),
                         itemBuilder: (context, index) {
                           final document = snapshot.data!.docs[index];
-                         
+
                           return Padding(
                             padding: const EdgeInsets.only(
                                 left: 5, right: 5, top: 5, bottom: 5),
@@ -53,8 +52,9 @@ class _ProductCableState extends State<ProductCable> {
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (ctx) =>
-                                            CheckDetails(collection: document['category'], idNum: document['idnum'])));
+                                        builder: (ctx) => CheckDetails(
+                                            collection: document['category'],
+                                            idNum: document['idnum'])));
                               },
                               child: Container(
                                   decoration: BoxDecoration(
@@ -91,7 +91,7 @@ class _ProductCableState extends State<ProductCable> {
                                                   fit: BoxFit.cover,
                                                   placeholder: (context, url) =>
                                                       Image.asset(
-                                                          'assets/Categories/processor.png',
+                                                          'assets/categories/processor.png',
                                                           fit: BoxFit.cover)),
                                             ),
                                             Text(document['category'],
@@ -164,13 +164,7 @@ class _ProductCableState extends State<ProductCable> {
                         }),
                   );
                 }
-                return SizedBox(
-                  height: MediaQuery.of(context).size.height,
-                  width: MediaQuery.of(context).size.width,
-                  child: Center(
-                      child: Lottie.asset(
-                          'assets/Animations/Animation - 1708393071899.json')),
-                );
+                return const Center(child: CircularProgressIndicator());
               }),
         )));
   }

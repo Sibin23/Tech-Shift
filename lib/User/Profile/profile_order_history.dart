@@ -1,0 +1,264 @@
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:lottie/lottie.dart';
+import 'package:prosample_1/User/products/product_details.dart';
+import 'package:prosample_1/User/utils/utils_colors.dart';
+import 'package:prosample_1/User/utils/utils_text_decorations.dart';
+
+class ProfileOrderHistory extends StatefulWidget {
+  const ProfileOrderHistory({super.key});
+
+  @override
+  State<ProfileOrderHistory> createState() => _ProfileOrderHistoryState();
+}
+
+class _ProfileOrderHistoryState extends State<ProfileOrderHistory> {
+  bool isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    Future.delayed(const Duration(seconds: 1)).then((value) {
+      setState(() {
+        isLoading = false;
+      });
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final uid = FirebaseAuth.instance.currentUser!.uid;
+    return Scaffold(
+        appBar: AppBar(
+          surfaceTintColor: Colors.white,
+          title: const Text("Order's History"),
+        ),
+        body: isLoading == true
+            ? Center(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text('Loading',
+                        style: GoogleFonts.roboto(
+                            color: AppColors.appTheme, fontSize: 23)),
+                    SizedBox(
+                      height: 40,
+                      width: 40,
+                      child: Lottie.asset('assets/animations/cart_loading.json',
+                          filterQuality: FilterQuality.high, fit: BoxFit.cover),
+                    ),
+                  ],
+                ),
+              )
+            : SafeArea(
+                child: StreamBuilder(
+                    stream: FirebaseFirestore.instance
+                        .collection('OrderOthers')
+                        .where('uid', isEqualTo: uid)
+                        .snapshots(),
+                    builder: (context, snapshot) {
+                      if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+                        return SizedBox(
+                            width: MediaQuery.of(context).size.width,
+                            height: MediaQuery.of(context).size.height,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Image.asset(
+                                  'assets/icons/order_box.png',
+                                  filterQuality: FilterQuality.high,
+                                  width: 200.0,
+                                  height: 200.0,
+                                ),
+                                Text('No Orders Yet',
+                                    style: GoogleFonts.roboto(
+                                        color: AppColors.appTheme,
+                                        fontSize: 20)),
+                              ],
+                            ));
+                      }
+                      if (snapshot.hasData) {
+                        return ListView.builder(
+                            itemCount: snapshot.data!.docs.length,
+                            itemBuilder: (context, index) {
+                              final data = snapshot.data!.docs[index];
+
+                              return Padding(
+                                padding: const EdgeInsets.only(
+                                    left: 16, right: 16, top: 8, bottom: 8),
+                                child: GestureDetector(
+                                  onTap: () {
+                                    if (data['category'] != null &&
+                                        data['idnum'] != null) {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (ctx) => CheckDetails(
+                                                  collection: data['category'],
+                                                  idNum: data['idnum'])));
+                                    }
+                                  },
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(8),
+                                        color: Colors.white,
+                                        boxShadow: const [
+                                          BoxShadow(
+                                              color: Colors.grey,
+                                              blurRadius: 3,
+                                              spreadRadius: 1,
+                                              offset: Offset(2, 2))
+                                        ]),
+                                    width: MediaQuery.of(context).size.width,
+                                    height: MediaQuery.of(context).size.height *
+                                        .18,
+                                    child: Stack(
+                                      children: [
+                                        Positioned(
+                                            top: 10,
+                                            right: 20,
+                                            child: Text(
+                                              data['status'],
+                                              style: TextStyle(
+                                                  fontSize: 16,
+                                                  color: data['status'] ==
+                                                          'Confirmed'
+                                                      ? Colors.green
+                                                      : data['status'] ==
+                                                              'Cancelled'
+                                                          ? Colors.red
+                                                          : data['status'] ==
+                                                                  'Pending'
+                                                              ? Colors.orange
+                                                              : Colors.grey),
+                                            )),
+                                        Column(
+                                          children: [
+                                            Row(
+                                              children: [
+                                                SizedBox(
+                                                  width: MediaQuery.of(context)
+                                                          .size
+                                                          .width *
+                                                      .3,
+                                                  height: MediaQuery.of(context)
+                                                          .size
+                                                          .height *
+                                                      .12,
+                                                  child: CachedNetworkImage(
+                                                    imageUrl: data['image'],
+                                                    fit: BoxFit.contain,
+                                                    placeholder:
+                                                        (context, url) =>
+                                                            const Center(
+                                                      child:
+                                                          CircularProgressIndicator(),
+                                                    ),
+                                                  ),
+                                                ),
+                                                const SizedBox(width: 5),
+                                                SizedBox(
+                                                  width: MediaQuery.of(context)
+                                                          .size
+                                                          .width *
+                                                      .55,
+                                                  height: MediaQuery.of(context)
+                                                          .size
+                                                          .height *
+                                                      0.165,
+                                                  child: Padding(
+                                                    padding:
+                                                        const EdgeInsets.only(
+                                                            top: 8),
+                                                    child: Column(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .center,
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        Text(data['category']
+                                                            .toString()
+                                                            .toUpperCase()),
+                                                        Text(data['name'],
+                                                            overflow:
+                                                                TextOverflow
+                                                                    .ellipsis,
+                                                            softWrap: false,
+                                                            maxLines: 1),
+                                                        Text('Qty: 1',
+                                                            style: TextStyling
+                                                                .categoryText),
+                                                        const SizedBox(
+                                                            height: 5),
+                                                        Row(
+                                                          children: [
+                                                            Text('₹',
+                                                                style: TextStyling
+                                                                    .subtitle),
+                                                            const SizedBox(
+                                                                width: 3),
+                                                            Text(
+                                                                data['oldprice'].replaceAllMapped(
+                                                                    RegExp(
+                                                                        r'(\d{1,3})(?=(\d{3})+(?!\d))'),
+                                                                    (Match m) =>
+                                                                        "${m[1]},"),
+                                                                style: TextStyling
+                                                                    .lineThrough),
+                                                            const SizedBox(
+                                                                width: 20),
+                                                            Text('₹',
+                                                                style: TextStyling
+                                                                    .subtitle),
+                                                            const SizedBox(
+                                                                width: 3),
+                                                            Text(
+                                                                data[
+                                                                    'newprice'],
+                                                                style:
+                                                                    TextStyling
+                                                                        .newP),
+                                                          ],
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              );
+                            });
+                      }
+                      return Center(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text('Loading',
+                                style: GoogleFonts.roboto(
+                                    color: AppColors.appTheme, fontSize: 23)),
+                            SizedBox(
+                              height: 40,
+                              width: 40,
+                              child: Lottie.asset(
+                                  'assets/animations/cart_loading.json',
+                                  filterQuality: FilterQuality.high,
+                                  fit: BoxFit.cover),
+                            ),
+                          ],
+                        ),
+                      );
+                    }),
+              ));
+  }
+}

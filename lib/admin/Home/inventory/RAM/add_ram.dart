@@ -3,10 +3,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:prosample_1/admin/utils/colors.dart';
-import 'package:prosample_1/admin/utils/common2.dart';
-import 'package:prosample_1/admin/utils/common_widgets.dart';
-import 'package:prosample_1/admin/utils/text_style.dart';
+import 'package:prosample_1/admin/utils/utils_colors.dart';
+import 'package:prosample_1/admin/utils/utils_text_style.dart';
+import 'package:prosample_1/admin/utils/utils_widget2.dart';
+import 'package:prosample_1/admin/utils/utils_widgets2.dart';
 
 class ScreenAddRam extends StatefulWidget {
   const ScreenAddRam({super.key});
@@ -17,7 +17,6 @@ class ScreenAddRam extends StatefulWidget {
 
 class _ScreenAddRamState extends State<ScreenAddRam> {
   final _formkey = GlobalKey<FormState>();
-  final idNum = TextEditingController();
   final _productCategory = TextEditingController();
   final _productName = TextEditingController();
   final _manufacturer = TextEditingController();
@@ -33,6 +32,7 @@ class _ScreenAddRamState extends State<ScreenAddRam> {
   final _country = TextEditingController();
   final _itemWeight = TextEditingController();
   final _warranty = TextEditingController();
+  String idnum = DateTime.now().toString().replaceAll(RegExp(r'[^\d]'), '');
   late String imageurl = '';
   Future<void> pickImage() async {
     final ImagePicker picker = ImagePicker();
@@ -55,7 +55,7 @@ class _ScreenAddRamState extends State<ScreenAddRam> {
   // submit
   Future submitData() async {
     final data = {
-      'idnum': idNum.text.trim(),
+      'idnum': idnum,
       'category': _productCategory.text.toLowerCase(),
       'image': imageurl.toString(),
       'name': _productName.text,
@@ -75,11 +75,10 @@ class _ScreenAddRamState extends State<ScreenAddRam> {
     };
     FirebaseFirestore.instance
         .collection('ram')
-        .doc(idNum.text.toLowerCase())
+        .doc(idnum)
         .set(data);
     setState(() {
       _productCategory.clear();
-      idNum.clear();
       imageurl = '';
       _productName.clear();
       _manufacturer.clear();
@@ -106,6 +105,7 @@ class _ScreenAddRamState extends State<ScreenAddRam> {
   String? selectedRamSize;
   @override
   Widget build(BuildContext context) {
+    const space = SizedBox(height: 10);
     return Scaffold(
       appBar: AppBar(
         surfaceTintColor: Colors.white,
@@ -162,9 +162,7 @@ class _ScreenAddRamState extends State<ScreenAddRam> {
                         Form(
                             key: _formkey,
                             child: Column(children: [
-                              AdminUi.admTextField(
-                                  label: 'Unique ID', textcontroller: idNum),
-                              const SizedBox(height: 10),
+                              
                               DropdownMenu<String>(
                                   label: const Text('Select Category',
                                       style: TextStyle(
@@ -194,7 +192,7 @@ class _ScreenAddRamState extends State<ScreenAddRam> {
                                     return DropdownMenuEntry<String>(
                                         value: value, label: value);
                                   }).toList()),
-                              const SizedBox(height: 10),
+                             space,
                               DropdownMenu<String>(
                                   label: const Text('Select RAM',
                                       style: TextStyle(
@@ -224,7 +222,7 @@ class _ScreenAddRamState extends State<ScreenAddRam> {
                                     return DropdownMenuEntry<String>(
                                         value: value, label: value);
                                   }).toList()),
-                              const SizedBox(height: 10),
+                             space,
                               DropdownMenu<String>(
                                   label: const Text('Select Model',
                                       style: TextStyle(
@@ -254,7 +252,7 @@ class _ScreenAddRamState extends State<ScreenAddRam> {
                                     return DropdownMenuEntry<String>(
                                         value: value, label: value);
                                   }).toList()),
-                              const SizedBox(height: 10),
+                             space,
                               DropdownMenu<String>(
                                   label: const Text('Select RAM Type',
                                       style: TextStyle(
@@ -284,7 +282,7 @@ class _ScreenAddRamState extends State<ScreenAddRam> {
                                     return DropdownMenuEntry<String>(
                                         value: value, label: value);
                                   }).toList()),
-                              const SizedBox(height: 10),
+                             space,
                               DropdownMenu<String>(
                                   label: const Text('Select RAM Size',
                                       style: TextStyle(
@@ -314,7 +312,7 @@ class _ScreenAddRamState extends State<ScreenAddRam> {
                                     return DropdownMenuEntry<String>(
                                         value: value, label: value);
                                   }).toList()),
-                              const SizedBox(height: 10),
+                             space,
                               DropdownMenu<String>(
                                   label: const Text('Select RAM Speed',
                                       style: TextStyle(
@@ -344,37 +342,37 @@ class _ScreenAddRamState extends State<ScreenAddRam> {
                                     return DropdownMenuEntry<String>(
                                         value: value, label: value);
                                   }).toList()),
-                              const SizedBox(height: 10),
+                             space,
                               AdminUi.admTextField(
                                   label: 'Manufacturer',
                                   textcontroller: _manufacturer),
-                              const SizedBox(height: 10),
+                             space,
                               AdminUi.admTextField(
                                   label: 'Old Price',
                                   textcontroller: _oldPrice),
-                              const SizedBox(height: 10),
+                             space,
                               AdminUi.admTextField(
                                   label: 'New Price',
                                   textcontroller: _newPrice),
-                              const SizedBox(height: 10),
+                             space,
                               AdminUi.admTextField(
                                   label: 'Product Dimensions',
                                   textcontroller: _productDimension),
-                              const SizedBox(height: 10),
+                             space,
                               AdminUi.admTextField(
                                   label: 'Form Factor',
                                   textcontroller: _fromFactor),
-                              const SizedBox(height: 10),
+                             space,
                               AdminUi.admTextField(
                                   label: 'Wattage', textcontroller: wattage),
-                              const SizedBox(height: 10),
+                             space,
                               AdminUi.admTextField(
                                   label: 'Country', textcontroller: _country),
-                              const SizedBox(height: 10),
+                             space,
                               AdminUi.admTextField(
                                   label: 'Item Weight',
                                   textcontroller: _itemWeight),
-                              const SizedBox(height: 10),
+                             space,
                               AdminUi.admTextField(
                                   label: 'Warranty', textcontroller: _warranty),
                               const SizedBox(height: 30),

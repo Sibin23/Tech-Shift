@@ -3,10 +3,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:prosample_1/admin/utils/colors.dart';
-import 'package:prosample_1/admin/utils/common2.dart';
-import 'package:prosample_1/admin/utils/common_widgets.dart';
-import 'package:prosample_1/admin/utils/text_style.dart';
+import 'package:prosample_1/admin/utils/utils_colors.dart';
+import 'package:prosample_1/admin/utils/utils_text_style.dart';
+import 'package:prosample_1/admin/utils/utils_widget2.dart';
+import 'package:prosample_1/admin/utils/utils_widgets2.dart';
 
 class UpdatePsu extends StatefulWidget {
   final String itemId;
@@ -18,7 +18,6 @@ class UpdatePsu extends StatefulWidget {
 
 class _UpdatePsuState extends State<UpdatePsu> {
   final formkey = GlobalKey<FormState>();
-  final idNum = TextEditingController();
   final productCategory = TextEditingController();
   final productName = TextEditingController();
   final manufacturer = TextEditingController();
@@ -56,13 +55,14 @@ class _UpdatePsuState extends State<UpdatePsu> {
     final String downloadUrl = await snapshot.ref.getDownloadURL();
     return imageurl = downloadUrl;
   }
-updateData() {
+
+  updateData() {
     FirebaseFirestore.instance
         .collection('psu')
         .doc(widget.itemId) // Use the itemId
         .update({
-       'category': productCategory.text.toLowerCase(),
-      'idnum': idNum.text.trim().toString(),
+      'category': productCategory.text.toLowerCase(),
+      'idnum': widget.itemId,
       'image': imageurl.toString(),
       'name': productName.text,
       'manufacturer': manufacturer.text,
@@ -80,8 +80,7 @@ updateData() {
     });
     setState(() {
       imageurl = '';
-      idNum.clear();
-       productCategory.clear();
+      productCategory.clear();
       imageurl = '';
       productName.clear();
       manufacturer.clear();
@@ -108,7 +107,6 @@ updateData() {
       if (snapshot.exists) {
         Map<String, dynamic> data = snapshot.data()!;
         productCategory.text = data['category'];
-        idNum.text = data['idnum'];
         productName.text = data['name'];
         imageurl = data['image'];
         setState(() {
@@ -132,6 +130,7 @@ updateData() {
     });
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     const space = SizedBox(height: 10);
@@ -178,10 +177,6 @@ updateData() {
                               Form(
                                   key: formkey,
                                   child: Column(children: [
-                                    AdminUi.admTextField(
-                                        label: 'Unique Id',
-                                        textcontroller: idNum),
-                                    space,
                                     DropdownMenu<String>(
                                         label: const Text(
                                           'Select Category',
@@ -193,14 +188,16 @@ updateData() {
                                             surfaceTintColor:
                                                 MaterialStatePropertyAll(
                                                     Colors.white)),
-                                        width: MediaQuery.of(context).size.width *
-                                            .93,
+                                        width:
+                                            MediaQuery.of(context).size.width *
+                                                .93,
                                         menuHeight: 300,
                                         inputDecorationTheme:
                                             InputDecorationTheme(
                                                 border: OutlineInputBorder(
                                                     borderRadius:
-                                                        BorderRadius.circular(8)),
+                                                        BorderRadius.circular(
+                                                            8)),
                                                 fillColor: Colors.white,
                                                 filled: true),
                                         onSelected: (value) {
@@ -226,14 +223,16 @@ updateData() {
                                             surfaceTintColor:
                                                 MaterialStatePropertyAll(
                                                     Colors.white)),
-                                        width: MediaQuery.of(context).size.width *
-                                            .93,
+                                        width:
+                                            MediaQuery.of(context).size.width *
+                                                .93,
                                         menuHeight: 300,
                                         inputDecorationTheme:
                                             InputDecorationTheme(
                                                 border: OutlineInputBorder(
                                                     borderRadius:
-                                                        BorderRadius.circular(8)),
+                                                        BorderRadius.circular(
+                                                            8)),
                                                 fillColor: Colors.white,
                                                 filled: true),
                                         onSelected: (value) {
@@ -259,14 +258,16 @@ updateData() {
                                             surfaceTintColor:
                                                 MaterialStatePropertyAll(
                                                     Colors.white)),
-                                        width: MediaQuery.of(context).size.width *
-                                            .93,
+                                        width:
+                                            MediaQuery.of(context).size.width *
+                                                .93,
                                         menuHeight: 300,
                                         inputDecorationTheme:
                                             InputDecorationTheme(
                                                 border: OutlineInputBorder(
                                                     borderRadius:
-                                                        BorderRadius.circular(8)),
+                                                        BorderRadius.circular(
+                                                            8)),
                                                 fillColor: Colors.white,
                                                 filled: true),
                                         onSelected: (value) {
@@ -292,14 +293,16 @@ updateData() {
                                             surfaceTintColor:
                                                 MaterialStatePropertyAll(
                                                     Colors.white)),
-                                        width: MediaQuery.of(context).size.width *
-                                            .93,
+                                        width:
+                                            MediaQuery.of(context).size.width *
+                                                .93,
                                         menuHeight: 300,
                                         inputDecorationTheme:
                                             InputDecorationTheme(
                                                 border: OutlineInputBorder(
                                                     borderRadius:
-                                                        BorderRadius.circular(8)),
+                                                        BorderRadius.circular(
+                                                            8)),
                                                 fillColor: Colors.white,
                                                 filled: true),
                                         onSelected: (value) {

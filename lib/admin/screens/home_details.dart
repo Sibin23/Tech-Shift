@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:prosample_1/admin/Home/categories/category%20list/list_category.dart';
-import 'package:prosample_1/admin/Home/inventory/add%20inventory/add_items_details.dart';
+import 'package:prosample_1/admin/home/categories/categories_main.dart';
+import 'package:prosample_1/admin/home/inventory/add%20inventory/add_items_details.dart';
 import 'package:prosample_1/admin/screens/screen_userguide.dart';
-import 'package:prosample_1/admin/utils/colors.dart';
-import 'package:prosample_1/admin/utils/text_style.dart';
+import 'package:prosample_1/admin/utils/utils_colors.dart';
+import 'package:prosample_1/admin/utils/utils_text_style.dart';
 import 'package:prosample_1/login.dart';
 
 class AdminHomePage extends StatefulWidget {

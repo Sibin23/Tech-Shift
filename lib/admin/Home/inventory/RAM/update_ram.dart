@@ -3,10 +3,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:prosample_1/admin/utils/colors.dart';
-import 'package:prosample_1/admin/utils/common2.dart';
-import 'package:prosample_1/admin/utils/common_widgets.dart';
-import 'package:prosample_1/admin/utils/text_style.dart';
+import 'package:prosample_1/admin/utils/utils_colors.dart';
+import 'package:prosample_1/admin/utils/utils_text_style.dart';
+import 'package:prosample_1/admin/utils/utils_widgets2.dart';
+
+import '../../../utils/utils_widget2.dart';
 
 class UpdateRam extends StatefulWidget {
   final String itemId;
@@ -18,7 +19,6 @@ class UpdateRam extends StatefulWidget {
 
 class _UpdateRamState extends State<UpdateRam> {
   final formkey = GlobalKey<FormState>();
-  final idNum = TextEditingController();
   final productCategory = TextEditingController();
   final productName = TextEditingController();
   final manufacturer = TextEditingController();
@@ -62,7 +62,7 @@ class _UpdateRamState extends State<UpdateRam> {
 
   updateData() {
     FirebaseFirestore.instance.collection('ram').doc(widget.itemId).update({
-      'idnum': idNum.text.trim(),
+      'idnum': widget.itemId,
       'category': productCategory.text.toLowerCase(),
       'image': imageurl.toString(),
       'name': productName.text,
@@ -82,7 +82,6 @@ class _UpdateRamState extends State<UpdateRam> {
     });
     setState(() {
       productCategory.clear();
-      idNum.clear();
       imageurl = '';
       productName.clear();
       manufacturer.clear();
@@ -117,7 +116,6 @@ class _UpdateRamState extends State<UpdateRam> {
         });
         productName.text = data['name'];
         productCategory.text = data['category'];
-        idNum.text = data['idnum'];
         manufacturer.text = data['manufacturer'];
         oldPrice.text = data['oldprice'];
         newPrice.text = data['newprice'];
@@ -138,6 +136,7 @@ class _UpdateRamState extends State<UpdateRam> {
 
   @override
   Widget build(BuildContext context) {
+    const space = SizedBox(height: 10);
     return Scaffold(
       appBar: AppBar(surfaceTintColor: Colors.white),
       body: SafeArea(
@@ -188,9 +187,6 @@ class _UpdateRamState extends State<UpdateRam> {
                       Form(
                           key: formkey,
                           child: Column(children: [
-                            AdminUi.admTextField(
-                                label: 'Unique ID', textcontroller: idNum),
-                            const SizedBox(height: 10),
                             DropdownMenu<String>(
                                 label: const Text('Select Category',
                                     style: TextStyle(
@@ -217,7 +213,7 @@ class _UpdateRamState extends State<UpdateRam> {
                                   return DropdownMenuEntry<String>(
                                       value: value, label: value);
                                 }).toList()),
-                            const SizedBox(height: 10),
+                            space,
                             DropdownMenu<String>(
                                 label: const Text('Select RAM',
                                     style: TextStyle(
@@ -244,7 +240,7 @@ class _UpdateRamState extends State<UpdateRam> {
                                   return DropdownMenuEntry<String>(
                                       value: value, label: value);
                                 }).toList()),
-                            const SizedBox(height: 10),
+                            space,
                             DropdownMenu<String>(
                                 label: const Text('Select Model',
                                     style: TextStyle(
@@ -271,7 +267,7 @@ class _UpdateRamState extends State<UpdateRam> {
                                   return DropdownMenuEntry<String>(
                                       value: value, label: value);
                                 }).toList()),
-                            const SizedBox(height: 10),
+                            space,
                             DropdownMenu<String>(
                                 label: const Text('Select RAM Type',
                                     style: TextStyle(
@@ -298,7 +294,7 @@ class _UpdateRamState extends State<UpdateRam> {
                                   return DropdownMenuEntry<String>(
                                       value: value, label: value);
                                 }).toList()),
-                            const SizedBox(height: 10),
+                            space,
                             DropdownMenu<String>(
                                 label: const Text('Select RAM Size',
                                     style: TextStyle(
@@ -325,7 +321,7 @@ class _UpdateRamState extends State<UpdateRam> {
                                   return DropdownMenuEntry<String>(
                                       value: value, label: value);
                                 }).toList()),
-                            const SizedBox(height: 10),
+                            space,
                             DropdownMenu<String>(
                                 label: const Text('Select RAM Speed',
                                     style: TextStyle(
@@ -352,35 +348,35 @@ class _UpdateRamState extends State<UpdateRam> {
                                   return DropdownMenuEntry<String>(
                                       value: value, label: value);
                                 }).toList()),
-                            const SizedBox(height: 10),
+                            space,
                             AdminUi.admTextField(
                                 label: 'Manufacturer',
                                 textcontroller: manufacturer),
-                            const SizedBox(height: 10),
+                            space,
                             AdminUi.admTextField(
                                 label: 'Old Price', textcontroller: oldPrice),
-                            const SizedBox(height: 10),
+                            space,
                             AdminUi.admTextField(
                                 label: 'New Price', textcontroller: newPrice),
-                            const SizedBox(height: 10),
+                            space,
                             AdminUi.admTextField(
                                 label: 'Product Dimensions',
                                 textcontroller: productDimension),
-                            const SizedBox(height: 10),
+                            space,
                             AdminUi.admTextField(
                                 label: 'Form Factor',
                                 textcontroller: formFactor),
-                            const SizedBox(height: 10),
+                            space,
                             AdminUi.admTextField(
                                 label: 'wattage', textcontroller: wattage),
-                            const SizedBox(height: 10),
+                            space,
                             AdminUi.admTextField(
                                 label: 'Country', textcontroller: country),
-                            const SizedBox(height: 10),
+                            space,
                             AdminUi.admTextField(
                                 label: 'Item Weight',
                                 textcontroller: itemWeight),
-                            const SizedBox(height: 10),
+                            space,
                             AdminUi.admTextField(
                                 label: 'Warranty', textcontroller: warranty),
                             const SizedBox(height: 30),

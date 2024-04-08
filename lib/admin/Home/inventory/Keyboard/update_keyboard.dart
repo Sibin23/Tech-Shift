@@ -4,10 +4,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:prosample_1/admin/utils/colors.dart';
-import 'package:prosample_1/admin/utils/common2.dart';
-import 'package:prosample_1/admin/utils/common_widgets.dart';
-import 'package:prosample_1/admin/utils/text_style.dart';
+import 'package:prosample_1/admin/utils/utils_colors.dart';
+import 'package:prosample_1/admin/utils/utils_text_style.dart';
+import 'package:prosample_1/admin/utils/utils_widget2.dart';
+import 'package:prosample_1/admin/utils/utils_widgets2.dart';
 
 class UpdateKeyboard extends StatefulWidget {
   final String itemId;
@@ -19,7 +19,6 @@ class UpdateKeyboard extends StatefulWidget {
 
 class _UpdateKeyboardState extends State<UpdateKeyboard> {
   final _formkey = GlobalKey<FormState>();
-  final idNum = TextEditingController();
   final categoryName = TextEditingController();
   final productName = TextEditingController();
   final manufacturer = TextEditingController();
@@ -65,7 +64,7 @@ class _UpdateKeyboardState extends State<UpdateKeyboard> {
         .doc(widget.itemId) // Use the itemId
         .update({
       'category': categoryName.text.toLowerCase(),
-      'idnum': idNum.text,
+      'idnum': widget.itemId,
       'image': imageurl.toString(),
       'name': productName.text,
       'manufacturer': manufacturer.text,
@@ -84,7 +83,6 @@ class _UpdateKeyboardState extends State<UpdateKeyboard> {
       categoryName.clear();
       imageurl = '';
       productName.clear();
-      idNum.clear();
       manufacturer.clear();
       _oldPrice.clear();
       _newPrice.clear();
@@ -109,7 +107,6 @@ class _UpdateKeyboardState extends State<UpdateKeyboard> {
       if (snapshot.exists) {
         Map<String, dynamic> data = snapshot.data()!;
         categoryName.text = data['category'];
-        idNum.text = data['idnum'];
         productName.text = data['name'];
         imageurl = data['image'];
         setState(() {
@@ -133,6 +130,7 @@ class _UpdateKeyboardState extends State<UpdateKeyboard> {
 
   @override
   Widget build(BuildContext context) {
+    const space = SizedBox(height: 10);
     return Scaffold(
       appBar: AppBar(surfaceTintColor: Colors.white),
       body: SafeArea(
@@ -175,9 +173,7 @@ class _UpdateKeyboardState extends State<UpdateKeyboard> {
                   Form(
                       key: _formkey,
                       child: Column(children: [
-                        AdminUi.admTextField(
-                            label: 'Unique ID', textcontroller: idNum),
-                        const SizedBox(height: 10),
+                       
                         DropdownMenu<String>(
                             label: const Text('Select Category',
                                 style: TextStyle(color: CustomColors.appTheme)),
@@ -202,7 +198,7 @@ class _UpdateKeyboardState extends State<UpdateKeyboard> {
                               return DropdownMenuEntry<String>(
                                   value: value, label: value);
                             }).toList()),
-                        const SizedBox(height: 10),
+                        space,
                         DropdownMenu<String>(
                             label: const Text('Select Keyboard',
                                 style: TextStyle(color: CustomColors.appTheme)),
@@ -227,7 +223,7 @@ class _UpdateKeyboardState extends State<UpdateKeyboard> {
                               return DropdownMenuEntry<String>(
                                   value: value, label: value);
                             }).toList()),
-                        const SizedBox(height: 10),
+                        space,
                         DropdownMenu<String>(
                             label: const Text('Select Model',
                                 style: TextStyle(color: CustomColors.appTheme)),
@@ -252,7 +248,7 @@ class _UpdateKeyboardState extends State<UpdateKeyboard> {
                               return DropdownMenuEntry<String>(
                                   value: value, label: value);
                             }).toList()),
-                        const SizedBox(height: 10),
+                        space,
                         DropdownMenu<String>(
                             label: const Text('Select Manufacturer',
                                 style: TextStyle(color: CustomColors.appTheme)),
@@ -277,30 +273,30 @@ class _UpdateKeyboardState extends State<UpdateKeyboard> {
                               return DropdownMenuEntry<String>(
                                   value: value, label: value);
                             }).toList()),
-                        const SizedBox(height: 10),
+                        space,
                         AdminUi.admTextField(
                             label: 'Old Price', textcontroller: _oldPrice),
-                        const SizedBox(height: 10),
+                        space,
                         AdminUi.admTextField(
                             label: 'New Price', textcontroller: _newPrice),
-                        const SizedBox(height: 10),
+                        space,
                         AdminUi.admTextField(
                             label: 'Product Dimensions',
                             textcontroller: _productDimension),
-                        const SizedBox(height: 10),
+                        space,
                         AdminUi.featuresTextfield(
                             label: 'Features',
                             textcontroller: _specialFeatures),
-                        const SizedBox(height: 10),
+                        space,
                         AdminUi.admTextField(
                             label: 'Connectivity', textcontroller: _connector),
-                        const SizedBox(height: 10),
+                        space,
                         AdminUi.admTextField(
                             label: 'Material', textcontroller: _material),
-                        const SizedBox(height: 10),
+                        space,
                         AdminUi.admTextField(
                             label: 'Country', textcontroller: _country),
-                        const SizedBox(height: 10),
+                        space,
                         AdminUi.admTextField(
                             label: 'Warranty', textcontroller: _warranty),
                       ])), // Text field

@@ -3,9 +3,9 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:lottie/lottie.dart';
-import 'package:prosample_1/User/Onboarding/onboard1.dart';
+import 'package:prosample_1/User/onboarding/onboard1.dart';
 import 'package:prosample_1/User/home.dart';
-import 'package:prosample_1/User/utils/text_decorations.dart';
+import 'package:prosample_1/User/utils/utils_text_decorations.dart';
 
 import 'firebase_options.dart';
 
@@ -75,7 +75,7 @@ class _MyHomePageState extends State<MyHomePage> {
           height: MediaQuery.of(context).size.height,
           decoration: const BoxDecoration(
               image: DecorationImage(
-                  image: AssetImage('assets/Splash/splash screen new.png'),
+                  image: AssetImage('assets/splash/splash_img.png'),
                   fit: BoxFit.cover)),
           child: Column(
             children: [
@@ -95,7 +95,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           height: MediaQuery.of(context).size.height * 0.2,
                           width: MediaQuery.of(context).size.width * 0.93,
                           child: Lottie.asset(
-                            'assets/Splash/Animation - 1706686055581.json',
+                            'assets/splash/splash_animation.json',
                             fit: BoxFit.cover,
                           ))
                     ],

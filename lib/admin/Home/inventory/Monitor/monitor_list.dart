@@ -1,11 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:prosample_1/admin/Home/inventory/Monitor/add_monitor.dart';
-import 'package:prosample_1/admin/Home/inventory/Monitor/update_monitor.dart';
-import 'package:prosample_1/admin/utils/colors.dart';
-import 'package:prosample_1/admin/utils/common2.dart';
-import 'package:prosample_1/admin/utils/common_widgets.dart';
-import 'package:prosample_1/admin/utils/text_style.dart';
+import 'package:prosample_1/admin/home/inventory/Monitor/add_monitor.dart';
+import 'package:prosample_1/admin/home/inventory/Monitor/update_monitor.dart';
+import 'package:prosample_1/admin/utils/utils_colors.dart';
+import 'package:prosample_1/admin/utils/utils_text_style.dart';
+import 'package:prosample_1/admin/utils/utils_widget2.dart';
+import 'package:prosample_1/admin/utils/utils_widgets2.dart';
 
 class MonitorDetails extends StatefulWidget {
   const MonitorDetails({super.key});
@@ -43,7 +43,7 @@ class _MonitorDetailsState extends State<MonitorDetails> {
                       MaterialPageRoute(
                           builder: (ctx) => const ScreenAddMonitor()));
                 },
-                icon: Image.asset('assets/Icons/add.png',
+                icon: Image.asset('assets/icons/add.png',
                     width: 30, color: Colors.white)),
           )
         ],
@@ -54,6 +54,13 @@ class _MonitorDetailsState extends State<MonitorDetails> {
                   .orderBy('name')
                   .snapshots(),
               builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                 if(!snapshot.hasData || snapshot.data!.docs.isEmpty){
+                  return SizedBox(
+                    height: MediaQuery.of(context).size.height,
+                  width: MediaQuery.of(context).size.width,
+                  child: const Center(child: Text('No Items Yet')),
+                  );
+                }
                 if (snapshot.hasData) {
                   return ListView.builder(
                     itemCount: snapshot.data!.docs.length,

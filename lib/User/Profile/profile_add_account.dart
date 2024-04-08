@@ -4,8 +4,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:prosample_1/User/utils/commonfile.dart';
-import 'package:prosample_1/User/utils/widget3.dart';
+import 'package:prosample_1/User/utils/utils_widget1.dart';
+import 'package:prosample_1/User/utils/utils_widget3.dart';
 
 class AddUserScreen extends StatefulWidget {
   const AddUserScreen({super.key});
@@ -96,7 +96,7 @@ class _AddUserScreenState extends State<AddUserScreen> {
                                   width: 50,
                                   height: 50,
                                   child: Image.asset(
-                                    'assets/Icons/Edit_icon.png',
+                                    'assets/icons/Edit_icon.png',
                                     color: Colors.black,
                                     fit: BoxFit.cover,
                                   )),

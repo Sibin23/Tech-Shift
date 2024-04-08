@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:prosample_1/admin/orders/confirmed.dart';
-import 'package:prosample_1/admin/orders/pendings.dart';
-import 'package:prosample_1/admin/utils/text_style.dart';
+import 'package:prosample_1/admin/orders/orders_confirmed.dart';
+import 'package:prosample_1/admin/orders/orders_pendings.dart';
+import 'package:prosample_1/admin/utils/utils_text_style.dart';
+
 
 class OrderButtons extends StatelessWidget {
   const OrderButtons({super.key});

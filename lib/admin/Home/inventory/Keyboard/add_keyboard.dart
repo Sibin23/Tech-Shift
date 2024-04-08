@@ -3,10 +3,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:prosample_1/admin/utils/colors.dart';
-import 'package:prosample_1/admin/utils/common2.dart';
-import 'package:prosample_1/admin/utils/common_widgets.dart';
-import 'package:prosample_1/admin/utils/text_style.dart';
+import 'package:prosample_1/admin/utils/utils_text_style.dart';
+import 'package:prosample_1/admin/utils/utils_widget2.dart';
+import 'package:prosample_1/admin/utils/utils_widgets2.dart';
+
+import '../../../utils/utils_colors.dart';
 
 class ScreenAddKeyboard extends StatefulWidget {
   const ScreenAddKeyboard({super.key});
@@ -17,7 +18,6 @@ class ScreenAddKeyboard extends StatefulWidget {
 
 class _ScreenAddKeyboardState extends State<ScreenAddKeyboard> {
   final _formkey = GlobalKey<FormState>();
-  final idNum = TextEditingController();
   final categoryName = TextEditingController();
   final productName = TextEditingController();
   final manufacturer = TextEditingController();
@@ -31,6 +31,7 @@ class _ScreenAddKeyboardState extends State<ScreenAddKeyboard> {
   final _itemWeight = TextEditingController();
   final _material = TextEditingController();
   final _warranty = TextEditingController();
+  String idnum = DateTime.now().toString().replaceAll(RegExp(r'[^\d]'), '');
   String? sselectedKeyboard;
   String? selectedModel;
   String? selectedManufacturer;
@@ -60,7 +61,7 @@ class _ScreenAddKeyboardState extends State<ScreenAddKeyboard> {
   Future submitData() async {
     final data = {
       'category': categoryName.text.toLowerCase(),
-      'idnum': idNum.text,
+      'idnum': idnum,
       'image': imageurl.toString(),
       'name': productName.text,
       'manufacturer': manufacturer.text,
@@ -75,14 +76,10 @@ class _ScreenAddKeyboardState extends State<ScreenAddKeyboard> {
       'itemweight': _itemWeight.text,
       'warranty': _warranty.text
     };
-    FirebaseFirestore.instance
-        .collection('keyboard')
-        .doc(idNum.text.toLowerCase())
-        .set(data);
+    FirebaseFirestore.instance.collection('keyboard').doc(idnum).set(data);
     setState(() {
       categoryName.clear();
       imageurl = '';
-      idNum.clear();
       productName.clear();
       manufacturer.clear();
       _oldPrice.clear();
@@ -100,6 +97,7 @@ class _ScreenAddKeyboardState extends State<ScreenAddKeyboard> {
 
   @override
   Widget build(BuildContext context) {
+    const space = SizedBox(height: 10);
     return Scaffold(
       appBar: AppBar(
         surfaceTintColor: Colors.white,
@@ -145,9 +143,6 @@ class _ScreenAddKeyboardState extends State<ScreenAddKeyboard> {
                           Form(
                               key: _formkey,
                               child: Column(children: [
-                                AdminUi.admTextField(
-                                    label: 'Unique ID', textcontroller: idNum),
-                                const SizedBox(height: 10),
                                 DropdownMenu<String>(
                                     label: const Text('Select Category',
                                         style: TextStyle(
@@ -177,7 +172,7 @@ class _ScreenAddKeyboardState extends State<ScreenAddKeyboard> {
                                       return DropdownMenuEntry<String>(
                                           value: value, label: value);
                                     }).toList()),
-                                const SizedBox(height: 10),
+                                space,
                                 DropdownMenu<String>(
                                     label: const Text('Select Keyboard',
                                         style: TextStyle(
@@ -207,7 +202,7 @@ class _ScreenAddKeyboardState extends State<ScreenAddKeyboard> {
                                       return DropdownMenuEntry<String>(
                                           value: value, label: value);
                                     }).toList()),
-                                const SizedBox(height: 10),
+                                space,
                                 DropdownMenu<String>(
                                     label: const Text('Select Model',
                                         style: TextStyle(
@@ -237,7 +232,7 @@ class _ScreenAddKeyboardState extends State<ScreenAddKeyboard> {
                                       return DropdownMenuEntry<String>(
                                           value: value, label: value);
                                     }).toList()),
-                                const SizedBox(height: 10),
+                                space,
                                 DropdownMenu<String>(
                                     label: const Text('Select Manufacturer',
                                         style: TextStyle(
@@ -267,34 +262,34 @@ class _ScreenAddKeyboardState extends State<ScreenAddKeyboard> {
                                       return DropdownMenuEntry<String>(
                                           value: value, label: value);
                                     }).toList()),
-                                const SizedBox(height: 10),
+                                space,
                                 AdminUi.admTextField(
                                     label: 'Old Price',
                                     textcontroller: _oldPrice),
-                                const SizedBox(height: 10),
+                                space,
                                 AdminUi.admTextField(
                                     label: 'New Price',
                                     textcontroller: _newPrice),
-                                const SizedBox(height: 10),
+                                space,
                                 AdminUi.admTextField(
                                     label: 'Product Dimensions',
                                     textcontroller: _productDimension),
-                                const SizedBox(height: 10),
+                                space,
                                 AdminUi.featuresTextfield(
                                     label: 'Features',
                                     textcontroller: _specialFeatures),
-                                const SizedBox(height: 10),
+                                space,
                                 AdminUi.admTextField(
                                     label: 'Connectivity',
                                     textcontroller: _connector),
-                                const SizedBox(height: 10),
+                                space,
                                 AdminUi.admTextField(
                                     label: 'Material',
                                     textcontroller: _material),
-                                const SizedBox(height: 10),
+                                space,
                                 AdminUi.admTextField(
                                     label: 'Country', textcontroller: _country),
-                                const SizedBox(height: 10),
+                                space,
                                 AdminUi.admTextField(
                                     label: 'Warranty',
                                     textcontroller: _warranty),

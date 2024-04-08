@@ -3,11 +3,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:prosample_1/admin/utils/colors.dart';
-import 'package:prosample_1/admin/utils/common2.dart';
-import 'package:prosample_1/admin/utils/common_widgets.dart';
-import 'package:prosample_1/admin/utils/text_style.dart';
-
+import 'package:prosample_1/admin/utils/utils_colors.dart';
+import 'package:prosample_1/admin/utils/utils_text_style.dart';
+import 'package:prosample_1/admin/utils/utils_widget2.dart';
+import 'package:prosample_1/admin/utils/utils_widgets2.dart';
 class EditCooler extends StatefulWidget {
   final String itemId;
   const EditCooler({super.key, required this.itemId});
@@ -18,7 +17,6 @@ class EditCooler extends StatefulWidget {
 
 class _EditCoolerState extends State<EditCooler> {
   final _formkey = GlobalKey<FormState>();
-  final uniqueId = TextEditingController();
   final categoryName = TextEditingController();
   final _productName = TextEditingController();
   final _manufacturer = TextEditingController();
@@ -73,7 +71,7 @@ class _EditCoolerState extends State<EditCooler> {
         .doc(widget.itemId) // Use the itemId
         .update({
       'image': imageurl.toString(),
-      'idnum': uniqueId.text.trim(),
+      'idnum': widget.itemId,
       'category': categoryName.text.trim(),
       'name': _productName.text,
       'manufacturer': _manufacturer.text,
@@ -98,7 +96,6 @@ class _EditCoolerState extends State<EditCooler> {
       imageurl = '';
       _productName.clear();
       categoryName.clear();
-      uniqueId.clear();
       features.clear();
       _manufacturer.clear();
       _oldPrice.clear();
@@ -133,7 +130,6 @@ class _EditCoolerState extends State<EditCooler> {
           image = imageurl;
         });
         imageurl = data['image'];
-        uniqueId.text = data['idnum'];
         categoryName.text = data['category'];
         _oldPrice.text = data['oldprice'];
         _newPrice.text = data['newprice'];
@@ -216,9 +212,6 @@ class _EditCoolerState extends State<EditCooler> {
                               Form(
                                   key: _formkey,
                                   child: Column(children: [
-                                    AdminUi.admTextField(
-                                        label: 'Unique ID',
-                                        textcontroller: uniqueId),
                                     space,
                                     DropdownMenu<String>(
                                         controller: categoryName,

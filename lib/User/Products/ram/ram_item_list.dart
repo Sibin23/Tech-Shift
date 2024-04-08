@@ -1,10 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:lottie/lottie.dart';
 import 'package:prosample_1/User/Products/product_details.dart';
-import 'package:prosample_1/User/utils/colors.dart';
-import 'package:prosample_1/User/utils/text_decorations.dart';
+import 'package:prosample_1/User/utils/utils_colors.dart';
+import 'package:prosample_1/User/utils/utils_text_decorations.dart';
 
 class ProductRam extends StatefulWidget {
   const ProductRam({super.key});
@@ -89,7 +88,7 @@ class _ProductRamState extends State<ProductRam> {
                                                 fit: BoxFit.cover,
                                                 placeholder: (context, url) =>
                                                     Image.asset(
-                                                        'assets/Categories/ram.png',
+                                                        'assets/categories/ram.png',
                                                         fit: BoxFit.cover)),
                                           ),
                                           Text(document['category'],
@@ -162,13 +161,7 @@ class _ProductRamState extends State<ProductRam> {
                       }),
                 );
               }
-              return SizedBox(
-                height: MediaQuery.of(context).size.height,
-                width: MediaQuery.of(context).size.width,
-                child: Center(
-                    child: Lottie.asset(
-                        'assets/Animations/Animation - 1708393071899.json')),
-              );
+              return const Center(child: CircularProgressIndicator());
             }),
       )),
     );

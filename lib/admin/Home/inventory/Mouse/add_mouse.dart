@@ -3,10 +3,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:prosample_1/admin/utils/colors.dart';
-import 'package:prosample_1/admin/utils/common2.dart';
-import 'package:prosample_1/admin/utils/common_widgets.dart';
-import 'package:prosample_1/admin/utils/text_style.dart';
+import 'package:prosample_1/admin/utils/utils_colors.dart';
+import 'package:prosample_1/admin/utils/utils_text_style.dart';
+import 'package:prosample_1/admin/utils/utils_widget2.dart';
+import 'package:prosample_1/admin/utils/utils_widgets2.dart';
 
 class ScreenAddMouse extends StatefulWidget {
   const ScreenAddMouse({super.key});
@@ -18,7 +18,6 @@ class ScreenAddMouse extends StatefulWidget {
 class _ScreenAddMouseState extends State<ScreenAddMouse> {
   final _formkey = GlobalKey<FormState>();
   final categoryName = TextEditingController();
-  final idNum = TextEditingController();
   final productName = TextEditingController();
   final manufacturer = TextEditingController();
   final _oldPrice = TextEditingController();
@@ -34,7 +33,7 @@ class _ScreenAddMouseState extends State<ScreenAddMouse> {
   final _country = TextEditingController();
   final _itemWeight = TextEditingController();
   final _warranty = TextEditingController();
- 
+  String idnum = DateTime.now().toString().replaceAll(RegExp(r'[^\d]'), '');
   late String imageurl = '';
   String? selectedCategory;
   String? selectedManufacturer;
@@ -61,8 +60,8 @@ class _ScreenAddMouseState extends State<ScreenAddMouse> {
 
   Future submitData() async {
     final data = {
-      'category': idNum.text.toLowerCase(),
-      'idnum': idNum.text,
+      'category': categoryName,
+      'idnum': idnum,
       'image': imageurl.toString(),
       'name': productName.text,
       'manufacturer': manufacturer.text,
@@ -79,15 +78,10 @@ class _ScreenAddMouseState extends State<ScreenAddMouse> {
       'country': _country.text,
       'itemweight': _itemWeight.text,
       'warranty': _warranty.text,
-     
     };
-    FirebaseFirestore.instance
-        .collection('mouse')
-        .doc(idNum.text.toLowerCase())
-        .set(data);
+    FirebaseFirestore.instance.collection('mouse').doc(idnum).set(data);
     setState(() {
       categoryName.clear();
-      idNum.clear();
       imageurl = '';
       productName.clear();
       manufacturer.clear();
@@ -104,12 +98,12 @@ class _ScreenAddMouseState extends State<ScreenAddMouse> {
       _country.clear();
       _itemWeight.clear();
       _warranty.clear();
-     
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    const space = SizedBox(height: 10);
     return Scaffold(
       appBar: AppBar(
         surfaceTintColor: Colors.white,
@@ -157,10 +151,6 @@ class _ScreenAddMouseState extends State<ScreenAddMouse> {
                               Form(
                                   key: _formkey,
                                   child: Column(children: [
-                                    AdminUi.admTextField(
-                                        label: 'Unique ID',
-                                        textcontroller: idNum),
-                                    const SizedBox(height: 10),
                                     DropdownMenu<String>(
                                         label: const Text('Select Category',
                                             style: TextStyle(
@@ -193,7 +183,7 @@ class _ScreenAddMouseState extends State<ScreenAddMouse> {
                                           return DropdownMenuEntry<String>(
                                               value: value, label: value);
                                         }).toList()),
-                                    const SizedBox(height: 10),
+                                    space,
                                     DropdownMenu<String>(
                                         label: const Text('Select Mouse',
                                             style: TextStyle(
@@ -226,7 +216,7 @@ class _ScreenAddMouseState extends State<ScreenAddMouse> {
                                           return DropdownMenuEntry<String>(
                                               value: value, label: value);
                                         }).toList()),
-                                    const SizedBox(height: 10),
+                                    space,
                                     DropdownMenu<String>(
                                         label: const Text('Select Model',
                                             style: TextStyle(
@@ -259,7 +249,7 @@ class _ScreenAddMouseState extends State<ScreenAddMouse> {
                                           return DropdownMenuEntry<String>(
                                               value: value, label: value);
                                         }).toList()),
-                                    const SizedBox(height: 10),
+                                    space,
                                     DropdownMenu<String>(
                                         label: const Text('Select Manufacturer',
                                             style: TextStyle(
@@ -292,55 +282,55 @@ class _ScreenAddMouseState extends State<ScreenAddMouse> {
                                           return DropdownMenuEntry<String>(
                                               value: value, label: value);
                                         }).toList()),
-                                    const SizedBox(height: 10),
+                                    space,
                                     AdminUi.admTextField(
                                         label: 'Series',
                                         textcontroller: _series),
-                                    const SizedBox(height: 10),
+                                    space,
                                     AdminUi.admTextField(
                                         label: 'Old Price',
                                         textcontroller: _oldPrice),
-                                    const SizedBox(height: 10),
+                                    space,
                                     AdminUi.admTextField(
                                         label: 'New Price',
                                         textcontroller: _newPrice),
-                                    const SizedBox(height: 10),
+                                    space,
                                     AdminUi.admTextField(
                                         label: 'Product Dimensions',
                                         textcontroller: _productDimension),
-                                    const SizedBox(height: 10),
+                                    space,
                                     AdminUi.admTextField(
                                         label: 'Colour',
                                         textcontroller: _color),
-                                    const SizedBox(height: 10),
+                                    space,
                                     AdminUi.featuresTextfield(
                                         label: 'Features',
                                         textcontroller: _specialFeatures),
-                                    const SizedBox(height: 10),
+                                    space,
                                     AdminUi.admTextField(
                                         label: 'DPI', textcontroller: _dpi),
-                                    const SizedBox(height: 10),
+                                    space,
                                     AdminUi.admTextField(
                                         label: 'Buttons',
                                         textcontroller: _buttons),
-                                    const SizedBox(height: 10),
+                                    space,
                                     AdminUi.admTextField(
                                         label: 'Connectivity',
                                         textcontroller: _connector),
-                                    const SizedBox(height: 10),
+                                    space,
                                     AdminUi.admTextField(
                                         label: 'Country',
                                         textcontroller: _country),
-                                    const SizedBox(height: 10),
+                                    space,
                                     AdminUi.admTextField(
                                         label: 'Item Weight',
                                         textcontroller: _itemWeight),
-                                    const SizedBox(height: 10),
+                                    space,
                                     AdminUi.admTextField(
                                         label: 'Warranty',
                                         textcontroller: _warranty),
-                                    const SizedBox(height: 10),
-                                  ])), // TextFormField
+                                  ])),
+                              const SizedBox(height: 30),
                               AdminUiHelper.customButton(context, () {
                                 if (_formkey.currentState!.validate()) {
                                   Navigator.pop(context);

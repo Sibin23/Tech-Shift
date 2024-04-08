@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:prosample_1/User/utils/colors.dart';
-import 'package:prosample_1/User/utils/text_decorations.dart';
+import 'package:prosample_1/User/utils/utils_colors.dart';
+import 'package:prosample_1/User/utils/utils_text_decorations.dart';
 
 class ScreenProcessorInfo extends StatefulWidget {
   final Map<String, dynamic> cpu;
@@ -115,7 +115,7 @@ class _ScreenProcessorInfoState extends State<ScreenProcessorInfo> {
                                   style: TextStyling.subtitle)),
                           SizedBox(
                               width: MediaQuery.of(context).size.width,
-                              height: MediaQuery.of(context).size.height * 0.08,
+                              height: MediaQuery.of(context).size.height * 0.1,
                               child: Text('Warranty',
                                   style: TextStyling.subtitle)),
                         ],
@@ -201,7 +201,7 @@ class _ScreenProcessorInfoState extends State<ScreenProcessorInfo> {
                                 Text(cpu['itemweight'], style: TextStyling.details)),
                                 SizedBox(
                             width: MediaQuery.of(context).size.width,
-                            height: MediaQuery.of(context).size.height * .08,
+                            height: MediaQuery.of(context).size.height * .1,
                             child:
                                 Text(cpu['warranty'], style: TextStyling.details)),
                         ],

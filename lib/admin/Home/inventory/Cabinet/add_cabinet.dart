@@ -3,10 +3,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:prosample_1/admin/utils/colors.dart';
-import 'package:prosample_1/admin/utils/common2.dart';
-import 'package:prosample_1/admin/utils/common_widgets.dart';
-import 'package:prosample_1/admin/utils/text_style.dart';
+import 'package:prosample_1/admin/utils/utils_colors.dart';
+import 'package:prosample_1/admin/utils/utils_text_style.dart';
+import 'package:prosample_1/admin/utils/utils_widget2.dart';
+import 'package:prosample_1/admin/utils/utils_widgets2.dart';
 
 class ScreenAddCabinet extends StatefulWidget {
   const ScreenAddCabinet({super.key});
@@ -18,7 +18,6 @@ class ScreenAddCabinet extends StatefulWidget {
 class _ScreenAddCabinetState extends State<ScreenAddCabinet> {
   final _formkey = GlobalKey<FormState>();
   final _productName = TextEditingController();
-  final idNum = TextEditingController();
   final categoryName = TextEditingController();
   final _manufacturer = TextEditingController();
   final _oldPrice = TextEditingController();
@@ -35,6 +34,7 @@ class _ScreenAddCabinetState extends State<ScreenAddCabinet> {
   final _fanSize = TextEditingController();
   final _fancount = TextEditingController();
   final _warranty = TextEditingController();
+  String idnum = DateTime.now().toString().replaceAll(RegExp(r'[^\d]'), '');
   String? selectedCabinet;
   String? selectedCategory;
   String? selectedManufacturer;
@@ -66,7 +66,7 @@ class _ScreenAddCabinetState extends State<ScreenAddCabinet> {
     final data = {
       'image': imageurl.toString(),
       'name': _productName.text,
-      'idnum': idNum.text.trim().toLowerCase(),
+      'idnum': idnum,
       'category': categoryName.text,
       'manufacturer': _manufacturer.text,
       'oldprice': _oldPrice.text,
@@ -84,14 +84,10 @@ class _ScreenAddCabinetState extends State<ScreenAddCabinet> {
       'fansize': _fanSize.text,
       'fancount': _fancount.text,
     };
-    FirebaseFirestore.instance
-        .collection('cabinet')
-        .doc()
-        .set(data);
+    FirebaseFirestore.instance.collection('cabinet').doc(idnum).set(data);
     setState(() {
       imageurl = '';
       _productName.clear();
-      idNum.clear();
       categoryName.clear();
       _manufacturer.clear();
       _oldPrice.clear();
@@ -160,10 +156,6 @@ class _ScreenAddCabinetState extends State<ScreenAddCabinet> {
                               Form(
                                   key: _formkey,
                                   child: Column(children: [
-                                    AdminUi.admTextField(
-                                        label: 'Unique ID',
-                                        textcontroller: idNum),
-                                    space,
                                     DropdownMenu<String>(
                                         controller: categoryName,
                                         menuStyle: const MenuStyle(

@@ -3,10 +3,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:prosample_1/admin/utils/colors.dart';
-import 'package:prosample_1/admin/utils/common2.dart';
-import 'package:prosample_1/admin/utils/common_widgets.dart';
-import 'package:prosample_1/admin/utils/text_style.dart';
+import 'package:prosample_1/admin/utils/utils_colors.dart';
+import 'package:prosample_1/admin/utils/utils_text_style.dart';
+import 'package:prosample_1/admin/utils/utils_widget2.dart';
+import 'package:prosample_1/admin/utils/utils_widgets2.dart';
 
 class ScreenAddChairs extends StatefulWidget {
   const ScreenAddChairs({super.key});
@@ -17,7 +17,6 @@ class ScreenAddChairs extends StatefulWidget {
 
 class _ScreenAddChairsState extends State<ScreenAddChairs> {
   final _formkey = GlobalKey<FormState>();
-  final _idNum = TextEditingController();
   final categoryName = TextEditingController();
   final _productName = TextEditingController();
   final _manufacturer = TextEditingController();
@@ -32,6 +31,7 @@ class _ScreenAddChairsState extends State<ScreenAddChairs> {
   final _country = TextEditingController();
   final _itemWeight = TextEditingController();
   final _warranty = TextEditingController();
+  String idnum = DateTime.now().toString().replaceAll(RegExp(r'[^\d]'), '');
   String? selectedCategory;
   String? selectedChair;
   String? selectedManufacturer;
@@ -60,7 +60,7 @@ class _ScreenAddChairsState extends State<ScreenAddChairs> {
   Future submitData() async {
     final data = {
       'image': imageurl.toString(),
-      'idnum': _idNum.text,
+      'idnum': idnum,
       'category': categoryName.text,
       'name': _productName.text,
       'manufacturer': _manufacturer.text,
@@ -76,15 +76,11 @@ class _ScreenAddChairsState extends State<ScreenAddChairs> {
       'itemweight': _itemWeight.text,
       'warranty': _warranty.text,
     };
-    FirebaseFirestore.instance
-        .collection('chairs')
-        .doc(_productName.text)
-        .set(data);
+    FirebaseFirestore.instance.collection('chairs').doc(idnum).set(data);
     setState(() {
       imageurl = '';
       _productName.clear();
       categoryName.clear();
-      _idNum.clear();
       _manufacturer.clear();
       _oldPrice.clear();
       _newPrice.clear();
@@ -151,9 +147,6 @@ class _ScreenAddChairsState extends State<ScreenAddChairs> {
                         Form(
                             key: _formkey,
                             child: Column(children: [
-                              AdminUi.admTextField(
-                                  label: 'Unique ID', textcontroller: _idNum),
-                              AdminUi.space,
                               DropdownMenu<String>(
                                   controller: categoryName,
                                   menuStyle: const MenuStyle(

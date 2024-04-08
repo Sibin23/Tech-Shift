@@ -3,10 +3,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:prosample_1/admin/utils/colors.dart';
-import 'package:prosample_1/admin/utils/common2.dart';
-import 'package:prosample_1/admin/utils/common_widgets.dart';
-import 'package:prosample_1/admin/utils/text_style.dart';
+import 'package:prosample_1/admin/utils/utils_colors.dart';
+import 'package:prosample_1/admin/utils/utils_text_style.dart';
+import 'package:prosample_1/admin/utils/utils_widget2.dart';
+import 'package:prosample_1/admin/utils/utils_widgets2.dart';
 
 class UpdateMonitor extends StatefulWidget {
   final String itemId;
@@ -18,8 +18,6 @@ class UpdateMonitor extends StatefulWidget {
 
 class _UpdateMonitorState extends State<UpdateMonitor> {
   final _formkey = GlobalKey<FormState>();
-
-  final idNum = TextEditingController();
   final categoryName = TextEditingController();
   final _series = TextEditingController();
   final productName = TextEditingController();
@@ -68,7 +66,7 @@ class _UpdateMonitorState extends State<UpdateMonitor> {
     FirebaseFirestore.instance.collection('monitor').doc(widget.itemId).update({
       'category': categoryName.text.toLowerCase(),
       'image': imageurl.toString(),
-      'idnum': idNum.text,
+      'idnum': widget.itemId,
       'name': productName.text,
       'manufacturer': _manufacturer.text,
       'oldprice': _oldPrice.text,
@@ -92,7 +90,6 @@ class _UpdateMonitorState extends State<UpdateMonitor> {
     setState(() {
       categoryName.clear();
       imageurl = '';
-      idNum.clear();
       _series.clear();
       productName.clear();
       _manufacturer.clear();
@@ -129,7 +126,6 @@ class _UpdateMonitorState extends State<UpdateMonitor> {
           image = imageurl;
         });
         imageurl = data['image'];
-        idNum.text = data['idnum'];
         categoryName.text = data['category'];
         _series.text = data['series'];
         _oldPrice.text = data['oldprice'];
@@ -156,6 +152,7 @@ class _UpdateMonitorState extends State<UpdateMonitor> {
 
   @override
   Widget build(BuildContext context) {
+    const space = SizedBox(height: 10);
     return Scaffold(
       appBar: AppBar(
         surfaceTintColor: Colors.white,
@@ -199,9 +196,7 @@ class _UpdateMonitorState extends State<UpdateMonitor> {
                     Form(
                         key: _formkey,
                         child: Column(children: [
-                          AdminUi.admTextField(
-                              label: 'Unique ID', textcontroller: idNum),
-                          const SizedBox(height: 10),
+                         
                           DropdownMenu<String>(
                               label: const Text('Select Category',
                                   style:
@@ -228,7 +223,7 @@ class _UpdateMonitorState extends State<UpdateMonitor> {
                                 return DropdownMenuEntry<String>(
                                     value: value, label: value);
                               }).toList()),
-                          const SizedBox(height: 10),
+                          space,
                           DropdownMenu<String>(
                               label: const Text('Select Monitor',
                                   style:
@@ -255,7 +250,7 @@ class _UpdateMonitorState extends State<UpdateMonitor> {
                                 return DropdownMenuEntry<String>(
                                     value: value, label: value);
                               }).toList()),
-                          const SizedBox(height: 10),
+                          space,
                           DropdownMenu<String>(
                               label: const Text('Select Model',
                                   style:
@@ -282,7 +277,7 @@ class _UpdateMonitorState extends State<UpdateMonitor> {
                                 return DropdownMenuEntry<String>(
                                     value: value, label: value);
                               }).toList()),
-                          const SizedBox(height: 10),
+                          space,
                           DropdownMenu<String>(
                               label: const Text('Select Manufacturer',
                                   style:
@@ -309,65 +304,65 @@ class _UpdateMonitorState extends State<UpdateMonitor> {
                                 return DropdownMenuEntry<String>(
                                     value: value, label: value);
                               }).toList()),
-                          const SizedBox(height: 10),
+                          space,
                           AdminUi.admTextField(
                               label: 'Series', textcontroller: _series),
-                          const SizedBox(height: 10),
-                          const SizedBox(height: 10),
+                          space,
+                          space,
                           AdminUi.admTextField(
                               label: 'Old Price', textcontroller: _oldPrice),
-                          const SizedBox(height: 10),
+                          space,
                           AdminUi.admTextField(
                               label: 'New Price', textcontroller: _newPrice),
-                          const SizedBox(height: 10),
+                          space,
                           AdminUi.admTextField(
                               label: 'Product Dimensions',
                               textcontroller: _productDimension),
-                          const SizedBox(height: 10),
+                          space,
                           AdminUi.admTextField(
                               label: 'Viewing Angle',
                               textcontroller: _veiwingAngle),
-                          const SizedBox(height: 10),
+                          space,
                           AdminUi.admTextField(
                               label: 'Display Type',
                               textcontroller: _displayType),
-                          const SizedBox(height: 10),
+                          space,
                           AdminUi.admTextField(
                               label: 'Display Size',
                               textcontroller: _displaySize),
-                          const SizedBox(height: 10),
+                          space,
                           AdminUi.admTextField(
                               label: 'Response Time',
                               textcontroller: _responseTime),
-                          const SizedBox(height: 10),
+                          space,
                           AdminUi.admTextField(
                               label: 'Resolution', textcontroller: _resolution),
-                          const SizedBox(height: 10),
+                          space,
                           AdminUi.admTextField(
                               label: 'Refresh Rate',
                               textcontroller: _refreshRate),
-                          const SizedBox(height: 10),
+                          space,
                           AdminUi.admTextField(
                               label: 'Features',
                               textcontroller: _specialFeatures),
-                          const SizedBox(height: 10),
+                          space,
                           AdminUi.admTextField(
                               label: 'Voltage', textcontroller: _voltage),
-                          const SizedBox(height: 10),
+                          space,
                           AdminUi.admTextField(
                               label: 'Hardware Interface',
                               textcontroller: _hdwInterface),
-                          const SizedBox(height: 10),
+                          space,
                           AdminUi.admTextField(
                               label: 'Country', textcontroller: _country),
-                          const SizedBox(height: 10),
+                          space,
                           AdminUi.admTextField(
                               label: 'Item Weight',
                               textcontroller: _itemWeight),
-                          const SizedBox(height: 10),
+                          space,
                           AdminUi.admTextField(
                               label: 'Warranty', textcontroller: _warranty),
-                          const SizedBox(height: 10),
+                          space,
                         ])),
                     const SizedBox(height: 30),
                     AdminUiHelper.customButton(context, () {

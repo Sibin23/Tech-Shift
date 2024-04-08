@@ -4,8 +4,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:prosample_1/User/home.dart';
 import 'package:prosample_1/User/create_account.dart';
 import 'package:prosample_1/User/forgot_password.dart';
-import 'package:prosample_1/User/utils/colors.dart';
-import 'package:prosample_1/User/utils/commonfile.dart';
+import 'package:prosample_1/User/utils/utils_colors.dart';
+import 'package:prosample_1/User/utils/utils_widget1.dart';
 import 'package:prosample_1/admin/screens/admin_home.dart';
 
 

@@ -3,10 +3,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:prosample_1/admin/utils/colors.dart';
-import 'package:prosample_1/admin/utils/common2.dart';
-import 'package:prosample_1/admin/utils/common_widgets.dart';
-import 'package:prosample_1/admin/utils/text_style.dart';
+import 'package:prosample_1/admin/utils/utils_colors.dart';
+import 'package:prosample_1/admin/utils/utils_text_style.dart';
+import 'package:prosample_1/admin/utils/utils_widget2.dart';
+import 'package:prosample_1/admin/utils/utils_widgets2.dart';
 
 class UpdateMouse extends StatefulWidget {
   final String itemId;
@@ -19,7 +19,6 @@ class UpdateMouse extends StatefulWidget {
 class _UpdateMouseState extends State<UpdateMouse> {
   final _formkey = GlobalKey<FormState>();
   final categoryName = TextEditingController();
-  final idNum = TextEditingController();
   final productName = TextEditingController();
   final manufacturer = TextEditingController();
   final _oldPrice = TextEditingController();
@@ -63,10 +62,10 @@ class _UpdateMouseState extends State<UpdateMouse> {
   updateData() {
     FirebaseFirestore.instance
         .collection('mouse')
-        .doc(widget.itemId) // Use the itemId
+        .doc(widget.itemId) 
         .update({
-      'category': idNum.text.toLowerCase(),
-      'idnum': idNum.text,
+      'category': categoryName,
+      'idnum': widget.itemId,
       'image': imageurl.toString(),
       'name': productName.text,
       'manufacturer': manufacturer.text,
@@ -86,7 +85,6 @@ class _UpdateMouseState extends State<UpdateMouse> {
     });
     setState(() {
       categoryName.clear();
-      idNum.clear();
       imageurl = '';
       productName.clear();
       manufacturer.clear();
@@ -120,7 +118,6 @@ class _UpdateMouseState extends State<UpdateMouse> {
           image = imageurl;
         });
         imageurl = data['image'];
-        idNum.text = data['idnum'];
         categoryName.text = data['category'];
         _oldPrice.text = data['oldprice'];
         _newPrice.text = data['newprice'];
@@ -143,6 +140,7 @@ class _UpdateMouseState extends State<UpdateMouse> {
 
   @override
   Widget build(BuildContext context) {
+    const space = SizedBox(height: 10);
     return Scaffold(
       appBar: AppBar(surfaceTintColor: Colors.white,),
       body: SafeArea(
@@ -187,9 +185,7 @@ class _UpdateMouseState extends State<UpdateMouse> {
                           Form(
                               key: _formkey,
                               child: Column(children: [
-                                AdminUi.admTextField(
-                                    label: 'Unique ID', textcontroller: idNum),
-                                const SizedBox(height: 10),
+                               
                                 DropdownMenu<String>(
                                     label: const Text('Select Category',
                                         style: TextStyle(
@@ -219,7 +215,7 @@ class _UpdateMouseState extends State<UpdateMouse> {
                                       return DropdownMenuEntry<String>(
                                           value: value, label: value);
                                     }).toList()),
-                                const SizedBox(height: 10),
+                              space,
                                 DropdownMenu<String>(
                                     label: const Text('Select Mouse',
                                         style: TextStyle(
@@ -249,7 +245,7 @@ class _UpdateMouseState extends State<UpdateMouse> {
                                       return DropdownMenuEntry<String>(
                                           value: value, label: value);
                                     }).toList()),
-                                const SizedBox(height: 10),
+                              space,
                                 DropdownMenu<String>(
                                     label: const Text('Select Model',
                                         style: TextStyle(
@@ -279,7 +275,7 @@ class _UpdateMouseState extends State<UpdateMouse> {
                                       return DropdownMenuEntry<String>(
                                           value: value, label: value);
                                     }).toList()),
-                                const SizedBox(height: 10),
+                              space,
                                 DropdownMenu<String>(
                                     label: const Text('Select Manufacturer',
                                         style: TextStyle(
@@ -309,50 +305,50 @@ class _UpdateMouseState extends State<UpdateMouse> {
                                       return DropdownMenuEntry<String>(
                                           value: value, label: value);
                                     }).toList()),
-                                const SizedBox(height: 10),
+                              space,
                                 AdminUi.admTextField(
                                     label: 'Series', textcontroller: _series),
-                                const SizedBox(height: 10),
+                              space,
                                 AdminUi.admTextField(
                                     label: 'Old Price',
                                     textcontroller: _oldPrice),
-                                const SizedBox(height: 10),
+                              space,
                                 AdminUi.admTextField(
                                     label: 'New Price',
                                     textcontroller: _newPrice),
-                                const SizedBox(height: 10),
+                              space,
                                 AdminUi.admTextField(
                                     label: 'Product Dimensions',
                                     textcontroller: _productDimension),
-                                const SizedBox(height: 10),
+                              space,
                                 AdminUi.admTextField(
                                     label: 'Colour', textcontroller: _color),
-                                const SizedBox(height: 10),
+                              space,
                                 AdminUi.featuresTextfield(
                                     label: 'Features',
                                     textcontroller: _specialFeatures),
-                                const SizedBox(height: 10),
+                              space,
                                 AdminUi.admTextField(
                                     label: 'DPI', textcontroller: _dpi),
-                                const SizedBox(height: 10),
+                              space,
                                 AdminUi.admTextField(
                                     label: 'Buttons', textcontroller: _buttons),
-                                const SizedBox(height: 10),
+                              space,
                                 AdminUi.admTextField(
                                     label: 'Connectivity',
                                     textcontroller: _connector),
-                                const SizedBox(height: 10),
+                              space,
                                 AdminUi.admTextField(
                                     label: 'Country', textcontroller: _country),
-                                const SizedBox(height: 10),
+                              space,
                                 AdminUi.admTextField(
                                     label: 'Item Weight',
                                     textcontroller: _itemWeight),
-                                const SizedBox(height: 10),
+                              space,
                                 AdminUi.admTextField(
                                     label: 'Warranty',
                                     textcontroller: _warranty),
-                                const SizedBox(height: 10),
+                              space,
                               ])), // TextFormField
                           AdminUiHelper.customButton(context, () {
                             if (_formkey.currentState!.validate()) {

@@ -2,8 +2,8 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:prosample_1/User/Products/product_details.dart';
-import 'package:prosample_1/User/utils/colors.dart';
-import 'package:prosample_1/User/utils/text_decorations.dart';
+import 'package:prosample_1/User/utils/utils_colors.dart';
+import 'package:prosample_1/User/utils/utils_text_decorations.dart';
 
 class ProductCabinet extends StatefulWidget {
   const ProductCabinet({super.key});
@@ -88,7 +88,7 @@ class _ProductCabinetState extends State<ProductCabinet> {
                                               placeholder: (context, url) =>
                                                    Center(
                                                 child:
-                                                    Image.asset('assets/Categories/cabinet.png'),
+                                                    Image.asset('assets/categories/cabinet.png'),
                                               ),
                                             ),
                                           ),

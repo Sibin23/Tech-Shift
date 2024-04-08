@@ -1,7 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:prosample_1/admin/orders/order_details_button.dart';
-import 'package:prosample_1/admin/utils/text_style.dart';
+import 'package:prosample_1/admin/utils/utils_text_style.dart';
+
 
 class OrderDetails extends StatefulWidget {
   final Map<String, dynamic> info;

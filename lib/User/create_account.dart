@@ -1,10 +1,8 @@
-// ignore_for_file: use_build_context_synchronously
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:prosample_1/User/Home/home_page.dart';
-import 'package:prosample_1/User/utils/commonfile.dart';
+import 'package:prosample_1/User/home.dart';
+import 'package:prosample_1/User/utils/utils_widget1.dart';
 
 class ScreenCreateAccnt extends StatefulWidget {
   const ScreenCreateAccnt({super.key});
@@ -131,13 +129,17 @@ class _ScreenCreateAccntState extends State<ScreenCreateAccnt> {
         usercredential = await FirebaseAuth.instance
             .createUserWithEmailAndPassword(email: email, password: pass1)
             .then((value) {
-          Navigator.push(context,
-              MaterialPageRoute(builder: (ctx2) => const ScreenHome()));
+          Navigator.push(
+              context, MaterialPageRoute(builder: (ctx2) => const HomeInfo()));
           return null;
         });
       } on FirebaseAuthException catch (ex) {
-        return UiHelper.customTextAlert(context, ex.code.toString());
+        error(ex);
       }
     }
+  }
+
+  error(ex) {
+    UiHelper.customTextAlert(context, ex.code.toString());
   }
 }

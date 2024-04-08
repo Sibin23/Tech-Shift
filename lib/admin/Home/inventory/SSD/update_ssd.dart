@@ -4,11 +4,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:prosample_1/admin/utils/colors.dart';
-import 'package:prosample_1/admin/utils/common2.dart';
-import 'package:prosample_1/admin/utils/common_widgets.dart';
-import 'package:prosample_1/admin/utils/text_style.dart';
-
+import 'package:prosample_1/admin/utils/utils_colors.dart';
+import 'package:prosample_1/admin/utils/utils_text_style.dart';
+import 'package:prosample_1/admin/utils/utils_widget2.dart';
+import 'package:prosample_1/admin/utils/utils_widgets2.dart';
 class UpdateSsd extends StatefulWidget {
   final String itemId;
   const UpdateSsd({super.key, required this.itemId});
@@ -19,7 +18,6 @@ class UpdateSsd extends StatefulWidget {
 
 class _UpdateSsdState extends State<UpdateSsd> {
   final formkey = GlobalKey<FormState>();
-  final idNum = TextEditingController();
   final productCategory = TextEditingController();
   final productName = TextEditingController();
   final manufacturer = TextEditingController();
@@ -33,7 +31,7 @@ class _UpdateSsdState extends State<UpdateSsd> {
   final transferSpeed = TextEditingController();
   final connector = TextEditingController();
   final fromFactor = TextEditingController();
-  final wattage =TextEditingController();
+  final wattage = TextEditingController();
   final country = TextEditingController();
   final itemWeight = TextEditingController();
   final warranty = TextEditingController();
@@ -67,7 +65,7 @@ class _UpdateSsdState extends State<UpdateSsd> {
     FirebaseFirestore.instance.collection('ssd').doc(widget.itemId).update({
       'category': productCategory.text.toLowerCase(),
       'image': imageurl.toString(),
-      'idnum': idNum.text,
+      'idnum': widget.itemId,
       'name': productName.text,
       'manufacturer': manufacturer.text,
       'oldprice': oldPrice.text,
@@ -88,7 +86,6 @@ class _UpdateSsdState extends State<UpdateSsd> {
     setState(() {
       productCategory.clear();
       imageurl = '';
-      idNum.clear();
       productName.clear();
       manufacturer.clear();
       oldPrice.clear();
@@ -122,7 +119,6 @@ class _UpdateSsdState extends State<UpdateSsd> {
           image = imageurl;
         });
         imageurl = data['image'];
-        idNum.text = data['idnum'];
         productCategory.text = data['category'];
         manufacturer.text = data['manufacturer'];
         oldPrice.text = data['oldprice'];
@@ -146,6 +142,7 @@ class _UpdateSsdState extends State<UpdateSsd> {
 
   @override
   Widget build(BuildContext context) {
+    const space = SizedBox(height: 10);
     return Scaffold(
       appBar: AppBar(surfaceTintColor: Colors.white),
       body: SafeArea(
@@ -196,9 +193,6 @@ class _UpdateSsdState extends State<UpdateSsd> {
                         Form(
                             key: formkey,
                             child: Column(children: [
-                              AdminUi.admTextField(
-                                  label: 'Unique ID', textcontroller: idNum),
-                              const SizedBox(height: 10),
                               DropdownMenu<String>(
                                   label: const Text('Select Category',
                                       style: TextStyle(
@@ -228,7 +222,7 @@ class _UpdateSsdState extends State<UpdateSsd> {
                                     return DropdownMenuEntry<String>(
                                         value: value, label: value);
                                   }).toList()),
-                              const SizedBox(height: 10),
+                              space,
                               DropdownMenu<String>(
                                   label: const Text('Select SSD',
                                       style: TextStyle(
@@ -258,7 +252,7 @@ class _UpdateSsdState extends State<UpdateSsd> {
                                     return DropdownMenuEntry<String>(
                                         value: value, label: value);
                                   }).toList()),
-                              const SizedBox(height: 10),
+                              space,
                               DropdownMenu<String>(
                                   label: const Text('Select Model',
                                       style: TextStyle(
@@ -288,7 +282,7 @@ class _UpdateSsdState extends State<UpdateSsd> {
                                     return DropdownMenuEntry<String>(
                                         value: value, label: value);
                                   }).toList()),
-                              const SizedBox(height: 10),
+                              space,
                               DropdownMenu<String>(
                                   label: const Text('Select Gen Type',
                                       style: TextStyle(
@@ -318,7 +312,7 @@ class _UpdateSsdState extends State<UpdateSsd> {
                                     return DropdownMenuEntry<String>(
                                         value: value, label: value);
                                   }).toList()),
-                              const SizedBox(height: 10),
+                              space,
                               DropdownMenu<String>(
                                   label: const Text('Select Speed',
                                       style: TextStyle(
@@ -348,7 +342,7 @@ class _UpdateSsdState extends State<UpdateSsd> {
                                     return DropdownMenuEntry<String>(
                                         value: value, label: value);
                                   }).toList()),
-                              const SizedBox(height: 10),
+                              space,
                               DropdownMenu<String>(
                                   label: const Text('Select Storage Capacity',
                                       style: TextStyle(
@@ -378,43 +372,43 @@ class _UpdateSsdState extends State<UpdateSsd> {
                                     return DropdownMenuEntry<String>(
                                         value: value, label: value);
                                   }).toList()),
-                              const SizedBox(height: 10),
+                              space,
                               AdminUi.admTextField(
                                   label: 'Manufacturer',
                                   textcontroller: manufacturer),
-                              const SizedBox(height: 10),
+                              space,
                               AdminUi.admTextField(
                                   label: 'Old Price', textcontroller: oldPrice),
-                              const SizedBox(height: 10),
+                              space,
                               AdminUi.admTextField(
                                   label: 'New Price', textcontroller: newPrice),
-                              const SizedBox(height: 10),
+                              space,
                               AdminUi.admTextField(
                                   label: 'Product Dimensions',
                                   textcontroller: productDimension),
-                              const SizedBox(height: 10),
+                              space,
                               AdminUi.admTextField(
                                   label: 'Interface',
                                   textcontroller: interface),
-                              const SizedBox(height: 10),
+                              space,
                               AdminUi.admTextField(
                                   label: 'Connectivity',
                                   textcontroller: connector),
-                              const SizedBox(height: 10),
+                              space,
                               AdminUi.admTextField(
                                   label: 'Form Factor',
                                   textcontroller: fromFactor),
-                              const SizedBox(height: 10),
-                               AdminUi.admTextField(
-                                    label: 'Wattage', textcontroller: wattage),
-                                const SizedBox(height: 10),
+                              space,
+                              AdminUi.admTextField(
+                                  label: 'Wattage', textcontroller: wattage),
+                              space,
                               AdminUi.admTextField(
                                   label: 'Country', textcontroller: country),
-                              const SizedBox(height: 10),
+                              space,
                               AdminUi.admTextField(
                                   label: 'Item Weight',
                                   textcontroller: itemWeight),
-                              const SizedBox(height: 10),
+                              space,
                               AdminUi.admTextField(
                                   label: 'Warranty', textcontroller: warranty),
                               const SizedBox(height: 30),

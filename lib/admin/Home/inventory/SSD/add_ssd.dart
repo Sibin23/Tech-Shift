@@ -3,10 +3,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:prosample_1/admin/utils/colors.dart';
-import 'package:prosample_1/admin/utils/common2.dart';
-import 'package:prosample_1/admin/utils/common_widgets.dart';
-import 'package:prosample_1/admin/utils/text_style.dart';
+import 'package:prosample_1/admin/utils/utils_colors.dart';
+import 'package:prosample_1/admin/utils/utils_text_style.dart';
+import 'package:prosample_1/admin/utils/utils_widget2.dart';
+import 'package:prosample_1/admin/utils/utils_widgets2.dart';
 
 class ScreenAddSsd extends StatefulWidget {
   const ScreenAddSsd({super.key});
@@ -17,7 +17,6 @@ class ScreenAddSsd extends StatefulWidget {
 
 class _ScreenAddSsdState extends State<ScreenAddSsd> {
   final _formkey = GlobalKey<FormState>();
-  final idNum = TextEditingController();
   final productCategory = TextEditingController();
   final productName = TextEditingController();
   final manufacturer = TextEditingController();
@@ -35,6 +34,7 @@ class _ScreenAddSsdState extends State<ScreenAddSsd> {
   final country = TextEditingController();
   final itemWeight = TextEditingController();
   final warranty = TextEditingController();
+  String idnum = DateTime.now().toString().replaceAll(RegExp(r'[^\d]'), '');
   String? selectedCategory;
   String? selectedSsd;
   String? selectedModel;
@@ -65,7 +65,7 @@ class _ScreenAddSsdState extends State<ScreenAddSsd> {
     final data = {
       'category': productCategory.text.toLowerCase(),
       'image': imageurl.toString(),
-      'idnum': idNum.text,
+      'idnum': idnum,
       'name': productName.text,
       'manufacturer': manufacturer.text,
       'oldprice': oldPrice.text,
@@ -85,12 +85,11 @@ class _ScreenAddSsdState extends State<ScreenAddSsd> {
     };
     FirebaseFirestore.instance
         .collection('ssd')
-        .doc(idNum.text.toLowerCase())
+        .doc(idnum)
         .set(data);
     setState(() {
       productCategory.clear();
       imageurl = '';
-      idNum.clear();
       productName.clear();
       manufacturer.clear();
       oldPrice.clear();
@@ -112,6 +111,7 @@ class _ScreenAddSsdState extends State<ScreenAddSsd> {
 
   @override
   Widget build(BuildContext context) {
+    const space = SizedBox(height: 10);
     return Scaffold(
       appBar: AppBar(
         surfaceTintColor: Colors.white,
@@ -165,9 +165,7 @@ class _ScreenAddSsdState extends State<ScreenAddSsd> {
                           Form(
                               key: _formkey,
                               child: Column(children: [
-                                AdminUi.admTextField(
-                                    label: 'Unique ID', textcontroller: idNum),
-                                const SizedBox(height: 10),
+                                
                                 DropdownMenu<String>(
                                     label: const Text('Select Category',
                                         style: TextStyle(
@@ -197,7 +195,7 @@ class _ScreenAddSsdState extends State<ScreenAddSsd> {
                                       return DropdownMenuEntry<String>(
                                           value: value, label: value);
                                     }).toList()),
-                                const SizedBox(height: 10),
+                                space,
                                 DropdownMenu<String>(
                                     label: const Text('Select SSD',
                                         style: TextStyle(
@@ -227,7 +225,7 @@ class _ScreenAddSsdState extends State<ScreenAddSsd> {
                                       return DropdownMenuEntry<String>(
                                           value: value, label: value);
                                     }).toList()),
-                                const SizedBox(height: 10),
+                                space,
                                 DropdownMenu<String>(
                                     label: const Text('Select Model',
                                         style: TextStyle(
@@ -257,7 +255,7 @@ class _ScreenAddSsdState extends State<ScreenAddSsd> {
                                       return DropdownMenuEntry<String>(
                                           value: value, label: value);
                                     }).toList()),
-                                const SizedBox(height: 10),
+                                space,
                                 DropdownMenu<String>(
                                     label: const Text('Select Gen Type',
                                         style: TextStyle(
@@ -287,7 +285,7 @@ class _ScreenAddSsdState extends State<ScreenAddSsd> {
                                       return DropdownMenuEntry<String>(
                                           value: value, label: value);
                                     }).toList()),
-                                const SizedBox(height: 10),
+                                space,
                                 DropdownMenu<String>(
                                     label: const Text('Select Speed',
                                         style: TextStyle(
@@ -317,7 +315,7 @@ class _ScreenAddSsdState extends State<ScreenAddSsd> {
                                       return DropdownMenuEntry<String>(
                                           value: value, label: value);
                                     }).toList()),
-                                const SizedBox(height: 10),
+                                space,
                                 DropdownMenu<String>(
                                     label: const Text('Select Storage Capacity',
                                         style: TextStyle(
@@ -347,45 +345,45 @@ class _ScreenAddSsdState extends State<ScreenAddSsd> {
                                       return DropdownMenuEntry<String>(
                                           value: value, label: value);
                                     }).toList()),
-                                const SizedBox(height: 10),
+                                space,
                                 AdminUi.admTextField(
                                     label: 'Manufacturer',
                                     textcontroller: manufacturer),
-                                const SizedBox(height: 10),
+                                space,
                                 AdminUi.admTextField(
                                     label: 'Old Price',
                                     textcontroller: oldPrice),
-                                const SizedBox(height: 10),
+                                space,
                                 AdminUi.admTextField(
                                     label: 'New Price',
                                     textcontroller: newPrice),
-                                const SizedBox(height: 10),
+                                space,
                                 AdminUi.admTextField(
                                     label: 'Product Dimensions',
                                     textcontroller: productDimension),
-                                const SizedBox(height: 10),
+                                space,
                                 AdminUi.admTextField(
                                     label: 'Interface',
                                     textcontroller: interface),
-                                const SizedBox(height: 10),
+                                space,
                                 AdminUi.admTextField(
                                     label: 'Connectivity',
                                     textcontroller: connector),
-                                const SizedBox(height: 10),
+                                space,
                                 AdminUi.admTextField(
                                     label: 'Form Factor',
                                     textcontroller: fromFactor),
-                                const SizedBox(height: 10),
+                                space,
                                 AdminUi.admTextField(
                                     label: 'Wattage', textcontroller: wattage),
-                                const SizedBox(height: 10),
+                                space,
                                 AdminUi.admTextField(
                                     label: 'Country', textcontroller: country),
-                                const SizedBox(height: 10),
+                                space,
                                 AdminUi.admTextField(
                                     label: 'Item Weight',
                                     textcontroller: itemWeight),
-                                const SizedBox(height: 10),
+                                space,
                                 AdminUi.admTextField(
                                     label: 'Warranty',
                                     textcontroller: warranty),

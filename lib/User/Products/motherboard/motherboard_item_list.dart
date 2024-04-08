@@ -1,10 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:lottie/lottie.dart';
 import 'package:prosample_1/User/Products/product_details.dart';
-import 'package:prosample_1/User/utils/colors.dart';
-import 'package:prosample_1/User/utils/text_decorations.dart';
+import 'package:prosample_1/User/utils/utils_colors.dart';
+import 'package:prosample_1/User/utils/utils_text_decorations.dart';
 
 class ProductMotherboard extends StatefulWidget {
   const ProductMotherboard({super.key});
@@ -88,7 +87,7 @@ class _ProductMotherboardState extends State<ProductMotherboard> {
                                                 fit: BoxFit.cover,
                                                 placeholder: (context, url) =>
                                                     Image.asset(
-                                                        'assets/Categories/motherboard.png',
+                                                        'assets/categories/motherboard.png',
                                                         fit: BoxFit.cover)),
                                           ),
                                           Text(document['category'],
@@ -158,13 +157,7 @@ class _ProductMotherboardState extends State<ProductMotherboard> {
                       }),
                 );
               }
-              return SizedBox(
-                height: MediaQuery.of(context).size.height,
-                width: MediaQuery.of(context).size.width,
-                child: Center(
-                    child: Lottie.asset(
-                        'assets/Animations/Animation - 1708393071899.json')),
-              );
+              return const Center(child: CircularProgressIndicator());
             }),
       )),
     );

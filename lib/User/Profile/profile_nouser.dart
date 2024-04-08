@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:prosample_1/User/Profile/logout.dart';
-import 'package:prosample_1/User/Profile/profile_add_account.dart';
-import 'package:prosample_1/User/Profile/profile_contact_button.dart';
-import 'package:prosample_1/User/Profile/profile_terms_policies_button.dart';
-import 'package:prosample_1/User/Profile/profile_warranty_button.dart';
-import 'package:prosample_1/User/utils/colors.dart';
-import 'package:prosample_1/User/utils/text_decorations.dart';
+import 'package:prosample_1/User/profile/profiel_custompc_order_button.dart';
+import 'package:prosample_1/User/profile/profile_add_account.dart';
+import 'package:prosample_1/User/profile/profile_logout_button.dart';
+import 'package:prosample_1/User/profile/profile_order_history_button.dart';
+import 'package:prosample_1/User/utils/utils_colors.dart';
+import 'package:prosample_1/User/utils/utils_text_decorations.dart';
 
 class AccountNoUser extends StatefulWidget {
   const AccountNoUser({super.key});
@@ -131,14 +130,12 @@ class _AccountNoUserState extends State<AccountNoUser> {
         ),
         const SizedBox(height: 20),
         const Divider(),
-        const ContactButton(),
+        const OrdersHistoryButto(),
         const Divider(),
-        const TermsButton(),
-        const Divider(),
-        const WarrantyButton(),
+        const CustomPcButton(),
         const Divider(),
         const LogOut(),
-        const Divider()
+        const Divider(),
       ],
     );
   }

@@ -3,10 +3,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:prosample_1/admin/utils/colors.dart';
-import 'package:prosample_1/admin/utils/common2.dart';
-import 'package:prosample_1/admin/utils/common_widgets.dart';
-import 'package:prosample_1/admin/utils/text_style.dart';
+import 'package:prosample_1/admin/utils/utils_colors.dart';
+import 'package:prosample_1/admin/utils/utils_text_style.dart';
+import 'package:prosample_1/admin/utils/utils_widget2.dart';
+import 'package:prosample_1/admin/utils/utils_widgets2.dart';
 
 class ScreenAddCables extends StatefulWidget {
   const ScreenAddCables({super.key});
@@ -18,7 +18,6 @@ class ScreenAddCables extends StatefulWidget {
 class _ScreenAddCablesState extends State<ScreenAddCables> {
   final _formkey = GlobalKey<FormState>();
   final categoryName = TextEditingController();
-  final idNum = TextEditingController();
   final _speed = TextEditingController();
   final _productName = TextEditingController();
   final _manufacturer = TextEditingController();
@@ -33,6 +32,7 @@ class _ScreenAddCablesState extends State<ScreenAddCables> {
   final _productDimension = TextEditingController();
   final _country = TextEditingController();
   final _warranty = TextEditingController();
+  String idnum = DateTime.now().toString().replaceAll(RegExp(r'[^\d]'), '');
   late String imageurl = '';
   String? selectedCategory;
   String? selectedCable;
@@ -48,7 +48,6 @@ class _ScreenAddCablesState extends State<ScreenAddCables> {
     }
   }
 
-  
   Future<String> uploadImage(var image) async {
     final Reference ref =
         FirebaseStorage.instance.ref().child('Cables/${image.name}');
@@ -64,7 +63,7 @@ class _ScreenAddCablesState extends State<ScreenAddCables> {
       'image': imageurl.toString(),
       'name': _productName.text,
       'category': categoryName.text,
-      'idnum': idNum.text,
+      'idnum': idnum,
       'manufacturer': _manufacturer.text,
       'oldprice': _oldPrice.text,
       'newprice': _newPrice.text,
@@ -81,12 +80,11 @@ class _ScreenAddCablesState extends State<ScreenAddCables> {
     };
     FirebaseFirestore.instance
         .collection('cables')
-        .doc(_productName.text)
+        .doc(idnum)
         .set(data);
     setState(() {
       imageurl = '';
       _productName.clear();
-      idNum.clear();
       categoryName.clear();
       _manufacturer.clear();
       _oldPrice.clear();
@@ -107,6 +105,7 @@ class _ScreenAddCablesState extends State<ScreenAddCables> {
 
   @override
   Widget build(BuildContext context) {
+    const space = SizedBox(height: 10);
     return Scaffold(
       appBar: AppBar(
         surfaceTintColor: Colors.white,
@@ -159,10 +158,6 @@ class _ScreenAddCablesState extends State<ScreenAddCables> {
                               Form(
                                   key: _formkey,
                                   child: Column(children: [
-                                    AdminUi.admTextField(
-                                        label: 'Unique ID',
-                                        textcontroller: idNum),
-                                    const SizedBox(height: 10),
                                     DropdownMenu<String>(
                                         controller: categoryName,
                                         menuStyle: const MenuStyle(
@@ -196,7 +191,7 @@ class _ScreenAddCablesState extends State<ScreenAddCables> {
                                           return DropdownMenuEntry<String>(
                                               value: value, label: value);
                                         }).toList()),
-                                    const SizedBox(height: 10),
+                                    space,
                                     DropdownMenu<String>(
                                         controller: _productName,
                                         menuStyle: const MenuStyle(
@@ -230,7 +225,7 @@ class _ScreenAddCablesState extends State<ScreenAddCables> {
                                           return DropdownMenuEntry<String>(
                                               value: value, label: value);
                                         }).toList()),
-                                    const SizedBox(height: 10),
+                                    space,
                                     DropdownMenu<String>(
                                         controller: _manufacturer,
                                         menuStyle: const MenuStyle(
@@ -264,7 +259,7 @@ class _ScreenAddCablesState extends State<ScreenAddCables> {
                                           return DropdownMenuEntry<String>(
                                               value: value, label: value);
                                         }).toList()),
-                                    const SizedBox(height: 10),
+                                    space,
                                     DropdownMenu<String>(
                                         controller: _speed,
                                         menuStyle: const MenuStyle(
@@ -298,7 +293,7 @@ class _ScreenAddCablesState extends State<ScreenAddCables> {
                                           return DropdownMenuEntry<String>(
                                               value: value, label: value);
                                         }).toList()),
-                                    const SizedBox(height: 10),
+                                    space,
                                     DropdownMenu<String>(
                                         controller: _modelName,
                                         menuStyle: const MenuStyle(
@@ -332,43 +327,43 @@ class _ScreenAddCablesState extends State<ScreenAddCables> {
                                           return DropdownMenuEntry<String>(
                                               value: value, label: value);
                                         }).toList()),
-                                    const SizedBox(height: 10),
+                                    space,
                                     AdminUi.admTextField(
                                         label: 'Old Price',
                                         textcontroller: _oldPrice),
-                                    const SizedBox(height: 10),
+                                    space,
                                     AdminUi.admTextField(
                                         label: 'New Price',
                                         textcontroller: _newPrice),
-                                    const SizedBox(height: 10),
+                                    space,
                                     AdminUi.admTextField(
                                         label: 'Item Colour',
                                         textcontroller: _color),
-                                    const SizedBox(height: 10),
+                                    space,
                                     AdminUi.admTextField(
                                         label: 'Number of Pins',
                                         textcontroller: _pinNumbers),
-                                    const SizedBox(height: 10),
+                                    space,
                                     AdminUi.admTextField(
                                         label: 'Wattage',
                                         textcontroller: _wattage),
-                                    const SizedBox(height: 10),
+                                    space,
                                     AdminUi.admTextField(
                                         label: 'Voltage',
                                         textcontroller: _voltage),
-                                    const SizedBox(height: 10),
+                                    space,
                                     AdminUi.admTextField(
                                         label: 'Product Dimenstions',
                                         textcontroller: _productDimension),
-                                    const SizedBox(height: 10),
+                                    space,
                                     AdminUi.admTextField(
                                         label: 'Item Weight',
                                         textcontroller: _itemWeight),
-                                    const SizedBox(height: 10),
+                                    space,
                                     AdminUi.admTextField(
                                         label: 'Country',
                                         textcontroller: _country),
-                                    const SizedBox(height: 10),
+                                    space,
                                     AdminUi.admTextField(
                                         label: 'Warranty',
                                         textcontroller: _warranty),

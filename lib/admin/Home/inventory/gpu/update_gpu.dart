@@ -4,10 +4,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:prosample_1/admin/utils/colors.dart';
-import 'package:prosample_1/admin/utils/common2.dart';
-import 'package:prosample_1/admin/utils/common_widgets.dart';
-import 'package:prosample_1/admin/utils/text_style.dart';
+import 'package:prosample_1/admin/utils/utils_colors.dart';
+import 'package:prosample_1/admin/utils/utils_text_style.dart';
+import 'package:prosample_1/admin/utils/utils_widget2.dart';
+import 'package:prosample_1/admin/utils/utils_widgets2.dart';
 
 class UpdateGpu extends StatefulWidget {
   final String itemId;
@@ -19,7 +19,6 @@ class UpdateGpu extends StatefulWidget {
 
 class _UpdateGpuState extends State<UpdateGpu> {
   final formkey = GlobalKey<FormState>();
-  final idNum = TextEditingController();
   final categoryName = TextEditingController();
   final gpuName = TextEditingController();
   final modelName = TextEditingController();
@@ -67,11 +66,11 @@ class _UpdateGpuState extends State<UpdateGpu> {
   updateData() {
     FirebaseFirestore.instance
         .collection('gpu')
-        .doc(widget.itemId) // Use the itemId
+        .doc(widget.itemId) 
         .update({
       'image': imageurl.toString(),
       'category': categoryName.text.trim(),
-      'idnum': idNum.text.trim().toLowerCase(),
+      'idnum': widget.itemId,
       'name': gpuName.text,
       'model': modelName.text,
       'manufacturer': manufacturer.text,
@@ -93,7 +92,6 @@ class _UpdateGpuState extends State<UpdateGpu> {
     });
     setState(() {
       imageurl = '';
-      idNum.clear();
       categoryName.clear();
       gpuName.clear();
       modelName.clear();
@@ -126,7 +124,6 @@ class _UpdateGpuState extends State<UpdateGpu> {
       if (snapshot.exists) {
         Map<String, dynamic> data = snapshot.data()!;
         categoryName.text = data['category'];
-        idNum.text = data['idnum'];
         gpuName.text = data['name'];
         imageurl = data['image'];
         setState(() {
@@ -157,6 +154,7 @@ class _UpdateGpuState extends State<UpdateGpu> {
 
   @override
   Widget build(BuildContext context) {
+    const space = SizedBox(height: 10);
     return Scaffold(
       body: SafeArea(
           child: StreamBuilder<QuerySnapshot>(
@@ -203,10 +201,8 @@ class _UpdateGpuState extends State<UpdateGpu> {
                               Form(
                                   key: formkey,
                                   child: Column(children: [
-                                    AdminUi.admTextField(
-                                        label: 'Unique ID',
-                                        textcontroller: idNum),
-                                    const SizedBox(height: 10),
+                                    
+                                    
                                     DropdownMenu<String>(
                                         label: const Text(
                                           'Select Category',
@@ -241,7 +237,7 @@ class _UpdateGpuState extends State<UpdateGpu> {
                                           return DropdownMenuEntry<String>(
                                               value: value, label: value);
                                         }).toList()),
-                                    const SizedBox(height: 10),
+                                    space,
                                     DropdownMenu<String>(
                                         label: const Text(
                                           'Select Graphics Card',
@@ -276,7 +272,7 @@ class _UpdateGpuState extends State<UpdateGpu> {
                                           return DropdownMenuEntry<String>(
                                               value: value, label: value);
                                         }).toList()),
-                                    const SizedBox(height: 10),
+                                    space,
                                     DropdownMenu<String>(
                                         label: const Text(
                                           'Select Model',
@@ -311,7 +307,7 @@ class _UpdateGpuState extends State<UpdateGpu> {
                                           return DropdownMenuEntry<String>(
                                               value: value, label: value);
                                         }).toList()),
-                                    const SizedBox(height: 10),
+                                    space,
                                     DropdownMenu<String>(
                                         label: const Text(
                                           'Select Manufacturer',
@@ -349,7 +345,7 @@ class _UpdateGpuState extends State<UpdateGpu> {
                                           return DropdownMenuEntry<String>(
                                               value: value, label: value);
                                         }).toList()),
-                                    const SizedBox(height: 10),
+                                    space,
                                     DropdownMenu<String>(
                                         label: const Text(
                                           'Select Feature Supports',
@@ -384,54 +380,54 @@ class _UpdateGpuState extends State<UpdateGpu> {
                                           return DropdownMenuEntry<String>(
                                               value: value, label: value);
                                         }).toList()),
-                                    const SizedBox(height: 10),
+                                    space,
                                     AdminUi.admTextField(
                                         label: 'Old Price',
                                         textcontroller: oldPrice),
-                                    const SizedBox(height: 10),
+                                    space,
                                     AdminUi.admTextField(
                                         label: 'New Price',
                                         textcontroller: newPrice),
-                                    const SizedBox(height: 10),
+                                    space,
                                     AdminUi.admTextField(
                                         label: 'Colour', textcontroller: color),
-                                    const SizedBox(height: 10),
+                                    space,
                                     AdminUi.featuresTextfield(
                                         label: 'Features',
                                         textcontroller: features),
-                                    const SizedBox(height: 10),
+                                    space,
                                     AdminUi.admTextField(
                                         label: 'Max Resolution',
                                         textcontroller: maxResolution),
-                                    const SizedBox(height: 10),
+                                    space,
                                     AdminUi.admTextField(
                                         label: 'Product Dimensions',
                                         textcontroller: dimension),
-                                    const SizedBox(height: 10),
+                                    space,
                                     AdminUi.admTextField(
                                         label: 'RAM Type',
                                         textcontroller: ramType),
-                                    const SizedBox(height: 10),
+                                    space,
                                     AdminUi.admTextField(
                                         label: 'RAM Size',
                                         textcontroller: ramSize),
-                                    const SizedBox(height: 10),
+                                    space,
                                     AdminUi.admTextField(
                                         label: 'Recomended PSU',
                                         textcontroller: recPsu),
-                                    const SizedBox(height: 10),
+                                    space,
                                     AdminUi.admTextField(
                                         label: 'Wattage',
                                         textcontroller: wattage),
-                                    const SizedBox(height: 10),
+                                    space,
                                     AdminUi.admTextField(
                                         label: 'Country',
                                         textcontroller: country),
-                                    const SizedBox(height: 10),
+                                    space,
                                     AdminUi.admTextField(
                                         label: 'Item Weight',
                                         textcontroller: weight),
-                                    const SizedBox(height: 10),
+                                    space,
                                     AdminUi.admTextField(
                                         label: 'Warranty',
                                         textcontroller: warranty)

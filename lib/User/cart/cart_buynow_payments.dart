@@ -4,11 +4,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
-import 'package:prosample_1/User/Profile/profile_terms_policies.dart';
 import 'package:prosample_1/User/cart/cart_total_amount.dart';
 import 'package:prosample_1/User/home.dart';
-import 'package:prosample_1/User/utils/commonfile.dart';
-import 'package:prosample_1/User/utils/text_decorations.dart';
+import 'package:prosample_1/User/user_home/user_home_terms_policies.dart';
+import 'package:prosample_1/User/utils/utils_widget1.dart';
+import 'package:prosample_1/User/utils/utils_text_decorations.dart';
 import 'package:prosample_1/functions/fuctions.dart';
 
 class CartBuyNowPayments extends StatefulWidget {
@@ -173,13 +173,13 @@ class _CartBuyNowPaymentsState extends State<CartBuyNowPayments> {
                                           MediaQuery.of(context).size.height *
                                               .07,
                                       child: Lottie.asset(
-                                          'assets/Animations/order_loading.json')),
+                                          'assets/animations/order_loading.json')),
                                 ],
                               ),
                             ),
                           ),
                         ),
-                        Lottie.asset('assets/Animations/order2.json',
+                        Lottie.asset('assets/animations/order2.json',
                             fit: BoxFit.contain,
                             height: MediaQuery.of(context).size.height * .4,
                             width: MediaQuery.of(context).size.width,
@@ -206,7 +206,7 @@ class _CartBuyNowPaymentsState extends State<CartBuyNowPayments> {
                           SizedBox(
                               width: MediaQuery.of(context).size.width,
                               height: MediaQuery.of(context).size.height * .4,
-                              child: Lottie.asset('assets/Animations/cod.json',
+                              child: Lottie.asset('assets/animations/cod.json',
                                   fit: BoxFit.contain)),
                           Padding(
                             padding: const EdgeInsets.all(10.0),
@@ -227,7 +227,7 @@ class _CartBuyNowPaymentsState extends State<CartBuyNowPayments> {
                                             MediaQuery.of(context).size.height *
                                                 .06,
                                         child: Image.asset(
-                                            'assets/Icons/images.jpeg.jpg',
+                                            'assets/icons/images.jpeg.jpg',
                                             fit: BoxFit.contain,
                                             filterQuality: FilterQuality.high))
                                   ],
