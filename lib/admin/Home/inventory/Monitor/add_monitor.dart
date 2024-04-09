@@ -280,28 +280,12 @@ class _ScreenAddMonitorState extends State<ScreenAddMonitor> {
                                     }).toList()),
                                 space,
                                 AdminUi.admTextField(
-                                    label: 'Category Name',
-                                    textcontroller: _productCategory),
-                                space,
-                                AdminUi.admTextField(
-                                    label: 'Product Name',
-                                    textcontroller: _productName),
-                                space,
-                                AdminUi.admTextField(
-                                    label: 'Manufacturer',
-                                    textcontroller: _manufacturer),
-                                space,
-                                AdminUi.admTextField(
                                     label: 'Old Price',
                                     textcontroller: _oldPrice),
                                 space,
                                 AdminUi.admTextField(
                                     label: 'New Price',
                                     textcontroller: _newPrice),
-                                space,
-                                AdminUi.admTextField(
-                                    label: 'Model Name',
-                                    textcontroller: _modelName),
                                 space,
                                 AdminUi.admTextField(
                                     label: 'Product Dimensions',

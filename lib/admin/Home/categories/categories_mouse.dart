@@ -21,7 +21,7 @@ class _ListMouseState extends State<ListMouse> {
 
   Future submit() async {
     final data = {
-      'category': categoryName.text.toLowerCase(),
+      'category': categoryName.text.trim().toLowerCase(),
       'name': productName.text,
       'model': model.text,
       'manufacturer': manufacturer.text,

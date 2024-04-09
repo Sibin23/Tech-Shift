@@ -116,16 +116,31 @@ class _ScreenOrdersListState extends State<ScreenOrdersList> {
                                                                 .size
                                                                 .height *
                                                             0.12,
-                                                        child: CachedNetworkImage(
-                                                            imageUrl: document[
-                                                                'image'],
-                                                            fit: BoxFit.cover,
-                                                            placeholder: (context,
-                                                                    url) =>
-                                                                Image.asset(
-                                                                    'assets/categories/ssd.png',
-                                                                    fit: BoxFit
-                                                                        .cover)),
+                                                        child: document[
+                                                                    'image'] !=
+                                                                null
+                                                            ? CachedNetworkImage(
+                                                                imageUrl:
+                                                                    document[
+                                                                        'image'],
+                                                                fit: BoxFit
+                                                                    .cover,
+                                                                placeholder: (context,
+                                                                        url) =>
+                                                                    const Center(
+                                                                        child:
+                                                                            CircularProgressIndicator()),
+                                                                errorWidget: (context,
+                                                                        url,
+                                                                        error) =>
+                                                                    const Icon(Icons
+                                                                        .error),
+                                                              )
+                                                            : Image.asset(
+                                                                'assets/categories/ssd.png',
+                                                                fit: BoxFit
+                                                                    .cover,
+                                                              ),
                                                       ),
                                                       const SizedBox(width: 5),
                                                       Flexible(

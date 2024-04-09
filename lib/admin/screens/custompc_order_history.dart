@@ -5,7 +5,6 @@ import 'package:prosample_1/admin/custompc_orders/custompc_order_buttons.dart';
 import 'package:prosample_1/admin/custompc_orders/custompc_order_details.dart';
 import 'package:prosample_1/admin/utils/utils_text_style.dart';
 
-
 class OrderConfiguration extends StatefulWidget {
   const OrderConfiguration({super.key});
 
@@ -110,16 +109,29 @@ class _OrderConfigurationState extends State<OrderConfiguration> {
                                                                 .size
                                                                 .height *
                                                             0.12,
-                                                        child: CachedNetworkImage(
-                                                            imageUrl:
-                                                                data['image'],
-                                                            fit: BoxFit.cover,
-                                                            placeholder: (context,
-                                                                    url) =>
-                                                                Image.asset(
-                                                                    'assets/categories/ssd.png',
-                                                                    fit: BoxFit
-                                                                        .cover)),
+                                                        child: data['image'] !=
+                                                                null
+                                                            ? CachedNetworkImage(
+                                                                imageUrl: data[
+                                                                    'image'],
+                                                                fit: BoxFit
+                                                                    .cover,
+                                                                placeholder: (context,
+                                                                        url) =>
+                                                                    const Center(
+                                                                        child:
+                                                                            CircularProgressIndicator()), 
+                                                                errorWidget: (context,
+                                                                        url,
+                                                                        error) =>
+                                                                    const Icon(Icons
+                                                                        .error), 
+                                                              )
+                                                            : Image.asset(
+                                                                'assets/categories/ssd.png',
+                                                                fit: BoxFit
+                                                                    .cover,
+                                                              ),
                                                       ),
                                                       const SizedBox(width: 5),
                                                       Flexible(
