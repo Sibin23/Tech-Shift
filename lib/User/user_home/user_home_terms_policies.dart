@@ -127,6 +127,27 @@ class TermsAndPolicy extends StatelessWidget {
                 ],
               ),
             ),
+             SizedBox(
+              width: MediaQuery.of(context).size.width,
+              child: Stack(
+                children: [
+                  Positioned(
+                      top: 0,
+                      left: 0,
+                      child: Text('6.', style: TextStyling.subtitle)),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 15),
+                    child: SizedBox(
+                      width: MediaQuery.of(context).size.width,
+                      child: Text(
+                        'Your data is used for functionality purposes only and is not transferred to third parties.',
+                        style: TextStyling.subtitle,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
           ],
         ),
       )),
