@@ -33,9 +33,9 @@ class _HomeInfo extends State<HomeInfo> {
 
   List pages = [
     const ScreenHome(),
-    const Profile(),
     const ScreenCart(),
     const ScreenFavorites(),
+    const Profile(),
   ];
   int myindex = 0;
 
@@ -74,17 +74,17 @@ class _HomeInfo extends State<HomeInfo> {
                 text: 'Home',
               ),
               GButton(
-                icon: Icons.person_sharp,
-                text: 'Profile',
-              ),
-              GButton(
                 icon: Icons.shopping_cart,
                 text: 'Cart',
               ),
               GButton(
                 icon: Icons.favorite,
                 text: 'Favorites',
-              )
+              ),
+              GButton(
+                icon: Icons.person_sharp,
+                text: 'Profile',
+              ),
             ],
           ),
         ),

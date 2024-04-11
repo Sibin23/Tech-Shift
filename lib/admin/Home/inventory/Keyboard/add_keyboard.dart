@@ -291,6 +291,10 @@ class _ScreenAddKeyboardState extends State<ScreenAddKeyboard> {
                                     label: 'Country', textcontroller: _country),
                                 space,
                                 AdminUi.admTextField(
+                                    label: 'Item Weight',
+                                    textcontroller: _itemWeight),
+                                space,
+                                AdminUi.admTextField(
                                     label: 'Warranty',
                                     textcontroller: _warranty),
                               ])), // Text field

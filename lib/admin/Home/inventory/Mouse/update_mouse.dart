@@ -64,9 +64,9 @@ class _UpdateMouseState extends State<UpdateMouse> {
         .collection('mouse')
         .doc(widget.itemId) 
         .update({
-      'category': categoryName,
+      'category': categoryName.text,
       'idnum': widget.itemId,
-      'image': imageurl.toString(),
+      'image': imageurl,
       'name': productName.text,
       'manufacturer': manufacturer.text,
       'oldprice': _oldPrice.text,
@@ -131,7 +131,7 @@ class _UpdateMouseState extends State<UpdateMouse> {
         _buttons.text = data['buttons'];
         _connector.text = data['connectivity'];
         _country.text = data['country'];
-        _itemWeight.text = data['country'];
+        _itemWeight.text = data['itemweight'];
         _warranty.text = data['warranty'];
       }
     });

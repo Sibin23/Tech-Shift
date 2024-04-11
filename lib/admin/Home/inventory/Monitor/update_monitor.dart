@@ -19,7 +19,6 @@ class UpdateMonitor extends StatefulWidget {
 class _UpdateMonitorState extends State<UpdateMonitor> {
   final _formkey = GlobalKey<FormState>();
   final categoryName = TextEditingController();
-  final _series = TextEditingController();
   final productName = TextEditingController();
   final _manufacturer = TextEditingController();
   final _oldPrice = TextEditingController();
@@ -71,7 +70,6 @@ class _UpdateMonitorState extends State<UpdateMonitor> {
       'manufacturer': _manufacturer.text,
       'oldprice': _oldPrice.text,
       'newprice': _newPrice.text,
-      'series': _series.text,
       'model': modelName.text,
       'productdimension': _productDimension.text,
       'viewingangle': _veiwingAngle.text,
@@ -90,7 +88,6 @@ class _UpdateMonitorState extends State<UpdateMonitor> {
     setState(() {
       categoryName.clear();
       imageurl = '';
-      _series.clear();
       productName.clear();
       _manufacturer.clear();
       _oldPrice.clear();
@@ -127,7 +124,6 @@ class _UpdateMonitorState extends State<UpdateMonitor> {
         });
         imageurl = data['image'];
         categoryName.text = data['category'];
-        _series.text = data['series'];
         _oldPrice.text = data['oldprice'];
         _newPrice.text = data['newprice'];
         modelName.text = data['model'];
@@ -196,7 +192,6 @@ class _UpdateMonitorState extends State<UpdateMonitor> {
                     Form(
                         key: _formkey,
                         child: Column(children: [
-                         
                           DropdownMenu<String>(
                               label: const Text('Select Category',
                                   style:
@@ -304,10 +299,6 @@ class _UpdateMonitorState extends State<UpdateMonitor> {
                                 return DropdownMenuEntry<String>(
                                     value: value, label: value);
                               }).toList()),
-                          space,
-                          AdminUi.admTextField(
-                              label: 'Series', textcontroller: _series),
-                          space,
                           space,
                           AdminUi.admTextField(
                               label: 'Old Price', textcontroller: _oldPrice),

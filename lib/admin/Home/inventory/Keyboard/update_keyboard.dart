@@ -173,7 +173,6 @@ class _UpdateKeyboardState extends State<UpdateKeyboard> {
                   Form(
                       key: _formkey,
                       child: Column(children: [
-                       
                         DropdownMenu<String>(
                             label: const Text('Select Category',
                                 style: TextStyle(color: CustomColors.appTheme)),
@@ -296,6 +295,9 @@ class _UpdateKeyboardState extends State<UpdateKeyboard> {
                         space,
                         AdminUi.admTextField(
                             label: 'Country', textcontroller: _country),
+                        space,
+                        AdminUi.admTextField(
+                            label: 'Item Weight', textcontroller: _itemWeight),
                         space,
                         AdminUi.admTextField(
                             label: 'Warranty', textcontroller: _warranty),

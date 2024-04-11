@@ -60,9 +60,9 @@ class _ScreenAddMouseState extends State<ScreenAddMouse> {
 
   Future submitData() async {
     final data = {
-      'category': categoryName,
+      'category': categoryName.text,
       'idnum': idnum,
-      'image': imageurl.toString(),
+      'image': imageurl,
       'name': productName.text,
       'manufacturer': manufacturer.text,
       'oldprice': _oldPrice.text,

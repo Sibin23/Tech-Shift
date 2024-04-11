@@ -64,11 +64,6 @@ class _ScreenMonitorInfoState extends State<ScreenMonitorInfo> {
                                   style: TextStyling.subtitle)),
                           SizedBox(
                               width: MediaQuery.of(context).size.width,
-                              height: MediaQuery.of(context).size.height * 0.04,
-                              child:
-                                  Text('Series', style: TextStyling.subtitle)),
-                          SizedBox(
-                              width: MediaQuery.of(context).size.width,
                               height: MediaQuery.of(context).size.height * 0.08,
                               child: Text('Features',
                                   style: TextStyling.subtitle)),
@@ -129,7 +124,7 @@ class _ScreenMonitorInfoState extends State<ScreenMonitorInfo> {
                                   style: TextStyling.subtitle)),
                           SizedBox(
                               width: MediaQuery.of(context).size.width,
-                              height: MediaQuery.of(context).size.height * 0.08,
+                              height: MediaQuery.of(context).size.height * 0.1,
                               child: Text('Warranty',
                                   style: TextStyling.subtitle)),
                         ],
@@ -157,11 +152,6 @@ class _ScreenMonitorInfoState extends State<ScreenMonitorInfo> {
                               width: MediaQuery.of(context).size.width,
                               height: MediaQuery.of(context).size.height * .04,
                               child: Text(monitor['manufacturer'],
-                                  style: TextStyling.details)),
-                          SizedBox(
-                              width: MediaQuery.of(context).size.width,
-                              height: MediaQuery.of(context).size.height * .04,
-                              child: Text(monitor['series'],
                                   style: TextStyling.details)),
                           SizedBox(
                               width: MediaQuery.of(context).size.width,
@@ -230,7 +220,7 @@ class _ScreenMonitorInfoState extends State<ScreenMonitorInfo> {
                                   style: TextStyling.details)),
                           SizedBox(
                               width: MediaQuery.of(context).size.width,
-                              height: MediaQuery.of(context).size.height * .08,
+                              height: MediaQuery.of(context).size.height * .1,
                               child: Text(monitor['warranty'],
                                   style: TextStyling.details)),
                         ],

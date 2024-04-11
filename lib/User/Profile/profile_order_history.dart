@@ -4,7 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
-import 'package:prosample_1/User/products/product_details.dart';
+import 'package:prosample_1/User/profile/profile_order_details.dart';
 import 'package:prosample_1/User/utils/utils_colors.dart';
 import 'package:prosample_1/User/utils/utils_text_decorations.dart';
 
@@ -96,9 +96,7 @@ class _ProfileOrderHistoryState extends State<ProfileOrderHistory> {
                                       Navigator.push(
                                           context,
                                           MaterialPageRoute(
-                                              builder: (ctx) => CheckDetails(
-                                                  collection: data['category'],
-                                                  idNum: data['idnum'])));
+                                              builder: (ctx) => ProfileOrderDetails(uid: data['uid'],orderId: data['orderid'])));
                                     }
                                   },
                                   child: Container(
@@ -181,6 +179,7 @@ class _ProfileOrderHistoryState extends State<ProfileOrderHistory> {
                                                           CrossAxisAlignment
                                                               .start,
                                                       children: [
+                                                        Text('# ${data['orderid']}'),
                                                         Text(data['category']
                                                             .toString()
                                                             .toUpperCase()),
