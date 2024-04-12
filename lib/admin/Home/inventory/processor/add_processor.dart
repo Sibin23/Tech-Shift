@@ -1,8 +1,10 @@
 import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:prosample_1/admin/const/variables.dart';
 import 'package:prosample_1/admin/utils/utils_colors.dart';
 import 'package:prosample_1/admin/utils/utils_text_style.dart';
 import 'package:prosample_1/admin/utils/utils_widget2.dart';
@@ -19,28 +21,27 @@ class ScreenAddProcessor extends StatefulWidget {
 
 class _ScreenAddProcessorState extends State<ScreenAddProcessor> {
   final _formkey = GlobalKey<FormState>();
-  String idnum = DateTime.now().toString().replaceAll(RegExp(r'[^\d]'), '');
-  final _productCategory = TextEditingController();
   final _productName = TextEditingController();
   final _oldPrice = TextEditingController();
   final _newPrice = TextEditingController();
   final _cores = TextEditingController();
-  final manufacturer = TextEditingController();
+  final _manufacturer = TextEditingController();
   final _threads = TextEditingController();
   final _socket = TextEditingController();
   final _speed = TextEditingController();
-  final dimension = TextEditingController();
-  final country = TextEditingController();
-  final weight = TextEditingController();
+  final _dimension = TextEditingController();
+  final _country = TextEditingController();
+  final _weight = TextEditingController();
   final _cache = TextEditingController();
   final _integratedGraphics = TextEditingController();
   final _includedCPUCooler = TextEditingController();
   final _unlocked = TextEditingController();
   final _tdp = TextEditingController();
   final _warranty = TextEditingController();
-
+  String idnum = DateTime.now().toString().replaceAll(RegExp(r'[^\d]'), '');
   late String imageurl = '';
-
+  bool isNew = false;
+  bool isPopular = false;
   Future<void> pickImage() async {
     final ImagePicker picker = ImagePicker();
     final XFile? image = await picker.pickImage(source: ImageSource.gallery);
@@ -64,42 +65,57 @@ class _ScreenAddProcessorState extends State<ScreenAddProcessor> {
 
   Future submitData() async {
     final data = {
-      'image': imageurl.toString(),
-      'idnum': idnum,
-      'category': _productCategory.text,
-      'name': _productName.text,
-      'oldprice': _oldPrice.text,
-      'newprice': _newPrice.text,
-      'manufacturer': manufacturer.text,
-      'cores': _cores.text,
-      'threads': _threads.text,
-      'socket': _socket.text,
-      'speed': _speed.text,
-      'productdimension': dimension.text,
-      'itemweight': weight.text,
-      'country': country.text,
-      'cache': _cache.text,
-      'graphics': _integratedGraphics.text.toUpperCase(),
-      'cooler': _includedCPUCooler.text.toUpperCase(),
-      'unlocked': _unlocked.text.toUpperCase(),
-      'tdp': _tdp.text,
-      'warranty': _warranty.text,
+      itemImage: imageurl.toString(),
+      uniqueId: idnum,
+      category: processor,
+      name: _productName.text,
+      oldPrice: _oldPrice.text,
+      newPrice: _newPrice.text,
+      manufacturer: _manufacturer.text,
+      cores: _cores.text,
+      threads: _threads.text,
+      socket: _socket.text.trim().toUpperCase(),
+      speed: _speed.text,
+      dimension: _dimension.text,
+      weight: _weight.text,
+      country: _country.text,
+      cache: _cache.text,
+      graphics: _integratedGraphics.text.toUpperCase(),
+      integratedCooler: _includedCPUCooler.text.toUpperCase(),
+      unlocked: _unlocked.text.toUpperCase(),
+      tdp: _tdp.text,
+      warranty: _warranty.text,
+      newArival: isNew,
+      popular: isPopular,
     };
-    FirebaseFirestore.instance.collection('processor').doc(idnum).set(data);
+    final item = {
+      itemImage: imageurl,
+      name: _productName.text,
+      uniqueId: idnum,
+      category: processor,
+      oldPrice: _oldPrice.text,
+      newPrice: _newPrice.text,
+    };
+    if (isNew == true) {
+      FirebaseFirestore.instance.collection(newArival).doc(idnum).set(item);
+    }
+    if (isPopular == true) {
+      FirebaseFirestore.instance.collection(popular).doc(idnum).set(item);
+    }
+    FirebaseFirestore.instance.collection(processor).doc(idnum).set(data);
 
     setState(() {
-      _productCategory.clear();
       _productName.clear();
       _oldPrice.clear();
       _newPrice.clear();
-      manufacturer.clear();
+      _manufacturer.clear();
       _cores.clear();
       _threads.clear();
       _socket.clear();
       _speed.clear();
-      dimension.clear();
-      weight.clear();
-      country.clear();
+      _dimension.clear();
+      _weight.clear();
+      _country.clear();
       _cache.clear();
       _integratedGraphics.clear();
       _includedCPUCooler.clear();
@@ -107,21 +123,9 @@ class _ScreenAddProcessorState extends State<ScreenAddProcessor> {
       _tdp.clear();
       _warranty.clear();
       imageurl = '';
+      isNew = false;
+      isPopular = false;
     });
-  }
-
-  String? selectedProcessor;
-  String? selectedSpeed;
-  String? selectedSocket;
-  String? selectedThreads;
-  String? selectedCores;
-  String? selectedCategory;
-  @override
-  void initState() {
-    FirebaseFirestore.instance.collection('cpudetails').get().then((snapshot) {
-      return;
-    });
-    super.initState();
   }
 
   @override
@@ -131,303 +135,126 @@ class _ScreenAddProcessorState extends State<ScreenAddProcessor> {
         surfaceTintColor: Colors.white,
       ),
       body: SafeArea(
-        child: StreamBuilder<QuerySnapshot>(
-            stream:
-                FirebaseFirestore.instance.collection('cpudetails').snapshots(),
-            builder: (context, snapshot) {
-              if (snapshot.hasError) {
-                return Text('Error: ${snapshot.error}');
-              }
-              if (!snapshot.hasData) {
-                return const Center(child: CircularProgressIndicator());
-              }
-              final category = snapshot.data!.docs
-                  .map((doc) => doc['category'] as String)
-                  .toSet()
-                  .toList();
-              final processor = snapshot.data!.docs
-                  .map((doc) => doc['name'] as String)
-                  .toSet()
-                  .toList();
-              final sockets = snapshot.data!.docs
-                  .map((doc) => doc['socket'] as String)
-                  .toSet()
-                  .toList();
-              final cores = snapshot.data!.docs
-                  .map((doc) => doc['cores'] as String)
-                  .toSet()
-                  .toList();
-              final threads = snapshot.data!.docs
-                  .map((doc) => doc['threads'] as String)
-                  .toSet()
-                  .toList();
-              final speeds = snapshot.data!.docs
-                  .map((doc) => doc['speed'] as String)
-                  .toSet()
-                  .toList();
-              return SingleChildScrollView(
-                child: SizedBox(
-                  width: MediaQuery.of(context).size.width,
-                  child: Padding(
-                    padding: const EdgeInsets.all(10.0),
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Text('Add Processor', style: CustomText.title),
+                h30,
+                AdminUiHelper.customImageBox(() {
+                  pickImage();
+                }, imageurl: imageurl),
+                h30,
+                Form(
+                    key: _formkey,
                     child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('Processor', style: CustomText.title),
-                        const SizedBox(height: 20),
-                        AdminUiHelper.customImageBox(() {
-                          pickImage();
-                        }, imageurl: imageurl),
-                        const SizedBox(height: 20),
-                        Form(
-                            key: _formkey,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const SizedBox(height: 10),
-                                DropdownMenu<String>(
-                                    controller: _productCategory,
-                                    menuStyle: const MenuStyle(
-                                        surfaceTintColor:
-                                            MaterialStatePropertyAll(
-                                                Colors.white)),
-                                    hintText: 'Select Category',
-                                    width:
-                                        MediaQuery.of(context).size.width * .93,
-                                    menuHeight: 300,
-                                    inputDecorationTheme: InputDecorationTheme(
-                                        hintStyle: const TextStyle(
-                                            color: CustomColors.appTheme),
-                                        border: OutlineInputBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(8)),
-                                        fillColor: Colors.white,
-                                        filled: true),
-                                    onSelected: (value) {
+                        AdminUi.admTextField(
+                            label: 'Product Name',
+                            textcontroller: _productName),
+                        h10,
+                        AdminUi.admTextField(
+                            label: 'Socket', textcontroller: _socket),
+                        h10,
+                        AdminUi.admTextField(
+                            label: 'Cores', textcontroller: _cores),
+                        h10,
+                        AdminUi.admTextField(
+                            label: 'Threads', textcontroller: _threads),
+                        h10,
+                        AdminUi.admTextField(
+                            label: 'Clock Speed', textcontroller: _speed),
+                        h10,
+                        AdminUi.admTextField(
+                            label: 'Manufacturer',
+                            textcontroller: _manufacturer),
+                        h10,
+                        AdminUi.admTextField(
+                            label: 'Old Price', textcontroller: _oldPrice),
+                        h10,
+                        AdminUi.admTextField(
+                            label: 'New Price', textcontroller: _newPrice),
+                        h10,
+                        AdminUi.admTextField(
+                            label: 'Cache', textcontroller: _cache),
+                        h10,
+                        AdminUi.admTextField(
+                            label: 'Integrated Graphics',
+                            textcontroller: _integratedGraphics),
+                        h10,
+                        AdminUi.admTextField(
+                            label: 'Included CPU Cooler',
+                            textcontroller: _includedCPUCooler),
+                        h10,
+                        AdminUi.admTextField(
+                            label: 'Unlocked', textcontroller: _unlocked),
+                        h10,
+                        AdminUi.admTextField(
+                            label: 'TDP in (W)', textcontroller: _tdp),
+                        h10,
+                        AdminUi.admTextField(
+                            label: 'Product Dimension',
+                            textcontroller: _dimension),
+                        h10,
+                        AdminUi.admTextField(
+                            label: 'Item Weight', textcontroller: _weight),
+                        h10,
+                        AdminUi.admTextField(
+                            label: 'Country of Origin',
+                            textcontroller: _country),
+                        h10,
+                        AdminUi.admTextField(
+                            label: 'Warranty', textcontroller: _warranty),
+                        h10,
+                        Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              Row(children: [
+                                Checkbox(
+                                    tristate: false,
+                                    activeColor: CustomColors.appTheme,
+                                    value: isNew,
+                                    onChanged: (newValue) {
                                       setState(() {
-                                        selectedCategory = value;
+                                        isNew = newValue!;
                                       });
-                                    },
-                                    dropdownMenuEntries: category
-                                        .map<DropdownMenuEntry<String>>(
-                                            (String value) {
-                                      return DropdownMenuEntry<String>(
-                                          value: value, label: value);
-                                    }).toList()),
-                                const SizedBox(height: 10),
-                                DropdownMenu<String>(
-                                    controller: _socket,
-                                    menuStyle: const MenuStyle(
-                                        surfaceTintColor:
-                                            MaterialStatePropertyAll(
-                                                Colors.white)),
-                                    hintText: 'Select Socket',
-                                    width:
-                                        MediaQuery.of(context).size.width * .93,
-                                    menuHeight: 300,
-                                    inputDecorationTheme: InputDecorationTheme(
-                                        hintStyle: const TextStyle(
-                                            color: CustomColors.appTheme),
-                                        border: OutlineInputBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(8)),
-                                        fillColor: Colors.white,
-                                        filled: true),
-                                    onSelected: (value) {
+                                    }),
+                                Text('New Arrival',
+                                    style: CustomText.categoryTitleText)
+                              ]),
+                              Row(children: [
+                                Checkbox(
+                                    tristate: false,
+                                    activeColor: CustomColors.appTheme,
+                                    value: isPopular,
+                                    onChanged: (newValue) {
                                       setState(() {
-                                        selectedSocket = value;
+                                        isPopular = newValue!;
                                       });
-                                    },
-                                    dropdownMenuEntries: sockets
-                                        .map<DropdownMenuEntry<String>>(
-                                            (String value) {
-                                      return DropdownMenuEntry<String>(
-                                          value: value, label: value);
-                                    }).toList()),
-                                const SizedBox(height: 10),
-                                DropdownMenu<String>(
-                                    controller: _productName,
-                                    menuStyle: const MenuStyle(
-                                        surfaceTintColor:
-                                            MaterialStatePropertyAll(
-                                                Colors.white)),
-                                    hintText: 'Select Processor',
-                                    width:
-                                        MediaQuery.of(context).size.width * .93,
-                                    menuHeight: 300,
-                                    inputDecorationTheme: InputDecorationTheme(
-                                        hintStyle: const TextStyle(
-                                            color: CustomColors.appTheme),
-                                        border: OutlineInputBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(8)),
-                                        fillColor: Colors.white,
-                                        filled: true),
-                                    onSelected: (value) {
-                                      setState(() {
-                                        selectedProcessor = value;
-                                      });
-                                    },
-                                    dropdownMenuEntries: processor
-                                        .map<DropdownMenuEntry<String>>(
-                                            (String value) {
-                                      return DropdownMenuEntry<String>(
-                                          value: value, label: value);
-                                    }).toList()),
-                                const SizedBox(height: 10),
-                                DropdownMenu<String>(
-                                    controller: _cores,
-                                    menuStyle: const MenuStyle(
-                                        surfaceTintColor:
-                                            MaterialStatePropertyAll(
-                                                Colors.white)),
-                                    hintText: 'Select Cores',
-                                    width:
-                                        MediaQuery.of(context).size.width * .93,
-                                    menuHeight: 300,
-                                    inputDecorationTheme: InputDecorationTheme(
-                                        hintStyle: const TextStyle(
-                                            color: CustomColors.appTheme),
-                                        border: OutlineInputBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(8)),
-                                        fillColor: Colors.white,
-                                        filled: true),
-                                    onSelected: (value) {
-                                      setState(() {
-                                        selectedCores = value;
-                                      });
-                                    },
-                                    dropdownMenuEntries: cores
-                                        .map<DropdownMenuEntry<String>>(
-                                            (String value) {
-                                      return DropdownMenuEntry<String>(
-                                          value: value, label: value);
-                                    }).toList()),
-                                const SizedBox(height: 10),
-                                DropdownMenu<String>(
-                                    controller: _threads,
-                                    menuStyle: const MenuStyle(
-                                        surfaceTintColor:
-                                            MaterialStatePropertyAll(
-                                                Colors.white)),
-                                    hintText: 'Select Threads',
-                                    width:
-                                        MediaQuery.of(context).size.width * .93,
-                                    menuHeight: 300,
-                                    inputDecorationTheme: InputDecorationTheme(
-                                        hintStyle: const TextStyle(
-                                            color: CustomColors.appTheme),
-                                        border: OutlineInputBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(8)),
-                                        fillColor: Colors.white,
-                                        filled: true),
-                                    onSelected: (value) {
-                                      setState(() {
-                                        selectedThreads = value;
-                                      });
-                                    },
-                                    dropdownMenuEntries: threads
-                                        .map<DropdownMenuEntry<String>>(
-                                            (String value) {
-                                      return DropdownMenuEntry<String>(
-                                          value: value, label: value);
-                                    }).toList()),
-                                const SizedBox(height: 10),
-                                DropdownMenu<String>(
-                                    controller: _speed,
-                                    menuStyle: const MenuStyle(
-                                        surfaceTintColor:
-                                            MaterialStatePropertyAll(
-                                                Colors.white)),
-                                    hintText: 'Select Clock Speed',
-                                    width:
-                                        MediaQuery.of(context).size.width * .93,
-                                    menuHeight: 300,
-                                    inputDecorationTheme: InputDecorationTheme(
-                                        hintStyle: const TextStyle(
-                                            color: CustomColors.appTheme),
-                                        border: OutlineInputBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(8)),
-                                        fillColor: Colors.white,
-                                        filled: true),
-                                    onSelected: (value) {
-                                      setState(() {
-                                        selectedSpeed = value;
-                                      });
-                                    },
-                                    dropdownMenuEntries: speeds
-                                        .map<DropdownMenuEntry<String>>(
-                                            (String value) {
-                                      return DropdownMenuEntry<String>(
-                                          value: value, label: value);
-                                    }).toList()),
-                                const SizedBox(height: 10),
-                                AdminUi.admTextField(
-                                    label: 'Manufacturer',
-                                    textcontroller: manufacturer),
-                                AdminUi.space,
-                                AdminUi.admTextField(
-                                    label: 'Old Price',
-                                    textcontroller: _oldPrice),
-                                const SizedBox(height: 10),
-                                AdminUi.admTextField(
-                                    label: 'New Price',
-                                    textcontroller: _newPrice),
-                                const SizedBox(height: 10),
-                                AdminUi.admTextField(
-                                    label: 'Cache', textcontroller: _cache),
-                                const SizedBox(height: 10),
-                                AdminUi.admTextField(
-                                    label: 'Integrated Graphics',
-                                    textcontroller: _integratedGraphics),
-                                const SizedBox(height: 10),
-                                AdminUi.admTextField(
-                                    label: 'Included CPU Cooler',
-                                    textcontroller: _includedCPUCooler),
-                                const SizedBox(height: 10),
-                                AdminUi.admTextField(
-                                    label: 'Unlocked',
-                                    textcontroller: _unlocked),
-                                const SizedBox(height: 10),
-                                AdminUi.admTextField(
-                                    label: 'TDP in (W)', textcontroller: _tdp),
-                                const SizedBox(height: 10),
-                                AdminUi.admTextField(
-                                    label: 'Product Dimension',
-                                    textcontroller: dimension),
-                                AdminUi.space,
-                                AdminUi.admTextField(
-                                    label: 'Item Weight',
-                                    textcontroller: weight),
-                                AdminUi.space,
-                                AdminUi.admTextField(
-                                    label: 'Country of Origin',
-                                    textcontroller: country),
-                                AdminUi.space,
-                                AdminUi.admTextField(
-                                    label: 'Warranty',
-                                    textcontroller: _warranty),
-                              ],
-                            )),
-                        const SizedBox(height: 30),
-                        AdminUiHelper.customButton(context, () {
-                          if (_formkey.currentState!.validate()) {
-                            Navigator.pop(context);
-                            submitData();
-                            AdminUiHelper.customSnackbar(
-                                context, 'Item Added Successfully !');
-                          }
-                        }, text: 'Save'),
-                        const SizedBox(height: 40)
+                                    }),
+                                Text('Popular Item',
+                                    style: CustomText.categoryTitleText)
+                              ])
+                            ])
                       ],
-                    ),
-                  ),
-                ),
-              );
-            }),
+                    )),
+                h30,
+                AdminUiHelper.customButton(context, () {
+                  if (_formkey.currentState!.validate()) {
+                    Navigator.pop(context);
+                    submitData();
+                    AdminUiHelper.customSnackbar(
+                        context, 'Item Added Successfully !');
+                  }
+                }, text: 'Save'),
+                h30
+              ],
+            ),
+          ),
+        ),
       ),
     );
   }

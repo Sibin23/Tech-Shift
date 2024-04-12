@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:prosample_1/admin/home/categories/categories_main.dart';
 import 'package:prosample_1/admin/home/inventory/add%20inventory/add_items_details.dart';
+import 'package:prosample_1/admin/home/newarivals/newarivals_list.dart';
+import 'package:prosample_1/admin/home/popular/popular_list.dart';
 import 'package:prosample_1/admin/screens/screen_userguide.dart';
 import 'package:prosample_1/admin/utils/utils_colors.dart';
 import 'package:prosample_1/admin/utils/utils_text_style.dart';
@@ -67,36 +68,7 @@ class _AdminHomePageState extends State<AdminHomePage> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.42,
-                  height: MediaQuery.of(context).size.height * 0.2,
-                  child: InkWell(
-                    onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (ctx) => const ListCategory()));
-                    },
-                    child: Card(
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            const Icon(
-                              Icons.layers_rounded,
-                              size: 30,
-                            ),
-                            Text(
-                              'Add Category',
-                              style: CustomText.title2,
-                            )
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
+               
                 SizedBox(
                   width: MediaQuery.of(context).size.width * 0.42,
                   height: MediaQuery.of(context).size.height * 0.2,
@@ -129,6 +101,22 @@ class _AdminHomePageState extends State<AdminHomePage> {
                 ),
               ],
             ),
+            ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (ctx) => const NewArivalsList()));
+                },
+                child: const Text('New Arival')),
+                ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (ctx) => const PopularList()));
+                },
+                child: const Text('Popular'))
           ],
         ),
       ),

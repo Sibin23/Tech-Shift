@@ -1,16 +1,19 @@
 import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:prosample_1/admin/const/variables.dart';
 import 'package:prosample_1/admin/utils/utils_colors.dart';
 import 'package:prosample_1/admin/utils/utils_text_style.dart';
 import 'package:prosample_1/admin/utils/utils_widget2.dart';
 import 'package:prosample_1/admin/utils/utils_widgets2.dart';
 
 class UpdateCable extends StatefulWidget {
-  final String itemId;
-  const UpdateCable({super.key, required this.itemId});
+  final Map<String, dynamic> item;
+  final String id;
+  const UpdateCable({super.key, required this.item, required this.id});
 
   @override
   State<UpdateCable> createState() => _MyWidgetState();
@@ -19,7 +22,6 @@ class UpdateCable extends StatefulWidget {
 class _MyWidgetState extends State<UpdateCable> {
   final _formkey = GlobalKey<FormState>();
   final _speed = TextEditingController();
-  final categoryName = TextEditingController();
   final _productName = TextEditingController();
   final _manufacturer = TextEditingController();
   final _oldPrice = TextEditingController();
@@ -34,12 +36,9 @@ class _MyWidgetState extends State<UpdateCable> {
   final _country = TextEditingController();
   final _warranty = TextEditingController();
   late String imageurl = '';
-  String? selectedCategory;
   String? image;
-  String? selectedCable;
-  String? selectedModel;
-  String? selectedManufacturer;
-  String? selectedSpeed;
+  bool? isNew;
+  bool? isPopular;
   Future<void> pickImage() async {
     final ImagePicker picker = ImagePicker();
     final XFile? image = await picker.pickImage(source: ImageSource.gallery);
@@ -49,7 +48,6 @@ class _MyWidgetState extends State<UpdateCable> {
     }
   }
 
-  // add to firefase
   Future<String> uploadImage(var image) async {
     final Reference ref =
         FirebaseStorage.instance.ref().child('Cables/${image.name}');
@@ -59,29 +57,53 @@ class _MyWidgetState extends State<UpdateCable> {
     return imageurl = downloadUrl;
   }
 
-  updateData() {
-    FirebaseFirestore.instance.collection('cables').doc(widget.itemId).update({
-      'image': imageurl.toString(),
-      'name': _productName.text,
-      'idnum': widget.itemId,
-      'category': categoryName.text,
-      'manufacturer': _manufacturer.text,
-      'oldprice': _oldPrice.text,
-      'newprice': _newPrice.text,
-      'color': _color.text,
-      'pins': _pinNumbers.text,
-      'model': _modelName.text,
-      'wattage': _wattage.text,
-      'voltage': _voltage.text,
-      'speed': _speed.text,
-      'productdimension': _productDimension.text,
-      'country': _country.text,
-      'itemweight': _itemWeight.text,
-      'Warranty': _warranty.text,
+  Future<void> updateData() async {
+    final item = {
+      itemImage: imageurl,
+      name: _productName.text,
+      uniqueId: widget.id,
+      category: cable,
+      oldPrice: _oldPrice.text,
+      newPrice: _newPrice.text,
+    };
+    if (isNew == true) {
+      FirebaseFirestore.instance.collection(newArival).doc(widget.id).set(item);
+    }
+    if (isPopular == true) {
+      FirebaseFirestore.instance.collection(popular).doc(widget.id).set(item);
+    }
+    if (isNew == false) {
+      final firestore = FirebaseFirestore.instance;
+      final docRef = firestore.collection(newArival).doc(widget.id);
+      await docRef.delete();
+    }
+    if (isPopular == false) {
+      final firestore = FirebaseFirestore.instance;
+      final docRef = firestore.collection(popular).doc(widget.id);
+      await docRef.delete();
+    }
+    FirebaseFirestore.instance.collection(cable).doc(widget.id).update({
+      itemImage: imageurl.toString(),
+      name: _productName.text,
+      manufacturer: _manufacturer.text,
+      oldPrice: _oldPrice.text,
+      newPrice: _newPrice.text,
+      color: _color.text,
+      pins: _pinNumbers.text,
+      model: _modelName.text,
+      wattage: _wattage.text,
+      voltage: _voltage.text,
+      speed: _speed.text,
+      dimension: _productDimension.text,
+      country: _country.text,
+      weight: _itemWeight.text,
+      warranty: _warranty.text,
+      newArival: isNew,
+      popular: isPopular,
     });
+
     setState(() {
       imageurl = '';
-      categoryName.clear();
       _productName.clear();
       _manufacturer.clear();
       _oldPrice.clear();
@@ -97,319 +119,153 @@ class _MyWidgetState extends State<UpdateCable> {
       _country.clear();
       _itemWeight.clear();
       _warranty.clear();
+      isNew = false;
+      isPopular = false;
     });
   }
 
   @override
   void initState() {
-    FirebaseFirestore.instance
-        .collection('cables')
-        .doc(widget.itemId)
-        .get()
-        .then((snapshot) {
-      if (snapshot.exists) {
-        Map<String, dynamic> data = snapshot.data()!;
-        _productName.text = data['name'];
-        setState(() {
-          image = imageurl;
-        });
-        imageurl = data['image'];
-        categoryName.text = data['category'];
-        _manufacturer.text = data['manufacturer'];
-        _oldPrice.text = data['oldprice'];
-        _newPrice.text = data['newprice'];
-        _color.text = data['color'];
-        _pinNumbers.text = data['pins'];
-        _modelName.text = data['modelname'];
-        _wattage.text = data['wattage'];
-        _speed.text = data['speed'];
-        _voltage.text = data['voltage'];
-        _productDimension.text = data['productdimension'];
-        _country.text = data['country'];
-        _itemWeight.text = data['itemweight'];
-        _warranty.text = data['Warranty'];
-      }
+    final item = widget.item;
+    _productName.text = item[name];
+    setState(() {
+      image = imageurl;
     });
+    imageurl = item[itemImage];
+    _manufacturer.text = item[manufacturer];
+    _oldPrice.text = item[oldPrice];
+    _newPrice.text = item[newPrice];
+    _color.text = item[color];
+    _pinNumbers.text = item[pins];
+    _modelName.text = item[model];
+    _wattage.text = item[wattage];
+    _speed.text = item[speed];
+    _voltage.text = item[voltage];
+    _productDimension.text = item[dimension];
+    _country.text = item[country];
+    _itemWeight.text = item[weight];
+    _warranty.text = item[warranty];
+    isNew = item[newArival] == true ? isNew = true : isNew = false;
+    isPopular = item[popular] == true ? isPopular = true : isPopular = false;
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    const space = SizedBox(height: 10);
     return Scaffold(
       appBar: AppBar(
         surfaceTintColor: Colors.white,
       ),
       body: SafeArea(
-          child: StreamBuilder<QuerySnapshot>(
-              stream: FirebaseFirestore.instance
-                  .collection('cabledetails')
-                  .snapshots(),
-              builder: (context, snapshot) {
-                if (snapshot.hasError) {
-                  return Text('Error: ${snapshot.error}');
-                }
-                if (!snapshot.hasData) {
-                  return const Center(child: CircularProgressIndicator());
-                }
-                final category = snapshot.data!.docs
-                    .map((doc) => doc['category'] as String)
-                    .toSet()
-                    .toList();
-                final cable = snapshot.data!.docs
-                    .map((doc) => doc['name'] as String)
-                    .toSet()
-                    .toList();
-                final manufacturer = snapshot.data!.docs
-                    .map((doc) => doc['manufacturer'] as String)
-                    .toSet()
-                    .toList();
-                final speed = snapshot.data!.docs
-                    .map((doc) => doc['speed'] as String)
-                    .toSet()
-                    .toList();
-                final model = snapshot.data!.docs
-                    .map((doc) => doc['model'] as String)
-                    .toSet()
-                    .toList();
-
-                return SingleChildScrollView(
-                    child: SizedBox(
-                        width: MediaQuery.of(context).size.width,
-                        child: Padding(
-                            padding: const EdgeInsets.all(10.0),
+          child: SingleChildScrollView(
+              child: SizedBox(
+                  width: MediaQuery.of(context).size.width,
+                  child: Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Column(children: [
+                        Text('Cables', style: CustomText.title),
+                        h30,
+                        AdminUiHelper.customImageBox(() {
+                          pickImage();
+                        }, imageurl: imageurl),
+                        h30,
+                        Form(
+                            key: _formkey,
                             child: Column(children: [
-                              Text('Cables', style: CustomText.title),
-                              const SizedBox(height: 20),
-                              AdminUiHelper.customImageBox(() {
-                                pickImage();
-                              }, imageurl: imageurl),
-                              const SizedBox(height: 20),
-                              Form(
-                                  key: _formkey,
-                                  child: Column(children: [
-                                    DropdownMenu<String>(
-                                        controller: categoryName,
-                                        menuStyle: const MenuStyle(
-                                            surfaceTintColor:
-                                                MaterialStatePropertyAll(
-                                                    Colors.white)),
-                                        hintText: 'Select Category',
-                                        width:
-                                            MediaQuery.of(context).size.width *
-                                                .93,
-                                        menuHeight: 300,
-                                        inputDecorationTheme:
-                                            InputDecorationTheme(
-                                                hintStyle: const TextStyle(
-                                                    color:
-                                                        CustomColors.appTheme),
-                                                border: OutlineInputBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            8)),
-                                                fillColor: Colors.white,
-                                                filled: true),
-                                        onSelected: (value) {
-                                          setState(() {
-                                            selectedCategory = value;
-                                          });
-                                        },
-                                        dropdownMenuEntries: category
-                                            .map<DropdownMenuEntry<String>>(
-                                                (String value) {
-                                          return DropdownMenuEntry<String>(
-                                              value: value, label: value);
-                                        }).toList()),
-                                    space,
-                                    DropdownMenu<String>(
-                                        controller: _productName,
-                                        menuStyle: const MenuStyle(
-                                            surfaceTintColor:
-                                                MaterialStatePropertyAll(
-                                                    Colors.white)),
-                                        hintText: 'Select Cable',
-                                        width:
-                                            MediaQuery.of(context).size.width *
-                                                .93,
-                                        menuHeight: 300,
-                                        inputDecorationTheme:
-                                            InputDecorationTheme(
-                                                hintStyle: const TextStyle(
-                                                    color:
-                                                        CustomColors.appTheme),
-                                                border: OutlineInputBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            8)),
-                                                fillColor: Colors.white,
-                                                filled: true),
-                                        onSelected: (value) {
-                                          setState(() {
-                                            selectedCable = value;
-                                          });
-                                        },
-                                        dropdownMenuEntries: cable
-                                            .map<DropdownMenuEntry<String>>(
-                                                (String value) {
-                                          return DropdownMenuEntry<String>(
-                                              value: value, label: value);
-                                        }).toList()),
-                                    space,
-                                    DropdownMenu<String>(
-                                        controller: _manufacturer,
-                                        menuStyle: const MenuStyle(
-                                            surfaceTintColor:
-                                                MaterialStatePropertyAll(
-                                                    Colors.white)),
-                                        hintText: 'Select Manufacturer',
-                                        width:
-                                            MediaQuery.of(context).size.width *
-                                                .93,
-                                        menuHeight: 300,
-                                        inputDecorationTheme:
-                                            InputDecorationTheme(
-                                                hintStyle: const TextStyle(
-                                                    color:
-                                                        CustomColors.appTheme),
-                                                border: OutlineInputBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            8)),
-                                                fillColor: Colors.white,
-                                                filled: true),
-                                        onSelected: (value) {
-                                          setState(() {
-                                            selectedManufacturer = value;
-                                          });
-                                        },
-                                        dropdownMenuEntries: manufacturer
-                                            .map<DropdownMenuEntry<String>>(
-                                                (String value) {
-                                          return DropdownMenuEntry<String>(
-                                              value: value, label: value);
-                                        }).toList()),
-                                    space,
-                                    DropdownMenu<String>(
-                                        controller: _speed,
-                                        menuStyle: const MenuStyle(
-                                            surfaceTintColor:
-                                                MaterialStatePropertyAll(
-                                                    Colors.white)),
-                                        hintText: 'Select Transfer Rate',
-                                        width:
-                                            MediaQuery.of(context).size.width *
-                                                .93,
-                                        menuHeight: 300,
-                                        inputDecorationTheme:
-                                            InputDecorationTheme(
-                                                hintStyle: const TextStyle(
-                                                    color:
-                                                        CustomColors.appTheme),
-                                                border: OutlineInputBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            8)),
-                                                fillColor: Colors.white,
-                                                filled: true),
-                                        onSelected: (value) {
-                                          setState(() {
-                                            selectedSpeed = value;
-                                          });
-                                        },
-                                        dropdownMenuEntries: speed
-                                            .map<DropdownMenuEntry<String>>(
-                                                (String value) {
-                                          return DropdownMenuEntry<String>(
-                                              value: value, label: value);
-                                        }).toList()),
-                                    space,
-                                    DropdownMenu<String>(
-                                        controller: _modelName,
-                                        menuStyle: const MenuStyle(
-                                            surfaceTintColor:
-                                                MaterialStatePropertyAll(
-                                                    Colors.white)),
-                                        hintText: 'Select Model name',
-                                        width:
-                                            MediaQuery.of(context).size.width *
-                                                .93,
-                                        menuHeight: 300,
-                                        inputDecorationTheme:
-                                            InputDecorationTheme(
-                                                hintStyle: const TextStyle(
-                                                    color:
-                                                        CustomColors.appTheme),
-                                                border: OutlineInputBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            8)),
-                                                fillColor: Colors.white,
-                                                filled: true),
-                                        onSelected: (value) {
-                                          setState(() {
-                                            selectedModel = value;
-                                          });
-                                        },
-                                        dropdownMenuEntries: model
-                                            .map<DropdownMenuEntry<String>>(
-                                                (String value) {
-                                          return DropdownMenuEntry<String>(
-                                              value: value, label: value);
-                                        }).toList()),
-                                    space,
-                                    AdminUi.admTextField(
-                                        label: 'Old Price',
-                                        textcontroller: _oldPrice),
-                                    space,
-                                    AdminUi.admTextField(
-                                        label: 'New Price',
-                                        textcontroller: _newPrice),
-                                    space,
-                                    AdminUi.admTextField(
-                                        label: 'Item Colour',
-                                        textcontroller: _color),
-                                    space,
-                                    AdminUi.admTextField(
-                                        label: 'Number of Pins',
-                                        textcontroller: _pinNumbers),
-                                    space,
-                                    AdminUi.admTextField(
-                                        label: 'Wattage',
-                                        textcontroller: _wattage),
-                                    space,
-                                    AdminUi.admTextField(
-                                        label: 'Voltage',
-                                        textcontroller: _voltage),
-                                    space,
-                                    AdminUi.admTextField(
-                                        label: 'Product Dimenstions',
-                                        textcontroller: _productDimension),
-                                    space,
-                                    AdminUi.admTextField(
-                                        label: 'Item Weight',
-                                        textcontroller: _itemWeight),
-                                    space,
-                                    AdminUi.admTextField(
-                                        label: 'Country',
-                                        textcontroller: _country),
-                                    space,
-                                    AdminUi.admTextField(
-                                        label: 'Warranty',
-                                        textcontroller: _warranty),
-                                  ])),
-                              const SizedBox(height: 30),
-                              AdminUiHelper.customButton(context, () {
-                                if (_formkey.currentState!.validate()) {
-                                  Navigator.pop(context);
-                                  updateData();
-                                  AdminUiHelper.customSnackbar(
-                                      context, 'Item Updated Successfully !');
-                                }
-                              }, text: 'Save'),
-                              const SizedBox(height: 30),
-                            ]))));
-              })),
+                              AdminUi.admTextField(
+                                  label: 'Product Name',
+                                  textcontroller: _productName),
+                              h10,
+                              AdminUi.admTextField(
+                                  label: 'Manufacturer',
+                                  textcontroller: _manufacturer),
+                              h10,
+                              AdminUi.admTextField(
+                                  label: 'Transfer Rate',
+                                  textcontroller: _speed),
+                              h10,
+                              AdminUi.admTextField(
+                                  label: 'Model Name',
+                                  textcontroller: _modelName),
+                              h10,
+                              AdminUi.admTextField(
+                                  label: 'Old Price',
+                                  textcontroller: _oldPrice),
+                              h10,
+                              AdminUi.admTextField(
+                                  label: 'New Price',
+                                  textcontroller: _newPrice),
+                              h10,
+                              AdminUi.admTextField(
+                                  label: 'Item Colour', textcontroller: _color),
+                              h10,
+                              AdminUi.admTextField(
+                                  label: 'Number of Pins',
+                                  textcontroller: _pinNumbers),
+                              h10,
+                              AdminUi.admTextField(
+                                  label: 'Wattage', textcontroller: _wattage),
+                              h10,
+                              AdminUi.admTextField(
+                                  label: 'Voltage', textcontroller: _voltage),
+                              h10,
+                              AdminUi.admTextField(
+                                  label: 'Product Dimenstions',
+                                  textcontroller: _productDimension),
+                              h10,
+                              AdminUi.admTextField(
+                                  label: 'Item Weight',
+                                  textcontroller: _itemWeight),
+                              h10,
+                              AdminUi.admTextField(
+                                  label: 'Country', textcontroller: _country),
+                              h10,
+                              AdminUi.admTextField(
+                                  label: 'Warranty', textcontroller: _warranty),
+                              h10,
+                              Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    Row(children: [
+                                      Checkbox(
+                                          tristate: false,
+                                          activeColor: CustomColors.appTheme,
+                                          value: isNew,
+                                          onChanged: (newValue) {
+                                            setState(() {
+                                              isNew = newValue!;
+                                            });
+                                          }),
+                                      Text('New Arrival',
+                                          style: CustomText.categoryTitleText)
+                                    ]),
+                                    Row(children: [
+                                      Checkbox(
+                                          tristate: false,
+                                          activeColor: CustomColors.appTheme,
+                                          value: isPopular,
+                                          onChanged: (newValue) {
+                                            setState(() {
+                                              isPopular = newValue!;
+                                            });
+                                          }),
+                                      Text('Popular Item',
+                                          style: CustomText.categoryTitleText)
+                                    ])
+                                  ])
+                            ])),
+                        h30,
+                        AdminUiHelper.customButton(context, () {
+                          if (_formkey.currentState!.validate()) {
+                            Navigator.pop(context);
+                            updateData();
+                            AdminUiHelper.customSnackbar(
+                                context, 'Item Updated Successfully !');
+                          }
+                        }, text: 'Save'),
+                        h30,
+                      ]))))),
     );
   }
 }

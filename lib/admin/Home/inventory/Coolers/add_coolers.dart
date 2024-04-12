@@ -1,11 +1,14 @@
 import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:prosample_1/admin/const/variables.dart';
 import 'package:prosample_1/admin/utils/utils_colors.dart';
 import 'package:prosample_1/admin/utils/utils_widget2.dart';
 import 'package:prosample_1/admin/utils/utils_widgets2.dart';
+
 import '../../../utils/utils_text_style.dart';
 
 class ScreenAddCoolers extends StatefulWidget {
@@ -17,8 +20,7 @@ class ScreenAddCoolers extends StatefulWidget {
 
 class _ScreenAddCoolersState extends State<ScreenAddCoolers> {
   final _formkey = GlobalKey<FormState>();
-  final categoryName = TextEditingController();
-  final features = TextEditingController();
+  final _features = TextEditingController();
   final size = TextEditingController();
   final _productName = TextEditingController();
   final _manufacturer = TextEditingController();
@@ -44,6 +46,8 @@ class _ScreenAddCoolersState extends State<ScreenAddCoolers> {
   String? selectedManufacturer;
   String? selectedMethod;
   String? selectedSpeed;
+  bool isNew = false;
+  bool isPopular = false;
   Future<void> pickImage() async {
     final ImagePicker picker = ImagePicker();
     final XFile? image = await picker.pickImage(source: ImageSource.gallery);
@@ -65,34 +69,50 @@ class _ScreenAddCoolersState extends State<ScreenAddCoolers> {
 // submit
   Future submitData() async {
     final data = {
-      'image': imageurl.toString(),
-      'category': categoryName.text.trim(),
-      'idnum': idnum,
-      'name': _productName.text,
-      'manufacturer': _manufacturer.text,
-      'oldprice': _oldPrice.text,
-      'newprice': _newPrice.text,
-      'connectivity': _connector.text,
-      'voltage': _voltage.text,
-      'wattage': _wattage.text,
-      'cooling': _coolingMethod.text,
-      'size': size.text,
-      'noise': _noiseLevel.text,
-      'fans': _fans.text,
-      'productdimension': _productDimension.text,
-      'features': features.text,
-      'material': _material.text,
-      'speed': _speed.text,
-      'country': _country.text,
-      'itemweight': _itemWeight.text,
-      'warranty': _warranty.text,
+      itemImage: imageurl.toString(),
+      category: cooler,
+      uniqueId: idnum,
+      name: _productName.text,
+      manufacturer: _manufacturer.text,
+      oldPrice: _oldPrice.text,
+      newPrice: _newPrice.text,
+      connectivity: _connector.text,
+      voltage: _voltage.text,
+      wattage: _wattage.text,
+      cooling: _coolingMethod.text,
+      fansize: size.text,
+      noise: _noiseLevel.text,
+      fancount: _fans.text,
+      dimension: _productDimension.text,
+      features: _features.text,
+      material: _material.text,
+      speed: _speed.text,
+      country: _country.text,
+      weight: _itemWeight.text,
+      warranty: _warranty.text,
+      newArival: isNew,
+      popular: isPopular,
     };
-    FirebaseFirestore.instance.collection('cooler').doc(idnum).set(data);
+    final item = {
+      itemImage: imageurl,
+      name: _productName.text,
+      uniqueId: idnum,
+      category: cooler,
+      oldPrice: _oldPrice.text,
+      newPrice: _newPrice.text,
+    };
+    if (isNew == true) {
+      FirebaseFirestore.instance.collection(newArival).doc(idnum).set(item);
+    }
+    if (isPopular == true) {
+      FirebaseFirestore.instance.collection(popular).doc(idnum).set(item);
+    }
+    FirebaseFirestore.instance.collection(cooler).doc(idnum).set(data);
     setState(() {
       imageurl = '';
       _productName.clear();
       _manufacturer.clear();
-      features.clear();
+      _features.clear();
       _oldPrice.clear();
       _newPrice.clear();
       _connector.clear();
@@ -113,330 +133,132 @@ class _ScreenAddCoolersState extends State<ScreenAddCoolers> {
 
   @override
   Widget build(BuildContext context) {
-    const space = SizedBox(height: 10);
     return Scaffold(
       appBar: AppBar(
         surfaceTintColor: Colors.white,
       ),
       body: SafeArea(
-          child: StreamBuilder<QuerySnapshot>(
-              stream: FirebaseFirestore.instance
-                  .collection('coolerdetails')
-                  .snapshots(),
-              builder: (context, snapshot) {
-                if (snapshot.hasError) {
-                  return Text('Error: ${snapshot.error}');
-                }
-                if (!snapshot.hasData) {
-                  return const Center(child: CircularProgressIndicator());
-                }
-                final category = snapshot.data!.docs
-                    .map((doc) => doc['category'] as String)
-                    .toSet()
-                    .toList();
-                final cooler = snapshot.data!.docs
-                    .map((doc) => doc['name'] as String)
-                    .toSet()
-                    .toList();
-                final manufacturer = snapshot.data!.docs
-                    .map((doc) => doc['manufacturer'] as String)
-                    .toSet()
-                    .toList();
-                final method = snapshot.data!.docs
-                    .map((doc) => doc['method'] as String)
-                    .toSet()
-                    .toList();
-                final fans = snapshot.data!.docs
-                    .map((doc) => doc['fans'] as String)
-                    .toSet()
-                    .toList();
-                final speeds = snapshot.data!.docs
-                    .map((doc) => doc['speed'] as String)
-                    .toSet()
-                    .toList();
-                return SingleChildScrollView(
-                    child: SizedBox(
-                        width: MediaQuery.of(context).size.width,
-                        child: Padding(
-                            padding: const EdgeInsets.all(10.0),
+          child: SingleChildScrollView(
+              child: SizedBox(
+                  width: MediaQuery.of(context).size.width,
+                  child: Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Column(children: [
+                        Text('Add Coolers', style: CustomText.title),
+                        h30,
+                        AdminUiHelper.customImageBox(() {
+                          pickImage();
+                        }, imageurl: imageurl),
+                        h30,
+                        Form(
+                            key: _formkey,
                             child: Column(children: [
-                              Text('Add Coolers', style: CustomText.title),
-                              const SizedBox(height: 20),
-                              AdminUiHelper.customImageBox(() {
-                                pickImage();
-                              }, imageurl: imageurl),
-                              const SizedBox(height: 20),
-                              Form(
-                                  key: _formkey,
-                                  child: Column(children: [
-                                    space,
-                                    DropdownMenu<String>(
-                                        controller: categoryName,
-                                        menuStyle: const MenuStyle(
-                                            surfaceTintColor:
-                                                MaterialStatePropertyAll(
-                                                    Colors.white)),
-                                        hintText: 'Select Category',
-                                        width:
-                                            MediaQuery.of(context).size.width *
-                                                .93,
-                                        menuHeight: 300,
-                                        inputDecorationTheme:
-                                            InputDecorationTheme(
-                                                hintStyle: const TextStyle(
-                                                    color:
-                                                        CustomColors.appTheme),
-                                                border: OutlineInputBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            8)),
-                                                fillColor: Colors.white,
-                                                filled: true),
-                                        onSelected: (value) {
-                                          setState(() {
-                                            selectedCategory = value;
-                                          });
-                                        },
-                                        dropdownMenuEntries: category
-                                            .map<DropdownMenuEntry<String>>(
-                                                (String value) {
-                                          return DropdownMenuEntry<String>(
-                                              value: value, label: value);
-                                        }).toList()),
-                                    space,
-                                    DropdownMenu<String>(
-                                        controller: _productName,
-                                        menuStyle: const MenuStyle(
-                                            surfaceTintColor:
-                                                MaterialStatePropertyAll(
-                                                    Colors.white)),
-                                        hintText: 'Select Cooler',
-                                        width:
-                                            MediaQuery.of(context).size.width *
-                                                .93,
-                                        menuHeight: 300,
-                                        inputDecorationTheme:
-                                            InputDecorationTheme(
-                                                hintStyle: const TextStyle(
-                                                    color:
-                                                        CustomColors.appTheme),
-                                                border: OutlineInputBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            8)),
-                                                fillColor: Colors.white,
-                                                filled: true),
-                                        onSelected: (value) {
-                                          setState(() {
-                                            selectedCooler = value;
-                                          });
-                                        },
-                                        dropdownMenuEntries: cooler
-                                            .map<DropdownMenuEntry<String>>(
-                                                (String value) {
-                                          return DropdownMenuEntry<String>(
-                                              value: value, label: value);
-                                        }).toList()),
-                                    space,
-                                    DropdownMenu<String>(
-                                        controller: _manufacturer,
-                                        menuStyle: const MenuStyle(
-                                            surfaceTintColor:
-                                                MaterialStatePropertyAll(
-                                                    Colors.white)),
-                                        hintText: 'Select Manufacturer',
-                                        width:
-                                            MediaQuery.of(context).size.width *
-                                                .93,
-                                        menuHeight: 300,
-                                        inputDecorationTheme:
-                                            InputDecorationTheme(
-                                                hintStyle: const TextStyle(
-                                                    color:
-                                                        CustomColors.appTheme),
-                                                border: OutlineInputBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            8)),
-                                                fillColor: Colors.white,
-                                                filled: true),
-                                        onSelected: (value) {
-                                          setState(() {
-                                            selectedManufacturer = value;
-                                          });
-                                        },
-                                        dropdownMenuEntries: manufacturer
-                                            .map<DropdownMenuEntry<String>>(
-                                                (String value) {
-                                          return DropdownMenuEntry<String>(
-                                              value: value, label: value);
-                                        }).toList()),
-                                    space,
-                                    DropdownMenu<String>(
-                                        controller: _coolingMethod,
-                                        menuStyle: const MenuStyle(
-                                            surfaceTintColor:
-                                                MaterialStatePropertyAll(
-                                                    Colors.white)),
-                                        hintText: 'Select Cooling Method',
-                                        width:
-                                            MediaQuery.of(context).size.width *
-                                                .93,
-                                        menuHeight: 300,
-                                        inputDecorationTheme:
-                                            InputDecorationTheme(
-                                                hintStyle: const TextStyle(
-                                                    color:
-                                                        CustomColors.appTheme),
-                                                border: OutlineInputBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            8)),
-                                                fillColor: Colors.white,
-                                                filled: true),
-                                        onSelected: (value) {
-                                          setState(() {
-                                            selectedMethod = value;
-                                          });
-                                        },
-                                        dropdownMenuEntries: method
-                                            .map<DropdownMenuEntry<String>>(
-                                                (String value) {
-                                          return DropdownMenuEntry<String>(
-                                              value: value, label: value);
-                                        }).toList()),
-                                    space,
-                                    DropdownMenu<String>(
-                                        controller: _speed,
-                                        menuStyle: const MenuStyle(
-                                            surfaceTintColor:
-                                                MaterialStatePropertyAll(
-                                                    Colors.white)),
-                                        hintText: 'Select Speed',
-                                        width:
-                                            MediaQuery.of(context).size.width *
-                                                .93,
-                                        menuHeight: 300,
-                                        inputDecorationTheme:
-                                            InputDecorationTheme(
-                                                hintStyle: const TextStyle(
-                                                    color:
-                                                        CustomColors.appTheme),
-                                                border: OutlineInputBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            8)),
-                                                fillColor: Colors.white,
-                                                filled: true),
-                                        onSelected: (value) {
-                                          setState(() {
-                                            selectedSpeed = value;
-                                          });
-                                        },
-                                        dropdownMenuEntries: speeds
-                                            .map<DropdownMenuEntry<String>>(
-                                                (String value) {
-                                          return DropdownMenuEntry<String>(
-                                              value: value, label: value);
-                                        }).toList()),
-                                    space,
-                                    DropdownMenu<String>(
-                                        controller: _fans,
-                                        menuStyle: const MenuStyle(
-                                            surfaceTintColor:
-                                                MaterialStatePropertyAll(
-                                                    Colors.white)),
-                                        hintText: 'Select Fans',
-                                        width:
-                                            MediaQuery.of(context).size.width *
-                                                .93,
-                                        menuHeight: 300,
-                                        inputDecorationTheme:
-                                            InputDecorationTheme(
-                                                hintStyle: const TextStyle(
-                                                    color:
-                                                        CustomColors.appTheme),
-                                                border: OutlineInputBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            8)),
-                                                fillColor: Colors.white,
-                                                filled: true),
-                                        onSelected: (value) {
-                                          setState(() {
-                                            selectedFans = value;
-                                          });
-                                        },
-                                        dropdownMenuEntries: fans
-                                            .map<DropdownMenuEntry<String>>(
-                                                (String value) {
-                                          return DropdownMenuEntry<String>(
-                                              value: value, label: value);
-                                        }).toList()),
-                                    space,
-                                    AdminUi.admTextField(
-                                        label: 'Old Price',
-                                        textcontroller: _oldPrice),
-                                    space,
-                                    AdminUi.admTextField(
-                                        label: 'New Price',
-                                        textcontroller: _newPrice),
-                                    space,
-                                    AdminUi.admTextField(
-                                        label: 'Size', textcontroller: size),
-                                    space,
-                                    AdminUi.admTextField(
-                                        label: 'Connector Type',
-                                        textcontroller: _connector),
-                                    space,
-                                    AdminUi.admTextField(
-                                        label: 'Voltage',
-                                        textcontroller: _voltage),
-                                    space,
-                                    AdminUi.admTextField(
-                                        label: 'Wattage',
-                                        textcontroller: _wattage),
-                                    space,
-                                    AdminUi.admTextField(
-                                        label: 'Noise Level',
-                                        textcontroller: _noiseLevel),
-                                    space,
-                                    AdminUi.admTextField(
-                                        label: 'Product Dimensions',
-                                        textcontroller: _productDimension),
-                                    space,
-                                    AdminUi.admTextField(
-                                        label: 'Features',
-                                        textcontroller: features),
-                                    space,
-                                    AdminUi.admTextField(
-                                        label: 'Material',
-                                        textcontroller: _material),
-                                    space,
-                                    AdminUi.admTextField(
-                                        label: 'Country',
-                                        textcontroller: _country),
-                                    space,
-                                    AdminUi.admTextField(
-                                        label: 'Item Weight',
-                                        textcontroller: _itemWeight),
-                                    space,
-                                    AdminUi.admTextField(
-                                        label: 'Warranty',
-                                        textcontroller: _warranty)
-                                  ])),
-                              const SizedBox(height: 30),
-                              AdminUiHelper.customButton(context, () {
-                                if (_formkey.currentState!.validate()) {
-                                  Navigator.pop(context);
-                                  submitData();
-                                  AdminUiHelper.customSnackbar(
-                                      context, 'Item Added Successfully !');
-                                }
-                              }, text: 'Save'),
-                              const SizedBox(height: 30)
-                            ]))));
-              })),
+                              AdminUi.admTextField(
+                                  label: "Product Name",
+                                  textcontroller: _productName),
+                              h10,
+                              AdminUi.admTextField(
+                                  label: 'Manufacuturer',
+                                  textcontroller: _manufacturer),
+                              h10,
+                              AdminUi.admTextField(
+                                  label: 'Cooling Method',
+                                  textcontroller: _coolingMethod),
+                              h10,
+                              AdminUi.admTextField(
+                                  label: 'Speed', textcontroller: _speed),
+                              h10,
+                              AdminUi.admTextField(
+                                  label: 'No. of Fans', textcontroller: _fans),
+                              h10,
+                              AdminUi.admTextField(
+                                  label: 'Old Price',
+                                  textcontroller: _oldPrice),
+                              h10,
+                              AdminUi.admTextField(
+                                  label: 'New Price',
+                                  textcontroller: _newPrice),
+                              h10,
+                              AdminUi.admTextField(
+                                  label: 'Size', textcontroller: size),
+                              h10,
+                              AdminUi.admTextField(
+                                  label: 'Connector Type',
+                                  textcontroller: _connector),
+                              h10,
+                              AdminUi.admTextField(
+                                  label: 'Voltage', textcontroller: _voltage),
+                              h10,
+                              AdminUi.admTextField(
+                                  label: 'Wattage', textcontroller: _wattage),
+                              h10,
+                              AdminUi.admTextField(
+                                  label: 'Noise Level',
+                                  textcontroller: _noiseLevel),
+                              h10,
+                              AdminUi.admTextField(
+                                  label: 'Product Dimensions',
+                                  textcontroller: _productDimension),
+                              h10,
+                              AdminUi.admTextField(
+                                  label: 'Features', textcontroller: _features),
+                              h10,
+                              AdminUi.admTextField(
+                                  label: 'Material', textcontroller: _material),
+                              h10,
+                              AdminUi.admTextField(
+                                  label: 'Country', textcontroller: _country),
+                              h10,
+                              AdminUi.admTextField(
+                                  label: 'Item Weight',
+                                  textcontroller: _itemWeight),
+                              h10,
+                              AdminUi.admTextField(
+                                  label: 'Warranty', textcontroller: _warranty),
+                              h10,
+                              Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    Row(children: [
+                                      Checkbox(
+                                          tristate: false,
+                                          activeColor: CustomColors.appTheme,
+                                          value: isNew,
+                                          onChanged: (newValue) {
+                                            setState(() {
+                                              isNew = newValue!;
+                                            });
+                                          }),
+                                      Text('New Arrival',
+                                          style: CustomText.categoryTitleText)
+                                    ]),
+                                    Row(children: [
+                                      Checkbox(
+                                          tristate: false,
+                                          activeColor: CustomColors.appTheme,
+                                          value: isPopular,
+                                          onChanged: (newValue) {
+                                            setState(() {
+                                              isPopular = newValue!;
+                                            });
+                                          }),
+                                      Text('Popular Item',
+                                          style: CustomText.categoryTitleText)
+                                    ])
+                                  ])
+                            ])),
+                        h30,
+                        AdminUiHelper.customButton(context, () {
+                          if (_formkey.currentState!.validate()) {
+                            Navigator.pop(context);
+                            submitData();
+                            AdminUiHelper.customSnackbar(
+                                context, 'Item Added Successfully !');
+                          }
+                        }, text: 'Save'),
+                        h30
+                      ]))))),
     );
   }
 }

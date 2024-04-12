@@ -1,8 +1,10 @@
 import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:prosample_1/admin/const/variables.dart';
 import 'package:prosample_1/admin/utils/utils_colors.dart';
 import 'package:prosample_1/admin/utils/utils_text_style.dart';
 import 'package:prosample_1/admin/utils/utils_widget2.dart';
@@ -17,26 +19,23 @@ class ScreenAddPsu extends StatefulWidget {
 
 class _ScreenAddPsuState extends State<ScreenAddPsu> {
   final formkey = GlobalKey<FormState>();
-  final productCategory = TextEditingController();
-  final productName = TextEditingController();
-  final manufacturer = TextEditingController();
-  final oldPrice = TextEditingController();
-  final newPrice = TextEditingController();
-  final modelName = TextEditingController();
-  final productDimension = TextEditingController();
-  final specialFeatures = TextEditingController();
-  final wattage = TextEditingController();
-  final coolingMethod = TextEditingController();
-  final fromFactor = TextEditingController();
-  final country = TextEditingController();
-  final itemWeight = TextEditingController();
-  final warranty = TextEditingController();
+  final _productName = TextEditingController();
+  final _manufacturer = TextEditingController();
+  final _oldPrice = TextEditingController();
+  final _newPrice = TextEditingController();
+  final _modelName = TextEditingController();
+  final _productDimension = TextEditingController();
+  final _specialFeatures = TextEditingController();
+  final _wattage = TextEditingController();
+  final _coolingMethod = TextEditingController();
+  final _fromFactor = TextEditingController();
+  final _country = TextEditingController();
+  final _itemWeight = TextEditingController();
+  final _warranty = TextEditingController();
   String idnum = DateTime.now().toString().replaceAll(RegExp(r'[^\d]'), '');
   late String imageurl = '';
-  String? selectedCategory;
-  String? selectedPsu;
-  String? selectedModel;
-  String? selectedWatt;
+  bool isNew = false;
+  bool isPopular = false;
   Future<void> pickImage() async {
     final ImagePicker picker = ImagePicker();
     final XFile? image = await picker.pickImage(source: ImageSource.gallery);
@@ -57,282 +56,172 @@ class _ScreenAddPsuState extends State<ScreenAddPsu> {
 
   Future submitData() async {
     final data = {
-      'category': productCategory.text.toLowerCase(),
-      'idnum': idnum,
-      'image': imageurl.toString(),
-      'name': productName.text,
-      'manufacturer': manufacturer.text,
-      'oldprice': oldPrice.text,
-      'newprice': newPrice.text,
-      'model': modelName.text,
-      'productdimension': productDimension.text,
-      'features': specialFeatures.text,
-      'coolingmethod': coolingMethod.text,
-      'formfactor': fromFactor.text,
-      'wattage': wattage.text,
-      'country': country.text,
-      'itemweight': itemWeight.text,
-      'warranty': warranty.text,
+      category: psu,
+      uniqueId: idnum,
+      itemImage: imageurl.toString(),
+      name: _productName.text,
+      manufacturer: _manufacturer.text,
+      oldPrice: _oldPrice.text,
+      newPrice: _newPrice.text,
+      model: _modelName.text,
+      dimension: _productDimension.text,
+      features: _specialFeatures.text,
+      coolingMethod: _coolingMethod.text,
+      formFactor: _fromFactor.text,
+      wattage: _wattage.text.trim(),
+      country: _country.text,
+      weight: _itemWeight.text,
+      warranty: _warranty.text,
+      newArival: isNew,
+      popular: isPopular
     };
-    FirebaseFirestore.instance.collection('psu').doc(idnum).set(data);
+    final item = {
+      itemImage: imageurl,
+      name: _productName.text,
+      uniqueId: idnum,
+      category: psu,
+      oldPrice: _oldPrice.text,
+      newPrice: _newPrice.text,
+    };
+    if (isNew == true) {
+      FirebaseFirestore.instance.collection(newArival).doc(idnum).set(item);
+    }
+    if (isPopular == true) {
+      FirebaseFirestore.instance.collection(popular).doc(idnum).set(item);
+    }
+    FirebaseFirestore.instance.collection(psu).doc(idnum).set(data);
     setState(() {
-      productCategory.clear();
       imageurl = '';
-      productName.clear();
-      manufacturer.clear();
-      oldPrice.clear();
-      newPrice.clear();
-      modelName.clear();
-      specialFeatures.clear();
-      productDimension.clear();
-      wattage.clear();
-      coolingMethod.clear();
-      fromFactor.clear();
-      itemWeight.clear();
-      warranty.clear();
+      _productName.clear();
+      _manufacturer.clear();
+      _oldPrice.clear();
+      _newPrice.clear();
+      _modelName.clear();
+      _specialFeatures.clear();
+      _productDimension.clear();
+      _wattage.clear();
+      _coolingMethod.clear();
+      _fromFactor.clear();
+      _itemWeight.clear();
+      _warranty.clear();
+      isNew = false;
+      isPopular = false;
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    const space = SizedBox(height: 10);
     return Scaffold(
-      appBar: AppBar(surfaceTintColor: Colors.white),
-      body: SafeArea(
-          child: StreamBuilder<QuerySnapshot>(
-              stream: FirebaseFirestore.instance
-                  .collection('psudetails')
-                  .snapshots(),
-              builder: (context, snapshot) {
-                if (snapshot.hasError) {
-                  return Text('Error: ${snapshot.error}');
-                }
-                if (!snapshot.hasData) {
-                  return const Center(child: CircularProgressIndicator());
-                }
-                final category = snapshot.data!.docs
-                    .map((doc) => doc['category'] as String)
-                    .toSet()
-                    .toList();
-                final psu = snapshot.data!.docs
-                    .map((doc) => doc['name'] as String)
-                    .toSet()
-                    .toList();
-                final model = snapshot.data!.docs
-                    .map((doc) => doc['model'] as String)
-                    .toSet()
-                    .toList();
-                final watt = snapshot.data!.docs
-                    .map((doc) => doc['wattage'] as String)
-                    .toSet()
-                    .toList();
-                return SingleChildScrollView(
-                    child: SizedBox(
-                        width: MediaQuery.of(context).size.width,
-                        child: Padding(
-                            padding: const EdgeInsets.all(10.0),
-                            child: Column(children: [
-                              Text('PSU', style: CustomText.title),
-                              const SizedBox(height: 20),
-                              AdminUiHelper.customImageBox(() {
-                                pickImage();
-                              }, imageurl: imageurl),
-                              const SizedBox(height: 20),
-                              Form(
-                                  key: formkey,
-                                  child: Column(children: [
-                                    DropdownMenu<String>(
-                                        label: const Text(
-                                          'Select Category',
-                                          style: TextStyle(
-                                              color: CustomColors.appTheme),
-                                        ),
-                                        controller: productCategory,
-                                        menuStyle: const MenuStyle(
-                                            surfaceTintColor:
-                                                MaterialStatePropertyAll(
-                                                    Colors.white)),
-                                        width:
-                                            MediaQuery.of(context).size.width *
-                                                .93,
-                                        menuHeight: 300,
-                                        inputDecorationTheme:
-                                            InputDecorationTheme(
-                                                border: OutlineInputBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            8)),
-                                                fillColor: Colors.white,
-                                                filled: true),
-                                        onSelected: (value) {
-                                          setState(() {
-                                            selectedCategory = value;
-                                          });
-                                        },
-                                        dropdownMenuEntries: category
-                                            .map<DropdownMenuEntry<String>>(
-                                                (String value) {
-                                          return DropdownMenuEntry<String>(
-                                              value: value, label: value);
-                                        }).toList()),
-                                    space,
-                                    DropdownMenu<String>(
-                                        label: const Text(
-                                          'Select PSU',
-                                          style: TextStyle(
-                                              color: CustomColors.appTheme),
-                                        ),
-                                        controller: productName,
-                                        menuStyle: const MenuStyle(
-                                            surfaceTintColor:
-                                                MaterialStatePropertyAll(
-                                                    Colors.white)),
-                                        width:
-                                            MediaQuery.of(context).size.width *
-                                                .93,
-                                        menuHeight: 300,
-                                        inputDecorationTheme:
-                                            InputDecorationTheme(
-                                                border: OutlineInputBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            8)),
-                                                fillColor: Colors.white,
-                                                filled: true),
-                                        onSelected: (value) {
-                                          setState(() {
-                                            selectedPsu = value;
-                                          });
-                                        },
-                                        dropdownMenuEntries: psu
-                                            .map<DropdownMenuEntry<String>>(
-                                                (String value) {
-                                          return DropdownMenuEntry<String>(
-                                              value: value, label: value);
-                                        }).toList()),
-                                    space,
-                                    DropdownMenu<String>(
-                                        label: const Text(
-                                          'Select Model Name',
-                                          style: TextStyle(
-                                              color: CustomColors.appTheme),
-                                        ),
-                                        controller: modelName,
-                                        menuStyle: const MenuStyle(
-                                            surfaceTintColor:
-                                                MaterialStatePropertyAll(
-                                                    Colors.white)),
-                                        width:
-                                            MediaQuery.of(context).size.width *
-                                                .93,
-                                        menuHeight: 300,
-                                        inputDecorationTheme:
-                                            InputDecorationTheme(
-                                                border: OutlineInputBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            8)),
-                                                fillColor: Colors.white,
-                                                filled: true),
-                                        onSelected: (value) {
-                                          setState(() {
-                                            selectedModel = value;
-                                          });
-                                        },
-                                        dropdownMenuEntries: model
-                                            .map<DropdownMenuEntry<String>>(
-                                                (String value) {
-                                          return DropdownMenuEntry<String>(
-                                              value: value, label: value);
-                                        }).toList()),
-                                    space,
-                                    DropdownMenu<String>(
-                                        label: const Text(
-                                          'Select Wattage',
-                                          style: TextStyle(
-                                              color: CustomColors.appTheme),
-                                        ),
-                                        controller: wattage,
-                                        menuStyle: const MenuStyle(
-                                            surfaceTintColor:
-                                                MaterialStatePropertyAll(
-                                                    Colors.white)),
-                                        width:
-                                            MediaQuery.of(context).size.width *
-                                                .93,
-                                        menuHeight: 300,
-                                        inputDecorationTheme:
-                                            InputDecorationTheme(
-                                                border: OutlineInputBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            8)),
-                                                fillColor: Colors.white,
-                                                filled: true),
-                                        onSelected: (value) {
-                                          setState(() {
-                                            selectedWatt = value;
-                                          });
-                                        },
-                                        dropdownMenuEntries: watt
-                                            .map<DropdownMenuEntry<String>>(
-                                                (String value) {
-                                          return DropdownMenuEntry<String>(
-                                              value: value, label: value);
-                                        }).toList()),
-                                    space,
-                                    AdminUi.admTextField(
-                                        label: 'Manufacturer',
-                                        textcontroller: manufacturer),
-                                    space,
-                                    AdminUi.admTextField(
-                                        label: 'Old Price',
-                                        textcontroller: oldPrice),
-                                    space,
-                                    AdminUi.admTextField(
-                                        label: 'New Price',
-                                        textcontroller: newPrice),
-                                    space,
-                                    AdminUi.admTextField(
-                                        label: 'Product Dimensions',
-                                        textcontroller: productDimension),
-                                    space,
-                                    AdminUi.featuresTextfield(
-                                        label: 'Features',
-                                        textcontroller: specialFeatures),
-                                    space,
-                                    AdminUi.admTextField(
-                                        label: 'Cooling Method',
-                                        textcontroller: coolingMethod),
-                                    space,
-                                    AdminUi.admTextField(
-                                        label: 'Form Factor',
-                                        textcontroller: fromFactor),
-                                    space,
-                                    AdminUi.admTextField(
-                                        label: 'Country',
-                                        textcontroller: country),
-                                    space,
-                                    AdminUi.admTextField(
-                                        label: 'Item Weight',
-                                        textcontroller: itemWeight),
-                                    space,
-                                    AdminUi.admTextField(
-                                        label: 'Warranty',
-                                        textcontroller: warranty),
-                                    const SizedBox(height: 30),
-                                  ])),
-                              AdminUiHelper.customButton(context, () {
-                                if (formkey.currentState!.validate()) {
-                                  Navigator.pop(context);
-                                  submitData();
-                                  AdminUiHelper.customSnackbar(
-                                      context, 'Item Added Successfully !');
-                                }
-                              }, text: 'Save'),
-                              const SizedBox(height: 30)
-                            ]))));
-              })),
-    );
+        appBar: AppBar(surfaceTintColor: Colors.white),
+        body: SafeArea(
+            child: SingleChildScrollView(
+                child: SizedBox(
+                    width: MediaQuery.of(context).size.width,
+                    child: Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: Column(children: [
+                          Text('PSU', style: CustomText.title),
+                          h30,
+                          AdminUiHelper.customImageBox(() {
+                            pickImage();
+                          }, imageurl: imageurl),
+                          h30,
+                          Form(
+                              key: formkey,
+                              child: Column(children: [
+                                AdminUi.admTextField(
+                                    label: 'Product Name',
+                                    textcontroller: _productName),
+                                h10,
+                                AdminUi.admTextField(
+                                    label: 'Model Name',
+                                    textcontroller: _modelName),
+                                h10,
+                                AdminUi.admTextField(
+                                    label: 'Wattage (W)',
+                                    textcontroller: _wattage),
+                                h10,
+                                AdminUi.admTextField(
+                                    label: 'Manufacturer',
+                                    textcontroller: _manufacturer),
+                                h10,
+                                AdminUi.admTextField(
+                                    label: 'Old Price',
+                                    textcontroller: _oldPrice),
+                                h10,
+                                AdminUi.admTextField(
+                                    label: 'New Price',
+                                    textcontroller: _newPrice),
+                                h10,
+                                AdminUi.admTextField(
+                                    label: 'Product Dimensions',
+                                    textcontroller: _productDimension),
+                                h10,
+                                AdminUi.featuresTextfield(
+                                    label: 'Features',
+                                    textcontroller: _specialFeatures),
+                                h10,
+                                AdminUi.admTextField(
+                                    label: 'Cooling Method',
+                                    textcontroller: _coolingMethod),
+                                h10,
+                                AdminUi.admTextField(
+                                    label: 'Form Factor',
+                                    textcontroller: _fromFactor),
+                                h10,
+                                AdminUi.admTextField(
+                                    label: 'Country', textcontroller: _country),
+                                h10,
+                                AdminUi.admTextField(
+                                    label: 'Item Weight',
+                                    textcontroller: _itemWeight),
+                                h10,
+                                AdminUi.admTextField(
+                                    label: 'Warranty',
+                                    textcontroller: _warranty),
+                                h10,
+                                Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    children: [
+                                      Row(children: [
+                                        Checkbox(
+                                            tristate: false,
+                                            activeColor: CustomColors.appTheme,
+                                            value: isNew,
+                                            onChanged: (newValue) {
+                                              setState(() {
+                                                isNew = newValue!;
+                                              });
+                                            }),
+                                        Text('New Arrival',
+                                            style: CustomText.categoryTitleText)
+                                      ]),
+                                      Row(children: [
+                                        Checkbox(
+                                            tristate: false,
+                                            activeColor: CustomColors.appTheme,
+                                            value: isPopular,
+                                            onChanged: (newValue) {
+                                              setState(() {
+                                                isPopular = newValue!;
+                                              });
+                                            }),
+                                        Text('Popular Item',
+                                            style: CustomText.categoryTitleText)
+                                      ])
+                                    ])
+                              ])),
+                          h30,
+                          AdminUiHelper.customButton(context, () {
+                            if (formkey.currentState!.validate()) {
+                              Navigator.pop(context);
+                              submitData();
+                              AdminUiHelper.customSnackbar(
+                                  context, 'Item Added Successfully !');
+                            }
+                          }, text: 'Save'),
+                          h30
+                        ]))))));
   }
 }

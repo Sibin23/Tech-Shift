@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:prosample_1/admin/const/variables.dart';
 import 'package:prosample_1/admin/home/inventory/Cabinet/add_cabinet.dart';
 import 'package:prosample_1/admin/home/inventory/Cabinet/update_cabinet.dart';
 import 'package:prosample_1/admin/utils/utils_colors.dart';
@@ -15,23 +16,34 @@ class CabinetDetails extends StatefulWidget {
 }
 
 class _CabinetDetailsState extends State<CabinetDetails> {
-   Future deleteData(itemId) async {
+  Future deleteData(itemId) async {
     final firestore = FirebaseFirestore.instance;
-    final docRef = firestore.collection('cabinet').doc(itemId);
+    final docRef = firestore.collection(cabinet).doc(itemId);
+    await docRef.delete();
+    deleteNewArivals(itemId);
+    deletePopular(itemId);
+  }
+
+  Future<void> deleteNewArivals(String itemId) async {
+    final firestore = FirebaseFirestore.instance;
+    final docRef = firestore.collection(newArival).doc(itemId);
     await docRef.delete();
   }
+
+  Future<void> deletePopular(String itemId) async {
+    final firestore = FirebaseFirestore.instance;
+    final docRef = firestore.collection(popular).doc(itemId);
+    await docRef.delete();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-       appBar: AppBar(
+      appBar: AppBar(
         centerTitle: true,
         title: Text('Processor Details', style: CustomText.apptitle),
         backgroundColor: CustomColors.appTheme,
-        leading: IconButton(
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            icon: const Icon(Icons.arrow_back, color: Colors.white)),
+        foregroundColor: Colors.white,
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: 10),
@@ -42,25 +54,26 @@ class _CabinetDetailsState extends State<CabinetDetails> {
                       MaterialPageRoute(
                           builder: (ctx) => const ScreenAddCabinet()));
                 },
-                icon: Image.asset('assets/icons/add.png',
-                    width: 30, color: Colors.white)),
+                icon: Image.asset(add, width: 30, color: Colors.white)),
           )
         ],
       ),
-      body: SafeArea(child: SizedBox(
+      body: SafeArea(
+        child: SizedBox(
             width: MediaQuery.of(context).size.width,
             height: MediaQuery.of(context).size.height,
             child: StreamBuilder(
               stream: FirebaseFirestore.instance
-                  .collection('cabinet')
-                  .orderBy('name')
+                  .collection(cabinet)
+                  .orderBy(name)
                   .snapshots(),
-              builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-                 if(!snapshot.hasData || snapshot.data!.docs.isEmpty){
+              builder: (context,
+                  AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
+                if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
                   return SizedBox(
                     height: MediaQuery.of(context).size.height,
-                  width: MediaQuery.of(context).size.width,
-                  child: const Center(child: Text('No Items Yet')),
+                    width: MediaQuery.of(context).size.width,
+                    child: const Center(child: Text('No Items Yet')),
                   );
                 }
                 if (snapshot.hasData) {
@@ -68,23 +81,24 @@ class _CabinetDetailsState extends State<CabinetDetails> {
                     itemCount: snapshot.data!.docs.length,
                     itemBuilder: (context, index) {
                       DocumentSnapshot document = snapshot.data!.docs[index];
-                      String imageUrl = document['image'];
-                      String name = document['name'];
-                      String itemId = document.id;
+                      Map<String, dynamic> item =
+                          document.data() as Map<String, dynamic>;
 
                       return AdminUiHelper.updatelist(context, () {
                         AdminUi.customAlert(text1: 'Edit', text2: 'Delete', () {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (ctx) =>
-                                      UpdateCabinet(itemId: itemId)));
+                                  builder: (ctx) => UpdateCabinet(
+                                      item: item, id: item[uniqueId])));
                         }, () {
-                          deleteData(itemId);
+                          deleteData(item[uniqueId]);
                           AdminUiHelper.customSnackbar(
                               context, 'Item Deleted Successfully !');
                         }, context);
-                      }, imageUrl: imageUrl, categoryName: name);
+                      },
+                          imageUrl: document[itemImage],
+                          categoryName: document[name]);
                     },
                   );
                 } else {

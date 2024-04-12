@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:prosample_1/admin/const/variables.dart';
 import 'package:prosample_1/admin/home/inventory/Keyboard/add_keyboard.dart';
 import 'package:prosample_1/admin/home/inventory/Keyboard/update_keyboard.dart';
 import 'package:prosample_1/admin/utils/utils_colors.dart';
@@ -17,7 +18,21 @@ class KeyboardDetails extends StatefulWidget {
 class _KeyboardDetailsState extends State<KeyboardDetails> {
   Future deleteData(itemId) async {
     final firestore = FirebaseFirestore.instance;
-    final docRef = firestore.collection('keyboard').doc(itemId);
+    final docRef = firestore.collection(keyboard).doc(itemId);
+    await docRef.delete();
+    deleteNewArivals(itemId);
+    deletePopular(itemId);
+  }
+
+  Future<void> deleteNewArivals(String itemId) async {
+    final firestore = FirebaseFirestore.instance;
+    final docRef = firestore.collection(newArival).doc(itemId);
+    await docRef.delete();
+  }
+
+  Future<void> deletePopular(String itemId) async {
+    final firestore = FirebaseFirestore.instance;
+    final docRef = firestore.collection(popular).doc(itemId);
     await docRef.delete();
   }
   @override
@@ -43,7 +58,7 @@ class _KeyboardDetailsState extends State<KeyboardDetails> {
                       MaterialPageRoute(
                           builder: (ctx) => const ScreenAddKeyboard()));
                 },
-                icon: Image.asset('assets/icons/add.png',
+                icon: Image.asset(add,
                     width: 30, color: Colors.white)),
           )
         ],
@@ -54,8 +69,8 @@ class _KeyboardDetailsState extends State<KeyboardDetails> {
             height: MediaQuery.of(context).size.height,
             child: StreamBuilder(
               stream: FirebaseFirestore.instance
-                  .collection('keyboard')
-                  .orderBy('name')
+                  .collection(keyboard)
+                  .orderBy(name)
                   .snapshots(),
               builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
                 if(!snapshot.hasData || snapshot.data!.docs.isEmpty){
@@ -70,9 +85,7 @@ class _KeyboardDetailsState extends State<KeyboardDetails> {
                     itemCount: snapshot.data!.docs.length,
                     itemBuilder: (context, index) {
                       DocumentSnapshot document = snapshot.data!.docs[index];
-                      String imageUrl = document['image'];
-                      String name = document['name'];
-                      String itemId = document.id;
+                      final item = document.data() as Map<String,dynamic>;
 
                       return AdminUiHelper.updatelist(context, () {
                         AdminUi.customAlert(text1: 'Edit', text2: 'Delete', () {
@@ -80,13 +93,13 @@ class _KeyboardDetailsState extends State<KeyboardDetails> {
                               context,
                               MaterialPageRoute(
                                   builder: (ctx) =>
-                                      UpdateKeyboard(itemId: itemId)));
+                                      UpdateKeyboard(item: item, id: item[uniqueId])));
                         }, () {
-                          deleteData(itemId);
+                          deleteData(item[uniqueId]);
                           AdminUiHelper.customSnackbar(
                               context, 'Item Deleted Successfully !');
                         }, context);
-                      }, imageUrl: imageUrl, categoryName: name);
+                      }, imageUrl: item[itemImage], categoryName: item[name]);
                     },
                   );
                 } else {

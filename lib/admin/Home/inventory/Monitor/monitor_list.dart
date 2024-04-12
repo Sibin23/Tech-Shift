@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:prosample_1/admin/const/variables.dart';
 import 'package:prosample_1/admin/home/inventory/Monitor/add_monitor.dart';
 import 'package:prosample_1/admin/home/inventory/Monitor/update_monitor.dart';
 import 'package:prosample_1/admin/utils/utils_colors.dart';
@@ -15,11 +16,26 @@ class MonitorDetails extends StatefulWidget {
 }
 
 class _MonitorDetailsState extends State<MonitorDetails> {
-   Future deleteData(itemId) async {
+  Future deleteData(itemId) async {
     final firestore = FirebaseFirestore.instance;
-    final docRef = firestore.collection('monitor').doc(itemId);
+    final docRef = firestore.collection(monitor).doc(itemId);
+    await docRef.delete();
+    deleteNewArivals(itemId);
+    deletePopular(itemId);
+  }
+
+  Future<void> deleteNewArivals(String itemId) async {
+    final firestore = FirebaseFirestore.instance;
+    final docRef = firestore.collection(newArival).doc(itemId);
     await docRef.delete();
   }
+
+  Future<void> deletePopular(String itemId) async {
+    final firestore = FirebaseFirestore.instance;
+    final docRef = firestore.collection(popular).doc(itemId);
+    await docRef.delete();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -43,56 +59,52 @@ class _MonitorDetailsState extends State<MonitorDetails> {
                       MaterialPageRoute(
                           builder: (ctx) => const ScreenAddMonitor()));
                 },
-                icon: Image.asset('assets/icons/add.png',
-                    width: 30, color: Colors.white)),
+                icon: Image.asset(add, width: 30, color: Colors.white)),
           )
         ],
       ),
-      body: SafeArea(child:  StreamBuilder(
-              stream: FirebaseFirestore.instance
-                  .collection('monitor')
-                  .orderBy('name')
-                  .snapshots(),
-              builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-                 if(!snapshot.hasData || snapshot.data!.docs.isEmpty){
-                  return SizedBox(
-                    height: MediaQuery.of(context).size.height,
-                  width: MediaQuery.of(context).size.width,
-                  child: const Center(child: Text('No Items Yet')),
-                  );
-                }
-                if (snapshot.hasData) {
-                  return ListView.builder(
-                    itemCount: snapshot.data!.docs.length,
-                    itemBuilder: (context, index) {
-                      DocumentSnapshot document = snapshot.data!.docs[index];
-                      String imageUrl = document['image'];
-                      String name = document['name'];
-                      String itemId = document.id;
+      body: SafeArea(
+          child: StreamBuilder(
+        stream: FirebaseFirestore.instance
+            .collection(monitor)
+            .orderBy(name)
+            .snapshots(),
+        builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+          if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+            return SizedBox(
+              height: MediaQuery.of(context).size.height,
+              width: MediaQuery.of(context).size.width,
+              child: const Center(child: Text('No Items Yet')),
+            );
+          }
+          if (snapshot.hasData) {
+            return ListView.builder(
+              itemCount: snapshot.data!.docs.length,
+              itemBuilder: (context, index) {
+                DocumentSnapshot document = snapshot.data!.docs[index];
+                final item = document.data() as Map<String, dynamic>;
 
-                      return AdminUiHelper.updatelist(context, () {
-                        AdminUi.customAlert(text1: 'Edit', text2: 'Delete', () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (ctx) =>
-                                      UpdateMonitor(itemId: itemId)));
-                        }, () {
-                          deleteData(itemId);
-                          AdminUiHelper.customSnackbar(
-                              context, 'Item Deleted Successfully !');
-                        }, context);
-                      }, imageUrl: imageUrl, categoryName: name);
-                    },
-                  );
-                } else {
-                  return const Center(
-                      child: CircularProgressIndicator(
-                          color: CustomColors.appTheme));
-                }
+                return AdminUiHelper.updatelist(context, () {
+                  AdminUi.customAlert(text1: 'Edit', text2: 'Delete', () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (ctx) =>
+                                UpdateMonitor(item: item, id: item[uniqueId])));
+                  }, () {
+                    deleteData(item[uniqueId]);
+                    AdminUiHelper.customSnackbar(
+                        context, 'Item Deleted Successfully !');
+                  }, context);
+                }, imageUrl: item[itemImage], categoryName: item[name]);
               },
-            )
-      ),
+            );
+          } else {
+            return const Center(
+                child: CircularProgressIndicator(color: CustomColors.appTheme));
+          }
+        },
+      )),
     );
   }
 }

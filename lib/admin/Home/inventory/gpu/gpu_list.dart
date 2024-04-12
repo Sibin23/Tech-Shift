@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:prosample_1/admin/const/variables.dart';
 import 'package:prosample_1/admin/home/inventory/gpu/add_gpu.dart';
 import 'package:prosample_1/admin/home/inventory/gpu/update_gpu.dart';
 import 'package:prosample_1/admin/utils/utils_colors.dart';
@@ -17,7 +18,21 @@ class GpuDetails extends StatefulWidget {
 class _GpuDetailsState extends State<GpuDetails> {
   Future deleteData(itemId) async {
     final firestore = FirebaseFirestore.instance;
-    final docRef = firestore.collection('gpu').doc(itemId);
+    final docRef = firestore.collection(gpu).doc(itemId);
+    await docRef.delete();
+    deleteNewArivals(itemId);
+    deletePopular(itemId);
+  }
+
+  Future<void> deleteNewArivals(String itemId) async {
+    final firestore = FirebaseFirestore.instance;
+    final docRef = firestore.collection(newArival).doc(itemId);
+    await docRef.delete();
+  }
+
+  Future<void> deletePopular(String itemId) async {
+    final firestore = FirebaseFirestore.instance;
+    final docRef = firestore.collection(popular).doc(itemId);
     await docRef.delete();
   }
 
@@ -29,11 +44,7 @@ class _GpuDetailsState extends State<GpuDetails> {
         centerTitle: true,
         title: Text('Keyboard Details', style: CustomText.apptitle),
         backgroundColor: CustomColors.appTheme,
-        leading: IconButton(
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            icon: const Icon(Icons.arrow_back, color: Colors.white)),
+        foregroundColor: Colors.white,
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: 10),
@@ -44,8 +55,7 @@ class _GpuDetailsState extends State<GpuDetails> {
                       MaterialPageRoute(
                           builder: (ctx) => const ScreenAddGpu()));
                 },
-                icon: Image.asset('assets/icons/add.png',
-                    width: 30, color: Colors.white)),
+                icon: Image.asset(add, width: 30, color: Colors.white)),
           )
         ],
       ),
@@ -55,15 +65,15 @@ class _GpuDetailsState extends State<GpuDetails> {
             height: MediaQuery.of(context).size.height,
             child: StreamBuilder(
               stream: FirebaseFirestore.instance
-                  .collection('gpu')
-                  .orderBy('name')
+                  .collection(gpu)
+                  .orderBy(name)
                   .snapshots(),
               builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-                 if(!snapshot.hasData || snapshot.data!.docs.isEmpty){
+                if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
                   return SizedBox(
                     height: MediaQuery.of(context).size.height,
-                  width: MediaQuery.of(context).size.width,
-                  child: const Center(child: Text('No Items Yet')),
+                    width: MediaQuery.of(context).size.width,
+                    child: const Center(child: Text('No Items Yet')),
                   );
                 }
                 if (snapshot.hasData) {
@@ -71,19 +81,23 @@ class _GpuDetailsState extends State<GpuDetails> {
                     itemCount: snapshot.data!.docs.length,
                     itemBuilder: (context, index) {
                       DocumentSnapshot document = snapshot.data!.docs[index];
-                      String imageUrl = document['image'];
-                      String name = document['name'];
-                      String itemId = document.id;
+                      final item = document.data() as Map<String, dynamic>;
 
                       return AdminUiHelper.updatelist(context, () {
                         AdminUi.customAlert(text1: 'Edit', text2: 'Delete', () {
-                          Navigator.push(context, MaterialPageRoute(builder: (ctx)=> UpdateGpu(itemId: itemId)));
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (ctx) => UpdateGpu(
+                                        item: item,
+                                        id: item[uniqueId],
+                                      )));
                         }, () {
-                          deleteData(itemId);
+                          deleteData(item[uniqueId]);
                           AdminUiHelper.customSnackbar(
                               context, 'Item Deleted Successfully !');
                         }, context);
-                      }, imageUrl: imageUrl, categoryName: name);
+                      }, imageUrl: item[itemImage], categoryName: item[name]);
                     },
                   );
                 } else {

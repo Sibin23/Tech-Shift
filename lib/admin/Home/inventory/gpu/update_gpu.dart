@@ -4,14 +4,16 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:prosample_1/admin/const/variables.dart';
 import 'package:prosample_1/admin/utils/utils_colors.dart';
 import 'package:prosample_1/admin/utils/utils_text_style.dart';
 import 'package:prosample_1/admin/utils/utils_widget2.dart';
 import 'package:prosample_1/admin/utils/utils_widgets2.dart';
 
 class UpdateGpu extends StatefulWidget {
-  final String itemId;
-  const UpdateGpu({super.key, required this.itemId});
+  final Map<String, dynamic> item;
+  final String id;
+  const UpdateGpu({super.key, required this.item, required this.id});
 
   @override
   State<UpdateGpu> createState() => _UpdateGpuState();
@@ -19,32 +21,28 @@ class UpdateGpu extends StatefulWidget {
 
 class _UpdateGpuState extends State<UpdateGpu> {
   final formkey = GlobalKey<FormState>();
-  final categoryName = TextEditingController();
-  final gpuName = TextEditingController();
-  final modelName = TextEditingController();
-  final manufacturer = TextEditingController();
-  final support = TextEditingController();
-  final clockSpeed = TextEditingController();
-  final oldPrice = TextEditingController();
-  final newPrice = TextEditingController();
-  final color = TextEditingController();
-  final features = TextEditingController();
-  final maxResolution = TextEditingController();
-  final dimension = TextEditingController();
-  final ramType = TextEditingController();
-  final ramSize = TextEditingController();
-  final recPsu = TextEditingController();
-  final wattage = TextEditingController();
-  final country = TextEditingController();
-  final weight = TextEditingController();
-  final warranty = TextEditingController();
+  final _productName = TextEditingController();
+  final _modelName = TextEditingController();
+  final _manufacturer = TextEditingController();
+  final _support = TextEditingController();
+  final _clockSpeed = TextEditingController();
+  final _oldPrice = TextEditingController();
+  final _newPrice = TextEditingController();
+  final _color = TextEditingController();
+  final _features = TextEditingController();
+  final _maxResolution = TextEditingController();
+  final _dimension = TextEditingController();
+  final _ramType = TextEditingController();
+  final _ramSize = TextEditingController();
+  final _recPsu = TextEditingController();
+  final _wattage = TextEditingController();
+  final _country = TextEditingController();
+  final _weight = TextEditingController();
+  final _warranty = TextEditingController();
   late String imageurl = '';
   String? image;
-  String? selectedGpu;
-  String? selectedCategory;
-  String? selectedManufacturer;
-  String? selectedModel;
-  String? selectedFeatureSprt;
+  bool? isNew;
+  bool? isPopular;
   Future<void> pickImage() async {
     final ImagePicker picker = ImagePicker();
     final XFile? image = await picker.pickImage(source: ImageSource.gallery);
@@ -63,387 +61,238 @@ class _UpdateGpuState extends State<UpdateGpu> {
     return imageurl = downloadUrl;
   }
 
-  updateData() {
-    FirebaseFirestore.instance
-        .collection('gpu')
-        .doc(widget.itemId) 
-        .update({
-      'image': imageurl.toString(),
-      'category': categoryName.text.trim(),
-      'idnum': widget.itemId,
-      'name': gpuName.text,
-      'model': modelName.text,
-      'manufacturer': manufacturer.text,
-      'support': support.text,
-      'speed': clockSpeed.text,
-      'oldprice': oldPrice.text,
-      'newprice': newPrice.text,
-      'color': color.text,
-      'features': features.text,
-      'maxres': maxResolution.text,
-      'productdimension': dimension.text,
-      'ramtype': ramType.text,
-      'ramsize': ramSize.text,
-      'recpsu': recPsu.text,
-      'wattage': wattage.text,
-      'country': country.text,
-      'itemweight': weight.text,
-      'warranty': warranty.text,
+  Future<void> updateData() async {
+    final item = {
+      itemImage: imageurl,
+      name: _productName.text,
+      uniqueId: widget.id,
+      category: gpu,
+      oldPrice: _oldPrice.text,
+      newPrice: _newPrice.text,
+    };
+    if (isNew == true) {
+      FirebaseFirestore.instance.collection(newArival).doc(widget.id).set(item);
+    }
+    if (isPopular == true) {
+      FirebaseFirestore.instance.collection(popular).doc(widget.id).set(item);
+    }
+    if (isNew == false) {
+      final firestore = FirebaseFirestore.instance;
+      final docRef = firestore.collection(newArival).doc(widget.id);
+      await docRef.delete();
+    }
+    if (isPopular == false) {
+      final firestore = FirebaseFirestore.instance;
+      final docRef = firestore.collection(popular).doc(widget.id);
+      await docRef.delete();
+    }
+    FirebaseFirestore.instance.collection(gpu).doc(widget.id).update({
+      itemImage: imageurl.toString(),
+      name: _productName.text,
+      model: _modelName.text,
+      manufacturer: _manufacturer.text,
+      support: _support.text,
+      speed: _clockSpeed.text,
+      oldPrice: _oldPrice.text,
+      newPrice: _newPrice.text,
+      color: _color.text,
+      features: _features.text,
+      maxResolution: _maxResolution.text,
+      dimension: _dimension.text,
+      ramType: _ramType.text,
+      ramSize: _ramSize.text,
+      recPsu: _recPsu.text,
+      wattage: _wattage.text,
+      country: _country.text,
+      weight: _weight.text,
+      warranty: _warranty.text.trim(),
+      newArival: isNew,
+      popular: isPopular,
     });
     setState(() {
       imageurl = '';
-      categoryName.clear();
-      gpuName.clear();
-      modelName.clear();
-      manufacturer.clear();
-      support.clear();
-      clockSpeed.clear();
-      oldPrice.clear();
-      newPrice.clear();
-      color.clear();
-      features.clear();
-      maxResolution.clear();
-      dimension.clear();
-      ramType.clear();
-      ramSize.clear();
-      recPsu.clear();
-      wattage.clear();
-      country.clear();
-      weight.clear();
-      warranty.clear();
+      _productName.clear();
+      _modelName.clear();
+      _manufacturer.clear();
+      _support.clear();
+      _clockSpeed.clear();
+      _oldPrice.clear();
+      _newPrice.clear();
+      _color.clear();
+      _features.clear();
+      _maxResolution.clear();
+      _dimension.clear();
+      _ramType.clear();
+      _ramSize.clear();
+      _recPsu.clear();
+      _wattage.clear();
+      _country.clear();
+      _weight.clear();
+      _warranty.clear();
+      isNew = false;
+      isPopular = false;
     });
   }
 
   @override
   void initState() {
-    FirebaseFirestore.instance
-        .collection('gpu')
-        .doc(widget.itemId)
-        .get()
-        .then((snapshot) {
-      if (snapshot.exists) {
-        Map<String, dynamic> data = snapshot.data()!;
-        categoryName.text = data['category'];
-        gpuName.text = data['name'];
-        imageurl = data['image'];
-        setState(() {
-          image = imageurl;
-        });
-        oldPrice.text = data['oldprice'];
-        newPrice.text = data['newprice'];
-        modelName.text = data['model'];
-        manufacturer.text = data['manufacturer'];
-        support.text = data['support'];
-        dimension.text = data['productdimension'];
-        clockSpeed.text = data['speed'];
-        color.text = data['color'];
-        features.text = data['features'];
-        maxResolution.text = data['maxres'];
-        dimension.text = data['productdimension'];
-        ramType.text = data['ramtype'];
-        ramSize.text = data['ramsize'];
-        recPsu.text = data['recpsu'];
-        wattage.text = data['wattage'];
-        country.text = data['country'];
-        weight.text = data['itemweight'];
-        warranty.text = data['warranty'];
-      }
+    final data = widget.item;
+    _productName.text = data[name];
+    imageurl = data[itemImage];
+    setState(() {
+      image = imageurl;
     });
+    _oldPrice.text = data[oldPrice];
+    _newPrice.text = data[newPrice];
+    _modelName.text = data[model];
+    _manufacturer.text = data[manufacturer];
+    _support.text = data[support];
+    _clockSpeed.text = data[speed];
+    _color.text = data[color];
+    _features.text = data[features];
+    _maxResolution.text = data[maxResolution];
+    _dimension.text = data[dimension];
+    _ramType.text = data[ramType];
+    _ramSize.text = data[ramSize];
+    _recPsu.text = data[recPsu];
+    _wattage.text = data[wattage];
+    _country.text = data[country];
+    _weight.text = data[weight];
+    _warranty.text = data[warranty];
+    isNew = data[newArival] == true ? isNew = true : isNew = false;
+    isPopular = data[popular] == true ? isPopular = true : isPopular = false;
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    const space = SizedBox(height: 10);
     return Scaffold(
+      appBar: AppBar(
+        surfaceTintColor: Colors.white,
+      ),
       body: SafeArea(
-          child: StreamBuilder<QuerySnapshot>(
-              stream: FirebaseFirestore.instance.collection('gpu').snapshots(),
-              builder: (context, snapshot) {
-                if (snapshot.hasError) {
-                  return Text('Error: ${snapshot.error}');
-                }
-                if (!snapshot.hasData) {
-                  return const Center(child: CircularProgressIndicator());
-                }
-                final category = snapshot.data!.docs
-                    .map((doc) => doc['category'] as String)
-                    .toSet()
-                    .toList();
-                final gpu = snapshot.data!.docs
-                    .map((doc) => doc['name'] as String)
-                    .toSet()
-                    .toList();
-                final model = snapshot.data!.docs
-                    .map((doc) => doc['model'] as String)
-                    .toSet()
-                    .toList();
-                final manufactured = snapshot.data!.docs
-                    .map((doc) => doc['manufacturer'] as String)
-                    .toSet()
-                    .toList();
-                final supports = snapshot.data!.docs
-                    .map((doc) => doc['support'] as String)
-                    .toSet()
-                    .toList();
-                return SingleChildScrollView(
-                    child: SizedBox(
-                        width: MediaQuery.of(context).size.width,
-                        child: Padding(
-                            padding: const EdgeInsets.all(10.0),
+          child: SingleChildScrollView(
+              child: SizedBox(
+                  width: MediaQuery.of(context).size.width,
+                  child: Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Column(children: [
+                        Text('Update GPU', style: CustomText.title),
+                        h30,
+                        AdminUiHelper.customImageBox(() {
+                          pickImage();
+                        }, imageurl: imageurl),
+                        h30,
+                        Form(
+                            key: formkey,
                             child: Column(children: [
-                              Text('GPU', style: CustomText.title),
-                              const SizedBox(height: 20),
-                              AdminUiHelper.customImageBox(() {
-                                pickImage();
-                              }, imageurl: imageurl),
-                              const SizedBox(height: 20),
-                              Form(
-                                  key: formkey,
-                                  child: Column(children: [
-                                    
-                                    
-                                    DropdownMenu<String>(
-                                        label: const Text(
-                                          'Select Category',
-                                          style: TextStyle(
-                                              color: CustomColors.appTheme),
-                                        ),
-                                        controller: gpuName,
-                                        menuStyle: const MenuStyle(
-                                            surfaceTintColor:
-                                                MaterialStatePropertyAll(
-                                                    Colors.white)),
-                                        width:
-                                            MediaQuery.of(context).size.width *
-                                                .93,
-                                        menuHeight: 300,
-                                        inputDecorationTheme:
-                                            InputDecorationTheme(
-                                                border: OutlineInputBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            8)),
-                                                fillColor: Colors.white,
-                                                filled: true),
-                                        onSelected: (value) {
-                                          setState(() {
-                                            selectedCategory = value;
-                                          });
-                                        },
-                                        dropdownMenuEntries: category
-                                            .map<DropdownMenuEntry<String>>(
-                                                (String value) {
-                                          return DropdownMenuEntry<String>(
-                                              value: value, label: value);
-                                        }).toList()),
-                                    space,
-                                    DropdownMenu<String>(
-                                        label: const Text(
-                                          'Select Graphics Card',
-                                          style: TextStyle(
-                                              color: CustomColors.appTheme),
-                                        ),
-                                        controller: gpuName,
-                                        menuStyle: const MenuStyle(
-                                            surfaceTintColor:
-                                                MaterialStatePropertyAll(
-                                                    Colors.white)),
-                                        width:
-                                            MediaQuery.of(context).size.width *
-                                                .93,
-                                        menuHeight: 300,
-                                        inputDecorationTheme:
-                                            InputDecorationTheme(
-                                                border: OutlineInputBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            8)),
-                                                fillColor: Colors.white,
-                                                filled: true),
-                                        onSelected: (value) {
-                                          setState(() {
-                                            selectedGpu = value;
-                                          });
-                                        },
-                                        dropdownMenuEntries: gpu
-                                            .map<DropdownMenuEntry<String>>(
-                                                (String value) {
-                                          return DropdownMenuEntry<String>(
-                                              value: value, label: value);
-                                        }).toList()),
-                                    space,
-                                    DropdownMenu<String>(
-                                        label: const Text(
-                                          'Select Model',
-                                          style: TextStyle(
-                                              color: CustomColors.appTheme),
-                                        ),
-                                        controller: modelName,
-                                        menuStyle: const MenuStyle(
-                                            surfaceTintColor:
-                                                MaterialStatePropertyAll(
-                                                    Colors.white)),
-                                        width:
-                                            MediaQuery.of(context).size.width *
-                                                .93,
-                                        menuHeight: 300,
-                                        inputDecorationTheme:
-                                            InputDecorationTheme(
-                                                border: OutlineInputBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            8)),
-                                                fillColor: Colors.white,
-                                                filled: true),
-                                        onSelected: (value) {
-                                          setState(() {
-                                            selectedModel = value;
-                                          });
-                                        },
-                                        dropdownMenuEntries: model
-                                            .map<DropdownMenuEntry<String>>(
-                                                (String value) {
-                                          return DropdownMenuEntry<String>(
-                                              value: value, label: value);
-                                        }).toList()),
-                                    space,
-                                    DropdownMenu<String>(
-                                        label: const Text(
-                                          'Select Manufacturer',
-                                          style: TextStyle(
-                                              color: CustomColors.appTheme),
-                                        ),
-                                        controller: manufacturer,
-                                        menuStyle: const MenuStyle(
-                                            surfaceTintColor:
-                                                MaterialStatePropertyAll(
-                                                    Colors.white)),
-                                        width:
-                                            MediaQuery.of(context).size.width *
-                                                .93,
-                                        menuHeight: 300,
-                                        inputDecorationTheme:
-                                            InputDecorationTheme(
-                                                hintStyle: const TextStyle(
-                                                    color:
-                                                        CustomColors.appTheme),
-                                                border: OutlineInputBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            8)),
-                                                fillColor: Colors.white,
-                                                filled: true),
-                                        onSelected: (value) {
-                                          setState(() {
-                                            selectedManufacturer = value;
-                                          });
-                                        },
-                                        dropdownMenuEntries: manufactured
-                                            .map<DropdownMenuEntry<String>>(
-                                                (String value) {
-                                          return DropdownMenuEntry<String>(
-                                              value: value, label: value);
-                                        }).toList()),
-                                    space,
-                                    DropdownMenu<String>(
-                                        label: const Text(
-                                          'Select Feature Supports',
-                                          style: TextStyle(
-                                              color: CustomColors.appTheme),
-                                        ),
-                                        controller: support,
-                                        menuStyle: const MenuStyle(
-                                            surfaceTintColor:
-                                                MaterialStatePropertyAll(
-                                                    Colors.white)),
-                                        width:
-                                            MediaQuery.of(context).size.width *
-                                                .93,
-                                        menuHeight: 300,
-                                        inputDecorationTheme:
-                                            InputDecorationTheme(
-                                                border: OutlineInputBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            8)),
-                                                fillColor: Colors.white,
-                                                filled: true),
-                                        onSelected: (value) {
-                                          setState(() {
-                                            selectedFeatureSprt = value;
-                                          });
-                                        },
-                                        dropdownMenuEntries: supports
-                                            .map<DropdownMenuEntry<String>>(
-                                                (String value) {
-                                          return DropdownMenuEntry<String>(
-                                              value: value, label: value);
-                                        }).toList()),
-                                    space,
-                                    AdminUi.admTextField(
-                                        label: 'Old Price',
-                                        textcontroller: oldPrice),
-                                    space,
-                                    AdminUi.admTextField(
-                                        label: 'New Price',
-                                        textcontroller: newPrice),
-                                    space,
-                                    AdminUi.admTextField(
-                                        label: 'Colour', textcontroller: color),
-                                    space,
-                                    AdminUi.featuresTextfield(
-                                        label: 'Features',
-                                        textcontroller: features),
-                                    space,
-                                    AdminUi.admTextField(
-                                        label: 'Max Resolution',
-                                        textcontroller: maxResolution),
-                                    space,
-                                    AdminUi.admTextField(
-                                        label: 'Product Dimensions',
-                                        textcontroller: dimension),
-                                    space,
-                                    AdminUi.admTextField(
-                                        label: 'RAM Type',
-                                        textcontroller: ramType),
-                                    space,
-                                    AdminUi.admTextField(
-                                        label: 'RAM Size',
-                                        textcontroller: ramSize),
-                                    space,
-                                    AdminUi.admTextField(
-                                        label: 'Recomended PSU',
-                                        textcontroller: recPsu),
-                                    space,
-                                    AdminUi.admTextField(
-                                        label: 'Wattage',
-                                        textcontroller: wattage),
-                                    space,
-                                    AdminUi.admTextField(
-                                        label: 'Country',
-                                        textcontroller: country),
-                                    space,
-                                    AdminUi.admTextField(
-                                        label: 'Item Weight',
-                                        textcontroller: weight),
-                                    space,
-                                    AdminUi.admTextField(
-                                        label: 'Warranty',
-                                        textcontroller: warranty)
-                                  ])),
-                              const SizedBox(height: 30),
-                              AdminUiHelper.customButton(context, () {
-                                if (formkey.currentState!.validate()) {
-                                  Navigator.pop(context);
-                                  updateData();
-                                  AdminUiHelper.customSnackbar(
-                                      context, 'Item Updated Successfully !');
-                                }
-                              }, text: 'Save'),
-                              const SizedBox(height: 30)
-                            ]))));
-              })),
+                              AdminUi.admTextField(
+                                  label: "Product Name",
+                                  textcontroller: _productName),
+                              h10,
+                              AdminUi.admTextField(
+                                  label: 'Model', textcontroller: _modelName),
+                              h10,
+                              AdminUi.admTextField(
+                                  label: 'Manufacuterer',
+                                  textcontroller: _manufacturer),
+                              h10,
+                              AdminUi.admTextField(
+                                  label: "Feature Support",
+                                  textcontroller: _support),
+                              h10,
+                              AdminUi.admTextField(
+                                  label: 'GPU Clock Speed',
+                                  textcontroller: _clockSpeed),
+                              h10,
+                              AdminUi.admTextField(
+                                  label: 'Old Price',
+                                  textcontroller: _oldPrice),
+                              h10,
+                              AdminUi.admTextField(
+                                  label: 'New Price',
+                                  textcontroller: _newPrice),
+                              h10,
+                              AdminUi.admTextField(
+                                  label: 'Colour', textcontroller: _color),
+                              h10,
+                              AdminUi.featuresTextfield(
+                                  label: 'Features', textcontroller: _features),
+                              h10,
+                              AdminUi.admTextField(
+                                  label: 'Max Resolution',
+                                  textcontroller: _maxResolution),
+                              h10,
+                              AdminUi.admTextField(
+                                  label: 'Product Dimensions',
+                                  textcontroller: _dimension),
+                              h10,
+                              AdminUi.admTextField(
+                                  label: 'RAM Type', textcontroller: _ramType),
+                              h10,
+                              AdminUi.admTextField(
+                                  label: 'RAM Size', textcontroller: _ramSize),
+                              h10,
+                              AdminUi.admTextField(
+                                  label: 'Recomended PSU',
+                                  textcontroller: _recPsu),
+                              h10,
+                              AdminUi.admTextField(
+                                  label: 'Wattage', textcontroller: _wattage),
+                              h10,
+                              AdminUi.admTextField(
+                                  label: 'Country', textcontroller: _country),
+                              h10,
+                              AdminUi.admTextField(
+                                  label: 'Item Weight',
+                                  textcontroller: _weight),
+                              h10,
+                              AdminUi.admTextField(
+                                  label: 'Warranty', textcontroller: _warranty),
+                              h10,
+                              Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    Row(children: [
+                                      Checkbox(
+                                          tristate: false,
+                                          activeColor: CustomColors.appTheme,
+                                          value: isNew,
+                                          onChanged: (newValue) {
+                                            setState(() {
+                                              isNew = newValue!;
+                                            });
+                                          }),
+                                      Text('New Arrival',
+                                          style: CustomText.categoryTitleText)
+                                    ]),
+                                    Row(children: [
+                                      Checkbox(
+                                          tristate: false,
+                                          activeColor: CustomColors.appTheme,
+                                          value: isPopular,
+                                          onChanged: (newValue) {
+                                            setState(() {
+                                              isPopular = newValue!;
+                                            });
+                                          }),
+                                      Text('Popular Item',
+                                          style: CustomText.categoryTitleText)
+                                    ])
+                                  ])
+                            ])),
+                        h30,
+                        AdminUiHelper.customButton(context, () {
+                          if (formkey.currentState!.validate()) {
+                            Navigator.pop(context);
+                            updateData();
+                            AdminUiHelper.customSnackbar(
+                                context, 'Item Updated Successfully !');
+                          }
+                        }, text: 'Save'),
+                        h30
+                      ]))))),
     );
   }
 }

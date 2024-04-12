@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:prosample_1/admin/const/variables.dart';
 import 'package:prosample_1/admin/home/inventory/RAM/add_ram.dart';
 import 'package:prosample_1/admin/home/inventory/RAM/update_ram.dart';
 import 'package:prosample_1/admin/utils/utils_colors.dart';
@@ -15,9 +16,23 @@ class RamDetails extends StatefulWidget {
 }
 
 class _RamDetailsState extends State<RamDetails> {
-  Future deleteData(itemId) async {
+ Future deleteData(itemId) async {
     final firestore = FirebaseFirestore.instance;
-    final docRef = firestore.collection('ram').doc(itemId);
+    final docRef = firestore.collection(ram).doc(itemId);
+    await docRef.delete();
+    deleteNewArivals(itemId);
+    deletePopular(itemId);
+  }
+
+  Future<void> deleteNewArivals(String itemId) async {
+    final firestore = FirebaseFirestore.instance;
+    final docRef = firestore.collection(newArival).doc(itemId);
+    await docRef.delete();
+  }
+
+  Future<void> deletePopular(String itemId) async {
+    final firestore = FirebaseFirestore.instance;
+    final docRef = firestore.collection(popular).doc(itemId);
     await docRef.delete();
   }
 
@@ -26,7 +41,7 @@ class _RamDetailsState extends State<RamDetails> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Text('Processor Details', style: CustomText.apptitle),
+        title: Text('RAM Details', style: CustomText.apptitle),
         backgroundColor: CustomColors.appTheme,
         leading: IconButton(
             onPressed: () {
@@ -43,14 +58,14 @@ class _RamDetailsState extends State<RamDetails> {
                       MaterialPageRoute(
                           builder: (ctx) => const ScreenAddRam()));
                 },
-                icon: Image.asset('assets/icons/add.png',
+                icon: Image.asset(add,
                     width: 30, color: Colors.white)),
           )
         ],
       ),
       body: SafeArea(
           child: StreamBuilder<QuerySnapshot>(
-              stream: FirebaseFirestore.instance.collection('ram').snapshots(),
+              stream: FirebaseFirestore.instance.collection(ram).orderBy(name).snapshots(),
               builder: (context, snapshot) {
                 if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
                   return SizedBox(
@@ -64,22 +79,20 @@ class _RamDetailsState extends State<RamDetails> {
                     itemCount: snapshot.data!.docs.length,
                     itemBuilder: (context, index) {
                       DocumentSnapshot document = snapshot.data!.docs[index];
-                      String imageUrl = document['image'];
-                      String name = document['name'];
-                      String itemId = document.id;
+                     final item = document.data() as Map<String,dynamic>;
 
                       return AdminUiHelper.updatelist(context, () {
                         AdminUi.customAlert(text1: 'Edit', text2: 'Delete', () {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (ctx) => UpdateRam(itemId: itemId)));
+                                  builder: (ctx) => UpdateRam(item: item, id: item[uniqueId])));
                         }, () {
-                          deleteData(itemId);
+                          deleteData(item[uniqueId]);
                           AdminUiHelper.customSnackbar(
                               context, 'Item Deleted Successfully !');
                         }, context);
-                      }, imageUrl: imageUrl, categoryName: name);
+                      }, imageUrl: item[itemImage], categoryName: item[name]);
                     },
                   );
                 } else {

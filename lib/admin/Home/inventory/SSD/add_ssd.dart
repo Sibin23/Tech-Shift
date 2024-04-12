@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:prosample_1/admin/const/variables.dart';
 import 'package:prosample_1/admin/utils/utils_colors.dart';
 import 'package:prosample_1/admin/utils/utils_text_style.dart';
 import 'package:prosample_1/admin/utils/utils_widget2.dart';
@@ -17,30 +18,25 @@ class ScreenAddSsd extends StatefulWidget {
 
 class _ScreenAddSsdState extends State<ScreenAddSsd> {
   final _formkey = GlobalKey<FormState>();
-  final productCategory = TextEditingController();
-  final productName = TextEditingController();
-  final manufacturer = TextEditingController();
-  final oldPrice = TextEditingController();
-  final newPrice = TextEditingController();
-  final modelName = TextEditingController();
-  final gen = TextEditingController();
-  final productDimension = TextEditingController();
-  final maxStorage = TextEditingController();
-  final interface = TextEditingController();
-  final transferSpeed = TextEditingController();
-  final connector = TextEditingController();
-  final fromFactor = TextEditingController();
-  final wattage = TextEditingController();
-  final country = TextEditingController();
-  final itemWeight = TextEditingController();
-  final warranty = TextEditingController();
+  final _productName = TextEditingController();
+  final _manufacturer = TextEditingController();
+  final _oldPrice = TextEditingController();
+  final _newPrice = TextEditingController();
+  final _modelName = TextEditingController();
+  final _gen = TextEditingController();
+  final _productDimension = TextEditingController();
+  final _maxStorage = TextEditingController();
+  final _interface = TextEditingController();
+  final _transferSpeed = TextEditingController();
+  final _connector = TextEditingController();
+  final _fromFactor = TextEditingController();
+  final _wattage = TextEditingController();
+  final _country = TextEditingController();
+  final _itemWeight = TextEditingController();
+  final _warranty = TextEditingController();
   String idnum = DateTime.now().toString().replaceAll(RegExp(r'[^\d]'), '');
-  String? selectedCategory;
-  String? selectedSsd;
-  String? selectedModel;
-  String? selectedSpeed;
-  String? selectedGen;
-  String? selcetedStorage;
+  bool isNew = false;
+  bool isPopular = false;
   String? imageurl = '';
   Future<void> pickImage() async {
     final ImagePicker picker = ImagePicker();
@@ -63,343 +59,181 @@ class _ScreenAddSsdState extends State<ScreenAddSsd> {
   // submit
   Future submitData() async {
     final data = {
-      'category': productCategory.text.toLowerCase(),
-      'image': imageurl.toString(),
-      'idnum': idnum,
-      'name': productName.text,
-      'manufacturer': manufacturer.text,
-      'oldprice': oldPrice.text,
-      'newprice': newPrice.text,
-      'model': modelName.text,
-      'gentype': gen.text,
-      'productdimension': productDimension.text,
-      'storage': maxStorage.text,
-      'interface': interface.text,
-      'transferspeed': transferSpeed.text,
-      'connectivity': connector.text,
-      'formfactor': fromFactor.text,
-      'wattage': wattage.text,
-      'country': country.text,
-      'itemweight': itemWeight.text,
-      'warranty': warranty.text,
+      category: ssd,
+      itemImage: imageurl.toString(),
+      uniqueId: idnum,
+      name: _productName.text,
+      manufacturer: _manufacturer.text,
+      oldPrice: _oldPrice.text,
+      newPrice: _newPrice.text,
+      model: _modelName.text,
+      genType: _gen.text,
+      dimension: _productDimension.text,
+      storage: _maxStorage.text,
+      hdwinterface: _interface.text,
+      speed: _transferSpeed.text,
+      connectivity: _connector.text,
+      formFactor: _fromFactor.text,
+      wattage: _wattage.text,
+      country: _country.text,
+      weight: _itemWeight.text,
+      warranty: _warranty.text,
+      newArival: isNew,
+      popular: isPopular,
     };
-    FirebaseFirestore.instance
-        .collection('ssd')
-        .doc(idnum)
-        .set(data);
+    final item = {
+      itemImage: imageurl,
+      name: _productName.text,
+      uniqueId: idnum,
+      category: ssd,
+      oldPrice: _oldPrice.text,
+      newPrice: _newPrice.text,
+    };
+    if (isNew == true) {
+      FirebaseFirestore.instance.collection(newArival).doc(idnum).set(item);
+    }
+    if (isPopular == true) {
+      FirebaseFirestore.instance.collection(popular).doc(idnum).set(item);
+    }
+    FirebaseFirestore.instance.collection(ssd).doc(idnum).set(data);
     setState(() {
-      productCategory.clear();
       imageurl = '';
-      productName.clear();
-      manufacturer.clear();
-      oldPrice.clear();
-      newPrice.clear();
-      modelName.clear();
-      gen.clear();
-      productDimension.clear();
-      maxStorage.clear();
-      interface.clear();
-      transferSpeed.clear();
-      connector.clear();
-      fromFactor.clear();
-      wattage.clear();
-      country.clear();
-      itemWeight.clear();
-      warranty.clear();
+      _productName.clear();
+      _manufacturer.clear();
+      _oldPrice.clear();
+      _newPrice.clear();
+      _modelName.clear();
+      _gen.clear();
+      _productDimension.clear();
+      _maxStorage.clear();
+      _interface.clear();
+      _transferSpeed.clear();
+      _connector.clear();
+      _fromFactor.clear();
+      _wattage.clear();
+      _country.clear();
+      _itemWeight.clear();
+      _warranty.clear();
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    const space = SizedBox(height: 10);
     return Scaffold(
       appBar: AppBar(
         surfaceTintColor: Colors.white,
       ),
       body: SafeArea(
           child: SingleChildScrollView(
-              child: StreamBuilder<QuerySnapshot>(
-                  stream: FirebaseFirestore.instance
-                      .collection('ssddetails')
-                      .snapshots(),
-                  builder: (context, snapshot) {
-                    if (snapshot.hasError) {
-                      return Text('Error: ${snapshot.error}');
-                    }
-                    if (!snapshot.hasData) {
-                      return const Center(child: CircularProgressIndicator());
-                    }
-                    final category = snapshot.data!.docs
-                        .map((doc) => doc['category'] as String)
-                        .toSet()
-                        .toList();
-                    final ssd = snapshot.data!.docs
-                        .map((doc) => doc['name'] as String)
-                        .toSet()
-                        .toList();
-                    final model = snapshot.data!.docs
-                        .map((doc) => doc['model'] as String)
-                        .toSet()
-                        .toList();
-                    final gemtype = snapshot.data!.docs
-                        .map((doc) => doc['gentype'] as String)
-                        .toSet()
-                        .toList();
-                    final speeds = snapshot.data!.docs
-                        .map((doc) => doc['speed'] as String)
-                        .toSet()
-                        .toList();
-                    final storage = snapshot.data!.docs
-                        .map((doc) => doc['storage'] as String)
-                        .toSet()
-                        .toList();
-                    return Padding(
-                        padding: const EdgeInsets.all(10.0),
+              child: Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: Column(children: [
+                    Text('Add SSD', style: CustomText.title),
+                    const SizedBox(height: 20),
+                    AdminUiHelper.customImageBox(() {
+                      pickImage();
+                    }, imageurl: imageurl),
+                    const SizedBox(height: 20),
+                    Form(
+                        key: _formkey,
                         child: Column(children: [
-                          Text('Solid State Drive', style: CustomText.title),
-                          const SizedBox(height: 20),
-                          AdminUiHelper.customImageBox(() {
-                            pickImage();
-                          }, imageurl: imageurl),
-                          const SizedBox(height: 20),
-                          Form(
-                              key: _formkey,
-                              child: Column(children: [
-                                
-                                DropdownMenu<String>(
-                                    label: const Text('Select Category',
-                                        style: TextStyle(
-                                            color: CustomColors.appTheme)),
-                                    controller: productCategory,
-                                    menuStyle: const MenuStyle(
-                                        surfaceTintColor:
-                                            MaterialStatePropertyAll(
-                                                Colors.white)),
-                                    width:
-                                        MediaQuery.of(context).size.width * .93,
-                                    menuHeight: 300,
-                                    inputDecorationTheme: InputDecorationTheme(
-                                        border: OutlineInputBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(8)),
-                                        fillColor: Colors.white,
-                                        filled: true),
-                                    onSelected: (value) {
-                                      setState(() {
-                                        selectedCategory = value;
-                                      });
-                                    },
-                                    dropdownMenuEntries: category
-                                        .map<DropdownMenuEntry<String>>(
-                                            (String value) {
-                                      return DropdownMenuEntry<String>(
-                                          value: value, label: value);
-                                    }).toList()),
-                                space,
-                                DropdownMenu<String>(
-                                    label: const Text('Select SSD',
-                                        style: TextStyle(
-                                            color: CustomColors.appTheme)),
-                                    controller: productName,
-                                    menuStyle: const MenuStyle(
-                                        surfaceTintColor:
-                                            MaterialStatePropertyAll(
-                                                Colors.white)),
-                                    width:
-                                        MediaQuery.of(context).size.width * .93,
-                                    menuHeight: 300,
-                                    inputDecorationTheme: InputDecorationTheme(
-                                        border: OutlineInputBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(8)),
-                                        fillColor: Colors.white,
-                                        filled: true),
-                                    onSelected: (value) {
-                                      setState(() {
-                                        selectedSsd = value;
-                                      });
-                                    },
-                                    dropdownMenuEntries: ssd
-                                        .map<DropdownMenuEntry<String>>(
-                                            (String value) {
-                                      return DropdownMenuEntry<String>(
-                                          value: value, label: value);
-                                    }).toList()),
-                                space,
-                                DropdownMenu<String>(
-                                    label: const Text('Select Model',
-                                        style: TextStyle(
-                                            color: CustomColors.appTheme)),
-                                    controller: modelName,
-                                    menuStyle: const MenuStyle(
-                                        surfaceTintColor:
-                                            MaterialStatePropertyAll(
-                                                Colors.white)),
-                                    width:
-                                        MediaQuery.of(context).size.width * .93,
-                                    menuHeight: 300,
-                                    inputDecorationTheme: InputDecorationTheme(
-                                        border: OutlineInputBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(8)),
-                                        fillColor: Colors.white,
-                                        filled: true),
-                                    onSelected: (value) {
-                                      setState(() {
-                                        selectedModel = value;
-                                      });
-                                    },
-                                    dropdownMenuEntries: model
-                                        .map<DropdownMenuEntry<String>>(
-                                            (String value) {
-                                      return DropdownMenuEntry<String>(
-                                          value: value, label: value);
-                                    }).toList()),
-                                space,
-                                DropdownMenu<String>(
-                                    label: const Text('Select Gen Type',
-                                        style: TextStyle(
-                                            color: CustomColors.appTheme)),
-                                    controller: gen,
-                                    menuStyle: const MenuStyle(
-                                        surfaceTintColor:
-                                            MaterialStatePropertyAll(
-                                                Colors.white)),
-                                    width:
-                                        MediaQuery.of(context).size.width * .93,
-                                    menuHeight: 300,
-                                    inputDecorationTheme: InputDecorationTheme(
-                                        border: OutlineInputBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(8)),
-                                        fillColor: Colors.white,
-                                        filled: true),
-                                    onSelected: (value) {
-                                      setState(() {
-                                        selectedGen = value;
-                                      });
-                                    },
-                                    dropdownMenuEntries: gemtype
-                                        .map<DropdownMenuEntry<String>>(
-                                            (String value) {
-                                      return DropdownMenuEntry<String>(
-                                          value: value, label: value);
-                                    }).toList()),
-                                space,
-                                DropdownMenu<String>(
-                                    label: const Text('Select Speed',
-                                        style: TextStyle(
-                                            color: CustomColors.appTheme)),
-                                    controller: transferSpeed,
-                                    menuStyle: const MenuStyle(
-                                        surfaceTintColor:
-                                            MaterialStatePropertyAll(
-                                                Colors.white)),
-                                    width:
-                                        MediaQuery.of(context).size.width * .93,
-                                    menuHeight: 300,
-                                    inputDecorationTheme: InputDecorationTheme(
-                                        border: OutlineInputBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(8)),
-                                        fillColor: Colors.white,
-                                        filled: true),
-                                    onSelected: (value) {
-                                      setState(() {
-                                        selectedSpeed = value;
-                                      });
-                                    },
-                                    dropdownMenuEntries: speeds
-                                        .map<DropdownMenuEntry<String>>(
-                                            (String value) {
-                                      return DropdownMenuEntry<String>(
-                                          value: value, label: value);
-                                    }).toList()),
-                                space,
-                                DropdownMenu<String>(
-                                    label: const Text('Select Storage Capacity',
-                                        style: TextStyle(
-                                            color: CustomColors.appTheme)),
-                                    controller: maxStorage,
-                                    menuStyle: const MenuStyle(
-                                        surfaceTintColor:
-                                            MaterialStatePropertyAll(
-                                                Colors.white)),
-                                    width:
-                                        MediaQuery.of(context).size.width * .93,
-                                    menuHeight: 300,
-                                    inputDecorationTheme: InputDecorationTheme(
-                                        border: OutlineInputBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(8)),
-                                        fillColor: Colors.white,
-                                        filled: true),
-                                    onSelected: (value) {
-                                      setState(() {
-                                        selcetedStorage = value;
-                                      });
-                                    },
-                                    dropdownMenuEntries: storage
-                                        .map<DropdownMenuEntry<String>>(
-                                            (String value) {
-                                      return DropdownMenuEntry<String>(
-                                          value: value, label: value);
-                                    }).toList()),
-                                space,
-                                AdminUi.admTextField(
-                                    label: 'Manufacturer',
-                                    textcontroller: manufacturer),
-                                space,
-                                AdminUi.admTextField(
-                                    label: 'Old Price',
-                                    textcontroller: oldPrice),
-                                space,
-                                AdminUi.admTextField(
-                                    label: 'New Price',
-                                    textcontroller: newPrice),
-                                space,
-                                AdminUi.admTextField(
-                                    label: 'Product Dimensions',
-                                    textcontroller: productDimension),
-                                space,
-                                AdminUi.admTextField(
-                                    label: 'Interface',
-                                    textcontroller: interface),
-                                space,
-                                AdminUi.admTextField(
-                                    label: 'Connectivity',
-                                    textcontroller: connector),
-                                space,
-                                AdminUi.admTextField(
-                                    label: 'Form Factor',
-                                    textcontroller: fromFactor),
-                                space,
-                                AdminUi.admTextField(
-                                    label: 'Wattage', textcontroller: wattage),
-                                space,
-                                AdminUi.admTextField(
-                                    label: 'Country', textcontroller: country),
-                                space,
-                                AdminUi.admTextField(
-                                    label: 'Item Weight',
-                                    textcontroller: itemWeight),
-                                space,
-                                AdminUi.admTextField(
-                                    label: 'Warranty',
-                                    textcontroller: warranty),
-                                const SizedBox(height: 30),
-                              ])),
-                          AdminUiHelper.customButton(context, () {
-                            if (_formkey.currentState!.validate()) {
-                              Navigator.pop(context);
-                              submitData();
-                              AdminUiHelper.customSnackbar(
-                                  context, 'Item Added Successfully !');
-                            }
-                          }, text: 'Save'),
-                          const SizedBox(height: 30)
-                        ]));
-                  }))),
+                          AdminUi.admTextField(
+                              label: 'Product Name',
+                              textcontroller: _productName),
+                          h10,
+                          AdminUi.admTextField(
+                              label: 'Model Name', textcontroller: _modelName),
+                          h10,
+                          AdminUi.admTextField(
+                              label: 'Gen Type', textcontroller: _gen),
+                          h10,
+                          AdminUi.admTextField(
+                              label: 'Speed', textcontroller: _transferSpeed),
+                          h10,
+                          AdminUi.admTextField(
+                              label: 'Storage Capacity',
+                              textcontroller: _maxStorage),
+                          h10,
+                          AdminUi.admTextField(
+                              label: 'Manufacturer',
+                              textcontroller: _manufacturer),
+                          h10,
+                          AdminUi.admTextField(
+                              label: 'Old Price', textcontroller: _oldPrice),
+                          h10,
+                          AdminUi.admTextField(
+                              label: 'New Price', textcontroller: _newPrice),
+                          h10,
+                          AdminUi.admTextField(
+                              label: 'Product Dimensions',
+                              textcontroller: _productDimension),
+                          h10,
+                          AdminUi.admTextField(
+                              label: 'Interface', textcontroller: _interface),
+                          h10,
+                          AdminUi.admTextField(
+                              label: 'Connectivity',
+                              textcontroller: _connector),
+                          h10,
+                          AdminUi.admTextField(
+                              label: 'Form Factor',
+                              textcontroller: _fromFactor),
+                          h10,
+                          AdminUi.admTextField(
+                              label: 'Wattage', textcontroller: _wattage),
+                          h10,
+                          AdminUi.admTextField(
+                              label: 'Country', textcontroller: _country),
+                          h10,
+                          AdminUi.admTextField(
+                              label: 'Item Weight',
+                              textcontroller: _itemWeight),
+                          h10,
+                          AdminUi.admTextField(
+                              label: 'Warranty', textcontroller: _warranty),
+                          h10,
+                          Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                Row(children: [
+                                  Checkbox(
+                                      tristate: false,
+                                      activeColor: CustomColors.appTheme,
+                                      value: isNew,
+                                      onChanged: (newValue) {
+                                        setState(() {
+                                          isNew = newValue!;
+                                        });
+                                      }),
+                                  Text('New Arrival',
+                                      style: CustomText.categoryTitleText)
+                                ]),
+                                Row(children: [
+                                  Checkbox(
+                                      tristate: false,
+                                      activeColor: CustomColors.appTheme,
+                                      value: isPopular,
+                                      onChanged: (newValue) {
+                                        setState(() {
+                                          isPopular = newValue!;
+                                        });
+                                      }),
+                                  Text('Popular Item',
+                                      style: CustomText.categoryTitleText)
+                                ])
+                              ])
+                        ])),
+                    h30,
+                    AdminUiHelper.customButton(context, () {
+                      if (_formkey.currentState!.validate()) {
+                        Navigator.pop(context);
+                        submitData();
+                        AdminUiHelper.customSnackbar(
+                            context, 'Item Added Successfully !');
+                      }
+                    }, text: 'Save'),
+                    h30
+                  ])))),
     );
   }
 }

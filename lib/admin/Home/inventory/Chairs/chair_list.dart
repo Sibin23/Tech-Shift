@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:prosample_1/admin/const/variables.dart';
 import 'package:prosample_1/admin/home/inventory/Chairs/add_chair.dart';
 import 'package:prosample_1/admin/home/inventory/Chairs/update_chair.dart';
 import 'package:prosample_1/admin/utils/utils_colors.dart';
@@ -17,9 +18,24 @@ class ChairDetails extends StatefulWidget {
 class _ChairDetailsState extends State<ChairDetails> {
   Future deleteData(itemId) async {
     final firestore = FirebaseFirestore.instance;
-    final docRef = firestore.collection('chair').doc(itemId);
+    final docRef = firestore.collection(chair).doc(itemId);
+    await docRef.delete();
+    deleteNewArivals(itemId);
+    deletePopular(itemId);
+  }
+
+  Future<void> deleteNewArivals(String itemId) async {
+    final firestore = FirebaseFirestore.instance;
+    final docRef = firestore.collection(newArival).doc(itemId);
     await docRef.delete();
   }
+
+  Future<void> deletePopular(String itemId) async {
+    final firestore = FirebaseFirestore.instance;
+    final docRef = firestore.collection(popular).doc(itemId);
+    await docRef.delete();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -27,11 +43,7 @@ class _ChairDetailsState extends State<ChairDetails> {
         centerTitle: true,
         title: Text('Processor Details', style: CustomText.apptitle),
         backgroundColor: CustomColors.appTheme,
-        leading: IconButton(
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            icon: const Icon(Icons.arrow_back, color: Colors.white)),
+        foregroundColor: Colors.white,
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: 10),
@@ -42,12 +54,12 @@ class _ChairDetailsState extends State<ChairDetails> {
                       MaterialPageRoute(
                           builder: (ctx) => const ScreenAddChairs()));
                 },
-                icon: Image.asset('assets/icons/add.png',
-                    width: 30, color: Colors.white)),
+                icon: Image.asset(add, width: 30, color: Colors.white)),
           )
         ],
       ),
-      body: SafeArea(child: SizedBox(
+      body: SafeArea(
+        child: SizedBox(
             width: MediaQuery.of(context).size.width,
             height: MediaQuery.of(context).size.height,
             child: StreamBuilder(
@@ -56,11 +68,11 @@ class _ChairDetailsState extends State<ChairDetails> {
                   .orderBy('name')
                   .snapshots(),
               builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-                 if(!snapshot.hasData || snapshot.data!.docs.isEmpty){
+                if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
                   return SizedBox(
                     height: MediaQuery.of(context).size.height,
-                  width: MediaQuery.of(context).size.width,
-                  child: const Center(child: Text('No Items Yet')),
+                    width: MediaQuery.of(context).size.width,
+                    child: const Center(child: Text('No Items Yet')),
                   );
                 }
                 if (snapshot.hasData) {
@@ -68,23 +80,23 @@ class _ChairDetailsState extends State<ChairDetails> {
                     itemCount: snapshot.data!.docs.length,
                     itemBuilder: (context, index) {
                       DocumentSnapshot document = snapshot.data!.docs[index];
-                      String imageUrl = document['image'];
-                      String name = document['name'];
-                      String itemId = document.id;
-
+                      Map<String, dynamic> item =
+                          document.data() as Map<String, dynamic>;
                       return AdminUiHelper.updatelist(context, () {
                         AdminUi.customAlert(text1: 'Edit', text2: 'Delete', () {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (ctx) =>
-                                      UpdateChair(itemId: itemId)));
+                                  builder: (ctx) => UpdateChair(
+                                      item: item, id: item[uniqueId])));
                         }, () {
-                          deleteData(itemId);
+                          deleteData(document[uniqueId]);
                           AdminUiHelper.customSnackbar(
                               context, 'Item Deleted Successfully !');
                         }, context);
-                      }, imageUrl: imageUrl, categoryName: name);
+                      },
+                          imageUrl: document[itemImage],
+                          categoryName: document[name]);
                     },
                   );
                 } else {

@@ -3,14 +3,16 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:prosample_1/admin/const/variables.dart';
 import 'package:prosample_1/admin/utils/utils_colors.dart';
 import 'package:prosample_1/admin/utils/utils_text_style.dart';
 import 'package:prosample_1/admin/utils/utils_widget2.dart';
 import 'package:prosample_1/admin/utils/utils_widgets2.dart';
 
 class UpdateMonitor extends StatefulWidget {
-  final String itemId;
-  const UpdateMonitor({super.key, required this.itemId});
+  final Map<String, dynamic> item;
+  final String id;
+  const UpdateMonitor({super.key, required this.id, required this.item});
 
   @override
   State<UpdateMonitor> createState() => _UpdateMonitorState();
@@ -18,12 +20,12 @@ class UpdateMonitor extends StatefulWidget {
 
 class _UpdateMonitorState extends State<UpdateMonitor> {
   final _formkey = GlobalKey<FormState>();
-  final categoryName = TextEditingController();
-  final productName = TextEditingController();
+  final _productCategory = TextEditingController();
+  final _productName = TextEditingController();
   final _manufacturer = TextEditingController();
   final _oldPrice = TextEditingController();
   final _newPrice = TextEditingController();
-  final modelName = TextEditingController();
+  final _modelName = TextEditingController();
   final _productDimension = TextEditingController();
   final _veiwingAngle = TextEditingController();
   final _displayType = TextEditingController();
@@ -39,10 +41,8 @@ class _UpdateMonitorState extends State<UpdateMonitor> {
   final _warranty = TextEditingController();
   String? image;
   late String imageurl = '';
-  String? selectedCategory;
-  String? selectedManufacturer;
-  String? selectedModel;
-  String? selectedMonitor;
+  bool? isNew;
+  bool? isPopular;
   Future<void> pickImage() async {
     final ImagePicker picker = ImagePicker();
     final XFile? image = await picker.pickImage(source: ImageSource.gallery);
@@ -62,37 +62,37 @@ class _UpdateMonitorState extends State<UpdateMonitor> {
   }
 
   updateData() {
-    FirebaseFirestore.instance.collection('monitor').doc(widget.itemId).update({
-      'category': categoryName.text.toLowerCase(),
-      'image': imageurl.toString(),
-      'idnum': widget.itemId,
-      'name': productName.text,
-      'manufacturer': _manufacturer.text,
-      'oldprice': _oldPrice.text,
-      'newprice': _newPrice.text,
-      'model': modelName.text,
-      'productdimension': _productDimension.text,
-      'viewingangle': _veiwingAngle.text,
-      'displaytype': _displayType.text,
-      'displaysize': _displaySize.text,
-      'response': _responseTime.text,
-      'resolution': _resolution.text,
-      'refRate': _refreshRate.text,
-      'features': _specialFeatures.text,
-      'voltage': _voltage.text,
-      'hdwinterface': _hdwInterface.text,
-      'country': _country.text,
-      'itemweight': _itemWeight.text,
-      'warranty': _warranty.text,
+    FirebaseFirestore.instance.collection(monitor).doc(widget.id).update({
+      itemImage: imageurl.toString(),
+      name: _productName.text,
+      manufacturer: _manufacturer.text,
+      oldPrice: _oldPrice.text,
+      newPrice: _newPrice.text,
+      model: _modelName.text,
+      dimension: _productDimension.text,
+      viewAngle: _veiwingAngle.text,
+      displayType: _displayType.text,
+      displaySize: _displaySize.text,
+      response: _responseTime.text,
+      resolution: _resolution.text,
+      refRate: _refreshRate.text,
+      features: _specialFeatures.text,
+      voltage: _voltage.text,
+      hdwinterface: _hdwInterface.text,
+      country: _country.text,
+      weight: _itemWeight.text,
+      warranty: _warranty.text,
+      newArival: isNew,
+      popular: isPopular
     });
     setState(() {
-      categoryName.clear();
+      _productCategory.clear();
       imageurl = '';
-      productName.clear();
+      _productName.clear();
       _manufacturer.clear();
       _oldPrice.clear();
       _newPrice.clear();
-      modelName.clear();
+      _modelName.clear();
       _productDimension.clear();
       _veiwingAngle.clear();
       _displayType.clear();
@@ -106,268 +106,169 @@ class _UpdateMonitorState extends State<UpdateMonitor> {
       _country.clear();
       _itemWeight.clear();
       _warranty.clear();
+      isNew = false;
+      isPopular = false;
     });
   }
 
   @override
   void initState() {
-    FirebaseFirestore.instance
-        .collection('monitor')
-        .doc(widget.itemId)
-        .get()
-        .then((snapshot) {
-      if (snapshot.exists) {
-        Map<String, dynamic> data = snapshot.data()!;
-        productName.text = data['name'];
-        setState(() {
-          image = imageurl;
-        });
-        imageurl = data['image'];
-        categoryName.text = data['category'];
-        _oldPrice.text = data['oldprice'];
-        _newPrice.text = data['newprice'];
-        modelName.text = data['model'];
-        _manufacturer.text = data['manufacturer'];
-        _productDimension.text = data['productdimension'];
-        _veiwingAngle.text = data['viewingangle'];
-        _displaySize.text = data['displaysize'];
-        _displayType.text = data['displaytype'];
-        _resolution.text = data['resolution'];
-        _responseTime.text = data['response'];
-        _refreshRate.text = data['refRate'];
-        _specialFeatures.text = data['features'];
-        _voltage.text = data['voltage'];
-        _hdwInterface.text = data['hdwinterface'];
-        _country.text = data['country'];
-        _itemWeight.text = data['itemweight'];
-        _warranty.text = data['warranty'];
-      }
+    final data = widget.item;
+    _productName.text = data[name];
+    setState(() {
+      image = imageurl;
     });
+    imageurl = data[itemImage];
+    _oldPrice.text = data[oldPrice];
+    _newPrice.text = data[newPrice];
+    _modelName.text = data[model];
+    _manufacturer.text = data[manufacturer];
+    _productDimension.text = data[dimension];
+    _veiwingAngle.text = data[viewAngle];
+    _displaySize.text = data[displaySize];
+    _displayType.text = data[displayType];
+    _resolution.text = data[resolution];
+    _responseTime.text = data[resolution];
+    _refreshRate.text = data[refRate];
+    _specialFeatures.text = data[features];
+    _voltage.text = data[voltage];
+    _hdwInterface.text = data[hdwinterface];
+    _country.text = data[country];
+    _itemWeight.text = data[weight];
+    _warranty.text = data[warranty];
+    isNew = data[newArival] == true ? isNew = true : isNew = false;
+    isPopular = data[popular] == true ? isPopular = true : isPopular = false;
+
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    const space = SizedBox(height: 10);
     return Scaffold(
       appBar: AppBar(
         surfaceTintColor: Colors.white,
       ),
       body: SafeArea(
           child: SingleChildScrollView(
-        child: StreamBuilder<QuerySnapshot>(
-            stream: FirebaseFirestore.instance.collection('mouse').snapshots(),
-            builder: (context, snapshot) {
-              if (snapshot.hasError) {
-                return Text('Error: ${snapshot.error}');
-              }
-              if (!snapshot.hasData) {
-                return const Center(child: CircularProgressIndicator());
-              }
-              final category = snapshot.data!.docs
-                  .map((doc) => doc['category'] as String)
-                  .toSet()
-                  .toList();
-              final monitor = snapshot.data!.docs
-                  .map((doc) => doc['name'] as String)
-                  .toSet()
-                  .toList();
-              final model = snapshot.data!.docs
-                  .map((doc) => doc['model'] as String)
-                  .toSet()
-                  .toList();
-              final manufactured = snapshot.data!.docs
-                  .map((doc) => doc['manufacturer'] as String)
-                  .toSet()
-                  .toList();
-              return Padding(
+              child: Padding(
                   padding: const EdgeInsets.all(10.0),
                   child: Column(children: [
-                    Text('Monitor', style: CustomText.title),
-                    const SizedBox(height: 20),
+                    Text('Add Monitor', style: CustomText.title),
+                    h30,
                     AdminUiHelper.customImageBox(() {
                       pickImage();
                     }, imageurl: imageurl),
-                    const SizedBox(height: 20),
+                    h30,
                     Form(
                         key: _formkey,
                         child: Column(children: [
-                          DropdownMenu<String>(
-                              label: const Text('Select Category',
-                                  style:
-                                      TextStyle(color: CustomColors.appTheme)),
-                              controller: categoryName,
-                              menuStyle: const MenuStyle(
-                                  surfaceTintColor:
-                                      MaterialStatePropertyAll(Colors.white)),
-                              width: MediaQuery.of(context).size.width * .93,
-                              menuHeight: 300,
-                              inputDecorationTheme: InputDecorationTheme(
-                                  border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(8)),
-                                  fillColor: Colors.white,
-                                  filled: true),
-                              onSelected: (value) {
-                                setState(() {
-                                  selectedCategory = value;
-                                });
-                              },
-                              dropdownMenuEntries: category
-                                  .map<DropdownMenuEntry<String>>(
-                                      (String value) {
-                                return DropdownMenuEntry<String>(
-                                    value: value, label: value);
-                              }).toList()),
-                          space,
-                          DropdownMenu<String>(
-                              label: const Text('Select Monitor',
-                                  style:
-                                      TextStyle(color: CustomColors.appTheme)),
-                              controller: productName,
-                              menuStyle: const MenuStyle(
-                                  surfaceTintColor:
-                                      MaterialStatePropertyAll(Colors.white)),
-                              width: MediaQuery.of(context).size.width * .93,
-                              menuHeight: 300,
-                              inputDecorationTheme: InputDecorationTheme(
-                                  border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(8)),
-                                  fillColor: Colors.white,
-                                  filled: true),
-                              onSelected: (value) {
-                                setState(() {
-                                  selectedMonitor = value;
-                                });
-                              },
-                              dropdownMenuEntries: monitor
-                                  .map<DropdownMenuEntry<String>>(
-                                      (String value) {
-                                return DropdownMenuEntry<String>(
-                                    value: value, label: value);
-                              }).toList()),
-                          space,
-                          DropdownMenu<String>(
-                              label: const Text('Select Model',
-                                  style:
-                                      TextStyle(color: CustomColors.appTheme)),
-                              controller: modelName,
-                              menuStyle: const MenuStyle(
-                                  surfaceTintColor:
-                                      MaterialStatePropertyAll(Colors.white)),
-                              width: MediaQuery.of(context).size.width * .93,
-                              menuHeight: 300,
-                              inputDecorationTheme: InputDecorationTheme(
-                                  border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(8)),
-                                  fillColor: Colors.white,
-                                  filled: true),
-                              onSelected: (value) {
-                                setState(() {
-                                  selectedModel = value;
-                                });
-                              },
-                              dropdownMenuEntries: model
-                                  .map<DropdownMenuEntry<String>>(
-                                      (String value) {
-                                return DropdownMenuEntry<String>(
-                                    value: value, label: value);
-                              }).toList()),
-                          space,
-                          DropdownMenu<String>(
-                              label: const Text('Select Manufacturer',
-                                  style:
-                                      TextStyle(color: CustomColors.appTheme)),
-                              controller: _manufacturer,
-                              menuStyle: const MenuStyle(
-                                  surfaceTintColor:
-                                      MaterialStatePropertyAll(Colors.white)),
-                              width: MediaQuery.of(context).size.width * .93,
-                              menuHeight: 300,
-                              inputDecorationTheme: InputDecorationTheme(
-                                  border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(8)),
-                                  fillColor: Colors.white,
-                                  filled: true),
-                              onSelected: (value) {
-                                setState(() {
-                                  selectedManufacturer = value;
-                                });
-                              },
-                              dropdownMenuEntries: manufactured
-                                  .map<DropdownMenuEntry<String>>(
-                                      (String value) {
-                                return DropdownMenuEntry<String>(
-                                    value: value, label: value);
-                              }).toList()),
-                          space,
+                          AdminUi.admTextField(
+                              label: 'Product Name',
+                              textcontroller: _productName),
+                          h10,
+                          AdminUi.admTextField(
+                              label: 'Model Name', textcontroller: _modelName),
+                          h10,
+                          AdminUi.admTextField(
+                              label: 'Manufacturer',
+                              textcontroller: _manufacturer),
+                          h10,
                           AdminUi.admTextField(
                               label: 'Old Price', textcontroller: _oldPrice),
-                          space,
+                          h10,
                           AdminUi.admTextField(
                               label: 'New Price', textcontroller: _newPrice),
-                          space,
+                          h10,
                           AdminUi.admTextField(
                               label: 'Product Dimensions',
                               textcontroller: _productDimension),
-                          space,
+                          h10,
                           AdminUi.admTextField(
                               label: 'Viewing Angle',
                               textcontroller: _veiwingAngle),
-                          space,
+                          h10,
                           AdminUi.admTextField(
                               label: 'Display Type',
                               textcontroller: _displayType),
-                          space,
+                          h10,
                           AdminUi.admTextField(
                               label: 'Display Size',
                               textcontroller: _displaySize),
-                          space,
+                          h10,
                           AdminUi.admTextField(
                               label: 'Response Time',
                               textcontroller: _responseTime),
-                          space,
+                          h10,
                           AdminUi.admTextField(
                               label: 'Resolution', textcontroller: _resolution),
-                          space,
+                          h10,
                           AdminUi.admTextField(
                               label: 'Refresh Rate',
                               textcontroller: _refreshRate),
-                          space,
+                          h10,
                           AdminUi.admTextField(
                               label: 'Features',
                               textcontroller: _specialFeatures),
-                          space,
+                          h10,
                           AdminUi.admTextField(
                               label: 'Voltage', textcontroller: _voltage),
-                          space,
+                          h10,
                           AdminUi.admTextField(
                               label: 'Hardware Interface',
                               textcontroller: _hdwInterface),
-                          space,
+                          h10,
                           AdminUi.admTextField(
                               label: 'Country', textcontroller: _country),
-                          space,
+                          h10,
                           AdminUi.admTextField(
                               label: 'Item Weight',
                               textcontroller: _itemWeight),
-                          space,
+                          h10,
                           AdminUi.admTextField(
                               label: 'Warranty', textcontroller: _warranty),
-                          space,
+                          h10,
+                          Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                Row(children: [
+                                  Checkbox(
+                                      tristate: false,
+                                      activeColor: CustomColors.appTheme,
+                                      value: isNew,
+                                      onChanged: (newValue) {
+                                        setState(() {
+                                          isNew = newValue!;
+                                        });
+                                      }),
+                                  Text('New Arrival',
+                                      style: CustomText.categoryTitleText)
+                                ]),
+                                Row(children: [
+                                  Checkbox(
+                                      tristate: false,
+                                      activeColor: CustomColors.appTheme,
+                                      value: isPopular,
+                                      onChanged: (newValue) {
+                                        setState(() {
+                                          isPopular = newValue!;
+                                        });
+                                      }),
+                                  Text('Popular Item',
+                                      style: CustomText.categoryTitleText)
+                                ])
+                              ])
                         ])),
-                    const SizedBox(height: 30),
+                    h30,
                     AdminUiHelper.customButton(context, () {
                       if (_formkey.currentState!.validate()) {
                         Navigator.pop(context);
                         updateData();
                         AdminUiHelper.customSnackbar(
-                            context, 'Item Deleted Successfully !');
+                            context, 'Item Added Successfully !');
                       }
                     }, text: 'Save'),
-                    const SizedBox(height: 30)
-                  ]));
-            }),
-      )),
+                    h30
+                  ])))),
     );
   }
 }

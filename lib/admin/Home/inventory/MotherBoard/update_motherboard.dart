@@ -4,14 +4,16 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:prosample_1/admin/const/variables.dart';
 import 'package:prosample_1/admin/utils/utils_colors.dart';
 import 'package:prosample_1/admin/utils/utils_text_style.dart';
 import 'package:prosample_1/admin/utils/utils_widget2.dart';
 import 'package:prosample_1/admin/utils/utils_widgets2.dart';
 
 class UpdateMotherboard extends StatefulWidget {
-  final String itemId;
-  const UpdateMotherboard({super.key, required this.itemId});
+  final Map<String, dynamic> item;
+  final String id;
+  const UpdateMotherboard({super.key, required this.item, required this.id});
 
   @override
   State<UpdateMotherboard> createState() => _UpdateMotherboardState();
@@ -19,38 +21,31 @@ class UpdateMotherboard extends StatefulWidget {
 
 class _UpdateMotherboardState extends State<UpdateMotherboard> {
   final _formkey = GlobalKey<FormState>();
-  final idNum = TextEditingController();
   String? image;
   late String imageurl = '';
-  final categoryName = TextEditingController();
-  final itemName = TextEditingController();
-  final maxClock = TextEditingController();
-  final modelName = TextEditingController();
-  final manufacturer = TextEditingController();
-  final processorSocket = TextEditingController();
-  final ramType = TextEditingController();
-  final ramSize = TextEditingController();
-  final ramSlots = TextEditingController();
-  final ssdType = TextEditingController();
-  final ssdSlots = TextEditingController();
-  final oldPrice = TextEditingController();
-  final newPrice = TextEditingController();
-  final dimension = TextEditingController();
-  final ports = TextEditingController();
-  final features = TextEditingController();
-  final wattage = TextEditingController();
-  final formFactor = TextEditingController();
-  final country = TextEditingController();
-  final weight = TextEditingController();
-  final warranty = TextEditingController();
-  String? selectedCategory;
-  String? selectedManufacturer;
-  String? selectedModel;
-  String? selectedBoard;
-  String? selectedRamSpeed;
-  String? selectedSocket;
-  String? selectedRam;
-  String? selectedSsd;
+  final _ramSlots = TextEditingController();
+  final _productCategory = TextEditingController();
+  final _productName = TextEditingController();
+  final _manufacturer = TextEditingController();
+  final _oldPrice = TextEditingController();
+  final _newPrice = TextEditingController();
+  final _modelName = TextEditingController();
+  final _productDimension = TextEditingController();
+  final _ssdslots = TextEditingController();
+  final _specialFeatures = TextEditingController();
+  final _ramType = TextEditingController();
+  final _ramMax = TextEditingController();
+  final _processorSocket = TextEditingController();
+  final _ssdType = TextEditingController();
+  final _ports = TextEditingController();
+  final _maxClock = TextEditingController();
+  final _wattage = TextEditingController();
+  final _formFactor = TextEditingController();
+  final _country = TextEditingController();
+  final _itemWeight = TextEditingController();
+  final _warranty = TextEditingController();
+  bool? isNew;
+  bool? isPopular;
   Future<void> pickImage() async {
     // ignore: no_leading_underscores_for_local_identifiers
     final ImagePicker _picker = ImagePicker();
@@ -70,99 +65,113 @@ class _UpdateMotherboardState extends State<UpdateMotherboard> {
     return imageurl = downloadUrl;
   }
 
-  updateData() {
-    FirebaseFirestore.instance
-        .collection('motherboard')
-        .doc(widget.itemId) // Use the itemId
-        .update({
-      'idnum': idNum.text,
-      'category': categoryName.text.toLowerCase(),
-      'image': imageurl.toString(),
-      'name': itemName.text,
-      'maxclock': maxClock.text,
-      'model': modelName.text,
-      'manufacturer': manufacturer.text,
-      'processorsocket': processorSocket.text,
-      'ramType': ramType.text,
-      'ramsize': ramSize.text,
-      'ramslots': ramSlots.text,
-      'ssdtype': ssdType.text,
-      'ssdslots': ssdSlots.text,
-      'oldprice': oldPrice.text,
-      'newprice': newPrice.text,
-      'productdimension': dimension.text,
-      'features': features.text,
-      'ports': ports.text,
-      'wattage': wattage.text,
-      'formfactor': formFactor.text,
-      'country': country.text,
-      'itemweight': weight.text,
-      'warranty': warranty.text,
+  Future<void> updateData() async {
+    final item = {
+      itemImage: imageurl,
+      name: _productName.text,
+      uniqueId: widget.id,
+      category: motherboard,
+      oldPrice: _oldPrice.text,
+      newPrice: _newPrice.text,
+    };
+    if (isNew == true) {
+      FirebaseFirestore.instance.collection(newArival).doc(widget.id).set(item);
+    }
+    if (isPopular == true) {
+      FirebaseFirestore.instance.collection(popular).doc(widget.id).set(item);
+    }
+    if (isNew == false) {
+      final firestore = FirebaseFirestore.instance;
+      final docRef = firestore.collection(newArival).doc(widget.id);
+      await docRef.delete();
+    }
+    if (isPopular == false) {
+      final firestore = FirebaseFirestore.instance;
+      final docRef = firestore.collection(popular).doc(widget.id);
+      await docRef.delete();
+    }
+    FirebaseFirestore.instance.collection(motherboard).doc(widget.id).update({
+      itemImage: imageurl.toString(),
+      name: _productName.text,
+      maxClock: _maxClock.text.trim(),
+      model: _modelName.text,
+      manufacturer: _manufacturer.text,
+      cpuSocket: _processorSocket.text.trim(),
+      ramType: _ramType.text.trim(),
+      ramSize: _ramMax.text.trim(),
+      ramSlots: _ramSlots.text.trim(),
+      ssdType: _ssdType.text.trim(),
+      ssdSlots: _ssdslots.text.trim(),
+      oldPrice: _oldPrice.text,
+      newPrice: _newPrice.text,
+      dimension: _productDimension.text,
+      features: _specialFeatures.text,
+      ports: _ports.text,
+      wattage: _wattage.text,
+      formFactor: _formFactor.text.trim(),
+      country: _country.text,
+      weight: _itemWeight.text,
+      warranty: _warranty.text,
+      newArival: isNew,
+      popular: isPopular,
     });
     setState(() {
-      idNum.clear();
-      categoryName.clear();
+      _productCategory.clear();
       imageurl = '';
-      itemName.clear();
-      maxClock.clear();
-      modelName.clear();
-      manufacturer.clear();
-      processorSocket.clear();
-      ramType.clear();
-      ramSize.clear();
-      ramSlots.clear();
-      ssdType.clear();
-      ssdSlots.clear();
-      oldPrice.clear();
-      newPrice.clear();
-      dimension.clear();
-      features.clear();
-      ports.clear();
-      wattage.clear();
-      formFactor.clear();
-      country.clear();
-      weight.clear();
-      warranty.clear();
+      _productName.clear();
+      _maxClock.clear();
+      _modelName.clear();
+      _manufacturer.clear();
+      _processorSocket.clear();
+      _ramType.clear();
+      _ramMax.clear();
+      _ramSlots.clear();
+      _ssdType.clear();
+      _oldPrice.clear();
+      _newPrice.clear();
+      _productDimension.clear();
+      _ssdslots.clear();
+      _specialFeatures.clear();
+      _ports.clear();
+      _wattage.clear();
+      _formFactor.clear();
+      _country.clear();
+      _itemWeight.clear();
+      _warranty.clear();
+      isNew = false;
+      isPopular = false;
     });
   }
 
   @override
   void initState() {
-    FirebaseFirestore.instance
-        .collection('motherboard')
-        .doc(widget.itemId)
-        .get()
-        .then((snapshot) {
-      if (snapshot.exists) {
-        Map<String, dynamic> data = snapshot.data()!;
-        itemName.text = data['name'];
-        setState(() {
-          image = imageurl;
-        });
-        imageurl = data['image'];
-        idNum.text = data['idnum'];
-        categoryName.text = data['category'];
-        manufacturer.text = data['manufacturer'];
-        oldPrice.text = data['oldprice'];
-        newPrice.text = data['newprice'];
-        modelName.text = data['model'];
-        ramSize.text = data['ramsize'];
-        dimension.text = data['productdimension'];
-        ssdSlots.text = data['ssdslots'];
-        ports.text = data['ports'];
-        features.text = data['features'];
-        ramType.text = data['ramType'];
-        ramSlots.text = data['ramslots'];
-        processorSocket.text = data['processorsocket'];
-        ssdType.text = data['ssdtype'];
-        maxClock.text = data['maxclock'];
-        wattage.text = data['wattage'];
-        formFactor.text = data['formfactor'];
-        country.text = data['country'];
-        weight.text = data['itemweight'];
-        warranty.text = data['warranty'];
-      }
+    final data = widget.item;
+    _productName.text = data[name];
+    setState(() {
+      image = imageurl;
     });
+    imageurl = data[itemImage];
+    _manufacturer.text = data[manufacturer];
+    _oldPrice.text = data[oldPrice];
+    _newPrice.text = data[newPrice];
+    _modelName.text = data[model];
+    _ramMax.text = data[ramSize];
+    _productDimension.text = data[dimension];
+    _ssdslots.text = data[ssdSlots];
+    _ports.text = data[ports];
+    _specialFeatures.text = data[features];
+    _ramType.text = data[ramType];
+    _ramSlots.text = data[ramSlots];
+    _processorSocket.text = data[cpuSocket];
+    _ssdType.text = data[ssdType];
+    _maxClock.text = data[maxClock];
+    _wattage.text = data[wattage];
+    _formFactor.text = data[formFactor];
+    _country.text = data[country];
+    _itemWeight.text = data[weight];
+    _warranty.text = data[warranty];
+    isNew = data[newArival] == true ? isNew = true : isNew = false;
+    isPopular = data[popular] == true ? isPopular = true : isPopular = false;
     super.initState();
   }
 
@@ -174,366 +183,126 @@ class _UpdateMotherboardState extends State<UpdateMotherboard> {
       ),
       body: SafeArea(
         child: SingleChildScrollView(
-          child: StreamBuilder<QuerySnapshot>(
-              stream: FirebaseFirestore.instance
-                  .collection('motherboard')
-                  .snapshots(),
-              builder: (context, snapshot) {
-                if (snapshot.hasError) {
-                  return Text('Error: ${snapshot.error}');
-                }
-                if (!snapshot.hasData) {
-                  return const Center(child: CircularProgressIndicator());
-                }
-                final category = snapshot.data!.docs
-                    .map((doc) => doc['category'] as String)
-                    .toSet()
-                    .toList();
-                final motherboard = snapshot.data!.docs
-                    .map((doc) => doc['name'] as String)
-                    .toSet()
-                    .toList();
-                final clockSpeed = snapshot.data!.docs
-                    .map((doc) => doc['maxclock'] as String)
-                    .toSet()
-                    .toList();
-
-                final model = snapshot.data!.docs
-                    .map((doc) => doc['model'] as String)
-                    .toSet()
-                    .toList();
-                final socket = snapshot.data!.docs
-                    .map((doc) => doc['processorsocket'] as String)
-                    .toSet()
-                    .toList();
-                final ram = snapshot.data!.docs
-                    .map((doc) => doc['ramType'] as String)
-                    .toSet()
-                    .toList();
-                final manufactured = snapshot.data!.docs
-                    .map((doc) => doc['manufacturer'] as String)
-                    .toSet()
-                    .toList();
-                final ssd = snapshot.data!.docs
-                    .map((doc) => doc['ssdtype'] as String)
-                    .toSet()
-                    .toList();
-                return Padding(
-                  padding: const EdgeInsets.all(10.0),
+            child: Padding(
+          padding: const EdgeInsets.all(10.0),
+          child: Column(
+            children: [
+              Text('Update MotherBoard', style: CustomText.title),
+              const SizedBox(height: 20),
+              AdminUiHelper.customImageBox(() {
+                pickImage();
+              }, imageurl: imageurl),
+              const SizedBox(height: 20),
+              Form(
+                  key: _formkey,
                   child: Column(
                     children: [
-                      Text('MotherBoard', style: CustomText.title),
-                      const SizedBox(height: 20),
-                      AdminUiHelper.customImageBox(() {
-                        pickImage();
-                      }, imageurl: imageurl),
-                      const SizedBox(height: 20),
-                      Form(
-                          key: _formkey,
-                          child: Column(
-                            children: [
-                              AdminUi.admTextField(
-                                  label: 'Unique ID', textcontroller: idNum),
-                              const SizedBox(height: 10),
-                              DropdownMenu<String>(
-                                  label: const Text('Select Category',
-                                      style: TextStyle(
-                                          color: CustomColors.appTheme)),
-                                  controller: categoryName,
-                                  menuStyle: const MenuStyle(
-                                      surfaceTintColor:
-                                          MaterialStatePropertyAll(
-                                              Colors.white)),
-                                  width:
-                                      MediaQuery.of(context).size.width * .93,
-                                  menuHeight: 300,
-                                  inputDecorationTheme: InputDecorationTheme(
-                                      border: OutlineInputBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(8)),
-                                      fillColor: Colors.white,
-                                      filled: true),
-                                  onSelected: (value) {
+                      AdminUi.admTextField(
+                          label: 'Product Name', textcontroller: _productName),
+                      h10,
+                      AdminUi.admTextField(
+                          label: "Clock Speed", textcontroller: _maxClock),
+                      h10,
+                      AdminUi.admTextField(
+                          label: 'Model Name', textcontroller: _modelName),
+                      h10,
+                      AdminUi.admTextField(
+                          label: 'Manufacuturer',
+                          textcontroller: _manufacturer),
+                      h10,
+                      AdminUi.admTextField(
+                          label: "Socket Type",
+                          textcontroller: _processorSocket),
+                      h10,
+                      AdminUi.admTextField(
+                          label: 'Ram Type', textcontroller: _ramType),
+                      h10,
+                      AdminUi.admTextField(
+                          label: 'Ram Slots', textcontroller: _ramSlots),
+                      h10,
+                      AdminUi.admTextField(
+                          label: 'SSD Type', textcontroller: _ssdType),
+                      h10,
+                      AdminUi.admTextField(
+                          label: 'SSD Slots', textcontroller: _ssdslots),
+                      h10,
+                      AdminUi.admTextField(
+                          label: 'Old Price', textcontroller: _oldPrice),
+                      h10,
+                      AdminUi.admTextField(
+                          label: 'New Price', textcontroller: _newPrice),
+                      h10,
+                      AdminUi.admTextField(
+                          label: 'Product Dimensions',
+                          textcontroller: _productDimension),
+                      h10,
+                      AdminUi.featuresTextfield(
+                          label: 'Ports', textcontroller: _ports),
+                      h10,
+                      AdminUi.featuresTextfield(
+                          label: 'Features', textcontroller: _specialFeatures),
+                      h10,
+                      AdminUi.admTextField(
+                          label: 'Form Factor', textcontroller: _formFactor),
+                      h10,
+                      AdminUi.admTextField(
+                          label: 'Power Consumption (W)',
+                          textcontroller: _wattage),
+                      h10,
+                      AdminUi.admTextField(
+                          label: 'Country', textcontroller: _country),
+                      h10,
+                      AdminUi.admTextField(
+                          label: 'Item Weight', textcontroller: _itemWeight),
+                      h10,
+                      AdminUi.admTextField(
+                          label: 'Warranty', textcontroller: _warranty),
+                      h10,
+                      Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            Row(children: [
+                              Checkbox(
+                                  tristate: false,
+                                  activeColor: CustomColors.appTheme,
+                                  value: isNew,
+                                  onChanged: (newValue) {
                                     setState(() {
-                                      selectedCategory = value;
+                                      isNew = newValue!;
                                     });
-                                  },
-                                  dropdownMenuEntries: category
-                                      .map<DropdownMenuEntry<String>>(
-                                          (String value) {
-                                    return DropdownMenuEntry<String>(
-                                        value: value, label: value);
-                                  }).toList()),
-                              const SizedBox(height: 10),
-                              DropdownMenu<String>(
-                                  label: const Text('Select Motherboard',
-                                      style: TextStyle(
-                                          color: CustomColors.appTheme)),
-                                  controller: itemName,
-                                  menuStyle: const MenuStyle(
-                                      surfaceTintColor:
-                                          MaterialStatePropertyAll(
-                                              Colors.white)),
-                                  width:
-                                      MediaQuery.of(context).size.width * .93,
-                                  menuHeight: 300,
-                                  inputDecorationTheme: InputDecorationTheme(
-                                      border: OutlineInputBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(8)),
-                                      fillColor: Colors.white,
-                                      filled: true),
-                                  onSelected: (value) {
+                                  }),
+                              Text('New Arrival',
+                                  style: CustomText.categoryTitleText)
+                            ]),
+                            Row(children: [
+                              Checkbox(
+                                  tristate: false,
+                                  activeColor: CustomColors.appTheme,
+                                  value: isPopular,
+                                  onChanged: (newValue) {
                                     setState(() {
-                                      selectedBoard = value;
+                                      isPopular = newValue!;
                                     });
-                                  },
-                                  dropdownMenuEntries: motherboard
-                                      .map<DropdownMenuEntry<String>>(
-                                          (String value) {
-                                    return DropdownMenuEntry<String>(
-                                        value: value, label: value);
-                                  }).toList()),
-                              const SizedBox(height: 10),
-                              DropdownMenu<String>(
-                                  label: const Text('Select Clock Speed',
-                                      style: TextStyle(
-                                          color: CustomColors.appTheme)),
-                                  controller: maxClock,
-                                  menuStyle: const MenuStyle(
-                                      surfaceTintColor:
-                                          MaterialStatePropertyAll(
-                                              Colors.white)),
-                                  width:
-                                      MediaQuery.of(context).size.width * .93,
-                                  menuHeight: 300,
-                                  inputDecorationTheme: InputDecorationTheme(
-                                      border: OutlineInputBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(8)),
-                                      fillColor: Colors.white,
-                                      filled: true),
-                                  onSelected: (value) {
-                                    setState(() {
-                                      selectedRamSpeed = value;
-                                    });
-                                  },
-                                  dropdownMenuEntries: clockSpeed
-                                      .map<DropdownMenuEntry<String>>(
-                                          (String value) {
-                                    return DropdownMenuEntry<String>(
-                                        value: value, label: value);
-                                  }).toList()),
-                              const SizedBox(height: 10),
-                              DropdownMenu<String>(
-                                  label: const Text('Select Model',
-                                      style: TextStyle(
-                                          color: CustomColors.appTheme)),
-                                  controller: modelName,
-                                  menuStyle: const MenuStyle(
-                                      surfaceTintColor:
-                                          MaterialStatePropertyAll(
-                                              Colors.white)),
-                                  width:
-                                      MediaQuery.of(context).size.width * .93,
-                                  menuHeight: 300,
-                                  inputDecorationTheme: InputDecorationTheme(
-                                      border: OutlineInputBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(8)),
-                                      fillColor: Colors.white,
-                                      filled: true),
-                                  onSelected: (value) {
-                                    setState(() {
-                                      selectedModel = value;
-                                    });
-                                  },
-                                  dropdownMenuEntries: model
-                                      .map<DropdownMenuEntry<String>>(
-                                          (String value) {
-                                    return DropdownMenuEntry<String>(
-                                        value: value, label: value);
-                                  }).toList()),
-                              const SizedBox(height: 10),
-                              DropdownMenu<String>(
-                                  label: const Text('Select Manufacturer',
-                                      style: TextStyle(
-                                          color: CustomColors.appTheme)),
-                                  controller: manufacturer,
-                                  menuStyle: const MenuStyle(
-                                      surfaceTintColor:
-                                          MaterialStatePropertyAll(
-                                              Colors.white)),
-                                  width:
-                                      MediaQuery.of(context).size.width * .93,
-                                  menuHeight: 300,
-                                  inputDecorationTheme: InputDecorationTheme(
-                                      border: OutlineInputBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(8)),
-                                      fillColor: Colors.white,
-                                      filled: true),
-                                  onSelected: (value) {
-                                    setState(() {
-                                      selectedManufacturer = value;
-                                    });
-                                  },
-                                  dropdownMenuEntries: manufactured
-                                      .map<DropdownMenuEntry<String>>(
-                                          (String value) {
-                                    return DropdownMenuEntry<String>(
-                                        value: value, label: value);
-                                  }).toList()),
-                              const SizedBox(height: 10),
-                              DropdownMenu<String>(
-                                  label: const Text('Select Socket Type',
-                                      style: TextStyle(
-                                          color: CustomColors.appTheme)),
-                                  controller: processorSocket,
-                                  menuStyle: const MenuStyle(
-                                      surfaceTintColor:
-                                          MaterialStatePropertyAll(
-                                              Colors.white)),
-                                  width:
-                                      MediaQuery.of(context).size.width * .93,
-                                  menuHeight: 300,
-                                  inputDecorationTheme: InputDecorationTheme(
-                                      border: OutlineInputBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(8)),
-                                      fillColor: Colors.white,
-                                      filled: true),
-                                  onSelected: (value) {
-                                    setState(() {
-                                      selectedSocket = value;
-                                    });
-                                  },
-                                  dropdownMenuEntries: socket
-                                      .map<DropdownMenuEntry<String>>(
-                                          (String value) {
-                                    return DropdownMenuEntry<String>(
-                                        value: value, label: value);
-                                  }).toList()),
-                              const SizedBox(height: 10),
-                              DropdownMenu<String>(
-                                  label: const Text('Select Ram Type',
-                                      style: TextStyle(
-                                          color: CustomColors.appTheme)),
-                                  controller: ramType,
-                                  menuStyle: const MenuStyle(
-                                      surfaceTintColor:
-                                          MaterialStatePropertyAll(
-                                              Colors.white)),
-                                  width:
-                                      MediaQuery.of(context).size.width * .93,
-                                  menuHeight: 300,
-                                  inputDecorationTheme: InputDecorationTheme(
-                                      border: OutlineInputBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(8)),
-                                      fillColor: Colors.white,
-                                      filled: true),
-                                  onSelected: (value) {
-                                    setState(() {
-                                      selectedRam = value;
-                                    });
-                                  },
-                                  dropdownMenuEntries: ram
-                                      .map<DropdownMenuEntry<String>>(
-                                          (String value) {
-                                    return DropdownMenuEntry<String>(
-                                        value: value, label: value);
-                                  }).toList()),
-                              const SizedBox(height: 10),
-                              AdminUi.admTextField(
-                                  label: 'RAM Maximum Size',
-                                  textcontroller: ramSize),
-                              const SizedBox(height: 10),
-                              AdminUi.admTextField(
-                                  label: 'RAM Slots', textcontroller: ramSlots),
-                              const SizedBox(height: 10),
-                              DropdownMenu<String>(
-                                  label: const Text('Select Storage Type',
-                                      style: TextStyle(
-                                          color: CustomColors.appTheme)),
-                                  controller: ssdType,
-                                  menuStyle: const MenuStyle(
-                                      surfaceTintColor:
-                                          MaterialStatePropertyAll(
-                                              Colors.white)),
-                                  width:
-                                      MediaQuery.of(context).size.width * .93,
-                                  menuHeight: 300,
-                                  inputDecorationTheme: InputDecorationTheme(
-                                      border: OutlineInputBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(8)),
-                                      fillColor: Colors.white,
-                                      filled: true),
-                                  onSelected: (value) {
-                                    setState(() {
-                                      selectedSsd = value;
-                                    });
-                                  },
-                                  dropdownMenuEntries: ssd
-                                      .map<DropdownMenuEntry<String>>(
-                                          (String value) {
-                                    return DropdownMenuEntry<String>(
-                                        value: value, label: value);
-                                  }).toList()),
-                              const SizedBox(height: 10),
-                              AdminUi.admTextField(
-                                  label: 'Old Price', textcontroller: oldPrice),
-                              const SizedBox(height: 10),
-                              AdminUi.admTextField(
-                                  label: 'New Price', textcontroller: newPrice),
-                              const SizedBox(height: 10),
-                              AdminUi.admTextField(
-                                  label: 'Product Dimensions',
-                                  textcontroller: dimension),
-                              const SizedBox(height: 10),
-                              AdminUi.admTextField(
-                                  label: 'SSD Slots', textcontroller: ssdSlots),
-                              const SizedBox(height: 10),
-                              AdminUi.featuresTextfield(
-                                  label: 'Ports', textcontroller: ports),
-                              const SizedBox(height: 10),
-                              AdminUi.featuresTextfield(
-                                  label: 'Features', textcontroller: features),
-                              const SizedBox(height: 10),
-                              AdminUi.admTextField(
-                                  label: 'Form Factor',
-                                  textcontroller: formFactor),
-                              const SizedBox(height: 10),
-                              AdminUi.admTextField(
-                                  label: 'Power Consumption (W)',
-                                  textcontroller: wattage),
-                              const SizedBox(height: 10),
-                              AdminUi.admTextField(
-                                  label: 'Country', textcontroller: country),
-                              const SizedBox(height: 10),
-                              AdminUi.admTextField(
-                                  label: 'Item Weight', textcontroller: weight),
-                              const SizedBox(height: 10),
-                              AdminUi.admTextField(
-                                  label: 'Warranty', textcontroller: warranty),
-                            ],
-                          )),
-                      const SizedBox(height: 30),
-                      AdminUiHelper.customButton(context, () {
-                        if (_formkey.currentState!.validate()) {
-                          Navigator.pop(context);
-                          updateData();
-                          AdminUiHelper.customSnackbar(
-                              context, 'Item Updated Successfully !');
-                        }
-                      }, text: 'Save'),
-                      const SizedBox(height: 30)
+                                  }),
+                              Text('Popular Item',
+                                  style: CustomText.categoryTitleText)
+                            ])
+                          ])
                     ],
-                  ),
-                );
-              }),
-        ),
+                  )),
+              h30,
+              AdminUiHelper.customButton(context, () {
+                if (_formkey.currentState!.validate()) {
+                  Navigator.pop(context);
+                  updateData();
+                  AdminUiHelper.customSnackbar(
+                      context, 'Item Updated Successfully !');
+                }
+              }, text: 'Save'),
+              h30
+            ],
+          ),
+        )),
       ),
     );
   }

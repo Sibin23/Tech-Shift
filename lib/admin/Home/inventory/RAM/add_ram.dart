@@ -1,8 +1,10 @@
 import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:prosample_1/admin/const/variables.dart';
 import 'package:prosample_1/admin/utils/utils_colors.dart';
 import 'package:prosample_1/admin/utils/utils_text_style.dart';
 import 'package:prosample_1/admin/utils/utils_widget2.dart';
@@ -17,7 +19,6 @@ class ScreenAddRam extends StatefulWidget {
 
 class _ScreenAddRamState extends State<ScreenAddRam> {
   final _formkey = GlobalKey<FormState>();
-  final _productCategory = TextEditingController();
   final _productName = TextEditingController();
   final _manufacturer = TextEditingController();
   final _oldPrice = TextEditingController();
@@ -27,11 +28,13 @@ class _ScreenAddRamState extends State<ScreenAddRam> {
   final _ramSize = TextEditingController();
   final _ramType = TextEditingController();
   final _clockSpeed = TextEditingController();
-  final wattage = TextEditingController();
+  final _wattage = TextEditingController();
   final _fromFactor = TextEditingController();
   final _country = TextEditingController();
   final _itemWeight = TextEditingController();
   final _warranty = TextEditingController();
+  bool isNew = false;
+  bool isPopular = false;
   String idnum = DateTime.now().toString().replaceAll(RegExp(r'[^\d]'), '');
   late String imageurl = '';
   Future<void> pickImage() async {
@@ -52,33 +55,44 @@ class _ScreenAddRamState extends State<ScreenAddRam> {
     return imageurl = downloadUrl;
   }
 
-  // submit
   Future submitData() async {
     final data = {
-      'idnum': idnum,
-      'category': _productCategory.text.toLowerCase(),
-      'image': imageurl.toString(),
-      'name': _productName.text,
-      'manufacturer': _manufacturer.text,
-      'oldprice': _oldPrice.text,
-      'newprice': _newPrice.text,
-      'model': _modelName.text,
-      'productdimension': _productDimension.text,
-      'ramsize': _ramSize.text,
-      'ramtype': _ramType.text,
-      'clockspeed': _clockSpeed.text,
-      'wattage': wattage.text,
-      'formfactor': _fromFactor.text,
-      'country': _country.text,
-      'itemweight': _itemWeight.text,
-      'warranty': _warranty.text,
+      uniqueId: idnum,
+      category: ram,
+      itemImage: imageurl.toString(),
+      name: _productName.text,
+      manufacturer: _manufacturer.text,
+      oldPrice: _oldPrice.text,
+      newPrice: _newPrice.text,
+      model: _modelName.text,
+      dimension: _productDimension.text,
+      ramSize: _ramSize.text,
+      ramType: _ramType.text,
+      speed: _clockSpeed.text,
+      wattage: _wattage.text,
+      formFactor: _fromFactor.text,
+      country: _country.text,
+      weight: _itemWeight.text,
+      warranty: _warranty.text,
+      newArival: isNew,
+      popular: isPopular
     };
-    FirebaseFirestore.instance
-        .collection('ram')
-        .doc(idnum)
-        .set(data);
+    final item = {
+      itemImage: imageurl,
+      name: _productName.text,
+      uniqueId: idnum,
+      category: ram,
+      oldPrice: _oldPrice.text,
+      newPrice: _newPrice.text,
+    };
+    if (isNew == true) {
+      FirebaseFirestore.instance.collection(newArival).doc(idnum).set(item);
+    }
+    if (isPopular == true) {
+      FirebaseFirestore.instance.collection(popular).doc(idnum).set(item);
+    }
+    FirebaseFirestore.instance.collection(ram).doc(idnum).set(data);
     setState(() {
-      _productCategory.clear();
       imageurl = '';
       _productName.clear();
       _manufacturer.clear();
@@ -89,310 +103,127 @@ class _ScreenAddRamState extends State<ScreenAddRam> {
       _ramSize.clear();
       _ramType.clear();
       _clockSpeed.clear();
-      wattage.clear();
+      _wattage.clear();
       _fromFactor.clear();
       _country.clear();
       _itemWeight.clear();
       _warranty.clear();
+      isNew =false;
+      isPopular = false;
     });
   }
 
-  String? selectedCategory;
-  String? selectedRam;
-  String? selectedModel;
-  String? selectedRamType;
-  String? selectedSpeed;
-  String? selectedRamSize;
   @override
   Widget build(BuildContext context) {
-    const space = SizedBox(height: 10);
     return Scaffold(
-      appBar: AppBar(
-        surfaceTintColor: Colors.white,
-      ),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: SizedBox(
-            width: MediaQuery.of(context).size.width,
-            child: StreamBuilder<QuerySnapshot>(
-                stream: FirebaseFirestore.instance
-                    .collection('ramdetails')
-                    .snapshots(),
-                builder: (context, snapshot) {
-                  if (snapshot.hasError) {
-                    return Text('Error: ${snapshot.error}');
-                  }
-                  if (!snapshot.hasData) {
-                    return const Center(child: CircularProgressIndicator());
-                  }
-                  final category = snapshot.data!.docs
-                      .map((doc) => doc['category'] as String)
-                      .toSet()
-                      .toList();
-                  final ram = snapshot.data!.docs
-                      .map((doc) => doc['name'] as String)
-                      .toSet()
-                      .toList();
-                  final model = snapshot.data!.docs
-                      .map((doc) => doc['model'] as String)
-                      .toSet()
-                      .toList();
-                  final type = snapshot.data!.docs
-                      .map((doc) => doc['ramtype'] as String)
-                      .toSet()
-                      .toList();
-                  final speeds = snapshot.data!.docs
-                      .map((doc) => doc['speed'] as String)
-                      .toSet()
-                      .toList();
-                  final size = snapshot.data!.docs
-                      .map((doc) => doc['ramsize'] as String)
-                      .toSet()
-                      .toList();
-                  return Padding(
-                    padding: const EdgeInsets.all(10.0),
-                    child: Column(
-                      children: [
-                        Text('Memory RAM', style: CustomText.title),
-                        const SizedBox(height: 20),
-                        AdminUiHelper.customImageBox(() {
-                          pickImage();
-                        }, imageurl: imageurl),
-                        const SizedBox(height: 20),
-                        Form(
-                            key: _formkey,
-                            child: Column(children: [
-                              
-                              DropdownMenu<String>(
-                                  label: const Text('Select Category',
-                                      style: TextStyle(
-                                          color: CustomColors.appTheme)),
-                                  controller: _productCategory,
-                                  menuStyle: const MenuStyle(
-                                      surfaceTintColor:
-                                          MaterialStatePropertyAll(
-                                              Colors.white)),
-                                  width:
-                                      MediaQuery.of(context).size.width * .93,
-                                  menuHeight: 300,
-                                  inputDecorationTheme: InputDecorationTheme(
-                                      border: OutlineInputBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(8)),
-                                      fillColor: Colors.white,
-                                      filled: true),
-                                  onSelected: (value) {
-                                    setState(() {
-                                      selectedCategory = value;
-                                    });
-                                  },
-                                  dropdownMenuEntries: category
-                                      .map<DropdownMenuEntry<String>>(
-                                          (String value) {
-                                    return DropdownMenuEntry<String>(
-                                        value: value, label: value);
-                                  }).toList()),
-                             space,
-                              DropdownMenu<String>(
-                                  label: const Text('Select RAM',
-                                      style: TextStyle(
-                                          color: CustomColors.appTheme)),
-                                  controller: _productName,
-                                  menuStyle: const MenuStyle(
-                                      surfaceTintColor:
-                                          MaterialStatePropertyAll(
-                                              Colors.white)),
-                                  width:
-                                      MediaQuery.of(context).size.width * .93,
-                                  menuHeight: 300,
-                                  inputDecorationTheme: InputDecorationTheme(
-                                      border: OutlineInputBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(8)),
-                                      fillColor: Colors.white,
-                                      filled: true),
-                                  onSelected: (value) {
-                                    setState(() {
-                                      selectedRam = value;
-                                    });
-                                  },
-                                  dropdownMenuEntries: ram
-                                      .map<DropdownMenuEntry<String>>(
-                                          (String value) {
-                                    return DropdownMenuEntry<String>(
-                                        value: value, label: value);
-                                  }).toList()),
-                             space,
-                              DropdownMenu<String>(
-                                  label: const Text('Select Model',
-                                      style: TextStyle(
-                                          color: CustomColors.appTheme)),
-                                  controller: _modelName,
-                                  menuStyle: const MenuStyle(
-                                      surfaceTintColor:
-                                          MaterialStatePropertyAll(
-                                              Colors.white)),
-                                  width:
-                                      MediaQuery.of(context).size.width * .93,
-                                  menuHeight: 300,
-                                  inputDecorationTheme: InputDecorationTheme(
-                                      border: OutlineInputBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(8)),
-                                      fillColor: Colors.white,
-                                      filled: true),
-                                  onSelected: (value) {
-                                    setState(() {
-                                      selectedModel = value;
-                                    });
-                                  },
-                                  dropdownMenuEntries: model
-                                      .map<DropdownMenuEntry<String>>(
-                                          (String value) {
-                                    return DropdownMenuEntry<String>(
-                                        value: value, label: value);
-                                  }).toList()),
-                             space,
-                              DropdownMenu<String>(
-                                  label: const Text('Select RAM Type',
-                                      style: TextStyle(
-                                          color: CustomColors.appTheme)),
-                                  controller: _ramType,
-                                  menuStyle: const MenuStyle(
-                                      surfaceTintColor:
-                                          MaterialStatePropertyAll(
-                                              Colors.white)),
-                                  width:
-                                      MediaQuery.of(context).size.width * .93,
-                                  menuHeight: 300,
-                                  inputDecorationTheme: InputDecorationTheme(
-                                      border: OutlineInputBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(8)),
-                                      fillColor: Colors.white,
-                                      filled: true),
-                                  onSelected: (value) {
-                                    setState(() {
-                                      selectedRamType = value;
-                                    });
-                                  },
-                                  dropdownMenuEntries: type
-                                      .map<DropdownMenuEntry<String>>(
-                                          (String value) {
-                                    return DropdownMenuEntry<String>(
-                                        value: value, label: value);
-                                  }).toList()),
-                             space,
-                              DropdownMenu<String>(
-                                  label: const Text('Select RAM Size',
-                                      style: TextStyle(
-                                          color: CustomColors.appTheme)),
-                                  controller: _ramSize,
-                                  menuStyle: const MenuStyle(
-                                      surfaceTintColor:
-                                          MaterialStatePropertyAll(
-                                              Colors.white)),
-                                  width:
-                                      MediaQuery.of(context).size.width * .93,
-                                  menuHeight: 300,
-                                  inputDecorationTheme: InputDecorationTheme(
-                                      border: OutlineInputBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(8)),
-                                      fillColor: Colors.white,
-                                      filled: true),
-                                  onSelected: (value) {
-                                    setState(() {
-                                      selectedRamSize = value;
-                                    });
-                                  },
-                                  dropdownMenuEntries: size
-                                      .map<DropdownMenuEntry<String>>(
-                                          (String value) {
-                                    return DropdownMenuEntry<String>(
-                                        value: value, label: value);
-                                  }).toList()),
-                             space,
-                              DropdownMenu<String>(
-                                  label: const Text('Select RAM Speed',
-                                      style: TextStyle(
-                                          color: CustomColors.appTheme)),
-                                  controller: _clockSpeed,
-                                  menuStyle: const MenuStyle(
-                                      surfaceTintColor:
-                                          MaterialStatePropertyAll(
-                                              Colors.white)),
-                                  width:
-                                      MediaQuery.of(context).size.width * .93,
-                                  menuHeight: 300,
-                                  inputDecorationTheme: InputDecorationTheme(
-                                      border: OutlineInputBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(8)),
-                                      fillColor: Colors.white,
-                                      filled: true),
-                                  onSelected: (value) {
-                                    setState(() {
-                                      selectedSpeed = value;
-                                    });
-                                  },
-                                  dropdownMenuEntries: speeds
-                                      .map<DropdownMenuEntry<String>>(
-                                          (String value) {
-                                    return DropdownMenuEntry<String>(
-                                        value: value, label: value);
-                                  }).toList()),
-                             space,
-                              AdminUi.admTextField(
-                                  label: 'Manufacturer',
-                                  textcontroller: _manufacturer),
-                             space,
-                              AdminUi.admTextField(
-                                  label: 'Old Price',
-                                  textcontroller: _oldPrice),
-                             space,
-                              AdminUi.admTextField(
-                                  label: 'New Price',
-                                  textcontroller: _newPrice),
-                             space,
-                              AdminUi.admTextField(
-                                  label: 'Product Dimensions',
-                                  textcontroller: _productDimension),
-                             space,
-                              AdminUi.admTextField(
-                                  label: 'Form Factor',
-                                  textcontroller: _fromFactor),
-                             space,
-                              AdminUi.admTextField(
-                                  label: 'Wattage', textcontroller: wattage),
-                             space,
-                              AdminUi.admTextField(
-                                  label: 'Country', textcontroller: _country),
-                             space,
-                              AdminUi.admTextField(
-                                  label: 'Item Weight',
-                                  textcontroller: _itemWeight),
-                             space,
-                              AdminUi.admTextField(
-                                  label: 'Warranty', textcontroller: _warranty),
-                              const SizedBox(height: 30),
-                            ])), // Textfromfield
-                        AdminUiHelper.customButton(context, () {
-                          if (_formkey.currentState!.validate()) {
-                            Navigator.pop(context);
-                            submitData();
-                            AdminUiHelper.customSnackbar(
-                                context, 'Item Added Successfully !');
-                          }
-                        }, text: 'Save'),
-                        const SizedBox(height: 30)
-                      ],
-                    ),
-                  );
-                }),
-          ),
+        appBar: AppBar(
+          surfaceTintColor: Colors.white,
         ),
-      ),
-    );
+        body: SafeArea(
+            child: SingleChildScrollView(
+                child: Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: Column(children: [
+                      Text('Memory RAM', style: CustomText.title),
+                      const SizedBox(height: 20),
+                      AdminUiHelper.customImageBox(() {
+                        pickImage();
+                      }, imageurl: imageurl),
+                      const SizedBox(height: 20),
+                      Form(
+                          key: _formkey,
+                          child: Column(children: [
+                            AdminUi.admTextField(
+                                label: 'Product Name',
+                                textcontroller: _productName),
+                            h10,
+                            AdminUi.admTextField(
+                                label: 'Model Name',
+                                textcontroller: _modelName),
+                            h10,
+                            AdminUi.admTextField(
+                                label: 'Ram Type', textcontroller: _ramType),
+                            h10,
+                            AdminUi.admTextField(
+                                label: 'Ram Size', textcontroller: _ramSize),
+                            h10,
+                            AdminUi.admTextField(
+                                label: 'Ram Speed',
+                                textcontroller: _clockSpeed),
+                            h10,
+                            AdminUi.admTextField(
+                                label: 'Manufacturer',
+                                textcontroller: _manufacturer),
+                            h10,
+                            AdminUi.admTextField(
+                                label: 'Old Price', textcontroller: _oldPrice),
+                            h10,
+                            AdminUi.admTextField(
+                                label: 'New Price', textcontroller: _newPrice),
+                            h10,
+                            AdminUi.admTextField(
+                                label: 'Product Dimensions',
+                                textcontroller: _productDimension),
+                            h10,
+                            AdminUi.admTextField(
+                                label: 'Form Factor',
+                                textcontroller: _fromFactor),
+                            h10,
+                            AdminUi.admTextField(
+                                label: 'Wattage', textcontroller: _wattage),
+                            h10,
+                            AdminUi.admTextField(
+                                label: 'Country', textcontroller: _country),
+                            h10,
+                            AdminUi.admTextField(
+                                label: 'Item Weight',
+                                textcontroller: _itemWeight),
+                            h10,
+                            AdminUi.admTextField(
+                                label: 'Warranty', textcontroller: _warranty),
+                            h10,
+                            Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  Row(children: [
+                                    Checkbox(
+                                        tristate: false,
+                                        activeColor: CustomColors.appTheme,
+                                        value: isNew,
+                                        onChanged: (newValue) {
+                                          setState(() {
+                                            isNew = newValue!;
+                                          });
+                                        }),
+                                    Text('New Arrival',
+                                        style: CustomText.categoryTitleText)
+                                  ]),
+                                  Row(children: [
+                                    Checkbox(
+                                        tristate: false,
+                                        activeColor: CustomColors.appTheme,
+                                        value: isPopular,
+                                        onChanged: (newValue) {
+                                          setState(() {
+                                            isPopular = newValue!;
+                                          });
+                                        }),
+                                    Text('Popular Item',
+                                        style: CustomText.categoryTitleText)
+                                  ])
+                                ])
+                          ])),
+                      h30,
+                      AdminUiHelper.customButton(context, () {
+                        if (_formkey.currentState!.validate()) {
+                          Navigator.pop(context);
+                          submitData();
+                          AdminUiHelper.customSnackbar(
+                              context, 'Item Added Successfully !');
+                        }
+                      }, text: 'Save'),
+                      h30
+                    ])))));
   }
 }

@@ -1,8 +1,10 @@
 import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:prosample_1/admin/const/variables.dart';
 import 'package:prosample_1/admin/utils/utils_colors.dart';
 import 'package:prosample_1/admin/utils/utils_text_style.dart';
 import 'package:prosample_1/admin/utils/utils_widget2.dart';
@@ -17,7 +19,6 @@ class ScreenAddChairs extends StatefulWidget {
 
 class _ScreenAddChairsState extends State<ScreenAddChairs> {
   final _formkey = GlobalKey<FormState>();
-  final categoryName = TextEditingController();
   final _productName = TextEditingController();
   final _manufacturer = TextEditingController();
   final _oldPrice = TextEditingController();
@@ -37,6 +38,8 @@ class _ScreenAddChairsState extends State<ScreenAddChairs> {
   String? selectedManufacturer;
   String? selectedModel;
   late String imageurl = '';
+  bool isNew = false;
+  bool isPopular = false;
   Future<void> pickImage() async {
     // ignore: no_leading_underscores_for_local_identifiers
     final ImagePicker picker = ImagePicker();
@@ -59,28 +62,43 @@ class _ScreenAddChairsState extends State<ScreenAddChairs> {
   // submit
   Future submitData() async {
     final data = {
-      'image': imageurl.toString(),
-      'idnum': idnum,
-      'category': categoryName.text,
-      'name': _productName.text,
-      'manufacturer': _manufacturer.text,
-      'oldprice': _oldPrice.text,
-      'newprice': _newPrice.text,
-      'color': _color.text,
-      'model': _model.text,
-      'material': _material.text,
-      'features': _specialFeatures.text,
-      'productdimension': _productDimension.text,
-      'fillmaterial': _fillMaterial.text,
-      'country': _country.text,
-      'itemweight': _itemWeight.text,
-      'warranty': _warranty.text,
+      itemImage: imageurl.toString(),
+      uniqueId: idnum,
+      category: chair,
+      name: _productName.text,
+      manufacturer: _manufacturer.text,
+      oldPrice: _oldPrice.text,
+      newPrice: _newPrice.text,
+      color: _color.text,
+      model: _model.text,
+      material: _material.text,
+      features: _specialFeatures.text,
+      dimension: _productDimension.text,
+      fillMaterial: _fillMaterial.text,
+      country: _country.text,
+      weight: _itemWeight.text,
+      warranty: _warranty.text,
+      newArival: isNew,
+      popular: isPopular,
     };
-    FirebaseFirestore.instance.collection('chairs').doc(idnum).set(data);
+    final item = {
+      itemImage: imageurl,
+      name: _productName.text,
+      uniqueId: idnum,
+      category: chair,
+      oldPrice: _oldPrice.text,
+      newPrice: _newPrice.text,
+    };
+    if (isNew == true) {
+      FirebaseFirestore.instance.collection(newArival).doc(idnum).set(item);
+    }
+    if (isPopular == true) {
+      FirebaseFirestore.instance.collection(popular).doc(idnum).set(item);
+    }
+    FirebaseFirestore.instance.collection(chair).doc(idnum).set(data);
     setState(() {
       imageurl = '';
       _productName.clear();
-      categoryName.clear();
       _manufacturer.clear();
       _oldPrice.clear();
       _newPrice.clear();
@@ -103,222 +121,108 @@ class _ScreenAddChairsState extends State<ScreenAddChairs> {
         surfaceTintColor: Colors.white,
       ),
       body: SafeArea(
-        child: StreamBuilder<QuerySnapshot>(
-            stream: FirebaseFirestore.instance
-                .collection('chairdetails')
-                .snapshots(),
-            builder: (context, snapshot) {
-              if (snapshot.hasError) {
-                return Text('Error: ${snapshot.error}');
-              }
-              if (!snapshot.hasData) {
-                return const Center(child: CircularProgressIndicator());
-              }
-              final category = snapshot.data!.docs
-                  .map((doc) => doc['category'] as String)
-                  .toSet()
-                  .toList();
-              final chair = snapshot.data!.docs
-                  .map((doc) => doc['name'] as String)
-                  .toSet()
-                  .toList();
-              final manufacturer = snapshot.data!.docs
-                  .map((doc) => doc['manufacturer'] as String)
-                  .toSet()
-                  .toList();
-              final model = snapshot.data!.docs
-                  .map((doc) => doc['model'] as String)
-                  .toSet()
-                  .toList();
-
-              return SingleChildScrollView(
-                child: SizedBox(
-                  width: MediaQuery.of(context).size.width,
-                  child: Padding(
-                    padding: const EdgeInsets.all(10.0),
-                    child: Column(
-                      children: [
-                        Text('Chairs', style: CustomText.title),
-                        const SizedBox(height: 20),
-                        AdminUiHelper.customImageBox(() {
-                          pickImage();
-                        }, imageurl: imageurl),
-                        const SizedBox(height: 20),
-                        Form(
-                            key: _formkey,
-                            child: Column(children: [
-                              DropdownMenu<String>(
-                                  controller: categoryName,
-                                  menuStyle: const MenuStyle(
-                                      surfaceTintColor:
-                                          MaterialStatePropertyAll(
-                                              Colors.white)),
-                                  hintText: 'Select Category',
-                                  width:
-                                      MediaQuery.of(context).size.width * .93,
-                                  menuHeight: 300,
-                                  inputDecorationTheme: InputDecorationTheme(
-                                      hintStyle: const TextStyle(
-                                          color: CustomColors.appTheme),
-                                      border: OutlineInputBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(8)),
-                                      fillColor: Colors.white,
-                                      filled: true),
-                                  onSelected: (value) {
+          child: SingleChildScrollView(
+        child: SizedBox(
+          width: MediaQuery.of(context).size.width,
+          child: Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: Column(
+              children: [
+                Text('Chairs', style: CustomText.title),
+                h30,
+                AdminUiHelper.customImageBox(() {
+                  pickImage();
+                }, imageurl: imageurl),
+                h30,
+                Form(
+                    key: _formkey,
+                    child: Column(children: [
+                      AdminUi.admTextField(
+                          label: 'Product Name', textcontroller: _productName),
+                      h10,
+                      AdminUi.admTextField(
+                          label: 'Manufacturer', textcontroller: _manufacturer),
+                      h10,
+                      AdminUi.admTextField(
+                          label: "Model", textcontroller: _model),
+                      h10,
+                      AdminUi.admTextField(
+                          label: 'Old Price', textcontroller: _oldPrice),
+                      h10,
+                      AdminUi.admTextField(
+                          label: 'New Price', textcontroller: _newPrice),
+                      h10,
+                      AdminUi.admTextField(
+                          label: 'Item Color', textcontroller: _color),
+                      h10,
+                      AdminUi.admTextField(
+                          label: 'Material', textcontroller: _material),
+                      h10,
+                      AdminUi.admTextField(
+                          label: 'Special Features',
+                          textcontroller: _specialFeatures),
+                      h10,
+                      AdminUi.admTextField(
+                          label: 'Product Dimension',
+                          textcontroller: _productDimension),
+                      h10,
+                      AdminUi.admTextField(
+                          label: 'Fill Material',
+                          textcontroller: _fillMaterial),
+                      h10,
+                      AdminUi.admTextField(
+                          label: 'Country', textcontroller: _country),
+                      h10,
+                      AdminUi.admTextField(
+                          label: 'Item Weight', textcontroller: _itemWeight),
+                      h10,
+                      AdminUi.admTextField(
+                          label: 'Warranty', textcontroller: _warranty),
+                      h10,
+                      Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            Row(children: [
+                              Checkbox(
+                                  activeColor: CustomColors.appTheme,
+                                  value: isNew,
+                                  onChanged: (newValue) {
                                     setState(() {
-                                      selectedCategory = value;
+                                      isNew = newValue!;
                                     });
-                                  },
-                                  dropdownMenuEntries: category
-                                      .map<DropdownMenuEntry<String>>(
-                                          (String value) {
-                                    return DropdownMenuEntry<String>(
-                                        value: value, label: value);
-                                  }).toList()),
-                              AdminUi.space,
-                              DropdownMenu<String>(
-                                  controller: _productName,
-                                  menuStyle: const MenuStyle(
-                                      surfaceTintColor:
-                                          MaterialStatePropertyAll(
-                                              Colors.white)),
-                                  hintText: 'Select Chair',
-                                  width:
-                                      MediaQuery.of(context).size.width * .93,
-                                  menuHeight: 300,
-                                  inputDecorationTheme: InputDecorationTheme(
-                                      hintStyle: const TextStyle(
-                                          color: CustomColors.appTheme),
-                                      border: OutlineInputBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(8)),
-                                      fillColor: Colors.white,
-                                      filled: true),
-                                  onSelected: (value) {
+                                  }),
+                              Text('New Arrival',
+                                  style: CustomText.categoryTitleText)
+                            ]),
+                            Row(children: [
+                              Checkbox(
+                                  activeColor: CustomColors.appTheme,
+                                  value: isPopular,
+                                  onChanged: (newValue) {
                                     setState(() {
-                                      selectedChair = value;
+                                      isPopular = newValue!;
                                     });
-                                  },
-                                  dropdownMenuEntries: chair
-                                      .map<DropdownMenuEntry<String>>(
-                                          (String value) {
-                                    return DropdownMenuEntry<String>(
-                                        value: value, label: value);
-                                  }).toList()),
-                              AdminUi.space,
-                              DropdownMenu<String>(
-                                  controller: _manufacturer,
-                                  menuStyle: const MenuStyle(
-                                      surfaceTintColor:
-                                          MaterialStatePropertyAll(
-                                              Colors.white)),
-                                  hintText: 'Select Manufacturer',
-                                  width:
-                                      MediaQuery.of(context).size.width * .93,
-                                  menuHeight: 300,
-                                  inputDecorationTheme: InputDecorationTheme(
-                                      hintStyle: const TextStyle(
-                                          color: CustomColors.appTheme),
-                                      border: OutlineInputBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(8)),
-                                      fillColor: Colors.white,
-                                      filled: true),
-                                  onSelected: (value) {
-                                    setState(() {
-                                      selectedManufacturer = value;
-                                    });
-                                  },
-                                  dropdownMenuEntries: manufacturer
-                                      .map<DropdownMenuEntry<String>>(
-                                          (String value) {
-                                    return DropdownMenuEntry<String>(
-                                        value: value, label: value);
-                                  }).toList()),
-                              AdminUi.space,
-                              DropdownMenu<String>(
-                                  controller: _model,
-                                  menuStyle: const MenuStyle(
-                                      surfaceTintColor:
-                                          MaterialStatePropertyAll(
-                                              Colors.white)),
-                                  hintText: 'Select Model',
-                                  width:
-                                      MediaQuery.of(context).size.width * .93,
-                                  menuHeight: 300,
-                                  inputDecorationTheme: InputDecorationTheme(
-                                      hintStyle: const TextStyle(
-                                          color: CustomColors.appTheme),
-                                      border: OutlineInputBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(8)),
-                                      fillColor: Colors.white,
-                                      filled: true),
-                                  onSelected: (value) {
-                                    setState(() {
-                                      selectedModel = value;
-                                    });
-                                  },
-                                  dropdownMenuEntries: model
-                                      .map<DropdownMenuEntry<String>>(
-                                          (String value) {
-                                    return DropdownMenuEntry<String>(
-                                        value: value, label: value);
-                                  }).toList()),
-                              AdminUi.space,
-                              AdminUi.admTextField(
-                                  label: 'Old Price',
-                                  textcontroller: _oldPrice),
-                              AdminUi.space,
-                              AdminUi.admTextField(
-                                  label: 'New Price',
-                                  textcontroller: _newPrice),
-                              AdminUi.space,
-                              AdminUi.admTextField(
-                                  label: 'Item Color', textcontroller: _color),
-                              AdminUi.space,
-                              AdminUi.admTextField(
-                                  label: 'Material', textcontroller: _material),
-                              AdminUi.space,
-                              AdminUi.admTextField(
-                                  label: 'Special Features',
-                                  textcontroller: _specialFeatures),
-                              AdminUi.space,
-                              AdminUi.admTextField(
-                                  label: 'Product Dimension',
-                                  textcontroller: _productDimension),
-                              AdminUi.space,
-                              AdminUi.admTextField(
-                                  label: 'Fill Material',
-                                  textcontroller: _fillMaterial),
-                              AdminUi.space,
-                              AdminUi.admTextField(
-                                  label: 'Country', textcontroller: _country),
-                              AdminUi.space,
-                              AdminUi.admTextField(
-                                  label: 'Item Weight',
-                                  textcontroller: _itemWeight),
-                              AdminUi.space,
-                              AdminUi.admTextField(
-                                  label: 'Warranty', textcontroller: _warranty),
-                            ])),
-                        const SizedBox(height: 30),
-                        AdminUiHelper.customButton(context, () {
-                          if (_formkey.currentState!.validate()) {
-                            submitData();
-                            AdminUiHelper.customSnackbar(
-                                context, 'Item Added Successfully !');
-                          }
-                        }, text: 'Save'),
-                        const SizedBox(height: 30)
-                      ],
-                    ),
-                  ),
-                ),
-              );
-            }),
-      ),
+                                  }),
+                              Text('Popular Item',
+                                  style: CustomText.categoryTitleText)
+                            ])
+                          ])
+                    ])),
+                h30,
+                AdminUiHelper.customButton(context, () {
+                  if (_formkey.currentState!.validate()) {
+                    Navigator.pop(context);
+                    submitData();
+                    AdminUiHelper.customSnackbar(
+                        context, 'Item Added Successfully !');
+                  }
+                }, text: 'Save'),
+                h30,
+              ],
+            ),
+          ),
+        ),
+      )),
     );
   }
 }

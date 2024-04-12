@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:prosample_1/admin/const/variables.dart';
 import 'package:prosample_1/admin/home/inventory/Headset/add_headset.dart';
 import 'package:prosample_1/admin/home/inventory/Headset/update_headset.dart';
 import 'package:prosample_1/admin/utils/utils_colors.dart';
@@ -15,6 +16,26 @@ class HeadsetDetails extends StatefulWidget {
 }
 
 class _HeadsetDetailsState extends State<HeadsetDetails> {
+  Future deleteData(itemId) async {
+    final firestore = FirebaseFirestore.instance;
+    final docRef = firestore.collection(headset).doc(itemId);
+    await docRef.delete();
+    deleteNewArivals(itemId);
+    deletePopular(itemId);
+  }
+
+  Future<void> deleteNewArivals(String itemId) async {
+    final firestore = FirebaseFirestore.instance;
+    final docRef = firestore.collection(newArival).doc(itemId);
+    await docRef.delete();
+  }
+
+  Future<void> deletePopular(String itemId) async {
+    final firestore = FirebaseFirestore.instance;
+    final docRef = firestore.collection(popular).doc(itemId);
+    await docRef.delete();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -22,11 +43,7 @@ class _HeadsetDetailsState extends State<HeadsetDetails> {
         centerTitle: true,
         title: Text('Headset Details', style: CustomText.apptitle),
         backgroundColor: CustomColors.appTheme,
-        leading: IconButton(
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            icon: const Icon(Icons.arrow_back, color: Colors.white)),
+        foregroundColor: Colors.white,
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: 10),
@@ -37,16 +54,15 @@ class _HeadsetDetailsState extends State<HeadsetDetails> {
                       MaterialPageRoute(
                           builder: (ctx) => const ScreenAddHeadset()));
                 },
-                icon: Image.asset('assets/icons/add.png',
-                    width: 30, color: Colors.white)),
+                icon: Image.asset(add, width: 30,color: Colors.white)),
           )
         ],
       ),
       body: SafeArea(
           child: StreamBuilder(
               stream: FirebaseFirestore.instance
-                  .collection('headsets')
-                  .orderBy('name')
+                  .collection(headset)
+                  .orderBy(name)
                   .snapshots(),
               builder: (context, snapshot) {
                 if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
@@ -62,9 +78,8 @@ class _HeadsetDetailsState extends State<HeadsetDetails> {
                     itemBuilder: (context, index) {
                       DocumentSnapshot document = snapshot.data!.docs[index];
 
-                      String itemId = document.id;
-                      String imageUrl = document['image'];
-                      String categoryName = document['name'];
+                      Map<String, dynamic> item =
+                          document.data() as Map<String, dynamic>;
 
                       return AdminUiHelper.updatelist(context, () {
                         AdminUi.customAlert(text1: 'Edit', text2: 'Delete', () {
@@ -72,14 +87,13 @@ class _HeadsetDetailsState extends State<HeadsetDetails> {
                               context,
                               MaterialPageRoute(
                                   builder: (ctx) => UpdateHeadset(
-                                        itemId: itemId,
-                                      )));
+                                      item: item, id: item[uniqueId])));
                         }, () {
+                          deleteData(item[uniqueId]);
                           AdminUiHelper.customSnackbar(
                               context, 'Item Deleted Successfully !');
-                          Navigator.pop(context);
                         }, context);
-                      }, imageUrl: imageUrl, categoryName: categoryName);
+                      }, imageUrl: item[itemImage], categoryName: item[name]);
                     },
                   );
                 }
