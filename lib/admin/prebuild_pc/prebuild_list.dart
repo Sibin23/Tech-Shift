@@ -1,8 +1,9 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:prosample_1/admin/const/variables.dart';
 import 'package:prosample_1/admin/prebuild_pc/prebuild_pc_add.dart';
 import 'package:prosample_1/admin/prebuild_pc/prebuild_pc_update.dart';
-import 'package:prosample_1/admin/utils/utils_colors.dart';
 import 'package:prosample_1/admin/utils/utils_text_style.dart';
 import 'package:prosample_1/admin/utils/utils_widget2.dart';
 import 'package:prosample_1/admin/utils/utils_widgets2.dart';
@@ -19,8 +20,17 @@ class __ListPreBuildStateState extends State<ListPreBuildState> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        foregroundColor: Colors.white,
         centerTitle: true,
-        backgroundColor: CustomColors.appTheme,
+        flexibleSpace: Container(
+          decoration: const BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage(admBoxImg),
+              fit: BoxFit.cover,
+            ),
+          ),
+        ),
         title: Text('List Pre-Builds', style: CustomText.apptitle),
         actions: [
           Padding(
@@ -32,59 +42,122 @@ class __ListPreBuildStateState extends State<ListPreBuildState> {
                       MaterialPageRoute(
                           builder: (ctx) => const ScreenPreBuild()));
                 },
-                icon: Image.asset('assets/icons/add.png',
-                    width: 30, color: Colors.white)),
+                icon: Image.asset(add, width: 30, color: Colors.white)),
           )
         ],
       ),
       body: SafeArea(
-          child: SizedBox(
-              width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.height,
-              child: StreamBuilder(
-                stream: FirebaseFirestore.instance
-                    .collection('prebuild')
-                    .orderBy('name')
-                    .snapshots(),
-                builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-                  if (snapshot.hasData) {
-                    return ListView.builder(
-                      itemCount: snapshot.data!.docs.length,
-                      itemBuilder: (context, index) {
-                        DocumentSnapshot document = snapshot.data!.docs[index];
+          child: StreamBuilder(
+        stream: FirebaseFirestore.instance
+            .collection(preBuild)
+            .orderBy(name)
+            .snapshots(),
+        builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+          if (snapshot.hasData) {
+            return ListView.builder(
+              itemCount: snapshot.data!.docs.length,
+              itemBuilder: (context, index) {
+                DocumentSnapshot document = snapshot.data!.docs[index];
 
-                        String itemId = document.id;
-                        String imageUrl = document['image'];
-                        String categoryName = document['name'];
+                final item = document.data() as Map<String, dynamic>;
 
-                        return AdminUiHelper.updatelist(context, () {
-                          AdminUi.customAlert(text1: 'Edit', text2: 'Delete',
-                              () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (ctx) => EditPC(
-                                          itemId: itemId,
-                                        )));
-                          }, () {
-                            deleteData(itemId);
-                            AdminUiHelper.customSnackbar(
-                                context, 'Item Deleted Successfully !');
-                          }, context);
-                        }, imageUrl: imageUrl, categoryName: categoryName);
-                      },
-                    );
-                  } else {
-                    return const Center(child: CircularProgressIndicator());
-                  }
-                },
-              ))),
+                return Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: GestureDetector(
+                    onTap: () {
+                      AdminUi.customAlert(() {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (ctx) =>
+                                    EditPC(id: item[uniqueId], item: item)));
+                      }, () {
+                        deleteData(item[uniqueId]);
+                        AdminUiHelper.customSnackbar(
+                            context, 'Item Deleted Successfully !');
+                      }, context, text1: 'Edit', text2: 'Delete');
+                    },
+                    child: Container(
+                      decoration: BoxDecoration(
+                          border: Border.all(color: Colors.black),
+                          borderRadius: BorderRadius.circular(5),
+                          color: Colors.white),
+                      child: Row(
+                        children: [
+                          SizedBox(
+                            width: 100,
+                            height: 100,
+                            child: CachedNetworkImage(
+                                errorWidget: (context, url, error) =>
+                                    const Center(
+                                      child: Text('Please Update Image'),
+                                    ),
+                                imageUrl: item[itemImage],
+                                fit: BoxFit.cover,
+                                placeholder: (context, url) => const Center(
+                                      child: CircularProgressIndicator(),
+                                    )),
+                          ),
+                          Expanded(
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(item[uniqueId],
+                                      style: CustomText.categoryText),
+                                  Text(item[cabinet],
+                                      style: CustomText.categoryText),
+                                  Text(item[category],
+                                      style: CustomText.categoryText),
+                                  Row(
+                                    children: [
+                                      const Text(
+                                        ' ₹ ',
+                                      ),
+                                      Text(item[oldPrice],
+                                          style: CustomText.lineThrough),
+                                      const SizedBox(width: 10),
+                                      Text(' ₹ ${item[oldPrice]}',
+                                          style: CustomText.subtitleG)
+                                    ],
+                                  )
+                                ],
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
+                );
+              },
+            );
+          } else {
+            return const Center(child: CircularProgressIndicator());
+          }
+        },
+      )),
     );
   }
 
   Future deleteData(itemId) async {
     final firestore = FirebaseFirestore.instance;
-    final docRef = firestore.collection('prebuild').doc(itemId);
+    final docRef = firestore.collection(preBuild).doc(itemId);
+    await docRef.delete();
+    deleteNewArivals(itemId);
+    deletePopular(itemId);
+  }
+
+  Future<void> deleteNewArivals(String itemId) async {
+    final firestore = FirebaseFirestore.instance;
+    final docRef = firestore.collection(newArival).doc(itemId);
+    await docRef.delete();
+  }
+
+  Future<void> deletePopular(String itemId) async {
+    final firestore = FirebaseFirestore.instance;
+    final docRef = firestore.collection(popular).doc(itemId);
     await docRef.delete();
   }
 }

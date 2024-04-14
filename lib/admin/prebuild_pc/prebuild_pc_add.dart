@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:prosample_1/admin/const/variables.dart';
 import 'package:prosample_1/admin/utils/utils_colors.dart';
 import 'package:prosample_1/admin/utils/utils_text_style.dart';
 import 'package:prosample_1/admin/utils/utils_widget2.dart';
@@ -17,8 +18,6 @@ class ScreenPreBuild extends StatefulWidget {
 
 class __ScreenPreBuildStateState extends State<ScreenPreBuild> {
   final _formkey = GlobalKey<FormState>();
-  final _productCategory = TextEditingController();
-  final _productName = TextEditingController();
   final _oldPrice = TextEditingController();
   final _newPrice = TextEditingController();
   final _processor = TextEditingController();
@@ -34,8 +33,9 @@ class __ScreenPreBuildStateState extends State<ScreenPreBuild> {
   final _warranty = TextEditingController();
   String idnum = DateTime.now().toString().replaceAll(RegExp(r'[^\d]'), '');
   late String imageurl = '';
+  bool isNew = false;
+  bool isPopular = false;
   Future<void> pickImage() async {
-   
     final ImagePicker picker = ImagePicker();
     final XFile? image = await picker.pickImage(source: ImageSource.gallery);
     if (image != null) {
@@ -53,35 +53,45 @@ class __ScreenPreBuildStateState extends State<ScreenPreBuild> {
     return imageurl = downloadUrl;
   }
 
-  // submit
   Future submitData() async {
     final data = {
-      'idnum': idnum,
-      'category': _productCategory.text.toLowerCase(),
-      'image': imageurl.toString(),
-      'name': _productName.text,
-      'oldprice': _oldPrice.text,
-      'newprice': _newPrice.text,
-      'processor': _processor.text,
-      'motherboard': _motherBoard.text,
-      'ram': _ram.text,
-      'ssd': _ssd.text,
-      'expstorage': _expandableStorage.text,
-      'gpu': _gpu.text,
-      'cooler': _cooler.text,
-      'features': _specialFeatures.text,
-      'psu': _psu.text,
-      'case': _case.text,
-      'warranty': _warranty.text,
+      uniqueId: idnum,
+      category: preBuild,
+      itemImage: imageurl.toString(),
+      name: _case.text,
+      oldPrice: _oldPrice.text,
+      newPrice: _newPrice.text,
+      processor: _processor.text,
+      motherboard: _motherBoard.text,
+      ram: _ram.text,
+      ssd: _ssd.text,
+      expStorage: _expandableStorage.text,
+      gpu: _gpu.text,
+      cooler: _cooler.text,
+      features: _specialFeatures.text,
+      psu: _psu.text,
+      cabinet: _case.text,
+      warranty: _warranty.text,
+      newArival: isNew,
+      popular: isPopular
     };
-    FirebaseFirestore.instance
-        .collection('prebuild')
-        .doc(idnum)
-        .set(data);
+    final item = {
+      itemImage: imageurl,
+      name: _case.text,
+      uniqueId: idnum,
+      category: preBuild,
+      oldPrice: _oldPrice.text,
+      newPrice: _newPrice.text,
+    };
+    if (isNew == true) {
+      FirebaseFirestore.instance.collection(newArival).doc(idnum).set(item);
+    }
+    if (isPopular == true) {
+      FirebaseFirestore.instance.collection(popular).doc(idnum).set(item);
+    }
+    FirebaseFirestore.instance.collection(preBuild).doc(idnum).set(data);
     setState(() {
-      _productCategory.clear();
       imageurl = '';
-      _productName.clear();
       _oldPrice.clear();
       _newPrice.clear();
       _processor.clear();
@@ -95,18 +105,18 @@ class __ScreenPreBuildStateState extends State<ScreenPreBuild> {
       _psu.clear();
       _case.clear();
       _warranty.clear();
+      isNew = false;
+      isPopular = false;
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    const space = SizedBox(height: 10);
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: CustomColors.appTheme,
+       surfaceTintColor: Colors.white,
         centerTitle: true,
-        title: Text("Pre - Build PC's", style: CustomText.apptitle),
-       
+        title: const Text("Pre - Build PC's", ),
       ),
       body: SafeArea(
           child: SingleChildScrollView(
@@ -123,55 +133,74 @@ class __ScreenPreBuildStateState extends State<ScreenPreBuild> {
                   child: Column(children: [
                     
                     AdminUi.admTextField(
-                        label: 'Category Name',
-                        textcontroller: _productCategory),
-                    space,
-                    AdminUi.admTextField(
-                        label: 'Product Name',
-                        textcontroller: _productName),
-                    space,
-                    AdminUi.admTextField(
                         label: 'Old Price', textcontroller: _oldPrice),
-                    space,
+                    h10,
                     AdminUi.admTextField(
                         label: 'New Price', textcontroller: _newPrice),
-                    space,
+                    h10,
                     AdminUi.admTextField(
                         label: 'Processor', textcontroller: _processor),
-                    space,
+                    h10,
                     AdminUi.admTextField(
                         label: 'Motherboard', textcontroller: _motherBoard),
-                    space,
-                    AdminUi.admTextField(
-                        label: 'Memory', textcontroller: _ram),
-                    space,
+                    h10,
+                    AdminUi.admTextField(label: 'Memory', textcontroller: _ram),
+                    h10,
                     AdminUi.admTextField(
                         label: 'Storage', textcontroller: _ssd),
-                    space,
+                    h10,
                     AdminUi.admTextField(
                         label: 'Expandable Storage',
                         textcontroller: _expandableStorage),
-                    space,
+                    h10,
+                    AdminUi.admTextField(label: 'GPU', textcontroller: _gpu),
+                    h10,
                     AdminUi.admTextField(
-                        label: 'GPU', textcontroller: _gpu),
-                    space,
-                    
-                    AdminUi.admTextField(
-                        label: 'Features',
-                        textcontroller: _specialFeatures),
-                    space,
+                        label: 'Features', textcontroller: _specialFeatures),
+                    h10,
                     AdminUi.admTextField(
                         label: 'PSU Certification', textcontroller: _psu),
-                    space,
-                    AdminUi.admTextField(label: 'Cooler', textcontroller: _cooler),
-                    space,
+                    h10,
                     AdminUi.admTextField(
-                        label: 'Case', textcontroller: _case),
-                    space,
+                        label: 'Cooler', textcontroller: _cooler),
+                    h10,
+                    AdminUi.admTextField(label: 'Case', textcontroller: _case),
+                    h10,
                     AdminUi.admTextField(
                         label: 'Warranty', textcontroller: _warranty),
-                    const SizedBox(height: 30),
+                    h10,
+                    Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Row(children: [
+                            Checkbox(
+                                tristate: false,
+                                activeColor: CustomColors.appTheme,
+                                value: isNew,
+                                onChanged: (newValue) {
+                                  setState(() {
+                                    isNew = newValue!;
+                                  });
+                                }),
+                            Text('New Arrival',
+                                style: CustomText.categoryTitleText)
+                          ]),
+                          Row(children: [
+                            Checkbox(
+                                tristate: false,
+                                activeColor: CustomColors.appTheme,
+                                value: isPopular,
+                                onChanged: (newValue) {
+                                  setState(() {
+                                    isPopular = newValue!;
+                                  });
+                                }),
+                            Text('Popular Item',
+                                style: CustomText.categoryTitleText)
+                          ])
+                        ])
                   ])),
+              h30,
               AdminUiHelper.customButton(context, () {
                 if (_formkey.currentState!.validate()) {
                   Navigator.pop(context);
@@ -180,7 +209,7 @@ class __ScreenPreBuildStateState extends State<ScreenPreBuild> {
                       context, 'Item Added Successfully !');
                 }
               }, text: 'Save'),
-              const SizedBox(height: 30)
+              h30
             ],
           ),
         ),

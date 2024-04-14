@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:prosample_1/User/utils/utils_colors.dart';
 import 'package:prosample_1/User/utils/utils_text_decorations.dart';
+import 'package:prosample_1/User/utils/utils_widget4.dart';
+import 'package:prosample_1/admin/const/variables.dart';
 
 class ScreenMonitorInfo extends StatefulWidget {
   final Map<String, dynamic> monitor;
@@ -38,196 +40,64 @@ class _ScreenMonitorInfoState extends State<ScreenMonitorInfo> {
                     offset: Offset(4, 4))
               ]),
               width: MediaQuery.of(context).size.width,
-              child: Row(
-                children: [
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width * .4,
-                    child: Padding(
-                      padding:
-                          const EdgeInsets.only(left: 10, right: 10, top: 10),
-                      child: Column(
-                        children: [
-                          SizedBox(
-                              width: MediaQuery.of(context).size.width,
-                              height: MediaQuery.of(context).size.height * 0.08,
-                              child: Text('Product Name',
-                                  style: TextStyling.subtitle)),
-                          SizedBox(
-                              width: MediaQuery.of(context).size.width,
-                              height: MediaQuery.of(context).size.height * 0.08,
-                              child: Text('Model Name',
-                                  style: TextStyling.subtitle)),
-                          SizedBox(
-                              width: MediaQuery.of(context).size.width,
-                              height: MediaQuery.of(context).size.height * 0.04,
-                              child: Text('Manufacturer',
-                                  style: TextStyling.subtitle)),
-                          SizedBox(
-                              width: MediaQuery.of(context).size.width,
-                              height: MediaQuery.of(context).size.height * 0.08,
-                              child: Text('Features',
-                                  style: TextStyling.subtitle)),
-                          SizedBox(
-                              width: MediaQuery.of(context).size.width,
-                              height: MediaQuery.of(context).size.height * 0.04,
-                              child: Text('Display Type',
-                                  style: TextStyling.subtitle)),
-                          SizedBox(
-                              width: MediaQuery.of(context).size.width,
-                              height: MediaQuery.of(context).size.height * 0.04,
-                              child: Text('Display Size',
-                                  style: TextStyling.subtitle)),
-                          SizedBox(
-                              width: MediaQuery.of(context).size.width,
-                              height: MediaQuery.of(context).size.height * 0.04,
-                              child: Text('Screen Resolution',
-                                  style: TextStyling.subtitle)),
-                          SizedBox(
-                              width: MediaQuery.of(context).size.width,
-                              height: MediaQuery.of(context).size.height * 0.04,
-                              child: Text('Refresh Rate',
-                                  style: TextStyling.subtitle)),
-                          SizedBox(
-                              width: MediaQuery.of(context).size.width,
-                              height: MediaQuery.of(context).size.height * 0.04,
-                              child: Text('Response',
-                                  style: TextStyling.subtitle)),
-                          SizedBox(
-                              width: MediaQuery.of(context).size.width,
-                              height: MediaQuery.of(context).size.height * 0.04,
-                              child: Text('View Angle',
-                                  style: TextStyling.subtitle)),
-                          SizedBox(
-                              width: MediaQuery.of(context).size.width,
-                              height: MediaQuery.of(context).size.height * 0.04,
-                              child: Text('Hardware Interface',
-                                  style: TextStyling.subtitle)),
-                          SizedBox(
-                              width: MediaQuery.of(context).size.width,
-                              height: MediaQuery.of(context).size.height * 0.04,
-                              child:
-                                  Text('Voltage', style: TextStyling.subtitle)),
-                          SizedBox(
-                              width: MediaQuery.of(context).size.width,
-                              height: MediaQuery.of(context).size.height * 0.08,
-                              child: Text('Product Dimension',
-                                  style: TextStyling.subtitle)),
-                          SizedBox(
-                              width: MediaQuery.of(context).size.width,
-                              height: MediaQuery.of(context).size.height * 0.04,
-                              child: Text('Item Weight',
-                                  style: TextStyling.subtitle)),
-                          SizedBox(
-                              width: MediaQuery.of(context).size.width,
-                              height: MediaQuery.of(context).size.height * 0.04,
-                              child: Text('Country of Origin',
-                                  style: TextStyling.subtitle)),
-                          SizedBox(
-                              width: MediaQuery.of(context).size.width,
-                              height: MediaQuery.of(context).size.height * 0.1,
-                              child: Text('Warranty',
-                                  style: TextStyling.subtitle)),
-                        ],
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width * .5,
-                    child: Padding(
-                      padding:
-                          const EdgeInsets.only(left: 10, right: 10, top: 10),
-                      child: Column(
-                        children: [
-                          SizedBox(
-                              width: MediaQuery.of(context).size.width,
-                              height: MediaQuery.of(context).size.height * .08,
-                              child: Text(monitor['name'],
-                                  style: TextStyling.details)),
-                          SizedBox(
-                              width: MediaQuery.of(context).size.width,
-                              height: MediaQuery.of(context).size.height * .08,
-                              child: Text(monitor['model'],
-                                  style: TextStyling.details)),
-                          SizedBox(
-                              width: MediaQuery.of(context).size.width,
-                              height: MediaQuery.of(context).size.height * .04,
-                              child: Text(monitor['manufacturer'],
-                                  style: TextStyling.details)),
-                          SizedBox(
-                              width: MediaQuery.of(context).size.width,
-                              height: MediaQuery.of(context).size.height * .08,
-                              child: Text(monitor['features'],
-                                  style: TextStyling.details)),
-                          SizedBox(
-                              width: MediaQuery.of(context).size.width,
-                              height: MediaQuery.of(context).size.height * .04,
-                              child: Text(monitor['displaytype'],
-                                  style: TextStyling.details)),
-                          SizedBox(
-                              width: MediaQuery.of(context).size.width,
-                              height: MediaQuery.of(context).size.height * .04,
-                              child: Text(monitor['displaysize'],
-                                  style: TextStyling.details)),
-                          SizedBox(
-                              width: MediaQuery.of(context).size.width,
-                              height: MediaQuery.of(context).size.height * .04,
-                              child: Text(monitor['resolution'],
-                                  style: TextStyling.details)),
-                          SizedBox(
-                              width: MediaQuery.of(context).size.width,
-                              height: MediaQuery.of(context).size.height * .04,
-                              child: Text(monitor['refRate'],
-                                  style: TextStyling.details)),
-                          SizedBox(
-                              width: MediaQuery.of(context).size.width,
-                              height: MediaQuery.of(context).size.height * .04,
-                              child: Text(monitor['response'],
-                                  style: TextStyling.details)),
-                          SizedBox(
-                              width: MediaQuery.of(context).size.width,
-                              height: MediaQuery.of(context).size.height * .04,
-                              child: Text(monitor['viewingangle'],
-                                  style: TextStyling.details)),
-                          SizedBox(
-                              width: MediaQuery.of(context).size.width,
-                              height: MediaQuery.of(context).size.height * .04,
-                              child: Text(monitor['hdwinterface'],
-                                  style: TextStyling.details)),
-                          SizedBox(
-                              width: MediaQuery.of(context).size.width,
-                              height: MediaQuery.of(context).size.height * .04,
-                              child: Text(monitor['voltage'],
-                                  style: TextStyling.details)),
-                          SizedBox(
-                              width: MediaQuery.of(context).size.width,
-                              height: MediaQuery.of(context).size.height * .04,
-                              child: Text(monitor['voltage'],
-                                  style: TextStyling.details)),
-                          SizedBox(
-                              width: MediaQuery.of(context).size.width,
-                              height: MediaQuery.of(context).size.height * .08,
-                              child: Text(monitor['productdimension'],
-                                  style: TextStyling.details)),
-                          SizedBox(
-                              width: MediaQuery.of(context).size.width,
-                              height: MediaQuery.of(context).size.height * .04,
-                              child: Text(monitor['itemweight'],
-                                  style: TextStyling.details)),
-                          SizedBox(
-                              width: MediaQuery.of(context).size.width,
-                              height: MediaQuery.of(context).size.height * .04,
-                              child: Text(monitor['country'],
-                                  style: TextStyling.details)),
-                          SizedBox(
-                              width: MediaQuery.of(context).size.width,
-                              height: MediaQuery.of(context).size.height * .1,
-                              child: Text(monitor['warranty'],
-                                  style: TextStyling.details)),
-                        ],
-                      ),
-                    ),
-                  )
-                ],
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('Specifications', style: TextStyling.detailMain),
+                    h30,
+                    Custom3.details(context,
+                        title: 'Product Name', detail: monitor[name]),
+                    h10,
+                    Custom3.details(context,
+                        title: 'Model Name', detail: monitor[model]),
+                    h10,
+                    Custom3.details(context,
+                        title: 'Manufacturer', detail: monitor[manufacturer]),
+                    h10,
+                    Custom3.details(context,
+                        title: 'Features', detail: monitor[features]),
+                    h10,
+                    Custom3.details(context,
+                        title: 'Display Type', detail: monitor[displayType]),
+                    h10,
+                    Custom3.details(context,
+                        title: 'Display Size', detail: monitor[displaySize]),
+                    h10,
+                    Custom3.details(context,
+                        title: 'Screen Resolution', detail: monitor[resolution]),
+                    h10,
+                    Custom3.details(context,
+                        title: 'Refresh Rate', detail: monitor[refRate]),
+                    h10,
+                    Custom3.details(context,
+                        title: 'Response', detail: monitor[response]),
+                    h10,
+                    Custom3.details(context,
+                        title: 'View Angle', detail: monitor[viewAngle]),
+                    h10,
+                    Custom3.details(context,
+                        title: 'Hardware Interface',
+                        detail: monitor[hdwinterface]),
+                    h10,
+                    Custom3.details(context,
+                        title: 'Voltage', detail: monitor[voltage]),
+                    h10,
+                    Custom3.details(context,
+                        title: 'Product Dimension', detail: monitor[dimension]),
+                    h10,
+                    Custom3.details(context,
+                        title: 'Item Weight', detail: monitor[weight]),
+                    h10,
+                    Custom3.details(context,
+                        title: 'Country of Origin', detail: monitor[country]),
+                    h10,
+                    Custom3.details(context,
+                        title: 'Warranty', detail: monitor[warranty]),
+                    h10,
+                  ],
+                ),
               ),
             ),
           ),

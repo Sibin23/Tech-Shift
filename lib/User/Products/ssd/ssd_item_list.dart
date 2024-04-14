@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:prosample_1/User/Products/product_details.dart';
 import 'package:prosample_1/User/utils/utils_colors.dart';
 import 'package:prosample_1/User/utils/utils_text_decorations.dart';
+import 'package:prosample_1/admin/const/variables.dart';
 
 class ProductSSD extends StatefulWidget {
   const ProductSSD({super.key});
@@ -22,8 +23,8 @@ class _ProductSSDState extends State<ProductSSD> {
       body: SafeArea(
           child: StreamBuilder<QuerySnapshot>(
               stream: FirebaseFirestore.instance
-                  .collection('ssd')
-                  .orderBy('name')
+                  .collection(ssd)
+                  .orderBy(name)
                   .snapshots(),
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
@@ -49,8 +50,8 @@ class _ProductSSDState extends State<ProductSSD> {
                                     context,
                                     MaterialPageRoute(
                                         builder: (ctx) => CheckDetails(
-                                            collection: document['category'],
-                                            idNum: document['idnum'])));
+                                            collection: document[category],
+                                            idNum: document[uniqueId])));
                               },
                               child: Container(
                                   decoration: BoxDecoration(
@@ -81,9 +82,9 @@ class _ProductSSDState extends State<ProductSSD> {
                                                       .size
                                                       .height *
                                                   0.13,
-                                              child: document['image'] != null
+                                              child: document[itemImage] != null
                                                   ? CachedNetworkImage(
-                                                      imageUrl: document['image'],
+                                                      imageUrl: document[itemImage],
                                                       fit: BoxFit.cover,
                                                       placeholder: (context,
                                                               url) =>
@@ -100,7 +101,7 @@ class _ProductSSDState extends State<ProductSSD> {
                                                       'assets/categories/ssd.png',
                                                       fit: BoxFit.cover),
                                             ),
-                                            Text(document['category'],
+                                            Text(document[category],
                                                 style: TextStyling.categoryText),
                                             SizedBox(
                                               width: MediaQuery.of(context)
@@ -121,7 +122,7 @@ class _ProductSSDState extends State<ProductSSD> {
                                             ),
                                             const SizedBox(height: 3),
                                             Text(
-                                                document['name']
+                                                document[name]
                                                     .toString()
                                                     .toUpperCase(),
                                                 softWrap: false,
@@ -135,7 +136,7 @@ class _ProductSSDState extends State<ProductSSD> {
                                                 ),
                                                 const SizedBox(width: 2),
                                                 Text(
-                                                    document['oldprice']
+                                                    document[oldPrice]
                                                         .replaceAllMapped(
                                                             RegExp(
                                                                 r'(\d{1,3})(?=(\d{3})+(?!\d))'),
@@ -154,7 +155,7 @@ class _ProductSSDState extends State<ProductSSD> {
                                                   ),
                                                   const SizedBox(width: 2),
                                                   Text(
-                                                      document['newprice']
+                                                      document[newPrice]
                                                           .replaceAllMapped(
                                                               RegExp(
                                                                   r'(\d{1,3})(?=(\d{3})+(?!\d))'),

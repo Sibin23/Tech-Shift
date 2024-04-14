@@ -3,11 +3,16 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:prosample_1/admin/const/variables.dart';
+import 'package:prosample_1/admin/utils/utils_colors.dart';
+import 'package:prosample_1/admin/utils/utils_text_style.dart';
 import 'package:prosample_1/admin/utils/utils_widget2.dart';
 import 'package:prosample_1/admin/utils/utils_widgets2.dart';
+
 class EditPC extends StatefulWidget {
-  final String itemId;
-  const EditPC({super.key, required this.itemId});
+  final Map<String, dynamic> item;
+  final String id;
+  const EditPC({super.key, required this.id, required this.item});
 
   @override
   State<EditPC> createState() => _EditPCState();
@@ -15,7 +20,6 @@ class EditPC extends StatefulWidget {
 
 class _EditPCState extends State<EditPC> {
   final _formkey = GlobalKey<FormState>();
-  final _productCategory = TextEditingController();
   final _productName = TextEditingController();
   final _oldPrice = TextEditingController();
   final _newPrice = TextEditingController();
@@ -32,11 +36,13 @@ class _EditPCState extends State<EditPC> {
   final _warranty = TextEditingController();
   String? image;
   late String imageurl = '';
-
+  bool? isNew;
+  bool? isPopular;
+  String? idnum;
+  String? categoryname;
   Future<void> pickImage() async {
-    // ignore: no_leading_underscores_for_local_identifiers
-    final ImagePicker _picker = ImagePicker();
-    final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+    final ImagePicker picker = ImagePicker();
+    final XFile? image = await picker.pickImage(source: ImageSource.gallery);
     if (image != null) {
       imageurl = await uploadImage(image);
       setState(() async {});
@@ -56,63 +62,78 @@ class _EditPCState extends State<EditPC> {
   void initState() {
     super.initState();
 
-    FirebaseFirestore.instance
-        .collection('prebuild')
-        .doc(widget.itemId)
-        .get()
-        .then((snapshot) {
-      if (snapshot.exists) {
-        
-        Map<String, dynamic> data = snapshot.data()!;
-
-        _productCategory.text = data['category'];
-        setState(() {
-          image = imageurl;
-        });
-        _productName.text = data['name'];
-        imageurl = data['image'];
-        _oldPrice.text = data['oldprice'];
-        _newPrice.text = data['newprice'];
-        _processor.text = data['processor'];
-        _motherBoard.text = data['motherboard'];
-        _ram.text = data['ram'];
-        _cooler.text = data['cooler'];
-        _ssd.text = data['ssd'];
-        _expandableStorage.text = data['expstorage'];
-        _gpu.text = data['gpu'];
-        _specialFeatures.text = data['features'];
-        _psu.text = data['psu'];
-        _case.text = data['case'];
-        _warranty.text = data['warranty'];
-      }
+    final data = widget.item;
+    setState(() {
+      image = imageurl;
     });
+    idnum = data[uniqueId];
+    categoryname = data[category];
+    _productName.text = data[name];
+    imageurl = data[itemImage];
+    _oldPrice.text = data[oldPrice];
+    _newPrice.text = data[newPrice];
+    _processor.text = data[processor];
+    _motherBoard.text = data[motherboard];
+    _ram.text = data[ram];
+    _cooler.text = data[cooler];
+    _ssd.text = data[ssd];
+    _expandableStorage.text = data[expStorage];
+    _gpu.text = data[gpu];
+    _specialFeatures.text = data[features];
+    _psu.text = data[psu];
+    _case.text = data[cabinet];
+    _warranty.text = data[warranty];
+    isNew = data[newArival] == true ? isNew = true : isNew = false;
+    isPopular = data[popular] == true ? isPopular = true : isPopular = false;
   }
 
-  updateData() {
-    FirebaseFirestore.instance
-        .collection('prebuild')
-        .doc(widget.itemId) 
-        .update({
-      'idnum': widget.itemId,
-      'category': _productCategory.text.toLowerCase(),
-      'image': imageurl.toString(),
-      'name': _productName.text,
-      'oldprice': _oldPrice.text,
-      'newprice': _newPrice.text,
-      'processor': _processor.text,
-      'motherboard': _motherBoard.text,
-      'ram': _ram.text,
-      'ssd': _ssd.text,
-      'expstorage': _expandableStorage.text,
-      'gpu': _gpu.text,
-      'cooler': _cooler.text,
-      'features': _specialFeatures.text,
-      'psu': _psu.text,
-      'case': _case.text,
-      'warranty': _warranty.text,
+  Future<void> updateData() async {
+    final item = {
+      itemImage: imageurl,
+      name: _productName.text,
+      uniqueId: widget.id,
+      category: preBuild,
+      oldPrice: _oldPrice.text,
+      newPrice: _newPrice.text,
+    };
+    if (isNew == true) {
+      FirebaseFirestore.instance.collection(newArival).doc(widget.id).set(item);
+    }
+    if (isPopular == true) {
+      FirebaseFirestore.instance.collection(popular).doc(widget.id).set(item);
+    }
+    if (isNew == false) {
+      final firestore = FirebaseFirestore.instance;
+      final docRef = firestore.collection(newArival).doc(widget.id);
+      await docRef.delete();
+    }
+    if (isPopular == false) {
+      final firestore = FirebaseFirestore.instance;
+      final docRef = firestore.collection(popular).doc(widget.id);
+      await docRef.delete();
+    }
+    FirebaseFirestore.instance.collection(preBuild).doc(widget.id).set({
+      uniqueId: idnum,
+      category: categoryname,
+      itemImage: imageurl.toString(),
+      name: _productName.text,
+      oldPrice: _oldPrice.text,
+      newPrice: _newPrice.text,
+      processor: _processor.text,
+      motherboard: _motherBoard.text,
+      ram: _ram.text,
+      ssd: _ssd.text,
+      expStorage: _expandableStorage.text,
+      gpu: _gpu.text,
+      cooler: _cooler.text,
+      features: _specialFeatures.text,
+      psu: _psu.text,
+      cabinet: _case.text,
+      warranty: _warranty.text,
+      newArival: isNew,
+      popular: isPopular
     });
     setState(() {
-      _productCategory.clear();
       imageurl = '';
       _productName.clear();
       _oldPrice.clear();
@@ -128,95 +149,114 @@ class _EditPCState extends State<EditPC> {
       _psu.clear();
       _case.clear();
       _warranty.clear();
+      isNew = false;
+      isPopular = false;
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    const space = SizedBox(height: 10);
     return Scaffold(
       appBar: AppBar(
+        centerTitle: true,
         surfaceTintColor: Colors.white,
-        leading: IconButton(onPressed: (){
-          Navigator.of(context).pop();
-        }, icon: const Icon(Icons.arrow_back)),
+        title: const Text('Update Pre-Build\'s'),
       ),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.all(10.0),
             child: Column(
-            children: [
-              AdminUiHelper.customImageBox(() {
-                pickImage();
-              }, imageurl: imageurl),
-              const SizedBox(height: 20),
-              Form(
-                  key: _formkey,
-                  child: Column(children: [
-                   
-                   
-                    AdminUi.admTextField(
-                        label: 'Category Name',
-                        textcontroller: _productCategory),
-                   space,
-                    AdminUi.admTextField(
-                        label: 'Product Name',
-                        textcontroller: _productName),
-                   space,
-                    AdminUi.admTextField(
-                        label: 'Old Price', textcontroller: _oldPrice),
-                   space,
-                    AdminUi.admTextField(
-                        label: 'New Price', textcontroller: _newPrice),
-                   space,
-                    AdminUi.admTextField(
-                        label: 'Processor', textcontroller: _processor),
-                   space,
-                    AdminUi.admTextField(
-                        label: 'Motherboard', textcontroller: _motherBoard),
-                   space,
-                    AdminUi.admTextField(
-                        label: 'Memory', textcontroller: _ram),
-                   space,
-                    AdminUi.admTextField(
-                        label: 'Storage', textcontroller: _ssd),
-                   space,
-                    AdminUi.admTextField(
-                        label: 'Expandable Storage',
-                        textcontroller: _expandableStorage),
-                   space,
-                    AdminUi.admTextField(
-                        label: 'GPU', textcontroller: _gpu),
-                   space,
-                    
-                    AdminUi.admTextField(
-                        label: 'Features',
-                        textcontroller: _specialFeatures),
-                   space,
-                    AdminUi.admTextField(
-                        label: 'PSU Certification', textcontroller: _psu),
-                   space,
-                    AdminUi.admTextField(label: 'Cooler', textcontroller: _cooler),
-                   space,
-                    AdminUi.admTextField(
-                        label: 'Case', textcontroller: _case),
-                   space,
-                    AdminUi.admTextField(
-                        label: 'Warranty', textcontroller: _warranty),
-                    const SizedBox(height: 30),
-                  ])),
-              AdminUiHelper.customButton(context, () {
-                if (_formkey.currentState!.validate()) {
-                  Navigator.pop(context);
-                  updateData();
-                  AdminUiHelper.customSnackbar(
-                      context, 'Item Updated Successfully !');
-                }
-              }, text: 'Save'),
-              const SizedBox(height: 30)
-            ],
-          ),
+              children: [
+                AdminUiHelper.customImageBox(() {
+                  pickImage();
+                }, imageurl: imageurl),
+                const SizedBox(height: 20),
+                Form(
+                    key: _formkey,
+                    child: Column(children: [
+                      AdminUi.admTextField(
+                          label: 'Old Price', textcontroller: _oldPrice),
+                      h10,
+                      AdminUi.admTextField(
+                          label: 'New Price', textcontroller: _newPrice),
+                      h10,
+                      AdminUi.admTextField(
+                          label: 'Processor', textcontroller: _processor),
+                      h10,
+                      AdminUi.admTextField(
+                          label: 'Motherboard', textcontroller: _motherBoard),
+                      h10,
+                      AdminUi.admTextField(
+                          label: 'Memory', textcontroller: _ram),
+                      h10,
+                      AdminUi.admTextField(
+                          label: 'Storage', textcontroller: _ssd),
+                      h10,
+                      AdminUi.admTextField(
+                          label: 'Expandable Storage',
+                          textcontroller: _expandableStorage),
+                      h10,
+                      AdminUi.admTextField(label: 'GPU', textcontroller: _gpu),
+                      h10,
+                      AdminUi.admTextField(
+                          label: 'Features', textcontroller: _specialFeatures),
+                      h10,
+                      AdminUi.admTextField(
+                          label: 'PSU Certification', textcontroller: _psu),
+                      h10,
+                      AdminUi.admTextField(
+                          label: 'Cooler', textcontroller: _cooler),
+                      h10,
+                      AdminUi.admTextField(
+                          label: 'Case', textcontroller: _case),
+                      h10,
+                      AdminUi.admTextField(
+                          label: 'Warranty', textcontroller: _warranty),
+                      h10,
+                      Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            Row(children: [
+                              Checkbox(
+                                  tristate: false,
+                                  activeColor: CustomColors.appTheme,
+                                  value: isNew,
+                                  onChanged: (newValue) {
+                                    setState(() {
+                                      isNew = newValue!;
+                                    });
+                                  }),
+                              Text('New Arrival',
+                                  style: CustomText.categoryTitleText)
+                            ]),
+                            Row(children: [
+                              Checkbox(
+                                  tristate: false,
+                                  activeColor: CustomColors.appTheme,
+                                  value: isPopular,
+                                  onChanged: (newValue) {
+                                    setState(() {
+                                      isPopular = newValue!;
+                                    });
+                                  }),
+                              Text('Popular Item',
+                                  style: CustomText.categoryTitleText)
+                            ])
+                          ])
+                    ])),
+                h30,
+                AdminUiHelper.customButton(context, () {
+                  if (_formkey.currentState!.validate()) {
+                    Navigator.pop(context);
+                    updateData();
+                    AdminUiHelper.customSnackbar(
+                        context, 'Item Updated Successfully !');
+                  }
+                }, text: 'Save'),
+                h30
+              ],
+            ),
           ),
         ),
       ),

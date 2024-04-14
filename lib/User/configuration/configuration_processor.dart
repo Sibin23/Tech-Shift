@@ -7,6 +7,7 @@ import 'package:prosample_1/User/configuration/configuration_motherboard.dart';
 import 'package:prosample_1/User/utils/utils_colors.dart';
 import 'package:prosample_1/User/utils/utils_text_decorations.dart';
 import 'package:prosample_1/User/utils/utils_widget2.dart';
+import 'package:prosample_1/admin/const/variables.dart';
 
 class ProcessorConfig extends StatefulWidget {
   const ProcessorConfig({
@@ -35,7 +36,7 @@ class _ProcessorConfigState extends State<ProcessorConfig> {
           GestureDetector(
             onTap: () {
               Map<String, dynamic> pc = {
-                'processor': selectedName.toString(),
+                processor: selectedName.toString(),
                 'processorprice': seletectedPrice.toString(),
               };
               Navigator.push(context,
@@ -85,7 +86,7 @@ class _ProcessorConfigState extends State<ProcessorConfig> {
         } else {
           var processorSocket = selectedSocket.toString();
           Map<String, dynamic> pc = {
-            'processor': selectedName.toString(),
+            processor: selectedName.toString(),
             'processorprice': seletectedPrice.toString(),
           };
           Navigator.push(
@@ -113,7 +114,7 @@ class _ProcessorConfigState extends State<ProcessorConfig> {
                 width: MediaQuery.of(context).size.width,
                 child: StreamBuilder<QuerySnapshot>(
                     stream: FirebaseFirestore.instance
-                        .collection('processor')
+                        .collection(processor)
                         .snapshots(),
                     builder: (context, snapshot) {
                       if (snapshot.hasData) {
@@ -127,19 +128,12 @@ class _ProcessorConfigState extends State<ProcessorConfig> {
                                 crossAxisCount: 2,
                                 mainAxisSpacing: 5,
                                 crossAxisSpacing: 5,
-                                mainAxisExtent: 220,
+                                mainAxisExtent: 230,
                               ),
                               itemBuilder: ((context, index) {
                                 DocumentSnapshot document =
                                     snapshot.data!.docs[index];
-                                String imageUrl = document['image'];
-                                String name = document['name'];
-                                String cores = document['cores'];
-                                String threads = document['threads'];
-                                String speed = document['speed'];
-                                String price = document['newprice'];
-                                String socket = document['socket'];
-                                String power = document['tdp'];
+                               
                                 bool isSelected =
                                     document.id == selectedDocumentId;
                                 return Padding(
@@ -155,11 +149,11 @@ class _ProcessorConfigState extends State<ProcessorConfig> {
                                             seletectedPrice = null;
                                             selectedTdp = null;
                                           } else {
-                                            selectedDocumentId = document.id;
-                                            selectedSocket = socket;
-                                            selectedName = name;
-                                            seletectedPrice = price;
-                                            selectedTdp = power;
+                                            selectedDocumentId = document[uniqueId];
+                                            selectedSocket = document[socket];
+                                            selectedName = document[name];
+                                            seletectedPrice = document[newPrice];
+                                            selectedTdp = document[tdp];
                                           }
                                           isSelected = !isSelected;
                                         });
@@ -216,7 +210,7 @@ class _ProcessorConfigState extends State<ProcessorConfig> {
                                                                   .height *
                                                               0.11,
                                                       child: CachedNetworkImage(
-                                                        imageUrl: imageUrl,
+                                                        imageUrl: document[itemImage],
                                                         fit: BoxFit.cover,
                                                         placeholder:
                                                             (context, url) {
@@ -237,7 +231,7 @@ class _ProcessorConfigState extends State<ProcessorConfig> {
                                                           CrossAxisAlignment
                                                               .start,
                                                       children: [
-                                                        Text(name,
+                                                        Text(document[name],
                                                             overflow:
                                                                 TextOverflow
                                                                     .ellipsis,
@@ -249,17 +243,17 @@ class _ProcessorConfigState extends State<ProcessorConfig> {
                                                             height: 5),
                                                         Row(
                                                           children: [
-                                                            Text('$cores,',
+                                                            Text('${document[cores].toString().trim()}, ',
                                                                 style: TextStyling
                                                                     .categoryText),
                                                             const SizedBox(
                                                                 width: 2),
-                                                            Text(threads,
+                                                            Text(document[threads].toString().trim(),
                                                                 style: TextStyling
                                                                     .categoryText)
                                                           ],
                                                         ),
-                                                        Text(speed,
+                                                        Text(document[speed],
                                                             overflow:
                                                                 TextOverflow
                                                                     .ellipsis,
@@ -275,7 +269,7 @@ class _ProcessorConfigState extends State<ProcessorConfig> {
                                                     const Text('₹'),
                                                     const SizedBox(width: 2),
                                                     Text(
-                                                        price.replaceAllMapped(
+                                                        document[newPrice].replaceAllMapped(
                                                             RegExp(
                                                                 r'(\d{1,3})(?=(\d{3})+(?!\d))'),
                                                             (Match m) =>

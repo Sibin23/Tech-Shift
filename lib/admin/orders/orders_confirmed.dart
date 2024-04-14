@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:prosample_1/admin/const/variables.dart';
 import 'package:prosample_1/admin/orders/order_details.dart';
 
 class OrdersConfirmed extends StatefulWidget {
@@ -24,7 +25,7 @@ class _OrdersConfirmedState extends State<OrdersConfirmed> {
                 height: MediaQuery.of(context).size.height,
                 child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
                     stream: FirebaseFirestore.instance
-                        .collection('OrderOthers').where('status',isEqualTo: 'Confirmed')
+                        .collection(orderOthers).where(status,isEqualTo: confirmed)
                         .snapshots(),
                     builder: (context, snapshot) {
                       if (snapshot.hasData) {
@@ -75,7 +76,7 @@ class _OrdersConfirmedState extends State<OrdersConfirmed> {
                                                           .width *
                                                       .05,
                                                   child: Text(
-                                                      document['status'],
+                                                      document[status],
                                                       style: const TextStyle(
                                                           color: Colors.green,
                                                           fontSize: 17,
@@ -105,13 +106,13 @@ class _OrdersConfirmedState extends State<OrdersConfirmed> {
                                                               child: CachedNetworkImage(
                                                                   imageUrl:
                                                                       document[
-                                                                          'image'],
+                                                                          itemImage],
                                                                   fit: BoxFit
                                                                       .cover,
                                                                   placeholder: (context,
                                                                           url) =>
                                                                       Image.asset(
-                                                                          'assets/Categories/ssd.png',
+                                                                          'assets/categories/ssd.png',
                                                                           fit: BoxFit
                                                                               .cover)),
                                                             ),
@@ -129,28 +130,28 @@ class _OrdersConfirmedState extends State<OrdersConfirmed> {
                                                                           .start,
                                                                   children: [
                                                                     Text(
-                                                                        '# ${document['orderid']}'),
+                                                                        '# ${document[orderId]}'),
                                                                     Text(document[
-                                                                        'category']),
+                                                                        category]),
                                                                     SizedBox(
                                                                       width: MediaQuery.of(
                                                                               context)
                                                                           .size
                                                                           .width,
                                                                       child: Text(document[
-                                                                              'name']
+                                                                              name]
                                                                           .toString()
                                                                           .toUpperCase()),
                                                                     ),
                                                                     Text(
                                                                       document[
-                                                                          'newprice'],
+                                                                          newPrice],
                                                                       style: const TextStyle(
                                                                           color:
                                                                               Colors.green),
                                                                     ),
                                                                     Text(
-                                                                        '${document['date']}/${document['month']}/${document['year']}'),
+                                                                        '${document[date]}/${document[month]}/${document[year]}'),
                                                                   ],
                                                                 ),
                                                               ),

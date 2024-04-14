@@ -40,9 +40,17 @@ class _CoolerDetailsState extends State<CoolerDetails> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: CustomColors.appTheme,
+       backgroundColor: Colors.transparent,
         foregroundColor: Colors.white,
         centerTitle: true,
+        flexibleSpace: Container(
+          decoration: const BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage(admBoxImg),
+              fit: BoxFit.cover,
+            ),
+          ),
+        ),
         title: Text(
           'Cooler Details',
           style: CustomText.apptitle,

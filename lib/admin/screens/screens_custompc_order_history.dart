@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:prosample_1/admin/const/variables.dart';
 import 'package:prosample_1/admin/custompc_orders/custompc_order_buttons.dart';
 import 'package:prosample_1/admin/custompc_orders/custompc_order_details.dart';
 import 'package:prosample_1/admin/utils/utils_text_style.dart';
@@ -17,6 +18,17 @@ class _OrderConfigurationState extends State<OrderConfiguration> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        foregroundColor: Colors.white,
+        centerTitle: true,
+        flexibleSpace: Container(
+          decoration: const BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage(admBoxImg),
+              fit: BoxFit.cover,
+            ),
+          ),
+        ),
         title: const Text('Custom Build Orders'),
       ),
       bottomNavigationBar: const Padding(
@@ -25,9 +37,8 @@ class _OrderConfigurationState extends State<OrderConfiguration> {
       ),
       body: SafeArea(
           child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
-              stream: FirebaseFirestore.instance
-                  .collection('OrderCustomPC')
-                  .snapshots(),
+              stream:
+                  FirebaseFirestore.instance.collection(customPc).snapshots(),
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
                   return Padding(
@@ -74,17 +85,16 @@ class _OrderConfigurationState extends State<OrderConfiguration> {
                                                   .width *
                                               0.02,
                                           child: Text(
-                                            data['status'],
+                                            data[status],
                                             style: TextStyle(
                                               fontSize: 17,
                                               fontWeight: FontWeight.w400,
-                                              color: data['status'] == 'Pending'
+                                              color: data[status] == pending
                                                   ? Colors.orange
-                                                  : data['status'] ==
-                                                          'Confirmed'
+                                                  : data[status] == confirmed
                                                       ? Colors.green
-                                                      : data['status'] ==
-                                                              'Cancelled'
+                                                      : data[status] ==
+                                                              cancelled
                                                           ? Colors.red
                                                           : Colors.black,
                                             ),
@@ -109,23 +119,25 @@ class _OrderConfigurationState extends State<OrderConfiguration> {
                                                                 .size
                                                                 .height *
                                                             0.12,
-                                                        child: data['image'] !=
+                                                        child: data[itemImage] !=
                                                                 null
                                                             ? CachedNetworkImage(
                                                                 imageUrl: data[
-                                                                    'image'],
+                                                                    itemImage],
                                                                 fit: BoxFit
                                                                     .cover,
                                                                 placeholder: (context,
                                                                         url) =>
-                                                                    const Center(
-                                                                        child:
-                                                                            CircularProgressIndicator()), 
+                                                                    Image.asset(
+                                                                  'assets/categories/ssd.png',
+                                                                  fit: BoxFit
+                                                                      .cover,
+                                                                ),
                                                                 errorWidget: (context,
                                                                         url,
                                                                         error) =>
                                                                     const Icon(Icons
-                                                                        .error), 
+                                                                        .error),
                                                               )
                                                             : Image.asset(
                                                                 'assets/categories/ssd.png',
@@ -146,10 +158,9 @@ class _OrderConfigurationState extends State<OrderConfiguration> {
                                                                     .start,
                                                             children: [
                                                               Text(
-                                                                  '# ${data['orderid']}'),
+                                                                  '# ${data[orderId]}'),
                                                               Text(
-                                                                data[
-                                                                    'username'],
+                                                                data[username],
                                                                 style: CustomText
                                                                     .subtitle2,
                                                               ),
@@ -159,7 +170,7 @@ class _OrderConfigurationState extends State<OrderConfiguration> {
                                                                     .size
                                                                     .width,
                                                                 child: Text(data[
-                                                                    'cabinet']),
+                                                                    cabinet]),
                                                               ),
                                                               Row(
                                                                 children: [
@@ -167,7 +178,7 @@ class _OrderConfigurationState extends State<OrderConfiguration> {
                                                                       'Total Price:  '),
                                                                   Text(
                                                                     data[
-                                                                        'totalprice'],
+                                                                        totalPrice],
                                                                     style: const TextStyle(
                                                                         color: Colors
                                                                             .green),
@@ -175,7 +186,7 @@ class _OrderConfigurationState extends State<OrderConfiguration> {
                                                                 ],
                                                               ),
                                                               Text(
-                                                                  '${data['date']}/${data['month']}/${data['year']}'),
+                                                                  '${data[date]}/${data[month]}/${data[year]}'),
                                                             ],
                                                           ),
                                                         ),

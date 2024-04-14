@@ -7,6 +7,7 @@ import 'package:prosample_1/User/configuration/configuration_ram.dart';
 import 'package:prosample_1/User/utils/utils_colors.dart';
 import 'package:prosample_1/User/utils/utils_text_decorations.dart';
 import 'package:prosample_1/User/utils/utils_widget2.dart';
+import 'package:prosample_1/admin/const/variables.dart';
 
 class MotherboardConfig extends StatefulWidget {
   final String power;
@@ -48,7 +49,7 @@ class _MotherboardConfigState extends State<MotherboardConfig> {
         GestureDetector(
             onTap: () {
               final pc = Map<String, dynamic>.from(widget.pc);
-              pc['motherboard'] = selectedBoard;
+              pc[motherboard] = selectedBoard;
               pc['motherboardprice'] = selectedPrice;
               Navigator.push(
                   context,
@@ -93,7 +94,7 @@ class _MotherboardConfigState extends State<MotherboardConfig> {
           final updatedConfig = Map<String, dynamic>.from(widget.pc);
           updatedConfig['motherboard'] = _selectedDocumentId;
           final pc = Map<String, dynamic>.from(widget.pc);
-          pc['motherboard'] = selectedBoard;
+          pc[motherboard] = selectedBoard;
           pc['motherboardprice'] = selectedPrice;
           Navigator.push(
               context,
@@ -121,11 +122,8 @@ class _MotherboardConfigState extends State<MotherboardConfig> {
                 height: MediaQuery.of(context).size.height,
                 child: StreamBuilder<QuerySnapshot>(
                     stream: FirebaseFirestore.instance
-                        .collection('motherboard')
-                        .where('processorsocket',
-                            isGreaterThanOrEqualTo: selectedSocket)
-                        .where('processorsocket',
-                            isLessThanOrEqualTo: '$selectedSocket.9')
+                        .collection(motherboard)
+                        .where(cpuSocket, isEqualTo: selectedSocket)
                         .snapshots(),
                     builder: (context, snapshot) {
                       if (snapshot.hasData) {
@@ -139,20 +137,12 @@ class _MotherboardConfigState extends State<MotherboardConfig> {
                                 crossAxisCount: 2,
                                 mainAxisSpacing: 15,
                                 crossAxisSpacing: 5,
-                                mainAxisExtent: 230,
+                                mainAxisExtent: 240,
                               ),
                               itemBuilder: ((context, index) {
                                 DocumentSnapshot document =
                                     snapshot.data!.docs[index];
-                                String imageUrl = document['image'];
-                                String name = document['name'];
-                                String processorSocket =
-                                    document['processorsocket'];
-                                String price = document['newprice'];
-                                String ramType = document['ramType'];
-                                String ssdType = document['ssdtype'];
-                                String speed = document['maxclock'];
-                                String wattage = document['wattage'];
+                               
                                 bool isSelected =
                                     document.id == _selectedDocumentId;
                                 return Padding(
@@ -170,11 +160,11 @@ class _MotherboardConfigState extends State<MotherboardConfig> {
                                               } else {
                                                 _selectedDocumentId =
                                                     document.id;
-                                                selectedBoard = name;
-                                                selectedRam = ramType;
-                                                selectedSsd = ssdType;
-                                                selectedPrice = price;
-                                                selectedPower = wattage;
+                                                selectedBoard = document[name];
+                                                selectedRam = document[ramType];
+                                                selectedSsd = document[ssdType];
+                                                selectedPrice = document[newPrice];
+                                                selectedPower = document[wattage];
                                               }
                                               isSelected = !isSelected;
                                             }),
@@ -237,7 +227,7 @@ class _MotherboardConfigState extends State<MotherboardConfig> {
                                                                         0.11,
                                                                     child: CachedNetworkImage(
                                                                         imageUrl:
-                                                                            imageUrl,
+                                                                            document[itemImage],
                                                                         fit: BoxFit
                                                                             .cover,
                                                                         placeholder: (context, url) => Image.asset(
@@ -251,7 +241,7 @@ class _MotherboardConfigState extends State<MotherboardConfig> {
                                                                           context)
                                                                       .size
                                                                       .width,
-                                                              child: Text(name,
+                                                              child: Text(document[name],
                                                                   overflow:
                                                                       TextOverflow
                                                                           .ellipsis,
@@ -265,17 +255,17 @@ class _MotherboardConfigState extends State<MotherboardConfig> {
                                                           Row(
                                                             children: [
                                                               Text(
-                                                                  '$processorSocket,',
+                                                                  '${document[cpuSocket]}, ',
                                                                   style: TextStyling
                                                                       .categoryText),
                                                               const SizedBox(
                                                                   width: 3),
-                                                              Text(ramType,
+                                                              Text(document[ramType],
                                                                   style: TextStyling
                                                                       .categoryText)
                                                             ],
                                                           ),
-                                                          Text(ssdType,
+                                                          Text(document[ssdType],
                                                               style: TextStyling
                                                                   .categoryText),
                                                           SizedBox(
@@ -284,7 +274,7 @@ class _MotherboardConfigState extends State<MotherboardConfig> {
                                                                           context)
                                                                       .size
                                                                       .width,
-                                                              child: Text(speed,
+                                                              child: Text(document[maxClock],
                                                                   overflow:
                                                                       TextOverflow
                                                                           .ellipsis,
@@ -300,7 +290,7 @@ class _MotherboardConfigState extends State<MotherboardConfig> {
                                                             const SizedBox(
                                                                 width: 2),
                                                             Text(
-                                                                price.replaceAllMapped(
+                                                                document[newPrice].replaceAllMapped(
                                                                     RegExp(
                                                                         r'(\d{1,3})(?=(\d{3})+(?!\d))'),
                                                                     (Match m) =>

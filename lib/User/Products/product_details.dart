@@ -21,6 +21,7 @@ import 'package:prosample_1/User/cart/cart_buynow_address.dart';
 import 'package:prosample_1/User/utils/utils_colors.dart';
 import 'package:prosample_1/User/utils/utils_product_info1.dart';
 import 'package:prosample_1/User/utils/utils_text_decorations.dart';
+import 'package:prosample_1/admin/const/variables.dart';
 import 'package:prosample_1/functions/fav_function.dart';
 import '../../../functions/fuctions.dart';
 
@@ -46,8 +47,8 @@ class _CheckDetailsState extends State<CheckDetails> {
       setState(() {
         fetchedData = data;
         isFavorite = fetchedData.any((item) =>
-            item['uid'] == FirebaseAuth.instance.currentUser!.uid &&
-            item['idnum'] == widget.idNum);
+            item[uid] == FirebaseAuth.instance.currentUser!.uid &&
+            item[uniqueId] == widget.idNum);
       });
     });
   }
@@ -55,9 +56,9 @@ class _CheckDetailsState extends State<CheckDetails> {
   Future<List<Map<String, dynamic>>> fetchData() async {
     final user = FirebaseAuth.instance.currentUser!.uid;
     final favRef = FirebaseFirestore.instance
-        .collection('User')
+        .collection(user)
         .doc(user)
-        .collection('Favorites')
+        .collection(favorites)
         .get();
 
     final querySnapshot = await favRef;
@@ -78,11 +79,11 @@ class _CheckDetailsState extends State<CheckDetails> {
                 final user = FirebaseAuth.instance.currentUser!.uid;
                 final time = DateTime.now().toString();
                 final item = Map<String, dynamic>.from(data);
-                item['uid'] = user;
+                item[uid] = user;
                 addAmount(
-                    newPrice: item['newprice'],
-                    oldPrice: item['oldprice'],
-                    idNum: item['idnum'],
+                    newPrice: item[newPrice],
+                    oldPrice: item[oldPrice],
+                    idNum: item[uniqueId],
                     time: time);
                 buyNow(item, time);
                 Navigator.push(
@@ -105,12 +106,12 @@ class _CheckDetailsState extends State<CheckDetails> {
                 final user = FirebaseAuth.instance.currentUser!.uid;
                 final time = DateTime.now().toString();
                 final item = Map<String, dynamic>.from(data);
-                item['uid'] = user;
-                userDetails(idNum: item['idnum'], time: time);
+                item[uid] = user;
+                userDetails(idNum: item[uniqueId], time: time);
                 addAmount(
-                    oldPrice: item['oldprice'],
-                    newPrice: item['newprice'],
-                    idNum: item['idnum'],
+                    oldPrice: item[oldPrice],
+                    newPrice: item[newPrice],
+                    idNum: item[uniqueId],
                     time: time);
                 addInventoryCart(item, time);
 
@@ -137,50 +138,50 @@ class _CheckDetailsState extends State<CheckDetails> {
             child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
               stream: FirebaseFirestore.instance
                   .collection(widget.collection)
-                  .where('idnum', isEqualTo: widget.idNum)
+                  .where(uniqueId, isEqualTo: widget.idNum)
                   .snapshots(),
               builder: (context, snapshot) {
                 if (snapshot.hasData && snapshot.data!.docs.isNotEmpty) {
                   final document = snapshot.data!.docs.first.data();
                   data = {
-                    'image': document['image'],
-                    'name': document['name'],
-                    'idnum': document['idnum'],
-                    'oldprice': document['oldprice'],
-                    'newprice': document['newprice'],
-                    'category': document['category'],
+                    itemImage: document[itemImage],
+                    name: document[name],
+                    uniqueId: document[uniqueId],
+                    oldPrice: document[oldPrice],
+                    newPrice: document[newPrice],
+                    category: document[category],
                   };
                   Widget navigateToScreen;
-                  if (document['category'] == 'cabinet') {
+                  if (document[category] == cabinet) {
                     navigateToScreen = ScreenCabinetInfo(cabinet: document);
-                  } else if (document['category'] == 'cables') {
+                  } else if (document[category] == cable) {
                     navigateToScreen = ScreenCableInfo(cable: document);
-                  } else if (document['category'] == 'chairs') {
+                  } else if (document[category] == chair) {
                     navigateToScreen = ScreenChairInfo(chair: document);
-                  } else if (document['category'] == 'cooler') {
+                  } else if (document[category] == cooler) {
                     navigateToScreen = ScreenCoolerInfo(cooler: document);
-                  } else if (document['category'] == 'gpu') {
+                  } else if (document[category] == gpu) {
                     navigateToScreen = ScreenGpuInfo(gpu: document);
-                  } else if (document['category'] == 'headsets') {
+                  } else if (document[category] == headset) {
                     navigateToScreen = ScreenHeadsetsInfo(headset: document);
-                  } else if (document['category'] == 'keyboard') {
+                  } else if (document[category] == keyboard) {
                     navigateToScreen = ScreenKeyboardInfo(keyboard: document);
-                  } else if (document['category'] == 'monitor') {
+                  } else if (document[category] == monitor) {
                     navigateToScreen = ScreenMonitorInfo(monitor: document);
-                  } else if (document['category'] == 'motherboard') {
+                  } else if (document[category] == motherboard) {
                     navigateToScreen = ScreenMotherboardInfo(board: document);
-                  } else if (document['category'] == 'mouse') {
+                  } else if (document[category] == mouse) {
                     navigateToScreen = ScreenMouseInfo(mouse: document);
-                  } else if (document['category'] == 'processor') {
+                  } else if (document[category] == processor) {
                     navigateToScreen = ScreenProcessorInfo(cpu: document);
-                  } else if (document['category'] == 'psu') {
+                  } else if (document[category] == psu) {
                     navigateToScreen = ScreenPsuInfo(psu: document);
-                  } else if (document['category'] == 'ram') {
+                  } else if (document[category] == ram) {
                     navigateToScreen = ScreenRamInfo(ram: document);
-                  } else if (document['category'] == 'ssd') {
+                  } else if (document[category] == ssd) {
                     navigateToScreen = ScreenSsdInfo(ssd: document);
-                  } else if (document['category'] == 'prebuild') {
-                    navigateToScreen = ScreenPrebuildInfo(prebuild: document);
+                  } else if (document[category] == preBuild) {
+                    navigateToScreen = ScreenPrebuildInfo(pc: document);
                   } else {
                     navigateToScreen = const Text('Unknown category');
                   }
@@ -194,15 +195,15 @@ class _CheckDetailsState extends State<CheckDetails> {
                             isFavorite = !isFavorite;
                             if (isFavorite) {
                               addToFav(
-                                  image: document['image'],
-                                  name: document['name'],
-                                  category: document['category'],
+                                  image: document[itemImage],
+                                  name: document[name],
+                                  category: document[category],
                                   time: time,
-                                  idNum: document['idnum'],
-                                  oldPrice: document['oldprice'],
-                                  newPrice: document['newprice']);
+                                  idNum: document[uniqueId],
+                                  oldPrice: document[oldPrice],
+                                  newPrice: document[newPrice]);
                             } else {
-                              deleteFromFav(idNum: document['idnum']);
+                              deleteFromFav(idNum: document[uniqueId]);
                             }
                           });
                         }, () {
@@ -211,10 +212,10 @@ class _CheckDetailsState extends State<CheckDetails> {
                               MaterialPageRoute(
                                   builder: (ctx) => navigateToScreen));
                         }, isFavorite,
-                            image: document['image'],
-                            name: document['name'],
-                            newPrice: document['newprice'],
-                            oldPrice: document['oldprice'])),
+                            image: document[itemImage],
+                            name: document[name],
+                            newPrice: document[newPrice],
+                            oldPrice: document[oldPrice])),
                   ]);
                 } else if (snapshot.hasError) {
                   return const Text('Something went wrong');

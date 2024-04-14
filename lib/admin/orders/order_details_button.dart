@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:prosample_1/admin/const/variables.dart';
 import 'package:prosample_1/admin/utils/utils_text_style.dart';
 
 
@@ -14,20 +15,20 @@ class OrderDetailButton extends StatefulWidget {
 }
 
 class _OrderDetailButtonState extends State<OrderDetailButton> {
-  Future<void> orderStatus(String status) async {
+  Future<void> orderStatus(String statusUpdate) async {
     final docRef = FirebaseFirestore.instance
-        .collection('OrderOthers')
-        .where('orderid', isEqualTo: widget.orderId)
-        .where('uid', isEqualTo: widget.uid);
+        .collection(orderOthers)
+        .where(orderId, isEqualTo: widget.orderId)
+        .where(uid, isEqualTo: widget.uid);
 
     final querySnapshot = await docRef.get();
     if (querySnapshot.docs.isNotEmpty) {
       final document = querySnapshot.docs.first;
       final docId = document.id;
       await FirebaseFirestore.instance
-          .collection('OrderOthers')
+          .collection(orderOthers)
           .doc(docId)
-          .update({'status': status});
+          .update({status: statusUpdate});
     }
   }
 
@@ -41,7 +42,7 @@ class _OrderDetailButtonState extends State<OrderDetailButton> {
           children: [
             GestureDetector(
               onTap: () {
-                String status = 'Cancelled';
+                String status = cancelled;
                 orderStatus(status);
                 Navigator.pop(context);
               },
@@ -65,7 +66,7 @@ class _OrderDetailButtonState extends State<OrderDetailButton> {
             ),
             GestureDetector(
               onTap: () {
-                String status = 'Confirmed';
+                String status = confirmed;
                 orderStatus(status);
                 Navigator.pop(context);
               },

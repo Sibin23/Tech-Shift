@@ -16,7 +16,7 @@ class PsuDetails extends StatefulWidget {
 }
 
 class _PsuDetailsState extends State<PsuDetails> {
- Future deleteData(itemId) async {
+  Future deleteData(itemId) async {
     final firestore = FirebaseFirestore.instance;
     final docRef = firestore.collection(psu).doc(itemId);
     await docRef.delete();
@@ -40,15 +40,18 @@ class _PsuDetailsState extends State<PsuDetails> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        surfaceTintColor: Colors.white,
-        centerTitle: true,
         title: Text('PSU Details', style: CustomText.apptitle),
-        backgroundColor: CustomColors.appTheme,
-        leading: IconButton(
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            icon: const Icon(Icons.arrow_back, color: Colors.white)),
+        backgroundColor: Colors.transparent,
+        foregroundColor: Colors.white,
+        centerTitle: true,
+        flexibleSpace: Container(
+          decoration: const BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage(admBoxImg),
+              fit: BoxFit.cover,
+            ),
+          ),
+        ),
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: 10),
@@ -59,14 +62,16 @@ class _PsuDetailsState extends State<PsuDetails> {
                       MaterialPageRoute(
                           builder: (ctx) => const ScreenAddPsu()));
                 },
-                icon: Image.asset(add,
-                    width: 30, color: Colors.white)),
+                icon: Image.asset(add, width: 30, color: Colors.white)),
           )
         ],
       ),
       body: SafeArea(
           child: StreamBuilder<QuerySnapshot>(
-        stream: FirebaseFirestore.instance.collection(psu).orderBy(name).snapshots(),
+        stream: FirebaseFirestore.instance
+            .collection(psu)
+            .orderBy(name)
+            .snapshots(),
         builder: (context, snapshot) {
           if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
             return SizedBox(
@@ -80,14 +85,15 @@ class _PsuDetailsState extends State<PsuDetails> {
               itemCount: snapshot.data!.docs.length,
               itemBuilder: (context, index) {
                 DocumentSnapshot document = snapshot.data!.docs[index];
-                final item = document.data() as Map<String,dynamic>;
+                final item = document.data() as Map<String, dynamic>;
 
                 return AdminUiHelper.updatelist(context, () {
                   AdminUi.customAlert(text1: 'Edit', text2: 'Delete', () {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (ctx) => UpdatePsu(item: item, id: item[uniqueId])));
+                            builder: (ctx) =>
+                                UpdatePsu(item: item, id: item[uniqueId])));
                   }, () {
                     deleteData(item[uniqueId]);
                     AdminUiHelper.customSnackbar(

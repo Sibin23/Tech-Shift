@@ -1,9 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:prosample_1/admin/const/variables.dart';
 import 'package:prosample_1/admin/orders/order_buttons.dart';
 import 'package:prosample_1/admin/orders/order_details.dart';
-import 'package:prosample_1/admin/utils/utils_text_style.dart';
 
 class ScreenOrdersList extends StatefulWidget {
   const ScreenOrdersList({super.key});
@@ -21,11 +21,19 @@ class _ScreenOrdersListState extends State<ScreenOrdersList> {
         child: OrderButtons(),
       ),
       appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        foregroundColor: Colors.white,
         centerTitle: true,
-        surfaceTintColor: Colors.white,
-        title: Text(
-          'Orders History',
-          style: CustomText.title2,
+        flexibleSpace: Container(
+          decoration: const BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage(admBoxImg),
+              fit: BoxFit.cover,
+            ),
+          ),
+        ),
+        title: const Text(
+          'Orders History'
         ),
       ),
       body: SafeArea(
@@ -33,7 +41,7 @@ class _ScreenOrdersListState extends State<ScreenOrdersList> {
           width: MediaQuery.of(context).size.width,
           child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
               stream: FirebaseFirestore.instance
-                  .collection('OrderOthers')
+                  .collection(orderOthers)
                   .snapshots(),
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
@@ -81,18 +89,18 @@ class _ScreenOrdersListState extends State<ScreenOrdersList> {
                                                   .width *
                                               .05,
                                           child: Text(
-                                            document['status'],
+                                            document[status],
                                             style: TextStyle(
                                                 fontWeight: FontWeight.w400,
                                                 fontSize: 17,
-                                                color: document['status'] ==
-                                                        'Pending'
+                                                color: document[status] ==
+                                                        pending
                                                     ? Colors.orange
-                                                    : document['status'] ==
-                                                            'Confirmed'
+                                                    : document[status] ==
+                                                            confirmed
                                                         ? Colors.green
-                                                        : document['status'] ==
-                                                                'Cancelled'
+                                                        : document[status] ==
+                                                                cancelled
                                                             ? Colors.red
                                                             : Colors.black),
                                           ),
@@ -117,12 +125,12 @@ class _ScreenOrdersListState extends State<ScreenOrdersList> {
                                                                 .height *
                                                             0.12,
                                                         child: document[
-                                                                    'image'] !=
+                                                                    itemImage] !=
                                                                 null
                                                             ? CachedNetworkImage(
                                                                 imageUrl:
                                                                     document[
-                                                                        'image'],
+                                                                        itemImage],
                                                                 fit: BoxFit
                                                                     .cover,
                                                                 placeholder: (context,
@@ -155,9 +163,9 @@ class _ScreenOrdersListState extends State<ScreenOrdersList> {
                                                                     .start,
                                                             children: [
                                                               Text(
-                                                                  '# ${document['orderid']}'),
+                                                                  '# ${document[orderId]}'),
                                                               Text(document[
-                                                                      'category']
+                                                                      category]
                                                                   .toString()
                                                                   .toUpperCase()),
                                                               SizedBox(
@@ -167,17 +175,17 @@ class _ScreenOrdersListState extends State<ScreenOrdersList> {
                                                                     .width,
                                                                 child: Text(
                                                                     document[
-                                                                        'name']),
+                                                                        name]),
                                                               ),
                                                               Text(
                                                                 document[
-                                                                    'newprice'],
+                                                                    newPrice],
                                                                 style: const TextStyle(
                                                                     color: Colors
                                                                         .green),
                                                               ),
                                                               Text(
-                                                                  '${document['date']}/${document['month']}/${document['year']}'),
+                                                                  '${document[date]}/${document[month]}/${document[year]}'),
                                                             ],
                                                           ),
                                                         ),

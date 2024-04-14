@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:prosample_1/User/utils/utils_colors.dart';
 import 'package:prosample_1/User/utils/utils_text_decorations.dart';
+import 'package:prosample_1/User/utils/utils_widget4.dart';
+import 'package:prosample_1/admin/const/variables.dart';
 
 class ScreenPsuInfo extends StatefulWidget {
   final Map<String, dynamic> psu;
@@ -16,6 +18,9 @@ class _ScreenPsuInfoState extends State<ScreenPsuInfo> {
     final psu = widget.psu;
     return Scaffold(
       appBar: AppBar(
+        centerTitle: true,
+        title: Text('Product Details', style: TextStyling.appTitle),
+        surfaceTintColor: Colors.white,
         leading: IconButton(
             onPressed: () {
               Navigator.pop(context);
@@ -23,188 +28,61 @@ class _ScreenPsuInfoState extends State<ScreenPsuInfo> {
             icon: Icon(Icons.close, color: AppColors.appTheme)),
       ),
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Container(
-            decoration: const BoxDecoration(color: Colors.white, boxShadow: [
-              BoxShadow(
-                  color: Colors.grey,
-                  blurRadius: 4.0,
-                  spreadRadius: 2.0,
-                  offset: Offset(4, 4))
-            ]),
-            width: MediaQuery.of(context).size.width,
-            child: Column(
-              children: [
-                Row(
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Container(
+              decoration: const BoxDecoration(color: Colors.white, boxShadow: [
+                BoxShadow(
+                    color: Colors.grey,
+                    blurRadius: 4.0,
+                    spreadRadius: 2.0,
+                    offset: Offset(4, 4))
+              ]),
+              width: MediaQuery.of(context).size.width,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    SizedBox(
-                      width: MediaQuery.of(context).size.width * .4,
-                      child: Padding(
-                        padding:
-                            const EdgeInsets.only(left: 10, right: 10, top: 10),
-                        child: Column(
-                          children: [
-                            SizedBox(
-                                width: MediaQuery.of(context).size.width,
-                                height:
-                                    MediaQuery.of(context).size.height * 0.05,
-                                child: Text('Product Name',
-                                    style: TextStyling.subtitle)),
-                            SizedBox(
-                                width: MediaQuery.of(context).size.width,
-                                height:
-                                    MediaQuery.of(context).size.height * 0.05,
-                                child: Text('Model Name',
-                                    style: TextStyling.subtitle)),
-                            SizedBox(
-                                width: MediaQuery.of(context).size.width,
-                                height:
-                                    MediaQuery.of(context).size.height * 0.05,
-                                child: Text('Manufacturer',
-                                    style: TextStyling.subtitle)),
-                            SizedBox(
-                                width: MediaQuery.of(context).size.width,
-                                height:
-                                    MediaQuery.of(context).size.height * 0.05,
-                                child: Text('Cooling Method',
-                                    style: TextStyling.subtitle)),
-                            SizedBox(
-                                width: MediaQuery.of(context).size.width,
-                                height:
-                                    MediaQuery.of(context).size.height * 0.05,
-                                child: Text('Form Factor',
-                                    style: TextStyling.subtitle)),
-                            SizedBox(
-                                width: MediaQuery.of(context).size.width,
-                                height:
-                                    MediaQuery.of(context).size.height * 0.05,
-                                child: Text('Wattage',
-                                    style: TextStyling.subtitle)),
-                            SizedBox(
-                                width: MediaQuery.of(context).size.width,
-                                height:
-                                    MediaQuery.of(context).size.height * 0.08,
-                                child: Text('Product Dimension',
-                                    style: TextStyling.subtitle)),
-                            SizedBox(
-                                width: MediaQuery.of(context).size.width,
-                                height:
-                                    MediaQuery.of(context).size.height * 0.05,
-                                child: Text('Country of Origin',
-                                    style: TextStyling.subtitle)),
-                            SizedBox(
-                                width: MediaQuery.of(context).size.width,
-                                height:
-                                    MediaQuery.of(context).size.height * 0.05,
-                                child: Text('Item Weight',
-                                    style: TextStyling.subtitle)),
-                            SizedBox(
-                                width: MediaQuery.of(context).size.width,
-                                height:
-                                    MediaQuery.of(context).size.height * 0.1,
-                                child: Text('Warranty',
-                                    style: TextStyling.subtitle)),
-                          ],
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      width: MediaQuery.of(context).size.width * .5,
-                      child: Padding(
-                        padding:
-                            const EdgeInsets.only(top: 10, right: 10, left: 10),
-                        child: Column(
-                          children: [
-                            SizedBox(
-                                width: MediaQuery.of(context).size.width,
-                                height:
-                                    MediaQuery.of(context).size.height * .05,
-                                child: Text(psu['name'],
-                                    style: TextStyling.details)),
-                            SizedBox(
-                                width: MediaQuery.of(context).size.width,
-                                height:
-                                    MediaQuery.of(context).size.height * .05,
-                                child: Text(psu['model'],
-                                    style: TextStyling.details)),
-                            SizedBox(
-                                width: MediaQuery.of(context).size.width,
-                                height:
-                                    MediaQuery.of(context).size.height * .05,
-                                child: Text(psu['manufacturer'],
-                                    style: TextStyling.details)),
-                            SizedBox(
-                                width: MediaQuery.of(context).size.width,
-                                height:
-                                    MediaQuery.of(context).size.height * .05,
-                                child: Text(psu['coolingmethod'],
-                                    style: TextStyling.details)),
-                            SizedBox(
-                                width: MediaQuery.of(context).size.width,
-                                height:
-                                    MediaQuery.of(context).size.height * .05,
-                                child: Text(psu['formfactor'],
-                                    style: TextStyling.details)),
-                            SizedBox(
-                                width: MediaQuery.of(context).size.width,
-                                height:
-                                    MediaQuery.of(context).size.height * .05,
-                                child: Text(psu['wattage'],
-                                    style: TextStyling.details)),
-                            SizedBox(
-                                width: MediaQuery.of(context).size.width,
-                                height:
-                                    MediaQuery.of(context).size.height * .08,
-                                child: Text(psu['productdimension'],
-                                    style: TextStyling.details)),
-                            SizedBox(
-                                width: MediaQuery.of(context).size.width,
-                                height:
-                                    MediaQuery.of(context).size.height * .05,
-                                child: Text(psu['country'],
-                                    style: TextStyling.details)),
-                            SizedBox(
-                                width: MediaQuery.of(context).size.width,
-                                height:
-                                    MediaQuery.of(context).size.height * .05,
-                                child: Text(psu['itemweight'],
-                                    style: TextStyling.details)),
-                            SizedBox(
-                                width: MediaQuery.of(context).size.width,
-                                height: MediaQuery.of(context).size.height * .1,
-                                child: Text(psu['warranty'],
-                                    style: TextStyling.details)),
-                          ],
-                        ),
-                      ),
-                    ),
+                    Text('Specifications', style: TextStyling.detailMain),
+                    h30,
+                    Custom3.details(context,
+                        title: 'Product Name', detail: psu[name]),
+                    h10,
+                    Custom3.details(context,
+                        title: 'Model Name', detail: psu[model]),
+                    h10,
+                    Custom3.details(context,
+                        title: 'Manufacturer', detail: psu[manufacturer]),
+                    h10,
+                    Custom3.details(context,
+                        title: 'Cooling Method', detail: psu[coolingMethod]),
+                    h10,
+                    Custom3.details(context,
+                        title: 'Form Factor', detail: psu[formFactor]),
+                    h10,
+                    Custom3.details(context,
+                        title: 'Wattage', detail: '${psu[wattage]} W'),
+                    h10,
+                    Custom3.details(context,
+                        title: 'Features', detail: psu[features]),
+                    h10,
+                    Custom3.details(context,
+                        title: 'Product Dimension', detail: psu[dimension]),
+                    h10,
+                    Custom3.details(context,
+                        title: 'Country of Origin', detail: psu[country]),
+                    h10,
+                    Custom3.details(context,
+                        title: 'item Weight', detail: psu[weight]),
+                    h10,
+                    Custom3.details(context,
+                        title: 'Warranty', detail: psu[warranty]),
+                    h10,
                   ],
                 ),
-                SizedBox(
-                  width: MediaQuery.of(context).size.width,
-                  child: Stack(
-                    children: [
-                      Positioned(
-                        left: 10,
-                        top: 0,
-                          child: SizedBox(
-                        width: MediaQuery.of(context).size.width * .4,
-                        child: Text('Features', style: TextStyling.subtitle2),
-                      )),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          SizedBox(
-                            width: MediaQuery.of(context).size.width * .5,
-                            child: Text(psu['features'],style: TextStyling.details),
-                          )
-                        ],
-                      )
-                    ],
-                  ),
-                )
-              ],
+              ),
             ),
           ),
         ),

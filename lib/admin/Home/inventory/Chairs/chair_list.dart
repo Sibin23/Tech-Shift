@@ -40,10 +40,18 @@ class _ChairDetailsState extends State<ChairDetails> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        centerTitle: true,
-        title: Text('Processor Details', style: CustomText.apptitle),
-        backgroundColor: CustomColors.appTheme,
+        title: Text('Chair Details', style: CustomText.apptitle),
+        backgroundColor: Colors.transparent,
         foregroundColor: Colors.white,
+        centerTitle: true,
+        flexibleSpace: Container(
+          decoration: const BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage(admBoxImg),
+              fit: BoxFit.cover,
+            ),
+          ),
+        ),
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: 10),

@@ -1,11 +1,12 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:prosample_1/User/configuration/details/details_cooler.dart';
 import 'package:prosample_1/User/configuration/configuration_psu.dart';
+import 'package:prosample_1/User/configuration/details/details_cooler.dart';
 import 'package:prosample_1/User/utils/utils_colors.dart';
 import 'package:prosample_1/User/utils/utils_text_decorations.dart';
 import 'package:prosample_1/User/utils/utils_widget2.dart';
+import 'package:prosample_1/admin/const/variables.dart';
 
 class CoolerConfig extends StatefulWidget {
   final String power;
@@ -33,14 +34,14 @@ class _CoolerConfigState extends State<CoolerConfig> {
     int totalPwr =
         int.parse(widget.power) + int.parse(selectedPower.toString());
     final pc = Map<String, dynamic>.from(widget.pc);
-    pc['cooler'] = selectedCooler;
+    pc[cooler] = selectedCooler;
     pc['coolerprice'] = selectedPrice;
     return Scaffold(
       bottomNavigationBar: UiCustom.bottomNextButton(context, () {
         Navigator.pop(context);
       }, () {
         final pc = Map<String, dynamic>.from(widget.pc);
-        pc['cooler'] = selectedCooler;
+        pc[cooler] = selectedCooler;
         pc['coolerprice'] = selectedPrice;
         Navigator.push(
             context,
@@ -101,7 +102,7 @@ class _CoolerConfigState extends State<CoolerConfig> {
                 height: MediaQuery.of(context).size.height,
                 child: StreamBuilder<QuerySnapshot>(
                     stream: FirebaseFirestore.instance
-                        .collection('cooler')
+                        .collection(cooler)
                         .snapshots(),
                     builder: (context, snapshot) {
                       if (snapshot.hasData) {
@@ -119,11 +120,7 @@ class _CoolerConfigState extends State<CoolerConfig> {
                               itemBuilder: ((context, index) {
                                 DocumentSnapshot document =
                                     snapshot.data!.docs[index];
-                                String imageUrl = document['image'];
-                                String name = document['name'];
-                                String price = document['newprice'];
-                                String size = document['size'];
-                                String wattage = document['wattage'];
+
                                 bool isSelected =
                                     document.id == selectedDocumentId;
                                 return Padding(
@@ -139,18 +136,19 @@ class _CoolerConfigState extends State<CoolerConfig> {
                                               } else {
                                                 selectedDocumentId =
                                                     document.id;
-                                                selectedCooler = name;
-                                                selectedPrice = price;
-                                                selectedPower = wattage;
+                                                selectedCooler = document[name];
+                                                selectedPrice =
+                                                    document[newPrice];
+                                                selectedPower =
+                                                    document[wattage];
                                               }
                                               isSelected = !isSelected;
                                             }),
                                         child: Container(
                                             decoration: BoxDecoration(
                                                 color: Colors.white,
-                                                borderRadius:
-                                                    const BorderRadius.all(
-                                                        Radius.circular(5)),
+                                                borderRadius: const BorderRadius.all(
+                                                    Radius.circular(5)),
                                                 boxShadow: [
                                                   BoxShadow(
                                                       offset:
@@ -170,9 +168,8 @@ class _CoolerConfigState extends State<CoolerConfig> {
                                             child: Container(
                                                 decoration: const BoxDecoration(
                                                     color: Colors.white,
-                                                    borderRadius:
-                                                        BorderRadius.all(
-                                                            Radius.circular(5)),
+                                                    borderRadius: BorderRadius.all(
+                                                        Radius.circular(5)),
                                                     boxShadow: [
                                                       BoxShadow(
                                                           spreadRadius: 1,
@@ -180,13 +177,11 @@ class _CoolerConfigState extends State<CoolerConfig> {
                                                           color: Colors.grey)
                                                     ]),
                                                 child: Padding(
-                                                    padding:
-                                                        const EdgeInsets.all(
-                                                            8.0),
+                                                    padding: const EdgeInsets.all(
+                                                        8.0),
                                                     child: Column(
                                                         crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .start,
+                                                            CrossAxisAlignment.start,
                                                         children: [
                                                           Row(
                                                               mainAxisAlignment:
@@ -204,7 +199,8 @@ class _CoolerConfigState extends State<CoolerConfig> {
                                                                         0.11,
                                                                     child: CachedNetworkImage(
                                                                         imageUrl:
-                                                                            imageUrl,
+                                                                            document[
+                                                                                itemImage],
                                                                         fit: BoxFit
                                                                             .cover,
                                                                         placeholder: (context, url) => Image.asset(
@@ -218,7 +214,9 @@ class _CoolerConfigState extends State<CoolerConfig> {
                                                                           context)
                                                                       .size
                                                                       .width,
-                                                              child: Text(name,
+                                                              child: Text(
+                                                                  document[
+                                                                      name],
                                                                   overflow:
                                                                       TextOverflow
                                                                           .ellipsis,
@@ -231,13 +229,22 @@ class _CoolerConfigState extends State<CoolerConfig> {
                                                               height: 5),
                                                           Row(
                                                             children: [
+                                                              Text(
+                                                                  '${document[fansize]} mm, ',
+                                                                  style: TextStyling
+                                                                      .categoryText),
                                                               const SizedBox(
                                                                   width: 3),
-                                                              Text(size,
+                                                              Text(
+                                                                  '${document[noise]},',
                                                                   style: TextStyling
-                                                                      .categoryText)
+                                                                      .categoryText),
                                                             ],
                                                           ),
+                                                          Text(
+                                                              document[cooling],
+                                                              style: TextStyling
+                                                                  .categoryText),
                                                           const SizedBox(
                                                               height: 8),
                                                           Row(children: [
@@ -245,11 +252,13 @@ class _CoolerConfigState extends State<CoolerConfig> {
                                                             const SizedBox(
                                                                 width: 2),
                                                             Text(
-                                                                price.replaceAllMapped(
-                                                                    RegExp(
-                                                                        r'(\d{1,3})(?=(\d{3})+(?!\d))'),
-                                                                    (Match m) =>
-                                                                        "${m[1]},"),
+                                                                document[
+                                                                        newPrice]
+                                                                    .replaceAllMapped(
+                                                                        RegExp(
+                                                                            r'(\d{1,3})(?=(\d{3})+(?!\d))'),
+                                                                        (Match m) =>
+                                                                            "${m[1]},"),
                                                                 style:
                                                                     TextStyling
                                                                         .newP)

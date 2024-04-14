@@ -6,6 +6,7 @@ import 'package:prosample_1/User/configuration/details/details_psu.dart';
 import 'package:prosample_1/User/utils/utils_colors.dart';
 import 'package:prosample_1/User/utils/utils_text_decorations.dart';
 import 'package:prosample_1/User/utils/utils_widget2.dart';
+import 'package:prosample_1/admin/const/variables.dart';
 
 class PsuConfig extends StatefulWidget {
   final String power;
@@ -36,7 +37,7 @@ class _PsuConfigState extends State<PsuConfig> {
           GestureDetector(
             onTap: () {
               final pc = Map<String, dynamic>.from(widget.pc);
-              pc['psu'] = selectedPsu;
+              pc[psu] = selectedPsu;
               pc['psuprice'] = selectedPrice;
               Navigator.push(
                   context,
@@ -82,7 +83,7 @@ class _PsuConfigState extends State<PsuConfig> {
               backgroundColor: const Color.fromARGB(255, 245, 62, 49)));
         } else {
           final pc = Map<String, dynamic>.from(widget.pc);
-          pc['psu'] = selectedPsu;
+          pc[psu] = selectedPsu;
           pc['psuprice'] = selectedPrice;
           Navigator.push(
               context,
@@ -102,8 +103,8 @@ class _PsuConfigState extends State<PsuConfig> {
               width: MediaQuery.of(context).size.width,
               child: StreamBuilder<QuerySnapshot>(
                   stream: FirebaseFirestore.instance
-                      .collection('psu')
-                      .where('wattage', isGreaterThan: widget.power)
+                      .collection(psu)
+                      .where(wattage, isGreaterThan: widget.power)
                       .snapshots(),
                   builder: (context, snapshot) {
                     if (snapshot.hasData) {
@@ -117,15 +118,12 @@ class _PsuConfigState extends State<PsuConfig> {
                               crossAxisCount: 2,
                               mainAxisSpacing: 5,
                               crossAxisSpacing: 5,
-                              mainAxisExtent: 220,
+                              mainAxisExtent: 230,
                             ),
                             itemBuilder: ((context, index) {
                               DocumentSnapshot document =
                                   snapshot.data!.docs[index];
-                              String imageUrl = document['image'];
-                              String name = document['name'];
-                              String price = document['newprice'];
-                              String power = document['wattage'];
+
                               final bool isSelected =
                                   document.id == selectedDocumentId;
                               return Padding(
@@ -140,9 +138,9 @@ class _PsuConfigState extends State<PsuConfig> {
                                             selectedPower = null;
                                           } else {
                                             selectedDocumentId = document.id;
-                                            selectedPsu = name;
-                                            selectedPrice = price;
-                                            selectedPower = power;
+                                            selectedPsu = document[name];
+                                            selectedPrice = document[newPrice];
+                                            selectedPower = document[wattage];
                                           }
                                         }),
                                     child: Container(
@@ -196,7 +194,8 @@ class _PsuConfigState extends State<PsuConfig> {
                                                                 .height *
                                                             0.11,
                                                     child: CachedNetworkImage(
-                                                        imageUrl: imageUrl,
+                                                        imageUrl:
+                                                            document[itemImage],
                                                         fit: BoxFit.cover,
                                                         placeholder: (context,
                                                                 url) =>
@@ -216,27 +215,40 @@ class _PsuConfigState extends State<PsuConfig> {
                                                         CrossAxisAlignment
                                                             .start,
                                                     children: [
-                                                      Text(name,
+                                                      Text(document[name],
                                                           overflow: TextOverflow
                                                               .ellipsis,
                                                           softWrap: false,
                                                           maxLines: 1,
                                                           style: TextStyling
                                                               .subtitle2),
-                                                      const SizedBox(height: 5),
+                                                      const SizedBox(height: 4),
+                                                      Row(
+                                                        children: [
+                                                          Text(
+                                                              '${document[wattage]}W, ',style: TextStyling
+                                                                .categoryText),
+                                                          Text(document[
+                                                              formFactor],style: TextStyling
+                                                                .categoryText)
+                                                        ],
+                                                      ),
+                                                      Text(document[certified],style: TextStyling
+                                                                .categoryText)
                                                     ],
                                                   )),
-                                              const SizedBox(height: 8),
+                                              const SizedBox(height: 5),
                                               Row(
                                                 children: [
                                                   const Text('₹'),
                                                   const SizedBox(width: 2),
                                                   Text(
-                                                      price.replaceAllMapped(
-                                                          RegExp(
-                                                              r'(\d{1,3})(?=(\d{3})+(?!\d))'),
-                                                          (Match m) =>
-                                                              "${m[1]},"),
+                                                      document[newPrice]
+                                                          .replaceAllMapped(
+                                                              RegExp(
+                                                                  r'(\d{1,3})(?=(\d{3})+(?!\d))'),
+                                                              (Match m) =>
+                                                                  "${m[1]},"),
                                                       style: TextStyling.newP),
                                                 ],
                                               ),

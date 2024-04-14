@@ -6,7 +6,7 @@ import 'package:prosample_1/User/create_account.dart';
 import 'package:prosample_1/User/forgot_password.dart';
 import 'package:prosample_1/User/utils/utils_colors.dart';
 import 'package:prosample_1/User/utils/utils_widget1.dart';
-import 'package:prosample_1/admin/screens/admin_home.dart';
+import 'package:prosample_1/admin/screens/screens_home_details.dart';
 
 
 
@@ -170,7 +170,7 @@ class _ScreenLoginState extends State<ScreenLogin> {
   goToAdminHome() {
     Navigator.pushAndRemoveUntil(
         context,
-        MaterialPageRoute(builder: (ctx) => const AdminHome()),
+        MaterialPageRoute(builder: (ctx) => const AdminHomePage()),
         (route) => false);
   }
 

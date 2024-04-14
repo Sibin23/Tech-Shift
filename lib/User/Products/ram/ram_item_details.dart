@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:prosample_1/User/utils/utils_colors.dart';
 import 'package:prosample_1/User/utils/utils_text_decorations.dart';
+import 'package:prosample_1/User/utils/utils_widget4.dart';
+import 'package:prosample_1/admin/const/variables.dart';
 
 class ScreenRamInfo extends StatefulWidget {
   final Map<String, dynamic> ram;
@@ -16,6 +18,9 @@ class _ScreenRamInfoState extends State<ScreenRamInfo> {
     final ram = widget.ram;
     return Scaffold(
       appBar: AppBar(
+        centerTitle: true,
+        title: Text('Product Details', style: TextStyling.appTitle),
+        surfaceTintColor: Colors.white,
         leading: IconButton(
             onPressed: () {
               Navigator.pop(context);
@@ -35,150 +40,48 @@ class _ScreenRamInfoState extends State<ScreenRamInfo> {
                     offset: Offset(4, 4))
               ]),
               width: MediaQuery.of(context).size.width,
-              child: Row(
-                children: [
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width * .4,
-                    child: SizedBox(
-                      child: Padding(
-                        padding: const EdgeInsets.only(
-                            left: 10, right: 10, ),
-                        child: Column(
-                          children: [
-                            SizedBox(
-                                width: MediaQuery.of(context).size.width,
-                                height:
-                                    MediaQuery.of(context).size.height * 0.08,
-                                child: Text('Product Name',
-                                    style: TextStyling.subtitle)),
-                            SizedBox(
-                                width: MediaQuery.of(context).size.width,
-                                height:
-                                    MediaQuery.of(context).size.height * 0.08,
-                                child: Text('Model Name',
-                                    style: TextStyling.subtitle)),
-                            SizedBox(
-                                width: MediaQuery.of(context).size.width,
-                                height:
-                                    MediaQuery.of(context).size.height * 0.08,
-                                child: Text('Manufacturer',
-                                    style: TextStyling.subtitle)),
-                            SizedBox(
-                                width: MediaQuery.of(context).size.width,
-                                height:
-                                    MediaQuery.of(context).size.height * 0.05,
-                                child: Text('RAM Type',
-                                    style: TextStyling.subtitle)),
-                            SizedBox(
-                                width: MediaQuery.of(context).size.width,
-                                height:
-                                    MediaQuery.of(context).size.height * 0.05,
-                                child: Text('RAM Size',
-                                    style: TextStyling.subtitle)),
-                            SizedBox(
-                                width: MediaQuery.of(context).size.width,
-                                height:
-                                    MediaQuery.of(context).size.height * 0.05,
-                                child: Text('Clock Speed',
-                                    style: TextStyling.subtitle)),
-                            SizedBox(
-                                width: MediaQuery.of(context).size.width,
-                                height:
-                                    MediaQuery.of(context).size.height * 0.05,
-                                child: Text('Form Factor',
-                                    style: TextStyling.subtitle)),
-                            SizedBox(
-                                width: MediaQuery.of(context).size.width,
-                                height:
-                                    MediaQuery.of(context).size.height * 0.08,
-                                child: Text('Product Dimension',
-                                    style: TextStyling.subtitle)),
-                            SizedBox(
-                                width: MediaQuery.of(context).size.width,
-                                height:
-                                    MediaQuery.of(context).size.height * 0.05,
-                                child: Text('Country',
-                                    style: TextStyling.subtitle)),
-                            SizedBox(
-                                width: MediaQuery.of(context).size.width,
-                                height:
-                                    MediaQuery.of(context).size.height * 0.04,
-                                child: Text('Item Weight',
-                                    style: TextStyling.subtitle)),
-                            SizedBox(
-                                width: MediaQuery.of(context).size.width,
-                                height:
-                                    MediaQuery.of(context).size.height * 0.1,
-                                child: Text('Warranty',
-                                    style: TextStyling.subtitle)),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width * .5,
-                    child: Column(
-                      children: [
-                        SizedBox(
-                            width: MediaQuery.of(context).size.width,
-                            height: MediaQuery.of(context).size.height * .08,
-                            child:
-                                Text(ram['name'], style: TextStyling.details)),
-                        SizedBox(
-                            width: MediaQuery.of(context).size.width,
-                            height: MediaQuery.of(context).size.height * .08,
-                            child:
-                                Text(ram['model'], style: TextStyling.details)),
-                        SizedBox(
-                            width: MediaQuery.of(context).size.width,
-                            height: MediaQuery.of(context).size.height * .08,
-                            child: Text(ram['manufacturer'],
-                                style: TextStyling.details)),
-                        SizedBox(
-                            width: MediaQuery.of(context).size.width,
-                            height: MediaQuery.of(context).size.height * .05,
-                            child: Text(ram['ramtype'],
-                                style: TextStyling.details)),
-                        SizedBox(
-                            width: MediaQuery.of(context).size.width,
-                            height: MediaQuery.of(context).size.height * .05,
-                            child: Text('${ram['ramsize']} Gb',
-                                style: TextStyling.details)),
-                        SizedBox(
-                            width: MediaQuery.of(context).size.width,
-                            height: MediaQuery.of(context).size.height * .05,
-                            child: Text(ram['clockspeed'],
-                                style: TextStyling.details)),
-                        SizedBox(
-                            width: MediaQuery.of(context).size.width,
-                            height: MediaQuery.of(context).size.height * .05,
-                            child: Text(ram['formfactor'],
-                                style: TextStyling.details)),
-                        SizedBox(
-                            width: MediaQuery.of(context).size.width,
-                            height: MediaQuery.of(context).size.height * .08,
-                            child: Text(ram['productdimension'],
-                                style: TextStyling.details)),
-                        SizedBox(
-                            width: MediaQuery.of(context).size.width,
-                            height: MediaQuery.of(context).size.height * .05,
-                            child: Text(ram['country'],
-                                style: TextStyling.details)),
-                        SizedBox(
-                            width: MediaQuery.of(context).size.width,
-                            height: MediaQuery.of(context).size.height * .05,
-                            child: Text(ram['itemweight'],
-                                style: TextStyling.details)),
-                        SizedBox(
-                            width: MediaQuery.of(context).size.width,
-                            height: MediaQuery.of(context).size.height * .1,
-                            child: Text(ram['warranty'],
-                                style: TextStyling.details)),
-                      ],
-                    ),
-                  )
-                ],
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('Specifications', style: TextStyling.detailMain),
+                    h30,
+                    Custom3.details(context,
+                        title: 'Product Name', detail: ram[name]),
+                    h10,
+                    Custom3.details(context,
+                        title: 'Model Name', detail: ram[model]),
+                    h10,
+                    Custom3.details(context,
+                        title: 'Manufacturer', detail: ram[manufacturer]),
+                    h10,
+                    Custom3.details(context,
+                        title: 'RAM Type', detail: ram[ramType]),
+                    h10,
+                    Custom3.details(context,
+                        title: 'RAM Size', detail: ram[ramSize]),
+                    h10,
+                    Custom3.details(context,
+                        title: 'Clock Speed', detail: ram[speed]),
+                    h10,
+                    Custom3.details(context,
+                        title: 'Form Factor', detail: ram[formFactor]),
+                    h10,
+                    Custom3.details(context,
+                        title: 'Product Dimension', detail: ram[dimension]),
+                    h10,
+                    Custom3.details(context,
+                        title: 'Country', detail: ram[country]),
+                    h10,
+                    Custom3.details(context,
+                        title: 'Item Weight', detail: ram[weight]),
+                    h10,
+                    Custom3.details(context,
+                        title: 'Warranty', detail: ram[warranty]),
+                    h10,
+                  ],
+                ),
               ),
             ),
           ),

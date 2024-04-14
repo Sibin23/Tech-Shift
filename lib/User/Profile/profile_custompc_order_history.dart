@@ -7,6 +7,7 @@ import 'package:lottie/lottie.dart';
 import 'package:prosample_1/User/profile/profile_custonpc_order_details.dart';
 import 'package:prosample_1/User/utils/utils_text_decorations.dart';
 import 'package:prosample_1/User/utils/utils_colors.dart';
+import 'package:prosample_1/admin/const/variables.dart';
 
 class CustonPcOrderHistory extends StatefulWidget {
   const CustonPcOrderHistory({super.key});
@@ -115,17 +116,17 @@ class _CustonPcOrderHistoryState extends State<CustonPcOrderHistory> {
                                           top: 10,
                                           right: 20,
                                           child: Text(
-                                            data['status'],
+                                            data[status],
                                             style: TextStyle(
                                                 fontSize: 16,
-                                                color: data['status'] ==
-                                                        'Confirmed'
+                                                color: data[status] ==
+                                                        confirmed
                                                     ? Colors.green
-                                                    : data['status'] ==
-                                                            'Cancelled'
+                                                    : data[status] ==
+                                                            cancelled
                                                         ? Colors.red
-                                                        : data['status'] ==
-                                                                'Pending'
+                                                        : data[status] ==
+                                                                pending
                                                             ? Colors.orange
                                                             : Colors.grey),
                                           )),
@@ -143,7 +144,7 @@ class _CustonPcOrderHistoryState extends State<CustonPcOrderHistory> {
                                                         .height *
                                                     .12,
                                                 child: CachedNetworkImage(
-                                                  imageUrl: data['image'],
+                                                  imageUrl: data[itemImage],
                                                   fit: BoxFit.contain,
                                                   placeholder: (context, url) =>
                                                       const Center(
@@ -174,10 +175,10 @@ class _CustonPcOrderHistoryState extends State<CustonPcOrderHistory> {
                                                         CrossAxisAlignment
                                                             .start,
                                                     children: [
-                                                      Text(data['username']
+                                                      Text(data[username]
                                                           .toString()
                                                           .toUpperCase()),
-                                                      Text(data['cabinet'],
+                                                      Text(data[cabinet],
                                                           overflow: TextOverflow
                                                               .ellipsis,
                                                           softWrap: false,
@@ -194,7 +195,7 @@ class _CustonPcOrderHistoryState extends State<CustonPcOrderHistory> {
                                                           const SizedBox(
                                                               width: 3),
                                                           Text(
-                                                              data['totalprice']
+                                                              data[totalPrice]
                                                                   .replaceAllMapped(
                                                                       RegExp(
                                                                           r'(\d{1,3})(?=(\d{3})+(?!\d))'),

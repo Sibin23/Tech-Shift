@@ -6,6 +6,7 @@ import 'package:prosample_1/User/configuration/details/details_cabinet.dart';
 import 'package:prosample_1/User/utils/utils_colors.dart';
 import 'package:prosample_1/User/utils/utils_text_decorations.dart';
 import 'package:prosample_1/User/utils/utils_widget2.dart';
+import 'package:prosample_1/admin/const/variables.dart';
 
 class CabinetConfig extends StatefulWidget {
   final Map<String, dynamic> pc;
@@ -37,7 +38,7 @@ class _CabinetConfigState extends State<CabinetConfig> {
         GestureDetector(
             onTap: () {
               final pc = Map<String, dynamic>.from(widget.pc);
-              pc['cabinet'] = selectedcabinet;
+              pc[cabinet] = selectedcabinet;
               pc['cabinetprice'] = selectedPrice;
               Navigator.push(
                   context,
@@ -78,9 +79,9 @@ class _CabinetConfigState extends State<CabinetConfig> {
               backgroundColor: const Color.fromARGB(255, 245, 62, 49)));
         } else {
           final pc = Map<String, dynamic>.from(widget.pc);
-          pc['cabinet'] = selectedcabinet;
+          pc[cabinet] = selectedcabinet;
           pc['cabinetprice'] = selectedPrice;
-          pc['image'] = selectedImage;
+          pc[itemImage] = selectedImage;
           Navigator.push(
               context,
               MaterialPageRoute(
@@ -104,7 +105,7 @@ class _CabinetConfigState extends State<CabinetConfig> {
                 height: MediaQuery.of(context).size.height,
                 child: StreamBuilder<QuerySnapshot>(
                     stream: FirebaseFirestore.instance
-                        .collection('cabinet')
+                        .collection(cabinet)
                         .snapshots(),
                     builder: (context, snapshot) {
                       if (snapshot.hasData) {
@@ -141,15 +142,15 @@ class _CabinetConfigState extends State<CabinetConfig> {
                                                 selectedDocumentId =
                                                     document.id;
                                                 selectedPrice =
-                                                    document['newprice'];
+                                                    document[newPrice];
                                                 selectedcabinet =
-                                                    document['name'];
+                                                    document[name];
                                                 selectedMaxSize =
-                                                    document['topcoolermax'];
+                                                    document[topCoolerMax];
                                                 selectedminSize =
-                                                    document['topcoolermin'];
+                                                    document[topCoolerMin];
                                                 selectedImage =
-                                                    document['image'];
+                                                    document[itemImage];
                                               }
                                               isSelected = !isSelected;
                                             }),
@@ -191,89 +192,82 @@ class _CabinetConfigState extends State<CabinetConfig> {
                                                     padding:
                                                         const EdgeInsets.all(
                                                             8.0),
-                                                    child: Column(
-                                                        crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .start,
-                                                        children: [
-                                                          Row(
-                                                              mainAxisAlignment:
-                                                                  MainAxisAlignment
-                                                                      .center,
-                                                              children: [
-                                                                SizedBox(
-                                                                    width: MediaQuery.of(context)
-                                                                            .size
-                                                                            .width *
-                                                                        0.3,
-                                                                    height: MediaQuery.of(context)
-                                                                            .size
-                                                                            .height *
-                                                                        0.11,
-                                                                    child:CachedNetworkImage(
-                                                      imageUrl: document['image'],
-                                                      fit: BoxFit.cover,
-                                                      placeholder: (context,
-                                                              url) =>
-                                                          Image.asset(
-                                                              'assets/categories/cabinet.png',
-                                                              fit: BoxFit
-                                                                  .cover)),)
-                                                              ]),
-                                                          SizedBox(
-                                                              width:
-                                                                  MediaQuery.of(
+                                                    child:
+                                                        Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                                                      Row(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .center,
+                                                          children: [
+                                                            SizedBox(
+                                                              width: MediaQuery.of(
                                                                           context)
                                                                       .size
-                                                                      .width,
-                                                              child: Text(
-                                                                  document[
-                                                                      'name'],
-                                                                  overflow:
-                                                                      TextOverflow
-                                                                          .ellipsis,
-                                                                  softWrap:
-                                                                      false,
-                                                                  maxLines: 1,
-                                                                  style: TextStyling
-                                                                      .subtitle2)),
-                                                          const SizedBox(
-                                                              height: 5),
-                                                          Row(
-                                                            children: [
-                                                              const SizedBox(
-                                                                  width: 3),
-                                                              Text(
-                                                                  document[
-                                                                      'fansize'],
-                                                                  style: TextStyling
-                                                                      .categoryText)
-                                                            ],
-                                                          ),
-                                                          Text(
-                                                              document[
-                                                                  'fancount'],
+                                                                      .width *
+                                                                  0.3,
+                                                              height: MediaQuery.of(
+                                                                          context)
+                                                                      .size
+                                                                      .height *
+                                                                  0.11,
+                                                              child: CachedNetworkImage(
+                                                                  imageUrl:
+                                                                      document[
+                                                                          itemImage],
+                                                                  fit: BoxFit
+                                                                      .cover,
+                                                                  placeholder: (context,
+                                                                          url) =>
+                                                                      Image.asset(
+                                                                          'assets/categories/cabinet.png',
+                                                                          fit: BoxFit
+                                                                              .cover)),
+                                                            )
+                                                          ]),
+                                                      SizedBox(
+                                                          width: MediaQuery.of(
+                                                                  context)
+                                                              .size
+                                                              .width,
+                                                          child: Text(
+                                                              document[name],
+                                                              overflow:
+                                                                  TextOverflow
+                                                                      .ellipsis,
+                                                              softWrap: false,
+                                                              maxLines: 1,
                                                               style: TextStyling
-                                                                  .categoryText),
+                                                                  .subtitle2)),
+                                                      const SizedBox(height: 5),
+                                                      Row(
+                                                        children: [
                                                           const SizedBox(
-                                                              height: 8),
-                                                          Row(children: [
-                                                            const Text('₹'),
-                                                            const SizedBox(
-                                                                width: 2),
-                                                            Text(
-                                                                document[
-                                                                        'newprice']
-                                                                    .replaceAllMapped(
-                                                                        RegExp(
-                                                                            r'(\d{1,3})(?=(\d{3})+(?!\d))'),
-                                                                        (Match m) =>
-                                                                            "${m[1]},"),
-                                                                style:
-                                                                    TextStyling
-                                                                        .newP)
-                                                          ])
-                                                        ]))))));
+                                                              width: 3),
+                                                          Text(
+                                                              'Fansize ${document[fansize]},',
+                                                              style: TextStyling
+                                                                  .categoryText)
+                                                        ],
+                                                      ),
+                                                      Text(document[fancount],
+                                                          style: TextStyling
+                                                              .categoryText),
+                                                      const SizedBox(height: 8),
+                                                      Row(children: [
+                                                        const Text('₹'),
+                                                        const SizedBox(
+                                                            width: 2),
+                                                        Text(
+                                                            document[newPrice]
+                                                                .replaceAllMapped(
+                                                                    RegExp(
+                                                                        r'(\d{1,3})(?=(\d{3})+(?!\d))'),
+                                                                    (Match m) =>
+                                                                        "${m[1]},"),
+                                                            style: TextStyling
+                                                                .newP)
+                                                      ])
+                                                    ]))))));
                               })),
                         );
                       } else {

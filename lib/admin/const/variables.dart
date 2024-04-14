@@ -16,6 +16,11 @@ const psu = 'psu';
 const ram = 'ram';
 const ssd = 'ssd';
 const preBuild = 'prebuild';
+const orderOthers = 'OrderOthers';
+const customPc = 'OrderCustomPC';
+const user = 'User';
+const favorites = 'Favorites';
+const configure = 'Configuration';
 
 // keys
 const itemImage = 'image';
@@ -31,7 +36,7 @@ const topCoolerMax = 'topcoolermax';
 const dimension = 'productdimension';
 const country = 'country';
 const material = 'material';
-const weight ='itemweight';
+const weight = 'itemweight';
 const usb2 = 'usb2';
 const usb3 = 'usb3';
 const warranty = 'warranty';
@@ -83,8 +88,32 @@ const tdp = 'tdp';
 const coolingMethod = 'coolingmethod';
 const genType = 'gentype';
 const storage = 'storage';
+const expStorage = 'expstorage';
+const certified = 'certification';
 
-// Space 
+// order keys
+const orderId = 'orderid';
+const uid = 'uid';
+const status = 'status';
+const confirmed = 'Confirmed';
+const cancelled = 'Cancelled';
+const pending = 'Pending';
+const date = 'date';
+const month = 'month';
+const year = 'year';
+const userImage = 'userimage';
+const username = 'username';
+const mobile = 'phnum';
+const email = 'email';
+const house = 'house';
+const area = 'area';
+const locality = 'locality';
+const city = 'city';
+const state = 'state';
+const pincode = 'pincode';
+const totalPrice = 'totalprice';
+
+// Space
 
 const h10 = SizedBox(height: 10);
 const h20 = SizedBox(height: 20);
@@ -92,3 +121,6 @@ const h30 = SizedBox(height: 30);
 
 //icons
 const add = 'assets/icons/add.png';
+
+// images
+const admBoxImg = 'assets/ads/admin_container.jpg';

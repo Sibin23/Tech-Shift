@@ -5,6 +5,7 @@ import 'package:prosample_1/User/utils/utils_colors.dart';
 import 'package:prosample_1/User/utils/utils_widget1.dart';
 import 'package:prosample_1/User/utils/utils_text_decorations.dart';
 import 'package:prosample_1/User/utils/utils_widget2.dart';
+import 'package:prosample_1/admin/const/variables.dart';
 import 'package:prosample_1/functions/fuctions.dart';
 
 class ConfigDetail extends StatefulWidget {
@@ -23,11 +24,11 @@ class _ConfigDetailState extends State<ConfigDetail> {
   @override
   Widget build(BuildContext context) {
     final custom = widget.pc;
-    if (custom['gpu'] == card) {
-      custom['gpu'] = notNeed;
+    if (custom[gpu] == card) {
+      custom[gpu] = notNeed;
     }
-    if (custom['cooler'] == fan) {
-      custom['cooler'] = notNeed;
+    if (custom[cooler] == fan) {
+      custom[cooler] = notNeed;
     }
 
     return Scaffold(
@@ -44,7 +45,7 @@ class _ConfigDetailState extends State<ConfigDetail> {
             final id =
                 DateTime.now().toString().replaceAll(RegExp(r'[^\d]'), '');
             final customPc = Map<String, dynamic>.from(widget.pc);
-            customPc['totalprice'] = widget.totalAmt;
+            customPc[totalPrice] = widget.totalAmt;
             toCustomCart(customPc, time);
             addAmount(
                 newPrice: widget.totalAmt,
@@ -168,19 +169,20 @@ class _ConfigDetailState extends State<ConfigDetail> {
 
   void showSnackbarWithAnimation() {
     final snackBar = SnackBar(
+      animation: CurvedAnimation(
+        parent:
+            AnimationMax(kAlwaysCompleteAnimation, kAlwaysDismissedAnimation),
+        curve: Curves.easeInOutCirc,
+      ),
       content: Container(
         decoration: BoxDecoration(
           boxShadow: const [
-            BoxShadow(
-              spreadRadius: 2,
-              blurRadius: 2,
-              color: Colors.grey,
-            ),
+            BoxShadow(spreadRadius: 1, blurRadius: 1, color: Colors.grey)
           ],
           color: Colors.white,
           borderRadius: BorderRadius.circular(5),
         ),
-        child: Column(
+        child: Row(
           children: [
             Lottie.asset('assets/animations/cart.json',
                 width: 100, height: 100),
@@ -191,25 +193,21 @@ class _ConfigDetailState extends State<ConfigDetail> {
         ),
       ),
       elevation: 5,
-      backgroundColor: Colors.white,
+      backgroundColor: const Color.fromARGB(255, 255, 255, 255),
       duration: const Duration(seconds: 2),
-      action: SnackBarAction(
-        textColor: AppColors.appTheme,
-        label: 'Dismiss',
-        onPressed: () => ScaffoldMessenger.of(context).hideCurrentSnackBar(),
-      ),
     );
 
-    ScaffoldMessenger.of(context)
-        .showSnackBar(snackBar)
-        .closed
-        .then((_) => navigate());
+    final scaffold = ScaffoldMessenger.maybeOf(context);
+    if (scaffold != null) {
+      scaffold.showSnackBar(snackBar).closed.then((_) => navigate());
+    }
   }
 
   Future<void> navigate() async {
     await Navigator.pushAndRemoveUntil(
-        context,
-        MaterialPageRoute(builder: (ctx) => const HomeInfo()),
-        (route) => false);
+      context,
+      MaterialPageRoute(builder: (ctx) => const HomeInfo()),
+      (route) => false, // Clear all previous routes
+    );
   }
 }

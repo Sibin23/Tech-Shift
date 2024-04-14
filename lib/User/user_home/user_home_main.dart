@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:prosample_1/User/user_home/user_home_build_section.dart';
 import 'package:prosample_1/User/user_home/user_home_categories_section.dart';
+import 'package:prosample_1/User/user_home/user_home_newarivals.dart';
+import 'package:prosample_1/User/user_home/user_home_popular.dart';
 import 'package:prosample_1/User/user_home/user_home_prebuid_section.dart';
 import 'package:prosample_1/User/user_home/user_home_promo1.dart';
 import 'package:prosample_1/User/user_home/user_home_promo2.dart';
@@ -35,7 +37,8 @@ class _ScreenHomeState extends State<ScreenHome> {
   Widget build(BuildContext context) {
     return Scaffold(
         key: _scaffoldKey,
-        drawer: Drawer(surfaceTintColor: Colors.white,
+        drawer: Drawer(
+          surfaceTintColor: Colors.white,
           child: ListView(
             children: [
               DrawerHeader(
@@ -129,7 +132,6 @@ class _ScreenHomeState extends State<ScreenHome> {
               ),
             ],
           ),
-          
         ),
         body: SafeArea(
             child: SingleChildScrollView(
@@ -195,6 +197,14 @@ class _ScreenHomeState extends State<ScreenHome> {
           SizedBox(
             width: MediaQuery.of(context).size.width,
             child: const HomeCategories(),
+          ),
+          SizedBox(
+            width: MediaQuery.of(context).size.width,
+            child: const HomePopularItems(),
+          ),
+          SizedBox(
+            width: MediaQuery.of(context).size.width,
+            child: const HomeNewArrivals(),
           ),
           SizedBox(
             width: MediaQuery.of(context).size.width,

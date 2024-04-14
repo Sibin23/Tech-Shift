@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:prosample_1/User/Products/product_details.dart';
 import 'package:prosample_1/User/utils/utils_text_decorations.dart';
+import 'package:prosample_1/admin/const/variables.dart';
 
 class ProductPrebuild extends StatefulWidget {
   const ProductPrebuild({super.key});
@@ -23,8 +24,8 @@ class _ProductPrebuildState extends State<ProductPrebuild> {
           width: MediaQuery.of(context).size.width,
           child: StreamBuilder<QuerySnapshot>(
               stream: FirebaseFirestore.instance
-                  .collection('prebuild')
-                  .orderBy('name')
+                  .collection(preBuild)
+                  .orderBy(name)
                   .snapshots(),
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
@@ -42,16 +43,14 @@ class _ProductPrebuildState extends State<ProductPrebuild> {
                           DocumentSnapshot document =
                               snapshot.data!.docs[index];
 
-                          String oldPrice = document['oldprice'];
-                          String newPrice = document['newprice'];
                           return GestureDetector(
                               onTap: () {
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
                                         builder: (ctx) => CheckDetails(
-                                            collection: document['category'],
-                                            idNum: document['idnum'])));
+                                            collection: document[category],
+                                            idNum: document[uniqueId])));
                               },
                               child: Container(
                                   decoration: BoxDecoration(
@@ -91,7 +90,7 @@ class _ProductPrebuildState extends State<ProductPrebuild> {
                                                             0.15,
                                                     child: CachedNetworkImage(
                                                       imageUrl:
-                                                          document['image'],
+                                                          document[itemImage],
                                                       fit: BoxFit.cover,
                                                       placeholder:
                                                           (context, url) {
@@ -102,10 +101,10 @@ class _ProductPrebuildState extends State<ProductPrebuild> {
                                                     ),
                                                   )
                                                 ]),
-                                            Text(document['category'],
+                                            Text(document[category],
                                                 style:
                                                     TextStyling.categoryText),
-                                            Text(document['case'],
+                                            Text(document[cabinet],
                                                 softWrap: false,
                                                 maxLines: 1,
                                                 overflow:
@@ -120,7 +119,7 @@ class _ProductPrebuildState extends State<ProductPrebuild> {
                                                 ),
                                                 const SizedBox(width: 5),
                                                 Text(
-                                                    oldPrice.replaceAllMapped(
+                                                    document[oldPrice].replaceAllMapped(
                                                         RegExp(
                                                             r'(\d{1,3})(?=(\d{3})+(?!\d))'),
                                                         (Match m) =>
@@ -130,7 +129,7 @@ class _ProductPrebuildState extends State<ProductPrebuild> {
                                               ]),
                                               const SizedBox(width: 10),
                                               Text(
-                                                  newPrice.replaceAllMapped(
+                                                  document[newPrice].replaceAllMapped(
                                                       RegExp(
                                                           r'(\d{1,3})(?=(\d{3})+(?!\d))'),
                                                       (Match m) => "${m[1]},"),

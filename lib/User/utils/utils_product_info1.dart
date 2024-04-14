@@ -1,8 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:prosample_1/User/utils/utils_text_decorations.dart';
 import 'package:prosample_1/User/utils/utils_colors.dart';
-import 'package:prosample_1/User/utils/utils_widget2.dart';
+import 'package:prosample_1/User/utils/utils_text_decorations.dart';
 
 class ProductDetails {
   static productInfo1(BuildContext context, VoidCallback voidCallback1,
@@ -77,7 +76,12 @@ class ProductDetails {
                           const SizedBox(height: 20),
                           Row(
                             children: [
-                              UiCustom.rating(),
+                              Text('4.0', style: TextStyling.rating),
+                              Icon(
+                                Icons.star,
+                                color: AppColors.appTheme,
+                                size: 20,
+                              )
                             ],
                           ),
                           const SizedBox(height: 5),
@@ -95,7 +99,7 @@ class ProductDetails {
                                       style: TextStyling.newPbig),
                                 ],
                               ),
-                              const SizedBox(width: 15),
+                              const SizedBox(width: 20),
                               Row(children: [
                                 Text('₹', style: TextStyling.subtitle2),
                                 const SizedBox(width: 3),
@@ -111,7 +115,6 @@ class ProductDetails {
                           const SizedBox(height: 20),
                           SizedBox(
                               width: MediaQuery.of(context).size.width,
-                              
                               child: Column(
                                 children: [
                                   Row(
@@ -193,14 +196,14 @@ class ProductDetails {
                           },
                           child: Container(
                             decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(5),
-                            boxShadow: [
-                              BoxShadow(
-                                color: AppColors.appTheme,
-                                spreadRadius: 1,
-                              )
-                            ]),
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(5),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: AppColors.appTheme,
+                                    spreadRadius: 1,
+                                  )
+                                ]),
                             width: MediaQuery.of(context).size.width * .35,
                             height: MediaQuery.of(context).size.height * .055,
                             child: Center(

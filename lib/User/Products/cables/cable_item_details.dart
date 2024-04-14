@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:prosample_1/User/utils/utils_colors.dart';
 import 'package:prosample_1/User/utils/utils_text_decorations.dart';
+import 'package:prosample_1/User/utils/utils_widget4.dart';
+import 'package:prosample_1/admin/const/variables.dart';
 
 class ScreenCableInfo extends StatefulWidget {
   final Map<String, dynamic> cable;
@@ -17,7 +19,7 @@ class _ScreenCableInfoState extends State<ScreenCableInfo> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Text('Product Details',style: TextStyling.appTitle),
+        title: Text('Product Details', style: TextStyling.appTitle),
         surfaceTintColor: Colors.white,
         leading: IconButton(
             onPressed: () {
@@ -38,181 +40,53 @@ class _ScreenCableInfoState extends State<ScreenCableInfo> {
                     offset: Offset(4, 4))
               ]),
               width: MediaQuery.of(context).size.width,
-              child: Column(
-                children: [
-                  Row(
-                    children: [
-                      SizedBox(
-                        width: MediaQuery.of(context).size.width * 0.4,
-                        child: Padding(
-                          padding: const EdgeInsets.only(
-                              top: 10, right: 10, left: 10),
-                          child: Column(
-                            children: [
-                              SizedBox(
-                                width: MediaQuery.of(context).size.width,
-                                height:
-                                    MediaQuery.of(context).size.height * 0.08,
-                                child: Text('Product Name',
-                                    style: TextStyling.subtitle),
-                              ),
-                              SizedBox(
-                                  width: MediaQuery.of(context).size.width,
-                                  height:
-                                      MediaQuery.of(context).size.height * 0.08,
-                                  child: Text('Model Name',
-                                      style: TextStyling.subtitle)),
-                              SizedBox(
-                                  width: MediaQuery.of(context).size.width,
-                                  height:
-                                      MediaQuery.of(context).size.height * 0.04,
-                                  child: Text('Manufacturer',
-                                      style: TextStyling.subtitle)),
-                              SizedBox(
-                                  width: MediaQuery.of(context).size.width,
-                                  height:
-                                      MediaQuery.of(context).size.height * 0.04,
-                                  child: Text('Colour',
-                                      style: TextStyling.subtitle)),
-                              SizedBox(
-                                  width: MediaQuery.of(context).size.width,
-                                  height:
-                                      MediaQuery.of(context).size.height * 0.04,
-                                  child: Text('Speed',
-                                      style: TextStyling.subtitle)),
-                              SizedBox(
-                                  width: MediaQuery.of(context).size.width,
-                                  height:
-                                      MediaQuery.of(context).size.height * 0.04,
-                                  child: Text('Pins',
-                                      style: TextStyling.subtitle2)),
-                              SizedBox(
-                                  width: MediaQuery.of(context).size.width,
-                                  height:
-                                      MediaQuery.of(context).size.height * 0.04,
-                                  child: Text('Voltage',
-                                      style: TextStyling.subtitle)),
-                              SizedBox(
-                                  width: MediaQuery.of(context).size.width,
-                                  height:
-                                      MediaQuery.of(context).size.height * 0.04,
-                                  child: Text('Wattage',
-                                      style: TextStyling.subtitle)),
-                              SizedBox(
-                                  width: MediaQuery.of(context).size.width,
-                                  height:
-                                      MediaQuery.of(context).size.height * 0.1,
-                                  child: Text('Product Dimensions',
-                                      style: TextStyling.subtitle)),
-                              SizedBox(
-                                  width: MediaQuery.of(context).size.width,
-                                  height:
-                                      MediaQuery.of(context).size.height * 0.04,
-                                  child: Text('Country of Origin',
-                                      style: TextStyling.subtitle)),
-                              SizedBox(
-                                  width: MediaQuery.of(context).size.width,
-                                  height:
-                                      MediaQuery.of(context).size.height * 0.04,
-                                  child: Text('Item Weight',
-                                      style: TextStyling.subtitle)),
-                              SizedBox(
-                                  width: MediaQuery.of(context).size.width,
-                                  height:
-                                      MediaQuery.of(context).size.height * 0.1,
-                                  child: Text('Warranty',
-                                      style: TextStyling.subtitle)),
-                            ],
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        width: MediaQuery.of(context).size.width * 0.5,
-                        child: Padding(
-                          padding: const EdgeInsets.only(
-                              top: 10, right: 10, left: 10),
-                          child: Column(
-                            children: [
-                              SizedBox(
-                                width: MediaQuery.of(context).size.width,
-                                height:
-                                    MediaQuery.of(context).size.height * 0.08,
-                                child: Text(cable['name'],
-                                    style: TextStyling.details),
-                              ),
-                              SizedBox(
-                                  width: MediaQuery.of(context).size.width,
-                                  height:
-                                      MediaQuery.of(context).size.height * 0.08,
-                                  child: Text(cable['model'],
-                                      style: TextStyling.details)),
-                              SizedBox(
-                                  width: MediaQuery.of(context).size.width,
-                                  height:
-                                      MediaQuery.of(context).size.height * 0.04,
-                                  child: Text(cable['manufacturer'],
-                                      style: TextStyling.details)),
-                              SizedBox(
-                                  width: MediaQuery.of(context).size.width,
-                                  height:
-                                      MediaQuery.of(context).size.height * 0.04,
-                                  child: Text(cable['color'],
-                                      style: TextStyling.details)),
-                              SizedBox(
-                                  width: MediaQuery.of(context).size.width,
-                                  height:
-                                      MediaQuery.of(context).size.height * 0.04,
-                                  child: Text(cable['speed'],
-                                      style: TextStyling.details)),
-                              SizedBox(
-                                  width: MediaQuery.of(context).size.width,
-                                  height:
-                                      MediaQuery.of(context).size.height * 0.04,
-                                  child: Text(cable['pins'],
-                                      style: TextStyling.details)),
-                              SizedBox(
-                                  width: MediaQuery.of(context).size.width,
-                                  height:
-                                      MediaQuery.of(context).size.height * 0.04,
-                                  child: Text(cable['voltage'],
-                                      style: TextStyling.details)),
-                              SizedBox(
-                                  width: MediaQuery.of(context).size.width,
-                                  height:
-                                      MediaQuery.of(context).size.height * 0.04,
-                                  child: Text(cable['wattage'],
-                                      style: TextStyling.details)),
-                              SizedBox(
-                                  width: MediaQuery.of(context).size.width,
-                                  height:
-                                      MediaQuery.of(context).size.height * 0.1,
-                                  child: Text(cable['productdimension'],
-                                      style: TextStyling.details)),
-                              SizedBox(
-                                  width: MediaQuery.of(context).size.width,
-                                  height:
-                                      MediaQuery.of(context).size.height * 0.04,
-                                  child: Text(cable['country'],
-                                      style: TextStyling.details)),
-                              SizedBox(
-                                  width: MediaQuery.of(context).size.width,
-                                  height:
-                                      MediaQuery.of(context).size.height * 0.04,
-                                  child: Text(cable['itemweight'],
-                                      style: TextStyling.details)),
-                              SizedBox(
-                                width: MediaQuery.of(context).size.width,
-                                height: MediaQuery.of(context).size.height * .1,
-                                child: Text(cable['Warranty'],
-                                    style: TextStyling.details),
-                              )
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
-                  )
-                ],
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('Specifications', style: TextStyling.detailMain),
+                    h30,
+                    Text('General', style: TextStyling.subtitle3),
+                    h10,
+                    Custom3.details(context,
+                        title: 'Product Name', detail: cable[name]),
+                    h10,
+                    Custom3.details(context,
+                        title: 'Model Name', detail: cable[model]),
+                    h10,
+                    Custom3.details(context,
+                        title: 'Manufacturer', detail: cable[manufacturer]),
+                    h10,
+                    Custom3.details(context,
+                        title: 'Colour', detail: cable[color]),
+                    h10,
+                    Custom3.details(context,
+                        title: 'Speed', detail: cable[speed]),
+                    h10,
+                    Custom3.details(context,
+                        title: 'No. of Pins', detail: cable[pins]),
+                    h10,
+                    Custom3.details(context,
+                        title: 'Voltage', detail: cable[voltage]),
+                    h10,
+                    Custom3.details(context,
+                        title: 'Wattage', detail: cable[wattage]),
+                    h10,
+                    Custom3.details(context,
+                        title: 'Product Dimension', detail: cable[dimension]),
+                    h10,
+                    Custom3.details(context,
+                        title: 'Country of Origin', detail: cable[country]),
+                    h10,
+                    Custom3.details(context,
+                        title: 'Item Weight', detail: cable[weight]),
+                    h10,
+                    Custom3.details(context,
+                        title: 'Warranty', detail: cable[warranty]),
+                    h10,
+                  ],
+                ),
               ),
             ),
           ),

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:prosample_1/User/Products/product_details.dart';
 import 'package:prosample_1/User/utils/utils_colors.dart';
 import 'package:prosample_1/User/utils/utils_text_decorations.dart';
+import 'package:prosample_1/admin/const/variables.dart';
 
 class ProductCooler extends StatefulWidget {
   const ProductCooler({super.key});
@@ -22,8 +23,8 @@ class _ProductCoolerState extends State<ProductCooler> {
         body: SafeArea(
             child: StreamBuilder<QuerySnapshot>(
                 stream: FirebaseFirestore.instance
-                    .collection('cooler')
-                    .orderBy('name')
+                    .collection(cooler)
+                    .orderBy(name)
                     .snapshots(),
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
@@ -39,7 +40,7 @@ class _ProductCoolerState extends State<ProductCooler> {
                                   crossAxisCount: 2),
                           itemBuilder: (context, index) {
                             final document = snapshot.data!.docs[index];
-            
+
                             return Padding(
                               padding: const EdgeInsets.only(
                                   left: 5, right: 5, top: 5, bottom: 5),
@@ -49,8 +50,8 @@ class _ProductCoolerState extends State<ProductCooler> {
                                       context,
                                       MaterialPageRoute(
                                           builder: (ctx) => CheckDetails(
-                                              collection: document['category'],
-                                              idNum: document['idnum'])));
+                                              collection: document[category],
+                                              idNum: document[uniqueId])));
                                 },
                                 child: Container(
                                     decoration: BoxDecoration(
@@ -63,17 +64,17 @@ class _ProductCoolerState extends State<ProductCooler> {
                                               spreadRadius: 1.0,
                                               offset: Offset(2.0, 2.0))
                                         ]),
-                                    width:
-                                        MediaQuery.of(context).size.width * 0.02,
-                                    height:
-                                        MediaQuery.of(context).size.height * 0.1,
+                                    width: MediaQuery.of(context).size.width *
+                                        0.02,
+                                    height: MediaQuery.of(context).size.height *
+                                        0.1,
                                     child: Padding(
                                         padding: const EdgeInsets.all(8.0),
                                         child: Column(
                                             crossAxisAlignment:
                                                 CrossAxisAlignment.start,
                                             children: [
-                                               SizedBox(
+                                              SizedBox(
                                                 width: MediaQuery.of(context)
                                                         .size
                                                         .width *
@@ -82,29 +83,30 @@ class _ProductCoolerState extends State<ProductCooler> {
                                                         .size
                                                         .height *
                                                     0.13,
-                                                child: document['image'] != null
+                                                child: document[itemImage] !=
+                                                        null
                                                     ? CachedNetworkImage(
                                                         imageUrl:
-                                                            document['image'],
+                                                            document[itemImage],
                                                         fit: BoxFit.cover,
                                                         placeholder: (context,
                                                                 url) =>
                                                             Image.asset(
                                                                 'assets/categories/cooler.jpg',
-                                                                fit:
-                                                                    BoxFit.cover),
+                                                                fit: BoxFit
+                                                                    .cover),
                                                         errorWidget: (context,
                                                                 url, error) =>
                                                             Image.asset(
                                                                 'assets/categories/cooler.jpg',
-                                                                fit:
-                                                                    BoxFit.cover),
+                                                                fit: BoxFit
+                                                                    .cover),
                                                       )
                                                     : Image.asset(
                                                         'assets/categories/cooler.jpg',
                                                         fit: BoxFit.cover),
                                               ),
-                                              Text(document['category'],
+                                              Text(document[category],
                                                   style:
                                                       TextStyling.categoryText),
                                               SizedBox(
@@ -126,7 +128,7 @@ class _ProductCoolerState extends State<ProductCooler> {
                                                 ),
                                               ),
                                               const SizedBox(height: 3),
-                                              Text(document['name'],
+                                              Text(document[name],
                                                   softWrap: false,
                                                   maxLines: 1,
                                                   overflow:
@@ -139,7 +141,7 @@ class _ProductCoolerState extends State<ProductCooler> {
                                                   ),
                                                   const SizedBox(width: 2),
                                                   Text(
-                                                      document['oldprice']
+                                                      document[oldPrice]
                                                           .replaceAllMapped(
                                                               RegExp(
                                                                   r'(\d{1,3})(?=(\d{3})+(?!\d))'),
@@ -158,13 +160,14 @@ class _ProductCoolerState extends State<ProductCooler> {
                                                     ),
                                                     const SizedBox(width: 2),
                                                     Text(
-                                                        document['newprice']
+                                                        document[newPrice]
                                                             .replaceAllMapped(
                                                                 RegExp(
                                                                     r'(\d{1,3})(?=(\d{3})+(?!\d))'),
                                                                 (Match m) =>
                                                                     "${m[1]},"),
-                                                        style: TextStyling.newP),
+                                                        style:
+                                                            TextStyling.newP),
                                                   ],
                                                 )
                                               ])

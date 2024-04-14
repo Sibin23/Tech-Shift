@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 
 import 'package:prosample_1/User/utils/utils_colors.dart';
 import 'package:prosample_1/User/utils/utils_text_decorations.dart';
+import 'package:prosample_1/User/utils/utils_widget4.dart';
+import 'package:prosample_1/admin/const/variables.dart';
 
 class ScreenChairInfo extends StatefulWidget {
   final Map<String, dynamic> chair;
@@ -18,7 +20,7 @@ class _ScreenChairInfoState extends State<ScreenChairInfo> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Text('Product Details',style: TextStyling.appTitle),
+        title: Text('Product Details', style: TextStyling.appTitle),
         surfaceTintColor: Colors.white,
         leading: IconButton(
             onPressed: () {
@@ -39,164 +41,48 @@ class _ScreenChairInfoState extends State<ScreenChairInfo> {
                     offset: Offset(4, 4))
               ]),
               width: MediaQuery.of(context).size.width,
-              child: Column(
-                children: [
-                  Row(
-                    children: [
-                      SizedBox(
-                        width: MediaQuery.of(context).size.width * 0.4,
-                        child: Padding(
-                          padding: const EdgeInsets.only(
-                              top: 10, right: 10, left: 10),
-                          child: Column(
-                            children: [
-                              SizedBox(
-                                width: MediaQuery.of(context).size.width,
-                                height:
-                                    MediaQuery.of(context).size.height * 0.08,
-                                child: Text('Product Name',
-                                    style: TextStyling.subtitle),
-                              ),
-                              SizedBox(
-                                  width: MediaQuery.of(context).size.width,
-                                  height:
-                                      MediaQuery.of(context).size.height * 0.04,
-                                  child: Text('Model Name',
-                                      style: TextStyling.subtitle)),
-                              SizedBox(
-                                  width: MediaQuery.of(context).size.width,
-                                  height:
-                                      MediaQuery.of(context).size.height * 0.04,
-                                  child: Text('Manufacturer',
-                                      style: TextStyling.subtitle)),
-                              SizedBox(
-                                  width: MediaQuery.of(context).size.width,
-                                  height:
-                                      MediaQuery.of(context).size.height * 0.04,
-                                  child: Text('Colour',
-                                      style: TextStyling.subtitle)),
-                              SizedBox(
-                                  width: MediaQuery.of(context).size.width,
-                                  height:
-                                      MediaQuery.of(context).size.height * 0.04,
-                                  child: Text('Material',
-                                      style: TextStyling.subtitle)),
-                              SizedBox(
-                                  width: MediaQuery.of(context).size.width,
-                                  height:
-                                      MediaQuery.of(context).size.height * 0.04,
-                                  child: Text('Fill Material',
-                                      style: TextStyling.subtitle)),
-                              SizedBox(
-                                  width: MediaQuery.of(context).size.width,
-                                  height:
-                                      MediaQuery.of(context).size.height * 0.12,
-                                  child: Text('Features',
-                                      style: TextStyling.subtitle)),
-                              SizedBox(
-                                  width: MediaQuery.of(context).size.width,
-                                  height:
-                                      MediaQuery.of(context).size.height * 0.04,
-                                  child: Text('Item Weight',
-                                      style: TextStyling.subtitle)),
-                              SizedBox(
-                                  width: MediaQuery.of(context).size.width,
-                                  height:
-                                      MediaQuery.of(context).size.height * 0.08,
-                                  child: Text('Product Dimensions',
-                                      style: TextStyling.subtitle)),
-                              SizedBox(
-                                  width: MediaQuery.of(context).size.width,
-                                  height:
-                                      MediaQuery.of(context).size.height * 0.04,
-                                  child: Text('Country of Origin',
-                                      style: TextStyling.subtitle)),
-                              SizedBox(
-                                  width: MediaQuery.of(context).size.width,
-                                  height:
-                                      MediaQuery.of(context).size.height * 0.1,
-                                  child: Text('Warranty',
-                                      style: TextStyling.subtitle)),
-                            ],
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        width: MediaQuery.of(context).size.width * 0.5,
-                        child: Column(
-                          children: [
-                            SizedBox(
-                                width: MediaQuery.of(context).size.width,
-                                height:
-                                    MediaQuery.of(context).size.height * 0.08,
-                                child: Text(chair['name'],
-                                    style: TextStyling.details)),
-                            SizedBox(
-                                width: MediaQuery.of(context).size.width,
-                                height:
-                                    MediaQuery.of(context).size.height * 0.04,
-                                child: Text(chair['model'],
-                                    style: TextStyling.details)),
-                            SizedBox(
-                                width: MediaQuery.of(context).size.width,
-                                height:
-                                    MediaQuery.of(context).size.height * 0.04,
-                                child: Text(chair['manufacturer'],
-                                    style: TextStyling.details)),
-                            SizedBox(
-                                width: MediaQuery.of(context).size.width,
-                                height:
-                                    MediaQuery.of(context).size.height * 0.04,
-                                child: Text(chair['color'],
-                                    style: TextStyling.details)),
-                            SizedBox(
-                                width: MediaQuery.of(context).size.width,
-                                height:
-                                    MediaQuery.of(context).size.height * 0.04,
-                                child: Text(chair['material'],
-                                    style: TextStyling.details)),
-                            SizedBox(
-                                width: MediaQuery.of(context).size.width,
-                                height:
-                                    MediaQuery.of(context).size.height * 0.04,
-                                child: Text(chair['fillmaterial'],
-                                    style: TextStyling.details)),
-                            SizedBox(
-                                width: MediaQuery.of(context).size.width,
-                                height:
-                                    MediaQuery.of(context).size.height * 0.12,
-                                child: Text(chair['features'],
-                                    style: TextStyling.details)),
-                            SizedBox(
-                                width: MediaQuery.of(context).size.width,
-                                height:
-                                    MediaQuery.of(context).size.height * 0.04,
-                                child: Text(chair['itemweight'],
-                                    style: TextStyling.details)),
-                            SizedBox(
-                                width: MediaQuery.of(context).size.width,
-                                height:
-                                    MediaQuery.of(context).size.height * 0.08,
-                                child: Text(chair['productdimension'],
-                                    style: TextStyling.details)),
-                            SizedBox(
-                                width: MediaQuery.of(context).size.width,
-                                height:
-                                    MediaQuery.of(context).size.height * 0.04,
-                                child: Text(chair['country'],
-                                    style: TextStyling.details)),
-                            SizedBox(
-                                width: MediaQuery.of(context).size.width,
-                                height:
-                                    MediaQuery.of(context).size.height * 0.1,
-                                child: Text(chair['warranty'],
-                                    style: TextStyling.details)),
-                          ],
-                        ),
-                      )
-                    ],
-                  )
-                ],
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('Specifications', style: TextStyling.detailMain),
+                    h30,
+                    Custom3.details(context,
+                        title: 'Product Name', detail: chair[name]),
+                    h10,
+                    Custom3.details(context,
+                        title: 'Model Name', detail: chair[model]),
+                    h10,
+                    Custom3.details(context,
+                        title: 'Manufacturer', detail: chair[manufacturer]),
+                    h10,
+                    Custom3.details(context,
+                        title: 'Colour', detail: chair[color]),
+                    h10,
+                    Custom3.details(context,
+                        title: 'Materail', detail: chair[material]),
+                    h10,
+                    Custom3.details(context,
+                        title: 'Fill Material', detail: chair[fillMaterial]),
+                    h10,
+                    Custom3.details(context,
+                        title: 'Features', detail: chair[features]),
+                    h10,
+                    Custom3.details(context,
+                        title: 'Item Weight', detail: chair[weight]),
+                    h10,
+                    Custom3.details(context,
+                        title: 'Product Dimension', detail: chair[dimension]),
+                    h10,
+                    Custom3.details(context,
+                        title: 'Country of Origin', detail: chair[country]),
+                    h10,
+                    Custom3.details(context,
+                        title: 'Warranty', detail: chair[warranty]),
+                    h10,
+                  ],
+                ),
               ),
             ),
           ),

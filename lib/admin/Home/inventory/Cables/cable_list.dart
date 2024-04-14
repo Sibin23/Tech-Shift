@@ -24,11 +24,12 @@ class _CableDetailsState extends State<CableDetails> {
     deletePopular(itemId);
   }
 
- Future<void> deleteNewArivals(String itemId) async {
+  Future<void> deleteNewArivals(String itemId) async {
     final firestore = FirebaseFirestore.instance;
     final docRef = firestore.collection(newArival).doc(itemId);
     await docRef.delete();
   }
+
   Future<void> deletePopular(String itemId) async {
     final firestore = FirebaseFirestore.instance;
     final docRef = firestore.collection(popular).doc(itemId);
@@ -39,10 +40,18 @@ class _CableDetailsState extends State<CableDetails> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        centerTitle: true,
-        title: Text('Processor Details', style: CustomText.apptitle),
-        backgroundColor: CustomColors.appTheme,
+        title: Text('Cable Details', style: CustomText.apptitle),
+        backgroundColor: Colors.transparent,
         foregroundColor: Colors.white,
+        centerTitle: true,
+        flexibleSpace: Container(
+          decoration: const BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage(admBoxImg),
+              fit: BoxFit.cover,
+            ),
+          ),
+        ),
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: 10),
@@ -53,8 +62,7 @@ class _CableDetailsState extends State<CableDetails> {
                       MaterialPageRoute(
                           builder: (ctx) => const ScreenAddCables()));
                 },
-                icon: Image.asset(add,
-                    width: 30, color: Colors.white)),
+                icon: Image.asset(add, width: 30, color: Colors.white)),
           )
         ],
       ),

@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:prosample_1/admin/const/variables.dart';
 import 'package:prosample_1/admin/custompc_orders/custompc_order_details.dart';
 
 class CustomPCOrderConfirmed extends StatefulWidget {
@@ -20,8 +21,8 @@ class _CustomPCOrderConfirmedState extends State<CustomPCOrderConfirmed> {
       body: SafeArea(
         child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
             stream: FirebaseFirestore.instance
-                .collection('OrderCustomPC')
-                .where('status', isEqualTo: 'Confirmed')
+                .collection(customPc)
+                .where(status, isEqualTo: confirmed)
                 .snapshots(),
             builder: (context, snapshot) {
               if (snapshot.hasData) {
@@ -67,7 +68,7 @@ class _CustomPCOrderConfirmedState extends State<CustomPCOrderConfirmed> {
                                                   .size
                                                   .width *
                                               .05,
-                                          child: Text(document['status'],
+                                          child: Text(document[status],
                                               style: const TextStyle(
                                                   color: Colors.green,
                                                   fontSize: 17,
@@ -93,8 +94,8 @@ class _CustomPCOrderConfirmedState extends State<CustomPCOrderConfirmed> {
                                                                   .height *
                                                               0.12,
                                                       child: CachedNetworkImage(
-                                                          imageUrl:
-                                                              document['image'],
+                                                          imageUrl: document[
+                                                              itemImage],
                                                           fit: BoxFit.cover,
                                                           placeholder: (context,
                                                                   url) =>
@@ -116,9 +117,9 @@ class _CustomPCOrderConfirmedState extends State<CustomPCOrderConfirmed> {
                                                                   .start,
                                                           children: [
                                                             Text(
-                                                                '# ${document['orderid']}'),
+                                                                '# ${document[orderId]}'),
                                                             Text(document[
-                                                                'cabinet']),
+                                                                cabinet]),
                                                             SizedBox(
                                                               width:
                                                                   MediaQuery.of(
@@ -126,19 +127,19 @@ class _CustomPCOrderConfirmedState extends State<CustomPCOrderConfirmed> {
                                                                       .size
                                                                       .width,
                                                               child: Text(document[
-                                                                      'processor']
+                                                                      processor]
                                                                   .toString()
                                                                   .toUpperCase()),
                                                             ),
                                                             Text(
                                                               document[
-                                                                  'totalprice'],
+                                                                  totalPrice],
                                                               style: const TextStyle(
                                                                   color: Colors
                                                                       .green),
                                                             ),
                                                             Text(
-                                                                '${document['date']}/${document['month']}/${document['year']}'),
+                                                                '${document[date]}/${document[month]}/${document[year]}'),
                                                           ],
                                                         ),
                                                       ),

@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:prosample_1/User/utils/utils_text_decorations.dart';
 import 'package:prosample_1/User/utils/utils_widget3.dart';
+import 'package:prosample_1/admin/const/variables.dart';
 
 class CustomPcOderDetails extends StatelessWidget {
   final Map<String, dynamic> pc;
@@ -22,14 +23,14 @@ class CustomPcOderDetails extends StatelessWidget {
                 top: 0,
                 right: 30,
                 child: Text(
-                  pc['status'],
+                  pc[status],
                   style: TextStyle(
                       fontSize: 18,
-                      color: pc['status'] == 'Confirmed'
+                      color: pc[status] == 'Confirmed'
                           ? Colors.green
-                          : pc['status'] == 'Cancelled'
+                          : pc[status] == 'Cancelled'
                               ? Colors.red
-                              : pc['status'] == 'Pending'
+                              : pc[status] == 'Pending'
                                   ? Colors.orange
                                   : Colors.grey),
                 )),

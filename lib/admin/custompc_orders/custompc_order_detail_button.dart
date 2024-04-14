@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:prosample_1/admin/const/variables.dart';
 import 'package:prosample_1/admin/utils/utils_text_style.dart';
-
 
 class CustomPCorderDetailButton extends StatefulWidget {
   final String orderId;
@@ -15,20 +15,20 @@ class CustomPCorderDetailButton extends StatefulWidget {
 }
 
 class _CustomPCorderDetailButtonState extends State<CustomPCorderDetailButton> {
-  Future<void> customPcStatus(String status) async {
+  Future<void> customPcStatus(String updateStatus) async {
     final docRef = FirebaseFirestore.instance
-        .collection('OrderCustomPC')
-        .where('orderid', isEqualTo: widget.orderId)
-        .where('uid', isEqualTo: widget.uid);
+        .collection(customPc)
+        .where(orderId, isEqualTo: widget.orderId)
+        .where(uid, isEqualTo: widget.uid);
 
     final querySnapshot = await docRef.get();
     if (querySnapshot.docs.isNotEmpty) {
       final document = querySnapshot.docs.first;
       final docId = document.id;
       await FirebaseFirestore.instance
-          .collection('OrderCustomPC')
+          .collection(customPc)
           .doc(docId)
-          .update({'status': status});
+          .update({status: updateStatus});
     }
   }
 
@@ -42,7 +42,7 @@ class _CustomPCorderDetailButtonState extends State<CustomPCorderDetailButton> {
           children: [
             GestureDetector(
               onTap: () {
-                String status = 'Cancelled';
+                String status = cancelled;
                 customPcStatus(status);
                 Navigator.pop(context);
               },
@@ -66,7 +66,7 @@ class _CustomPCorderDetailButtonState extends State<CustomPCorderDetailButton> {
             ),
             GestureDetector(
               onTap: () {
-                String status = 'Confirmed';
+                String status = confirmed;
                 customPcStatus(status);
                 Navigator.pop(context);
               },

@@ -42,9 +42,17 @@ class _GpuDetailsState extends State<GpuDetails> {
       appBar: AppBar(
         surfaceTintColor: Colors.white,
         centerTitle: true,
-        title: Text('Keyboard Details', style: CustomText.apptitle),
-        backgroundColor: CustomColors.appTheme,
+        title: Text('GPU Details', style: CustomText.apptitle),
+        backgroundColor: Colors.transparent,
         foregroundColor: Colors.white,
+        flexibleSpace: Container(
+          decoration: const BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage(admBoxImg),
+              fit: BoxFit.cover,
+            ),
+          ),
+        ),
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: 10),

@@ -6,6 +6,7 @@ import 'package:prosample_1/User/configuration/configuration_ssd.dart';
 import 'package:prosample_1/User/utils/utils_colors.dart';
 import 'package:prosample_1/User/utils/utils_text_decorations.dart';
 import 'package:prosample_1/User/utils/utils_widget2.dart';
+import 'package:prosample_1/admin/const/variables.dart';
 
 class RamConfig extends StatefulWidget {
   final Map<String, dynamic> pc;
@@ -37,7 +38,7 @@ class _RamConfigState extends State<RamConfig> {
     selectedPower ??= 0.toString();
     int totalPwr =
         int.parse(widget.power) + int.parse(selectedPower.toString()) + 50;
-    final ram = widget.ramType;
+
     String amt = widget.total;
     selectedPrice ??= 0.toString();
     int total = int.parse(amt) + int.parse(selectedPrice.toString());
@@ -45,13 +46,12 @@ class _RamConfigState extends State<RamConfig> {
     selectedRam ??= 'Select a RAM';
     return Scaffold(
       appBar: AppBar(
-       
         surfaceTintColor: Colors.white,
         actions: [
           GestureDetector(
             onTap: () {
               final pc = Map<String, dynamic>.from(widget.pc);
-              pc['ram'] = selectedRam;
+              pc[ram] = selectedRam;
               pc['ramprice'] = selectedPrice;
               Navigator.push(
                   context,
@@ -101,7 +101,7 @@ class _RamConfigState extends State<RamConfig> {
           ));
         } else {
           final pc = Map<String, dynamic>.from(widget.pc);
-          pc['ram'] = selectedRam;
+          pc[ram] = selectedRam;
           pc['ramprice'] = selectedPrice;
           Navigator.push(
               context,
@@ -127,9 +127,10 @@ class _RamConfigState extends State<RamConfig> {
                 height: MediaQuery.of(context).size.height,
                 child: StreamBuilder<QuerySnapshot>(
                     stream: FirebaseFirestore.instance
-                        .collection('ram')
-                        .where('ramtype', isGreaterThanOrEqualTo: ram)
-                        .where('ramtype', isLessThanOrEqualTo: '$ram.9')
+                        .collection(ram)
+                        .where(ramType, isGreaterThanOrEqualTo: widget.ramType)
+                        .where(ramType,
+                            isLessThanOrEqualTo: '${widget.ramType}.9')
                         .snapshots(),
                     builder: (context, snapshot) {
                       if (snapshot.hasData) {
@@ -148,12 +149,7 @@ class _RamConfigState extends State<RamConfig> {
                               itemBuilder: ((context, index) {
                                 DocumentSnapshot document =
                                     snapshot.data!.docs[index];
-                                String imageUrl = document['image'];
-                                String name = document['name'];
-                                String speed = document['clockspeed'];
-                                String type = document['ramtype'];
-                                String size = document['ramsize'];
-                                String price = document['newprice'];
+
                                 bool isSelected =
                                     document.id == selectedDocumentId;
                                 return Padding(
@@ -171,8 +167,9 @@ class _RamConfigState extends State<RamConfig> {
                                               } else {
                                                 selectedDocumentId =
                                                     document.id;
-                                                selectedRam = name;
-                                                selectedPrice = price;
+                                                selectedRam = document[name];
+                                                selectedPrice =
+                                                    document[newPrice];
                                               }
                                               isSelected = !isSelected;
                                             });
@@ -222,18 +219,24 @@ class _RamConfigState extends State<RamConfig> {
                                                                 .size
                                                                 .width *
                                                             0.35,
-                                                        height: MediaQuery.of(
-                                                                    context)
+                                                        height: MediaQuery
+                                                                    .of(context)
                                                                 .size
                                                                 .height *
                                                             0.11,
                                                         child:
                                                             CachedNetworkImage(
-                                                          imageUrl: imageUrl,
-                                                          fit: BoxFit.cover,
-                                                          placeholder:
-                                                              (context, url) => Image.asset('assets/categories/ram.png',fit: BoxFit.cover,)
-                                                        )),
+                                                                imageUrl: document[
+                                                                    itemImage],
+                                                                fit: BoxFit
+                                                                    .cover,
+                                                                placeholder: (context,
+                                                                        url) =>
+                                                                    Image.asset(
+                                                                      'assets/categories/ram.png',
+                                                                      fit: BoxFit
+                                                                          .cover,
+                                                                    ))),
                                                     SizedBox(
                                                         width: MediaQuery.of(
                                                                 context)
@@ -244,7 +247,7 @@ class _RamConfigState extends State<RamConfig> {
                                                               CrossAxisAlignment
                                                                   .start,
                                                           children: [
-                                                            Text(name,
+                                                            Text(document[name],
                                                                 overflow:
                                                                     TextOverflow
                                                                         .ellipsis,
@@ -256,17 +259,21 @@ class _RamConfigState extends State<RamConfig> {
                                                                 height: 5),
                                                             Row(
                                                               children: [
-                                                                Text('$size,',
+                                                                Text(
+                                                                    '${document[ramSize]},',
                                                                     style: TextStyling
                                                                         .categoryText),
                                                                 const SizedBox(
                                                                     width: 3),
-                                                                Text(type,
+                                                                Text(
+                                                                    document[
+                                                                        ramType],
                                                                     style: TextStyling
                                                                         .categoryText),
                                                               ],
                                                             ),
-                                                            Text(speed,
+                                                            Text(
+                                                                document[speed],
                                                                 style: TextStyling
                                                                     .categoryText),
                                                           ],
@@ -278,11 +285,12 @@ class _RamConfigState extends State<RamConfig> {
                                                         const SizedBox(
                                                             width: 2),
                                                         Text(
-                                                            price.replaceAllMapped(
-                                                                RegExp(
-                                                                    r'(\d{1,3})(?=(\d{3})+(?!\d))'),
-                                                                (Match m) =>
-                                                                    "${m[1]},"),
+                                                            document[newPrice]
+                                                                .replaceAllMapped(
+                                                                    RegExp(
+                                                                        r'(\d{1,3})(?=(\d{3})+(?!\d))'),
+                                                                    (Match m) =>
+                                                                        "${m[1]},"),
                                                             style: TextStyling
                                                                 .newP),
                                                       ],

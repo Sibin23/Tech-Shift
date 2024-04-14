@@ -42,8 +42,16 @@ class _HeadsetDetailsState extends State<HeadsetDetails> {
       appBar: AppBar(
         centerTitle: true,
         title: Text('Headset Details', style: CustomText.apptitle),
-        backgroundColor: CustomColors.appTheme,
+        backgroundColor: Colors.transparent,
         foregroundColor: Colors.white,
+        flexibleSpace: Container(
+          decoration: const BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage(admBoxImg),
+              fit: BoxFit.cover,
+            ),
+          ),
+        ),
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: 10),
@@ -54,7 +62,7 @@ class _HeadsetDetailsState extends State<HeadsetDetails> {
                       MaterialPageRoute(
                           builder: (ctx) => const ScreenAddHeadset()));
                 },
-                icon: Image.asset(add, width: 30,color: Colors.white)),
+                icon: Image.asset(add, width: 30, color: Colors.white)),
           )
         ],
       ),

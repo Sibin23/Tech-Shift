@@ -16,6 +16,7 @@ import 'package:prosample_1/User/Products/psu/psu_item_list.dart';
 import 'package:prosample_1/User/Products/ram/ram_item_list.dart';
 import 'package:prosample_1/User/Products/ssd/ssd_item_list.dart';
 import 'package:prosample_1/User/utils/utils_text_decorations.dart';
+import 'package:prosample_1/admin/const/variables.dart';
 
 class HomeCategories extends StatelessWidget {
   const HomeCategories({super.key});
@@ -46,8 +47,8 @@ class HomeCategories extends StatelessWidget {
                       itemCount: snapshot.data!.docs.length,
                       itemBuilder: (context, index) {
                         DocumentSnapshot document = snapshot.data!.docs[index];
-                        String imageUrl = document['image'];
-                        String categoryName = document['name'];
+                        String imageUrl = document[itemImage];
+                        String categoryName = document[name];
                         return Padding(
                           padding: const EdgeInsets.all(8),
                           child: GestureDetector(

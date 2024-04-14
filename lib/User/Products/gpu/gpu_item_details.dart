@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:prosample_1/User/utils/utils_colors.dart';
 import 'package:prosample_1/User/utils/utils_text_decorations.dart';
+import 'package:prosample_1/User/utils/utils_widget4.dart';
+import 'package:prosample_1/admin/const/variables.dart';
 
 class ScreenGpuInfo extends StatefulWidget {
   final Map<String, dynamic> gpu;
@@ -15,7 +17,9 @@ class _ScreenGpuInfoState extends State<ScreenGpuInfo> {
   Widget build(BuildContext context) {
     final gpu = widget.gpu;
     return Scaffold(
-      appBar: AppBar(
+       appBar: AppBar(
+        centerTitle: true,
+        title: Text('Product Details', style: TextStyling.appTitle),
         surfaceTintColor: Colors.white,
         leading: IconButton(
             onPressed: () {
@@ -36,181 +40,59 @@ class _ScreenGpuInfoState extends State<ScreenGpuInfo> {
                     offset: Offset(4, 4))
               ]),
               width: MediaQuery.of(context).size.width,
-              child: Row(
-                children: [
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width * .4,
-                    child: Padding(
-                      padding:
-                          const EdgeInsets.only(top: 10, right: 10, left: 10),
-                      child: Column(
-                        children: [
-                          SizedBox(
-                              width: MediaQuery.of(context).size.width,
-                              height: MediaQuery.of(context).size.height * 0.15,
-                              child: Text('Product Name',
-                                  style: TextStyling.subtitle)),
-                          SizedBox(
-                              width: MediaQuery.of(context).size.width,
-                              height: MediaQuery.of(context).size.height * 0.08,
-                              child: Text('Model Name',
-                                  style: TextStyling.subtitle)),
-                          SizedBox(
-                              width: MediaQuery.of(context).size.width,
-                              height: MediaQuery.of(context).size.height * 0.04,
-                              child: Text('Manufacturer',
-                                  style: TextStyling.subtitle)),
-                          SizedBox(
-                              width: MediaQuery.of(context).size.width,
-                              height: MediaQuery.of(context).size.height * 0.04,
-                              child:
-                                  Text('Colour', style: TextStyling.subtitle)),
-                          SizedBox(
-                              width: MediaQuery.of(context).size.width,
-                              height: MediaQuery.of(context).size.height * 0.35,
-                              child: Text('Features',
-                                  style: TextStyling.subtitle)),
-                          SizedBox(
-                              width: MediaQuery.of(context).size.width,
-                              height: MediaQuery.of(context).size.height * 0.08,
-                              child: Text('Maximum Resolution',
-                                  style: TextStyling.subtitle)),
-                          SizedBox(
-                              width: MediaQuery.of(context).size.width,
-                              height: MediaQuery.of(context).size.height * 0.04,
-                              child: Text('Ram Type',
-                                  style: TextStyling.subtitle)),
-                          SizedBox(
-                              width: MediaQuery.of(context).size.width,
-                              height: MediaQuery.of(context).size.height * 0.04,
-                              child: Text('Ram Size',
-                                  style: TextStyling.subtitle)),
-                          SizedBox(
-                              width: MediaQuery.of(context).size.width,
-                              height: MediaQuery.of(context).size.height * 0.04,
-                              child:
-                                  Text('Speed', style: TextStyling.subtitle)),
-                          SizedBox(
-                              width: MediaQuery.of(context).size.width,
-                              height: MediaQuery.of(context).size.height * 0.04,
-                              child: Text('Support Type',
-                                  style: TextStyling.subtitle)),
-                          SizedBox(
-                              width: MediaQuery.of(context).size.width,
-                              height: MediaQuery.of(context).size.height * 0.04,
-                              child:
-                                  Text('Wattage', style: TextStyling.subtitle)),
-                          SizedBox(
-                              width: MediaQuery.of(context).size.width,
-                              height: MediaQuery.of(context).size.height * 0.08,
-                              child: Text('Product Dimension',
-                                  style: TextStyling.subtitle)),
-                          SizedBox(
-                              width: MediaQuery.of(context).size.width,
-                              height: MediaQuery.of(context).size.height * 0.04,
-                              child: Text('Item Weight',
-                                  style: TextStyling.subtitle)),
-                          SizedBox(
-                              width: MediaQuery.of(context).size.width,
-                              height: MediaQuery.of(context).size.height * 0.04,
-                              child: Text('Country of Origin',
-                                  style: TextStyling.subtitle)),
-                          SizedBox(
-                              width: MediaQuery.of(context).size.width,
-                              height: MediaQuery.of(context).size.height * 0.1,
-                              child: Text('Warranty',
-                                  style: TextStyling.subtitle)),
-                        ],
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width * .5,
-                    child: Padding(
-                      padding:
-                          const EdgeInsets.only(top: 10, right: 10, left: 10),
-                      child: Column(
-                        children: [
-                          SizedBox(
-                              width: MediaQuery.of(context).size.width,
-                              height: MediaQuery.of(context).size.height * .15,
-                              child: Text(gpu['name'],
-                                  style: TextStyling.details)),
-                          SizedBox(
-                              width: MediaQuery.of(context).size.width,
-                              height: MediaQuery.of(context).size.height * .08,
-                              child: Text(gpu['model'],
-                                  style: TextStyling.details)),
-                          SizedBox(
-                              width: MediaQuery.of(context).size.width,
-                              height: MediaQuery.of(context).size.height * .04,
-                              child: Text(gpu['manufacturer'],
-                                  style: TextStyling.details)),
-                          SizedBox(
-                              width: MediaQuery.of(context).size.width,
-                              height: MediaQuery.of(context).size.height * .04,
-                              child: Text(gpu['color'],
-                                  style: TextStyling.details)),
-                          SizedBox(
-                              width: MediaQuery.of(context).size.width,
-                              height: MediaQuery.of(context).size.height * .35,
-                              child: Text(gpu['features'],
-                                  style: TextStyling.details)),
-                          SizedBox(
-                              width: MediaQuery.of(context).size.width,
-                              height: MediaQuery.of(context).size.height * .08,
-                              child: Text(gpu['maxres'],
-                                  style: TextStyling.details)),
-                          SizedBox(
-                              width: MediaQuery.of(context).size.width,
-                              height: MediaQuery.of(context).size.height * .04,
-                              child: Text(gpu['ramtype'],
-                                  style: TextStyling.details)),
-                          SizedBox(
-                              width: MediaQuery.of(context).size.width,
-                              height: MediaQuery.of(context).size.height * .04,
-                              child: Text(gpu['ramsize'],
-                                  style: TextStyling.details)),
-                          SizedBox(
-                              width: MediaQuery.of(context).size.width,
-                              height: MediaQuery.of(context).size.height * .04,
-                              child: Text(gpu['speed'],
-                                  style: TextStyling.details)),
-                          SizedBox(
-                              width: MediaQuery.of(context).size.width,
-                              height: MediaQuery.of(context).size.height * .04,
-                              child: Text(gpu['support'],
-                                  style: TextStyling.details)),
-                          SizedBox(
-                              width: MediaQuery.of(context).size.width,
-                              height: MediaQuery.of(context).size.height * .04,
-                              child: Text('${gpu['wattage']} W',
-                                  style: TextStyling.details)),
-                          SizedBox(
-                              width: MediaQuery.of(context).size.width,
-                              height: MediaQuery.of(context).size.height * .08,
-                              child: Text(gpu['productdimension'],
-                                  style: TextStyling.details)),
-                          SizedBox(
-                              width: MediaQuery.of(context).size.width,
-                              height: MediaQuery.of(context).size.height * .04,
-                              child: Text(gpu['itemweight'],
-                                  style: TextStyling.details)),
-                          SizedBox(
-                              width: MediaQuery.of(context).size.width,
-                              height: MediaQuery.of(context).size.height * .04,
-                              child: Text(gpu['country'],
-                                  style: TextStyling.details)),
-                          SizedBox(
-                              width: MediaQuery.of(context).size.width,
-                              height: MediaQuery.of(context).size.height * .1,
-                              child: Text(gpu['warranty'],
-                                  style: TextStyling.details)),
-                        ],
-                      ),
-                    ),
-                  )
-                ],
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('Specifications', style: TextStyling.detailMain),
+                    h30,
+                    Custom3.details(context,
+                        title: 'Product Name', detail: gpu[name]),
+                    h10,
+                    Custom3.details(context,
+                        title: 'Model Name', detail: gpu[model]),
+                    h10,
+                    Custom3.details(context,
+                        title: 'Manufacturer', detail: gpu[manufacturer]),
+                    h10,
+                    Custom3.details(context, title: 'Colour', detail: gpu[color]),
+                    h10,
+                    Custom3.details(context,
+                        title: 'Features', detail: gpu[features]),
+                    h10,
+                    Custom3.details(context,
+                        title: 'Maximum Resoluion', detail: gpu[maxResolution]),
+                    h10,
+                    Custom3.details(context,
+                        title: 'Graphics Ram Type', detail: gpu[ramType]),
+                    h10,
+                    Custom3.details(context,
+                        title: 'Graphics Ram Size', detail: gpu[ramSize]),
+                    h10,
+                    Custom3.details(context,
+                        title: 'Memory Clock Speed', detail: gpu[speed]),
+                    h10,
+                    Custom3.details(context,
+                        title: 'Card Interface', detail: gpu[support]),
+                    h10,
+                    Custom3.details(context,
+                        title: 'Wattage', detail: gpu[wattage]),
+                    h10,
+                    Custom3.details(context,
+                        title: 'Product Dimension', detail: gpu[dimension]),
+                    h10,
+                    Custom3.details(context,
+                        title: 'Item Weight', detail: gpu[weight]),
+                    h10,
+                    Custom3.details(context,
+                        title: 'Country of Origin', detail: gpu[country]),
+                    h10,
+                    Custom3.details(context,
+                        title: 'Warranty', detail: gpu[warranty]),
+                    h10,
+                  ],
+                ),
               ),
             ),
           ),

@@ -6,6 +6,7 @@ import 'package:prosample_1/User/configuration/details/details_gpu.dart';
 import 'package:prosample_1/User/utils/utils_colors.dart';
 import 'package:prosample_1/User/utils/utils_text_decorations.dart';
 import 'package:prosample_1/User/utils/utils_widget2.dart';
+import 'package:prosample_1/admin/const/variables.dart';
 
 class GpuConfig extends StatefulWidget {
   final Map<String, dynamic> pc;
@@ -30,7 +31,6 @@ class _GpuConfigState extends State<GpuConfig> {
   String? selectedPrice;
   @override
   Widget build(BuildContext context) {
-    final ssd = widget.ssd;
     selectedPower ??= 0.toString();
     selectedgpu ??= 'Select a Graphics Card';
     int totalPwr =
@@ -43,7 +43,7 @@ class _GpuConfigState extends State<GpuConfig> {
         Navigator.pop(context);
       }, () {
         final updatedConfig = Map<String, dynamic>.from(widget.pc);
-        updatedConfig['gpu'] = selectedgpu;
+        updatedConfig[gpu] = selectedgpu;
         updatedConfig['gpuprice'] = selectedPrice.toString();
         Navigator.push(
             context,
@@ -59,7 +59,7 @@ class _GpuConfigState extends State<GpuConfig> {
           GestureDetector(
             onTap: () {
               final pc = Map<String, dynamic>.from(widget.pc);
-              pc['gpu'] = selectedgpu;
+              pc[gpu] = selectedgpu;
               pc['gpuprice'] = selectedPrice;
               Navigator.push(
                   context,
@@ -108,9 +108,9 @@ class _GpuConfigState extends State<GpuConfig> {
                 height: MediaQuery.of(context).size.height,
                 child: StreamBuilder<QuerySnapshot>(
                     stream: FirebaseFirestore.instance
-                        .collection('gpu')
-                        .where('support', isGreaterThanOrEqualTo: ssd)
-                        .where('support', isLessThanOrEqualTo: '$ssd.9')
+                        .collection(gpu)
+                        .where(support, isGreaterThanOrEqualTo: widget.ssd)
+                        .where(support, isLessThanOrEqualTo: '${widget.ssd}.9')
                         .snapshots(),
                     builder: (context, snapshot) {
                       if (snapshot.hasData) {
@@ -129,14 +129,7 @@ class _GpuConfigState extends State<GpuConfig> {
                               itemBuilder: ((context, index) {
                                 DocumentSnapshot document =
                                     snapshot.data!.docs[index];
-                                String imageUrl = document['image'];
-                                String name = document['name'];
-                                String model = document['model'];
-                                String price = document['newprice'];
-                                String ramType = document['ramtype'];
-                                String size = document['ramsize'];
-                                String speed = document['speed'];
-                                String wattage = document['wattage'];
+                                
                                 bool isSelected =
                                     document.id == selectedDocumentId;
                                 return Padding(
@@ -152,9 +145,9 @@ class _GpuConfigState extends State<GpuConfig> {
                                             selectedgpu = null;
                                           } else {
                                             selectedDocumentId = document.id;
-                                            selectedgpu = name;
-                                            selectedPrice = price;
-                                            selectedPower = wattage;
+                                            selectedgpu = document[name];
+                                            selectedPrice = document[newPrice];
+                                            selectedPower = document[wattage];
                                           }
                                           isSelected = !isSelected;
                                         });
@@ -213,7 +206,7 @@ class _GpuConfigState extends State<GpuConfig> {
                                                                   .height *
                                                               0.11,
                                                       child: CachedNetworkImage(
-                                                          imageUrl: imageUrl,
+                                                          imageUrl: document[itemImage],
                                                           fit: BoxFit.cover,
                                                           placeholder: (context,
                                                                   url) =>
@@ -229,38 +222,38 @@ class _GpuConfigState extends State<GpuConfig> {
                                                         MediaQuery.of(context)
                                                             .size
                                                             .width,
-                                                    child: Text(name,
+                                                    child: Text(document[name],
                                                         overflow: TextOverflow
                                                             .ellipsis,
                                                         softWrap: false,
                                                         maxLines: 1,
                                                         style: TextStyling
                                                             .subtitle2)),
-                                                const SizedBox(height: 5),
-                                                Text(model,
+                                                const SizedBox(height: 4),
+                                                Text(document[model],
                                                     style: TextStyling
                                                         .categoryText),
                                                 Row(
                                                   children: [
-                                                    Text('$size,',
+                                                    Text('${document[ramSize]},',
                                                         style: TextStyling
                                                             .categoryText),
                                                     const SizedBox(width: 3),
-                                                    Text(ramType,
+                                                    Text(document[ramType],
                                                         style: TextStyling
                                                             .categoryText)
                                                   ],
                                                 ),
-                                                Text(speed,
+                                                Text(document[speed],
                                                     style: TextStyling
                                                         .categoryText),
-                                                const SizedBox(height: 8),
+                                                const SizedBox(height: 4),
                                                 Row(
                                                   children: [
                                                     const Text('₹'),
                                                     const SizedBox(width: 2),
                                                     Text(
-                                                        price.replaceAllMapped(
+                                                        document[newPrice].replaceAllMapped(
                                                             RegExp(
                                                                 r'(\d{1,3})(?=(\d{3})+(?!\d))'),
                                                             (Match m) =>

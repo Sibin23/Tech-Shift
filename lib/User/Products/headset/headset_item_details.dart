@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:prosample_1/User/utils/utils_colors.dart';
 import 'package:prosample_1/User/utils/utils_text_decorations.dart';
+import 'package:prosample_1/User/utils/utils_widget4.dart';
+import 'package:prosample_1/admin/const/variables.dart';
 
 class ScreenHeadsetsInfo extends StatefulWidget {
   final Map<String, dynamic> headset;
@@ -16,6 +18,9 @@ class _ScreenHeadsetsInfoState extends State<ScreenHeadsetsInfo> {
     final headset = widget.headset;
     return Scaffold(
       appBar: AppBar(
+        centerTitle: true,
+        title: Text('Product Details', style: TextStyling.appTitle),
+        surfaceTintColor: Colors.white,
         leading: IconButton(
             onPressed: () {
               Navigator.pop(context);
@@ -35,151 +40,53 @@ class _ScreenHeadsetsInfoState extends State<ScreenHeadsetsInfo> {
                     offset: Offset(4, 4))
               ]),
               width: MediaQuery.of(context).size.width,
-              child: Row(
-                children: [
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width * .4,
-                    child: Padding(
-                      padding:
-                          const EdgeInsets.only(left: 10, right: 10, top: 10),
-                      child: Column(
-                        children: [
-                          SizedBox(
-                              width: MediaQuery.of(context).size.width,
-                              height: MediaQuery.of(context).size.height * 0.08,
-                              child: Text('Product Name',
-                                  style: TextStyling.subtitle)),
-                          SizedBox(
-                              width: MediaQuery.of(context).size.width,
-                              height: MediaQuery.of(context).size.height * 0.04,
-                              child: Text('Model Name',
-                                  style: TextStyling.subtitle)),
-                          SizedBox(
-                              width: MediaQuery.of(context).size.width,
-                              height: MediaQuery.of(context).size.height * 0.04,
-                              child:
-                                  Text('Series', style: TextStyling.subtitle)),
-                          SizedBox(
-                              width: MediaQuery.of(context).size.width,
-                              height: MediaQuery.of(context).size.height * 0.04,
-                              child: Text('Manufacturer',
-                                  style: TextStyling.subtitle)),
-                          SizedBox(
-                              width: MediaQuery.of(context).size.width,
-                              height: MediaQuery.of(context).size.height * 0.04,
-                              child:
-                                  Text('Colour', style: TextStyling.subtitle)),
-                          SizedBox(
-                              width: MediaQuery.of(context).size.width,
-                              height: MediaQuery.of(context).size.height * 0.04,
-                              child: Text('Connectivity',
-                                  style: TextStyling.subtitle)),
-                          SizedBox(
-                              width: MediaQuery.of(context).size.width,
-                              height: MediaQuery.of(context).size.height * 0.08,
-                              child: Text('Features',
-                                  style: TextStyling.subtitle)),
-                          SizedBox(
-                              width: MediaQuery.of(context).size.width,
-                              height: MediaQuery.of(context).size.height * 0.15,
-                              child: Text('Sound Feautures',
-                                  style: TextStyling.subtitle)),
-                          SizedBox(
-                              width: MediaQuery.of(context).size.width,
-                              height: MediaQuery.of(context).size.height * 0.08,
-                              child: Text('Product Dimension',
-                                  style: TextStyling.subtitle)),
-                          SizedBox(
-                              width: MediaQuery.of(context).size.width,
-                              height: MediaQuery.of(context).size.height * 0.04,
-                              child: Text('Item Weight',
-                                  style: TextStyling.subtitle)),
-                          SizedBox(
-                              width: MediaQuery.of(context).size.width,
-                              height: MediaQuery.of(context).size.height * 0.04,
-                              child: Text('Country of Origin',
-                                  style: TextStyling.subtitle)),
-                          SizedBox(
-                              width: MediaQuery.of(context).size.width,
-                              height: MediaQuery.of(context).size.height * 0.08,
-                              child: Text('Warranty',
-                                  style: TextStyling.subtitle)),
-                        ],
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width * .5,
-                    child: Padding(
-                      padding:
-                          const EdgeInsets.only(right: 10, left: 10, top: 10),
-                      child: Column(
-                        children: [
-                          SizedBox(
-                              width: MediaQuery.of(context).size.width,
-                              height: MediaQuery.of(context).size.height * .08,
-                              child: Text(headset['name'],
-                                  style: TextStyling.details)),
-                          SizedBox(
-                              width: MediaQuery.of(context).size.width,
-                              height: MediaQuery.of(context).size.height * .04,
-                              child: Text(headset['model'],
-                                  style: TextStyling.details)),
-                          SizedBox(
-                              width: MediaQuery.of(context).size.width,
-                              height: MediaQuery.of(context).size.height * .04,
-                              child: Text(headset['series'],
-                                  style: TextStyling.details)),
-                          SizedBox(
-                              width: MediaQuery.of(context).size.width,
-                              height: MediaQuery.of(context).size.height * .04,
-                              child: Text(headset['manufacturer'],
-                                  style: TextStyling.details)),
-                          SizedBox(
-                              width: MediaQuery.of(context).size.width,
-                              height: MediaQuery.of(context).size.height * .04,
-                              child: Text(headset['color'],
-                                  style: TextStyling.details)),
-                          SizedBox(
-                              width: MediaQuery.of(context).size.width,
-                              height: MediaQuery.of(context).size.height * .04,
-                              child: Text(headset['connector'],
-                                  style: TextStyling.details)),
-                          SizedBox(
-                              width: MediaQuery.of(context).size.width,
-                              height: MediaQuery.of(context).size.height * .08,
-                              child: Text(headset['features'],
-                                  style: TextStyling.details)),
-                          SizedBox(
-                              width: MediaQuery.of(context).size.width,
-                              height: MediaQuery.of(context).size.height * .15,
-                              child: Text(headset['soundfeatures'],
-                                  style: TextStyling.details)),
-                          SizedBox(
-                              width: MediaQuery.of(context).size.width,
-                              height: MediaQuery.of(context).size.height * .08,
-                              child: Text(headset['productdimension'],
-                                  style: TextStyling.details)),
-                          SizedBox(
-                              width: MediaQuery.of(context).size.width,
-                              height: MediaQuery.of(context).size.height * .04,
-                              child: Text(headset['itemweight'],
-                                  style: TextStyling.details)),
-                          SizedBox(
-                              width: MediaQuery.of(context).size.width,
-                              height: MediaQuery.of(context).size.height * .04,
-                              child: Text(headset['country'],
-                                  style: TextStyling.details)),
-                          SizedBox(
-                              width: MediaQuery.of(context).size.width,
-                              height: MediaQuery.of(context).size.height * .08,
-                              child: Text(headset['warranty'],
-                                  style: TextStyling.details)),
-                        ],
-                      ),
-                    ),
-                  )
-                ],
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('Specifications', style: TextStyling.detailMain),
+                    h30,
+                    Custom3.details(context,
+                        title: 'Product Name', detail: headset[name]),
+                    h10,
+                    Custom3.details(context,
+                        title: 'Model Name', detail: headset[model]),
+                    h10,
+                    Custom3.details(context,
+                        title: 'Series', detail: headset[series]),
+                    h10,
+                    Custom3.details(context,
+                        title: 'Manufacutrer', detail: headset[manufacturer]),
+                    h10,
+                    Custom3.details(context,
+                        title: 'Colour', detail: headset[color]),
+                    h10,
+                    Custom3.details(context,
+                        title: 'Connectivity', detail: headset[connectivity]),
+                    h10,
+                    Custom3.details(context,
+                        title: 'Features', detail: headset[features]),
+                    h10,
+                    Custom3.details(context,
+                        title: 'Sound Features',
+                        detail: headset[soundFeatures]),
+                    h10,
+                    Custom3.details(context,
+                        title: 'Product Dimensions',
+                        detail: headset[dimension]),
+                    h10,
+                    Custom3.details(context,
+                        title: 'Item Weight', detail: headset[weight]),
+                    h10,
+                    Custom3.details(context,
+                        title: 'Country', detail: headset[country]),
+                    h10,
+                    Custom3.details(context,
+                        title: 'Warranty', detail: headset[warranty]),
+                    h10,
+                  ],
+                ),
               ),
             ),
           ),

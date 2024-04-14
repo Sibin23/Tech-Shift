@@ -80,7 +80,7 @@ class _ScreenAddCoolersState extends State<ScreenAddCoolers> {
       voltage: _voltage.text,
       wattage: _wattage.text,
       cooling: _coolingMethod.text,
-      fansize: size.text,
+      fansize: size.text.trim(),
       noise: _noiseLevel.text,
       fancount: _fans.text,
       dimension: _productDimension.text,

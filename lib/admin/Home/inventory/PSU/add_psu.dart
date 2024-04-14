@@ -32,6 +32,7 @@ class _ScreenAddPsuState extends State<ScreenAddPsu> {
   final _country = TextEditingController();
   final _itemWeight = TextEditingController();
   final _warranty = TextEditingController();
+  final _certification = TextEditingController();
   String idnum = DateTime.now().toString().replaceAll(RegExp(r'[^\d]'), '');
   late String imageurl = '';
   bool isNew = false;
@@ -66,6 +67,7 @@ class _ScreenAddPsuState extends State<ScreenAddPsu> {
       model: _modelName.text,
       dimension: _productDimension.text,
       features: _specialFeatures.text,
+      certified: _certification.text,
       coolingMethod: _coolingMethod.text,
       formFactor: _fromFactor.text,
       wattage: _wattage.text.trim(),
@@ -100,6 +102,7 @@ class _ScreenAddPsuState extends State<ScreenAddPsu> {
       _specialFeatures.clear();
       _productDimension.clear();
       _wattage.clear();
+      _certification.clear();
       _coolingMethod.clear();
       _fromFactor.clear();
       _itemWeight.clear();
@@ -168,6 +171,10 @@ class _ScreenAddPsuState extends State<ScreenAddPsu> {
                                 AdminUi.admTextField(
                                     label: 'Form Factor',
                                     textcontroller: _fromFactor),
+                                h10,
+                                AdminUi.admTextField(
+                                    label: 'Certification',
+                                    textcontroller: _certification),
                                 h10,
                                 AdminUi.admTextField(
                                     label: 'Country', textcontroller: _country),

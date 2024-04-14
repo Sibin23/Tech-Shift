@@ -41,9 +41,17 @@ class _CabinetDetailsState extends State<CabinetDetails> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Text('Processor Details', style: CustomText.apptitle),
-        backgroundColor: CustomColors.appTheme,
+        title: Text('Cabinet Details', style: CustomText.apptitle),
+        backgroundColor: Colors.transparent,
         foregroundColor: Colors.white,
+        flexibleSpace: Container(
+          decoration: const BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage(admBoxImg),
+              fit: BoxFit.cover,
+            ),
+          ),
+        ),
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: 10),

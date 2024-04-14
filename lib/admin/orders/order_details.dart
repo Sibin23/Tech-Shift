@@ -1,8 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:prosample_1/admin/const/variables.dart';
 import 'package:prosample_1/admin/orders/order_details_button.dart';
 import 'package:prosample_1/admin/utils/utils_text_style.dart';
-
 
 class OrderDetails extends StatefulWidget {
   final Map<String, dynamic> info;
@@ -20,8 +20,8 @@ class _OrderDetailsState extends State<OrderDetails> {
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.only(bottom: 20),
         child: OrderDetailButton(
-          orderId: widget.info['orderid'],
-          uid: widget.info['uid'],
+          orderId: widget.info[orderId],
+          uid: widget.info[uid],
         ),
       ),
       appBar: AppBar(),
@@ -49,7 +49,9 @@ class _OrderDetailsState extends State<OrderDetails> {
                           width: MediaQuery.of(context).size.width * .3,
                           height: MediaQuery.of(context).size.height * .15,
                           child: CachedNetworkImage(
-                            imageUrl: data['userimage'],
+                            errorWidget: (context, url, error) =>
+                                const Icon(Icons.person, size: 30),
+                            imageUrl: data[userImage],
                             fit: BoxFit.cover,
                             placeholder: (context, url) {
                               return const Center(
@@ -69,36 +71,35 @@ class _OrderDetailsState extends State<OrderDetails> {
                                     Text('Order Status:  ',
                                         style: CustomText.subtitle2),
                                     Text(
-                                      data['status'],
+                                      data[status],
                                       style: TextStyle(
                                           fontWeight: FontWeight.w400,
                                           fontSize: 17,
-                                          color: data['status'] == 'Pending'
+                                          color: data[status] == pending
                                               ? Colors.orange
-                                              : data['status'] == 'Confirmed'
+                                              : data[status] == confirmed
                                                   ? Colors.green
-                                                  : data['status'] ==
-                                                          'Cancelled'
+                                                  : data[status] == cancelled
                                                       ? Colors.red
                                                       : Colors.black),
                                     ),
                                   ],
                                 ),
                                 Text(
-                                  '# ${data['orderid']}',
+                                  '# ${data[orderId]}',
                                   style: CustomText.subtitle2,
                                 ),
                                 Text(
-                                    '${data['date']}/${data['month']}/${data['year']}',
+                                    '${data[date]}/${data[month]}/${data[year]}',
                                     style: CustomText.subtitleG),
-                                Text(data['username'],
+                                Text(data[username],
                                     style: CustomText.subtitle2),
                                 Text(
-                                  data['phnum'],
+                                  data[mobile],
                                   style: CustomText.subtitle2,
                                 ),
                                 Text(
-                                  data['email'],
+                                  data[email],
                                   style: CustomText.subtitle2,
                                 )
                               ],
@@ -115,7 +116,7 @@ class _OrderDetailsState extends State<OrderDetails> {
                           Text('Shipping Address', style: CustomText.subtitle),
                           const SizedBox(height: 10),
                           Text(
-                            '${data['house']}, ${data['area']}, ${data['locality']}, ${data['city']}, ${data['state']}, ${data['pincode']}.',
+                            '${data[house]}, ${data[area]}, ${data[locality]}, ${data[city]}, ${data[state]}, ${data[pincode]}.',
                             style: CustomText.subtitle2,
                           ),
                         ],
@@ -132,7 +133,7 @@ class _OrderDetailsState extends State<OrderDetails> {
                             width: MediaQuery.of(context).size.width * .4,
                             height: MediaQuery.of(context).size.height * .2,
                             child: CachedNetworkImage(
-                              imageUrl: data['image'],
+                              imageUrl: data[itemImage],
                               fit: BoxFit.cover,
                               placeholder: (context, url) => const Center(
                                 child: CircularProgressIndicator(),
@@ -149,7 +150,7 @@ class _OrderDetailsState extends State<OrderDetails> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      data['name'],
+                                      data[name],
                                       style: CustomText.subtitle2,
                                     ),
                                     Row(
@@ -157,7 +158,7 @@ class _OrderDetailsState extends State<OrderDetails> {
                                         Text('New Price:  ',
                                             style: CustomText.subtitle2),
                                         Text(
-                                          '${data['newprice']}',
+                                          '${data[newPrice]}',
                                           style: const TextStyle(
                                               color: Colors.green),
                                         ),
@@ -167,7 +168,7 @@ class _OrderDetailsState extends State<OrderDetails> {
                                       children: [
                                         Text('Old Price:  ',
                                             style: CustomText.subtitle2),
-                                        Text(data['oldprice']),
+                                        Text(data[oldPrice]),
                                       ],
                                     ),
                                   ],

@@ -36,11 +36,13 @@ class TextStyling {
       fontSize: 16,
       color: Colors.grey.shade500,
       decoration: TextDecoration.lineThrough);
-  static final newPbig = GoogleFonts.ptSerif(fontSize: 20, color: Colors.black);
+  static final newPbig = GoogleFonts.ptSerif(fontSize: 20, color: Colors.green);
   static final details = GoogleFonts.roboto(color: Colors.black, fontSize: 17);
   static final buttonW = GoogleFonts.roboto(fontSize: 17, color: Colors.white);
   static final buttonB =
       GoogleFonts.roboto(fontSize: 17, color: AppColors.appTheme);
   static final buttonApptheme =
       GoogleFonts.abyssinicaSil(color: Colors.purple.shade800, fontSize: 23);
+      static final detailMain =
+      GoogleFonts.roboto(color: Colors.black, fontSize: 30);
 }

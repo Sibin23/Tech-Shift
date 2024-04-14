@@ -4,6 +4,7 @@ import 'package:prosample_1/User/Products/product_details.dart';
 import 'package:prosample_1/User/pre_builds/prebuild_item_list.dart';
 import 'package:prosample_1/User/utils/utils_text_decorations.dart';
 import 'package:prosample_1/User/utils/utils_widget2.dart';
+import 'package:prosample_1/admin/const/variables.dart';
 
 class HomePreBuildPC extends StatefulWidget {
   const HomePreBuildPC({super.key});
@@ -29,7 +30,7 @@ class _HomePreBuildPCState extends State<HomePreBuildPC> {
             height: MediaQuery.of(context).size.height * 0.65,
             child: StreamBuilder<QuerySnapshot>(
                 stream: FirebaseFirestore.instance
-                    .collection('prebuild')
+                    .collection(preBuild)
                     .snapshots(),
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
@@ -53,14 +54,14 @@ class _HomePreBuildPCState extends State<HomePreBuildPC> {
                                   context,
                                   MaterialPageRoute(
                                       builder: (ctx) => CheckDetails(
-                                          collection: document['category'],
-                                          idNum: document['idnum'])));
+                                          collection: document[category],
+                                          idNum: document[uniqueId])));
                             },
-                                imageUrl: document['image'],
-                                categoryName: document['category'],
-                                oldPrice: document['oldprice'],
-                                newPrice: document['newprice'],
-                                cabinet: document['case']);
+                                imageUrl: document[itemImage],
+                                categoryName: document[category],
+                                oldPrice: document[oldPrice],
+                                newPrice: document[newPrice],
+                                cabinet: document[cabinet]);
                           }),
                     );
                   } else {

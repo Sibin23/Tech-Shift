@@ -1,8 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:prosample_1/admin/const/variables.dart';
 import 'package:prosample_1/admin/custompc_orders/custompc_order_detail_button.dart';
 import 'package:prosample_1/admin/utils/utils_text_style.dart';
-
 
 class CustomPCOrderDetails extends StatefulWidget {
   final Map<String, dynamic> info;
@@ -21,7 +21,7 @@ class _CustomPCOrderDetailsState extends State<CustomPCOrderDetails> {
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.only(bottom: 20),
         child: CustomPCorderDetailButton(
-            orderId: widget.info['orderid'], uid: widget.info['uid']),
+            orderId: widget.info[orderId], uid: widget.info[uid]),
       ),
       appBar: AppBar(
         surfaceTintColor: Colors.white,
@@ -54,7 +54,7 @@ class _CustomPCOrderDetailsState extends State<CustomPCOrderDetails> {
                               width: MediaQuery.of(context).size.width * .3,
                               height: MediaQuery.of(context).size.height * .15,
                               child: CachedNetworkImage(
-                                imageUrl: item['userimage'],
+                                imageUrl: item[userImage],
                                 fit: BoxFit.cover,
                                 placeholder: (context, url) {
                                   return const Center(
@@ -74,35 +74,35 @@ class _CustomPCOrderDetailsState extends State<CustomPCOrderDetails> {
                                         Text('Order Status:  ',
                                             style: CustomText.subtitle2),
                                         Text(
-                                          item['status'],
+                                          item[status],
                                           style: TextStyle(
                                               fontSize: 17,
-                                              color: item['status'] == 'Pending'
+                                              color: item[status] == pending
                                                   ? Colors.orange
-                                                  : item['status'] == 'Confirmed'
+                                                  : item[status] == confirmed
                                                       ? Colors.green
-                                                      : item['status'] ==
-                                                              'Cancelled'
+                                                      : item[status] ==
+                                                              cancelled
                                                           ? Colors.red
                                                           : Colors.black),
                                         ),
                                       ],
                                     ),
                                     Text(
-                                      '# ${item['orderid']}',
+                                      '# ${item[orderId]}',
                                       style: CustomText.subtitle2,
                                     ),
                                     Text(
-                                        '${item['date']}/${item['month']}/${item['year']}',
+                                        '${item[date]}/${item[month]}/${item[year]}',
                                         style: CustomText.subtitleG),
-                                    Text(item['username'],
+                                    Text(item[username],
                                         style: CustomText.subtitle2),
                                     Text(
-                                      item['phnum'],
+                                      item[mobile],
                                       style: CustomText.subtitle2,
                                     ),
                                     Text(
-                                      item['email'],
+                                      item[email],
                                       style: CustomText.subtitle2,
                                     )
                                   ],
@@ -120,7 +120,7 @@ class _CustomPCOrderDetailsState extends State<CustomPCOrderDetails> {
                                   style: CustomText.subtitle),
                               const SizedBox(height: 10),
                               Text(
-                                '${item['house']}, ${item['area']}, ${item['locality']}, ${item['city']}, ${item['state']}, ${item['pincode']}.',
+                                '${item[house]}, ${item[area]}, ${item[locality]}, ${item[city]}, ${item[state]}, ${item[pincode]}.',
                                 style: CustomText.subtitle2,
                               ),
                             ],
@@ -137,7 +137,7 @@ class _CustomPCOrderDetailsState extends State<CustomPCOrderDetails> {
                                 width: MediaQuery.of(context).size.width * .4,
                                 height: MediaQuery.of(context).size.height * .2,
                                 child: CachedNetworkImage(
-                                  imageUrl: item['image'],
+                                  imageUrl: item[itemImage],
                                   fit: BoxFit.cover,
                                   placeholder: (context, url) => const Center(
                                     child: CircularProgressIndicator(),
@@ -155,7 +155,7 @@ class _CustomPCOrderDetailsState extends State<CustomPCOrderDetails> {
                                           CrossAxisAlignment.start,
                                       children: [
                                         Text(
-                                          item['cabinet'],
+                                          item[cabinet],
                                           style: CustomText.subtitle2,
                                         ),
                                         Row(
@@ -163,7 +163,7 @@ class _CustomPCOrderDetailsState extends State<CustomPCOrderDetails> {
                                             Text('Total Price:  ',
                                                 style: CustomText.subtitle2),
                                             Text(
-                                              '${item['totalprice']}',
+                                              '${item[totalPrice]}',
                                               style: const TextStyle(
                                                   color: Colors.green),
                                             ),
@@ -178,28 +178,29 @@ class _CustomPCOrderDetailsState extends State<CustomPCOrderDetails> {
                           ),
                         ),
                         Text('Cabinet', style: CustomText.categoryTitleText),
-                        Text(item['cabinet'], style: CustomText.subtitle2),
+                        Text(item[cabinet], style: CustomText.subtitle2),
                         space,
                         Text('Processor', style: CustomText.categoryTitleText),
-                        Text(item['processor'], style: CustomText.subtitle2),
+                        Text(item[processor], style: CustomText.subtitle2),
                         space,
-                        Text('Motherboard', style: CustomText.categoryTitleText),
-                        Text(item['motherboard'], style: CustomText.subtitle2),
+                        Text('Motherboard',
+                            style: CustomText.categoryTitleText),
+                        Text(item[motherboard], style: CustomText.subtitle2),
                         space,
                         Text('RAM', style: CustomText.categoryTitleText),
-                        Text(item['ram'], style: CustomText.subtitle2),
+                        Text(item[ram], style: CustomText.subtitle2),
                         space,
                         Text('SSD', style: CustomText.categoryTitleText),
-                        Text(item['ssd'], style: CustomText.subtitle2),
+                        Text(item[ssd], style: CustomText.subtitle2),
                         space,
                         Text('GPU', style: CustomText.categoryTitleText),
-                        Text(item['gpu'], style: CustomText.subtitle2),
+                        Text(item[gpu], style: CustomText.subtitle2),
                         space,
                         Text('CPU Cooler', style: CustomText.categoryTitleText),
-                        Text(item['cooler'], style: CustomText.subtitle2),
+                        Text(item[cooler], style: CustomText.subtitle2),
                         space,
                         Text('PSU', style: CustomText.categoryTitleText),
-                        Text(item['psu'], style: CustomText.subtitle2),
+                        Text(item[psu], style: CustomText.subtitle2),
                         space,
                       ],
                     ),

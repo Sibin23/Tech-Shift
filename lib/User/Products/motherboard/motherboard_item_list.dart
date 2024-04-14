@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:prosample_1/User/Products/product_details.dart';
 import 'package:prosample_1/User/utils/utils_colors.dart';
 import 'package:prosample_1/User/utils/utils_text_decorations.dart';
+import 'package:prosample_1/admin/const/variables.dart';
 
 class ProductMotherboard extends StatefulWidget {
   const ProductMotherboard({super.key});
@@ -22,8 +23,8 @@ class _ProductMotherboardState extends State<ProductMotherboard> {
       body: SafeArea(
           child: StreamBuilder<QuerySnapshot>(
               stream: FirebaseFirestore.instance
-                  .collection('motherboard')
-                  .orderBy('name')
+                  .collection(motherboard)
+                  .orderBy(name)
                   .snapshots(),
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
@@ -48,8 +49,8 @@ class _ProductMotherboardState extends State<ProductMotherboard> {
                                     context,
                                     MaterialPageRoute(
                                         builder: (ctx) => CheckDetails(
-                                            collection: document['category'],
-                                            idNum: document['idnum'])));
+                                            collection: document[category],
+                                            idNum: document[uniqueId])));
                               },
                               child: Container(
                                   decoration: BoxDecoration(
@@ -80,10 +81,10 @@ class _ProductMotherboardState extends State<ProductMotherboard> {
                                                         .size
                                                         .height *
                                                     0.13,
-                                                child: document['image'] != null
+                                                child: document[itemImage] != null
                                                     ? CachedNetworkImage(
                                                         imageUrl:
-                                                            document['image'],
+                                                            document[itemImage],
                                                         fit: BoxFit.cover,
                                                         placeholder: (context,
                                                                 url) =>
@@ -102,7 +103,7 @@ class _ProductMotherboardState extends State<ProductMotherboard> {
                                                         'assets/categories/motherboard.png',
                                                         fit: BoxFit.cover),
                                               ),
-                                            Text(document['category'],
+                                            Text(document[category],
                                                 style: TextStyling.categoryText),
                                             SizedBox(
                                               width: MediaQuery.of(context)
@@ -122,7 +123,7 @@ class _ProductMotherboardState extends State<ProductMotherboard> {
                                               ),
                                             ),
                                             const SizedBox(height: 3),
-                                            Text(document['name'],
+                                            Text(document[name],
                                                 softWrap: false,
                                                 maxLines: 1,
                                                 overflow: TextOverflow.ellipsis),
@@ -134,7 +135,7 @@ class _ProductMotherboardState extends State<ProductMotherboard> {
                                                 ),
                                                 const SizedBox(width: 2),
                                                 Text(
-                                                    document['oldprice']
+                                                    document[oldPrice]
                                                         .replaceAllMapped(
                                                             RegExp(
                                                                 r'(\d{1,3})(?=(\d{3})+(?!\d))'),
@@ -153,7 +154,7 @@ class _ProductMotherboardState extends State<ProductMotherboard> {
                                                   ),
                                                   const SizedBox(width: 2),
                                                   Text(
-                                                      document['newprice']
+                                                      document[newPrice]
                                                           .replaceAllMapped(
                                                               RegExp(
                                                                   r'(\d{1,3})(?=(\d{3})+(?!\d))'),

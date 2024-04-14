@@ -33,6 +33,7 @@ class _UpdatePsuState extends State<UpdatePsu> {
   final _country = TextEditingController();
   final _itemWeight = TextEditingController();
   final _warranty = TextEditingController();
+  final _certification = TextEditingController();
   late String imageurl = '';
   bool? isNew;
   bool? isPopular;
@@ -55,7 +56,7 @@ class _UpdatePsuState extends State<UpdatePsu> {
     return imageurl = downloadUrl;
   }
 
- Future<void> updateData() async{
+  Future<void> updateData() async {
     final item = {
       itemImage: imageurl,
       name: _productName.text,
@@ -91,6 +92,7 @@ class _UpdatePsuState extends State<UpdatePsu> {
       features: _specialFeatures.text,
       coolingMethod: _coolingMethod.text,
       formFactor: _fromFactor.text,
+      certified: _certification.text,
       wattage: _wattage.text.trim(),
       country: _country.text,
       weight: _itemWeight.text,
@@ -111,6 +113,7 @@ class _UpdatePsuState extends State<UpdatePsu> {
       _coolingMethod.clear();
       _fromFactor.clear();
       _itemWeight.clear();
+      _certification.clear();
       _warranty.clear();
       isNew = false;
       isPopular = false;
@@ -136,6 +139,7 @@ class _UpdatePsuState extends State<UpdatePsu> {
     _coolingMethod.text = data[coolingMethod];
     _fromFactor.text = data[formFactor];
     _wattage.text = data[wattage];
+    _certification.text = data[certified];
     _country.text = data[country];
     _itemWeight.text = data[weight];
     _warranty.text = data[warranty];
@@ -203,6 +207,10 @@ class _UpdatePsuState extends State<UpdatePsu> {
                                 AdminUi.admTextField(
                                     label: 'Form Factor',
                                     textcontroller: _fromFactor),
+                                h10,
+                                AdminUi.admTextField(
+                                    label: 'Certification',
+                                    textcontroller: _certification),
                                 h10,
                                 AdminUi.admTextField(
                                     label: 'Country', textcontroller: _country),

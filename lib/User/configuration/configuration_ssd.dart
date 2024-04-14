@@ -6,6 +6,7 @@ import 'package:prosample_1/User/configuration/configuration_gpu.dart';
 import 'package:prosample_1/User/utils/utils_colors.dart';
 import 'package:prosample_1/User/utils/utils_text_decorations.dart';
 import 'package:prosample_1/User/utils/utils_widget2.dart';
+import 'package:prosample_1/admin/const/variables.dart';
 
 class SsdConfig extends StatefulWidget {
   final String power;
@@ -31,7 +32,6 @@ class _SsdConfigState extends State<SsdConfig> {
   String? selectedPower;
   @override
   Widget build(BuildContext context) {
-    final ssd = widget.ssdType;
     selectedPower ??= 0.toString();
     int totalPwr =
         int.parse(widget.power) + int.parse(selectedPower.toString()) + 30;
@@ -47,7 +47,7 @@ class _SsdConfigState extends State<SsdConfig> {
           GestureDetector(
             onTap: () {
               final pc = Map<String, dynamic>.from(widget.pc);
-              pc['ssd'] = selectedSsd;
+              pc[ssd] = selectedSsd;
               pc['ssdprice'] = selectedPrice;
               Navigator.push(
                   context,
@@ -99,7 +99,7 @@ class _SsdConfigState extends State<SsdConfig> {
           );
         } else {
           final updatedConfig = Map<String, dynamic>.from(widget.pc);
-          updatedConfig['ssd'] = selectedSsd;
+          updatedConfig[ssd] = selectedSsd;
           updatedConfig['ssdprice'] = selectedPrice;
 
           Navigator.push(
@@ -127,9 +127,10 @@ class _SsdConfigState extends State<SsdConfig> {
                 height: MediaQuery.of(context).size.height,
                 child: StreamBuilder<QuerySnapshot>(
                     stream: FirebaseFirestore.instance
-                        .collection('ssd')
-                        .where('gentype', isGreaterThanOrEqualTo: ssd)
-                        .where('gentype', isLessThanOrEqualTo: '$ssd.9')
+                        .collection(ssd)
+                        .where(genType, isGreaterThanOrEqualTo: widget.ssdType)
+                        .where(genType,
+                            isLessThanOrEqualTo: '${widget.ssdType}.9')
                         .snapshots(),
                     builder: (context, snapshot) {
                       if (snapshot.hasData) {
@@ -143,18 +144,12 @@ class _SsdConfigState extends State<SsdConfig> {
                                 crossAxisCount: 2,
                                 mainAxisSpacing: 15,
                                 crossAxisSpacing: 5,
-                                mainAxisExtent: 220,
+                                mainAxisExtent: 225,
                               ),
                               itemBuilder: ((context, index) {
                                 DocumentSnapshot document =
                                     snapshot.data!.docs[index];
-                                String imageUrl = document['image'];
-                                String name = document['name'];
-                                String price = document['newprice'];
-                                String storage = document['storage'];
-                                String speed = document['transferspeed'];
-                                String gen = document['gentype'];
-                                String wattage = document['wattage'];
+
                                 bool isSelected =
                                     document.id == selectedDocumentId;
                                 return Padding(
@@ -170,9 +165,9 @@ class _SsdConfigState extends State<SsdConfig> {
                                             selectedPrice = null;
                                           } else {
                                             selectedDocumentId = document.id;
-                                            selectedSsd = name;
-                                            selectedPrice = price;
-                                            selectedPower = wattage;
+                                            selectedSsd = document[name];
+                                            selectedPrice = document[newPrice];
+                                            selectedPower = document[wattage];
                                           }
                                           isSelected = !isSelected;
                                         });
@@ -223,7 +218,8 @@ class _SsdConfigState extends State<SsdConfig> {
                                                           .height *
                                                       0.11,
                                                   child: CachedNetworkImage(
-                                                      imageUrl: imageUrl,
+                                                      imageUrl:
+                                                          document[itemImage],
                                                       fit: BoxFit.cover,
                                                       placeholder: (context,
                                                               url) =>
@@ -243,7 +239,7 @@ class _SsdConfigState extends State<SsdConfig> {
                                                           CrossAxisAlignment
                                                               .start,
                                                       children: [
-                                                        Text(name,
+                                                        Text(document[name],
                                                             overflow:
                                                                 TextOverflow
                                                                     .ellipsis,
@@ -255,17 +251,20 @@ class _SsdConfigState extends State<SsdConfig> {
                                                             height: 5),
                                                         Row(
                                                           children: [
-                                                            Text('$storage,',
+                                                            Text(
+                                                                '${document[storage]}, ',
                                                                 style: TextStyling
                                                                     .categoryText),
                                                             const SizedBox(
                                                                 width: 3),
-                                                            Text(gen,
+                                                            Text(
+                                                                document[
+                                                                    genType],
                                                                 style: TextStyling
                                                                     .categoryText)
                                                           ],
                                                         ),
-                                                        Text(speed,
+                                                        Text(document[speed],
                                                             style: TextStyling
                                                                 .categoryText),
                                                       ],
@@ -276,11 +275,12 @@ class _SsdConfigState extends State<SsdConfig> {
                                                     const Text('₹'),
                                                     const SizedBox(width: 2),
                                                     Text(
-                                                        price.replaceAllMapped(
-                                                            RegExp(
-                                                                r'(\d{1,3})(?=(\d{3})+(?!\d))'),
-                                                            (Match m) =>
-                                                                "${m[1]},"),
+                                                        document[newPrice]
+                                                            .replaceAllMapped(
+                                                                RegExp(
+                                                                    r'(\d{1,3})(?=(\d{3})+(?!\d))'),
+                                                                (Match m) =>
+                                                                    "${m[1]},"),
                                                         style:
                                                             TextStyling.newP),
                                                   ],

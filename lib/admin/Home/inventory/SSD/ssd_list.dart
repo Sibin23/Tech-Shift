@@ -41,11 +41,18 @@ class _SsdDetailsState extends State<SsdDetails> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        surfaceTintColor: Colors.white,
-        centerTitle: true,
         title: Text('SSD Details', style: CustomText.apptitle),
-        backgroundColor: CustomColors.appTheme,
+        backgroundColor: Colors.transparent,
         foregroundColor: Colors.white,
+        centerTitle: true,
+        flexibleSpace: Container(
+          decoration: const BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage(admBoxImg),
+              fit: BoxFit.cover,
+            ),
+          ),
+        ),
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: 10),

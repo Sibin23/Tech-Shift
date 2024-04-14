@@ -264,7 +264,7 @@ class _UpdateMonitorState extends State<UpdateMonitor> {
                         Navigator.pop(context);
                         updateData();
                         AdminUiHelper.customSnackbar(
-                            context, 'Item Added Successfully !');
+                            context, 'Item Updated Successfully !');
                       }
                     }, text: 'Save'),
                     h30

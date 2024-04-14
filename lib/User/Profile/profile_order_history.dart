@@ -7,6 +7,7 @@ import 'package:lottie/lottie.dart';
 import 'package:prosample_1/User/profile/profile_order_details.dart';
 import 'package:prosample_1/User/utils/utils_colors.dart';
 import 'package:prosample_1/User/utils/utils_text_decorations.dart';
+import 'package:prosample_1/admin/const/variables.dart';
 
 class ProfileOrderHistory extends StatefulWidget {
   const ProfileOrderHistory({super.key});
@@ -30,7 +31,7 @@ class _ProfileOrderHistoryState extends State<ProfileOrderHistory> {
 
   @override
   Widget build(BuildContext context) {
-    final uid = FirebaseAuth.instance.currentUser!.uid;
+    final userId = FirebaseAuth.instance.currentUser!.uid;
     return Scaffold(
         appBar: AppBar(
           surfaceTintColor: Colors.white,
@@ -56,8 +57,8 @@ class _ProfileOrderHistoryState extends State<ProfileOrderHistory> {
             : SafeArea(
                 child: StreamBuilder(
                     stream: FirebaseFirestore.instance
-                        .collection('OrderOthers')
-                        .where('uid', isEqualTo: uid)
+                        .collection(orderOthers)
+                        .where(uid, isEqualTo: userId)
                         .snapshots(),
                     builder: (context, snapshot) {
                       if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
@@ -85,18 +86,22 @@ class _ProfileOrderHistoryState extends State<ProfileOrderHistory> {
                             itemCount: snapshot.data!.docs.length,
                             itemBuilder: (context, index) {
                               final data = snapshot.data!.docs[index];
+                              final detail = data.data();
 
                               return Padding(
                                 padding: const EdgeInsets.only(
                                     left: 16, right: 16, top: 8, bottom: 8),
                                 child: GestureDetector(
                                   onTap: () {
-                                    if (data['category'] != null &&
-                                        data['idnum'] != null) {
+                                    if (data[category] != null &&
+                                        data[uniqueId] != null) {
                                       Navigator.push(
                                           context,
                                           MaterialPageRoute(
-                                              builder: (ctx) => ProfileOrderDetails(uid: data['uid'],orderId: data['orderid'])));
+                                              builder: (ctx) =>
+                                                  ProfileOrderDetails(
+                                                    detail: detail,
+                                                  )));
                                     }
                                   },
                                   child: Container(
@@ -119,17 +124,17 @@ class _ProfileOrderHistoryState extends State<ProfileOrderHistory> {
                                             top: 10,
                                             right: 20,
                                             child: Text(
-                                              data['status'],
+                                              data[status],
                                               style: TextStyle(
                                                   fontSize: 16,
-                                                  color: data['status'] ==
-                                                          'Confirmed'
+                                                  color: data[status] ==
+                                                          confirmed
                                                       ? Colors.green
-                                                      : data['status'] ==
-                                                              'Cancelled'
+                                                      : data[status] ==
+                                                              cancelled
                                                           ? Colors.red
-                                                          : data['status'] ==
-                                                                  'Pending'
+                                                          : data[status] ==
+                                                                  pending
                                                               ? Colors.orange
                                                               : Colors.grey),
                                             )),
@@ -147,7 +152,7 @@ class _ProfileOrderHistoryState extends State<ProfileOrderHistory> {
                                                           .height *
                                                       .12,
                                                   child: CachedNetworkImage(
-                                                    imageUrl: data['image'],
+                                                    imageUrl: data[itemImage],
                                                     fit: BoxFit.contain,
                                                     placeholder:
                                                         (context, url) =>
@@ -179,11 +184,12 @@ class _ProfileOrderHistoryState extends State<ProfileOrderHistory> {
                                                           CrossAxisAlignment
                                                               .start,
                                                       children: [
-                                                        Text('# ${data['orderid']}'),
-                                                        Text(data['category']
+                                                        Text(
+                                                            '# ${data[orderId]}'),
+                                                        Text(data[category]
                                                             .toString()
                                                             .toUpperCase()),
-                                                        Text(data['name'],
+                                                        Text(data[name],
                                                             overflow:
                                                                 TextOverflow
                                                                     .ellipsis,
@@ -202,7 +208,7 @@ class _ProfileOrderHistoryState extends State<ProfileOrderHistory> {
                                                             const SizedBox(
                                                                 width: 3),
                                                             Text(
-                                                                data['oldprice'].replaceAllMapped(
+                                                                data[oldPrice].replaceAllMapped(
                                                                     RegExp(
                                                                         r'(\d{1,3})(?=(\d{3})+(?!\d))'),
                                                                     (Match m) =>
@@ -216,9 +222,7 @@ class _ProfileOrderHistoryState extends State<ProfileOrderHistory> {
                                                                     .subtitle),
                                                             const SizedBox(
                                                                 width: 3),
-                                                            Text(
-                                                                data[
-                                                                    'newprice'],
+                                                            Text(data[newPrice],
                                                                 style:
                                                                     TextStyling
                                                                         .newP),

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:prosample_1/User/Products/product_details.dart';
 import 'package:prosample_1/User/utils/utils_colors.dart';
 import 'package:prosample_1/User/utils/utils_text_decorations.dart';
+import 'package:prosample_1/admin/const/variables.dart';
 
 class ProductKeyboard extends StatefulWidget {
   const ProductKeyboard({super.key});
@@ -22,8 +23,8 @@ class _ProductKeyboardState extends State<ProductKeyboard> {
         body: SafeArea(
             child: StreamBuilder<QuerySnapshot>(
                 stream: FirebaseFirestore.instance
-                    .collection('keyboard')
-                    .orderBy('name')
+                    .collection(keyboard)
+                    .orderBy(name)
                     .snapshots(),
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
@@ -39,7 +40,7 @@ class _ProductKeyboardState extends State<ProductKeyboard> {
                                   crossAxisCount: 2),
                           itemBuilder: (context, index) {
                             final document = snapshot.data!.docs[index];
-            
+
                             return Padding(
                               padding: const EdgeInsets.only(
                                   left: 5, right: 5, top: 5, bottom: 5),
@@ -49,8 +50,8 @@ class _ProductKeyboardState extends State<ProductKeyboard> {
                                       context,
                                       MaterialPageRoute(
                                           builder: (ctx) => CheckDetails(
-                                              collection: document['category'],
-                                              idNum: document['idnum'])));
+                                              collection: document[category],
+                                              idNum: document[uniqueId])));
                                 },
                                 child: Container(
                                     decoration: BoxDecoration(
@@ -63,10 +64,10 @@ class _ProductKeyboardState extends State<ProductKeyboard> {
                                               spreadRadius: 1.0,
                                               offset: Offset(2.0, 2.0))
                                         ]),
-                                    width:
-                                        MediaQuery.of(context).size.width * 0.02,
-                                    height:
-                                        MediaQuery.of(context).size.height * 0.1,
+                                    width: MediaQuery.of(context).size.width *
+                                        0.02,
+                                    height: MediaQuery.of(context).size.height *
+                                        0.1,
                                     child: Padding(
                                         padding: const EdgeInsets.all(8.0),
                                         child: Column(
@@ -82,29 +83,30 @@ class _ProductKeyboardState extends State<ProductKeyboard> {
                                                         .size
                                                         .height *
                                                     0.13,
-                                                child: document['image'] != null
+                                                child: document[itemImage] !=
+                                                        null
                                                     ? CachedNetworkImage(
                                                         imageUrl:
-                                                            document['image'],
+                                                            document[itemImage],
                                                         fit: BoxFit.cover,
                                                         placeholder: (context,
                                                                 url) =>
                                                             Image.asset(
                                                                 'assets/categories/keyboard.png',
-                                                                fit:
-                                                                    BoxFit.cover),
+                                                                fit: BoxFit
+                                                                    .cover),
                                                         errorWidget: (context,
                                                                 url, error) =>
                                                             Image.asset(
                                                                 'assets/categories/keyboard.png',
-                                                                fit:
-                                                                    BoxFit.cover),
+                                                                fit: BoxFit
+                                                                    .cover),
                                                       )
                                                     : Image.asset(
                                                         'assets/categories/keyboard.png',
                                                         fit: BoxFit.cover),
                                               ),
-                                              Text(document['category'],
+                                              Text(document[category],
                                                   style:
                                                       TextStyling.categoryText),
                                               SizedBox(
@@ -126,7 +128,7 @@ class _ProductKeyboardState extends State<ProductKeyboard> {
                                                 ),
                                               ),
                                               const SizedBox(height: 3),
-                                              Text(document['name'],
+                                              Text(document[name],
                                                   softWrap: false,
                                                   maxLines: 1,
                                                   overflow:
@@ -139,7 +141,7 @@ class _ProductKeyboardState extends State<ProductKeyboard> {
                                                   ),
                                                   const SizedBox(width: 2),
                                                   Text(
-                                                      document['oldprice']
+                                                      document[oldPrice]
                                                           .replaceAllMapped(
                                                               RegExp(
                                                                   r'(\d{1,3})(?=(\d{3})+(?!\d))'),
@@ -158,13 +160,14 @@ class _ProductKeyboardState extends State<ProductKeyboard> {
                                                     ),
                                                     const SizedBox(width: 2),
                                                     Text(
-                                                        document['newprice']
+                                                        document[newPrice]
                                                             .replaceAllMapped(
                                                                 RegExp(
                                                                     r'(\d{1,3})(?=(\d{3})+(?!\d))'),
                                                                 (Match m) =>
                                                                     "${m[1]},"),
-                                                        style: TextStyling.newP),
+                                                        style:
+                                                            TextStyling.newP),
                                                   ],
                                                 )
                                               ])
