@@ -2,10 +2,15 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:prosample_1/User/user_home/user_home_privacy_policies.dart';
+import 'package:prosample_1/User/utils/utils_colors.dart';
+import 'package:prosample_1/User/utils/utils_text_decorations.dart';
 import 'package:prosample_1/User/utils/utils_widget1.dart';
 import 'package:prosample_1/User/utils/utils_widget3.dart';
+import 'package:prosample_1/admin/const/variables.dart';
 
 class AddUserScreen extends StatefulWidget {
   const AddUserScreen({super.key});
@@ -27,6 +32,7 @@ class _AddUserScreenState extends State<AddUserScreen> {
   String? id;
   late String imageurl = '';
   String? imageNew;
+  bool isTrue = false;
   Future<void> pickImage() async {
     final ImagePicker picker = ImagePicker();
     final XFile? image = await picker.pickImage(source: ImageSource.gallery);
@@ -104,66 +110,90 @@ class _AddUserScreenState extends State<AddUserScreen> {
                       ],
                     ),
                   ),
-                  const SizedBox(height: 30),
+                  h30,
                   Form(
                       key: _formkey,
                       child: Column(
                         children: [
-                          UiHelper.customTextField(
+                          UiHelper.profileTextField(
                               controller: _nameController,
-                              labeltext: 'Full Name',
-                              iconData: Icons.person,
+                              text: 'Full Name*',
+                              keyboardType: TextInputType.text,
                               validate: 'Name is required'),
-                          const SizedBox(height: 10),
-                          UiHelper.customTextField(
+                          h10,
+                          UiHelper.profileTextField(
                               controller: _phoneNumberController,
-                              labeltext: 'Phone Number',
-                              iconData: Icons.phone,
+                              text: 'Phone Number*',
                               keyboardType: TextInputType.number,
                               validate: 'Contact details is required'),
-                          const SizedBox(height: 10),
-                          UiHelper.customTextField(
+                          h10,
+                          UiHelper.profileTextField(
                               controller: _cityController,
-                              labeltext: 'City',
-                              iconData: Icons.location_city_rounded,
+                              text: 'City*',
                               validate: 'City Name is required'),
-                          const SizedBox(height: 10),
-                          UiHelper.customTextField(
+                          h10,
+                          UiHelper.profileTextField(
                               controller: _stateController,
-                              labeltext: 'State',
-                              iconData: Icons.location_city,
+                              text: 'State*',
                               validate: 'State Name is required'),
-                          const SizedBox(height: 10),
-                          UiHelper.customTextField(
+                          h10,
+                          UiHelper.profileTextField(
                               controller: _pincodeController,
-                              labeltext: "Pincode",
-                              iconData: Icons.post_add_outlined,
+                              text: "Pincode*",
                               keyboardType: TextInputType.number,
                               validate: 'Pincode is reqired'),
-                          const SizedBox(height: 10),
-                          UiHelper.customTextField(
+                          h10,
+                          UiHelper.profileTextField(
                               controller: locality,
-                              labeltext: 'Locality',
-                              iconData: Icons.location_city,
+                              text: 'Locality*',
                               validate: 'Locality is required'),
-                          const SizedBox(height: 10),
-                          UiHelper.customTextField(
+                          h10,
+                          UiHelper.profileTextField(
                               controller: _addressController,
-                              labeltext: 'House No., Building Name',
-                              iconData: Icons.home_rounded,
+                              text: 'House No., Building Name',
                               validate: 'Adress is required'),
-                          const SizedBox(height: 10),
-                          UiHelper.customTextField(
+                          h10,
+                          UiHelper.profileTextField(
                               controller: _roadNameController,
-                              labeltext: 'Road Name, Area',
-                              iconData: Icons.location_on,
+                              text: 'Road Name, Area',
                               validate: 'This field is required'),
+                          h20,
+                          Row(
+                          children: [
+                            Checkbox(
+                                value: isTrue,
+                                onChanged: (newValue) {
+                                  setState(() {
+                                    isTrue = newValue!;
+                                  });
+                                }),
+                            RichText(
+                              text: TextSpan(
+                                text: 'I Agree with ',
+                                style: TextStyling.categoryText,
+                                children: [
+                                  TextSpan(
+                                    text: 'Privacy Policy',
+                                    style: TextStyle(color: AppColors.appTheme),
+                                    recognizer: TapGestureRecognizer()
+                                      ..onTap = () => Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (ctx) =>
+                                                  const HomePrivacyPolicy())),
+                                  ),
+                                ],
+                              ),
+                            )
+                          ],
+                        ),
                         ],
                       )),
-                  const SizedBox(height: 30),
+                  h30,
                   UiHelper.customButton(context, () async {
                     if (_formkey.currentState!.validate()) {
-                      Navigator.pop(context);
+                      if(isTrue == true){
+                        Navigator.pop(context);
                       final user = {
                         'userid': id.toString(),
                         'name': _nameController.text.trim(),
@@ -177,6 +207,9 @@ class _AddUserScreenState extends State<AddUserScreen> {
                         'imageUrl': imageurl,
                       };
                       addProfile(user);
+                      } else if(isTrue == false){
+                        UiHelper.userSnackbar(context, "Please Agree Privacy Policy");
+                      }
                     }
                   }, text: 'Add Profile'),
                   const SizedBox(height: 40),

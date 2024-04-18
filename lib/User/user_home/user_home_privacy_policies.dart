@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:prosample_1/User/utils/utils_text_decorations.dart';
 import 'package:prosample_1/admin/const/variables.dart';
 
-class TermsAndPolicy extends StatelessWidget {
-  const TermsAndPolicy({super.key});
+class HomePrivacyPolicy extends StatelessWidget {
+  const HomePrivacyPolicy({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -17,8 +17,12 @@ class TermsAndPolicy extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const SizedBox(height: 20),
-            Text('Terms & Conditions', style: TextStyling.appTitle),
+            Text('Privacy Policy', style: TextStyling.appTitle),
             const SizedBox(height: 20),
+            // Text('Personal Information',style: TextStyling.subtitle3),
+            // h20,
+            // Text('When you create an account, we collect you name, email address, phone number, and other information you provide.',style: TextStyling.subtitle2,),
+            // Text('When you C'),
             SizedBox(
               width: MediaQuery.of(context).size.width,
               child: Stack(

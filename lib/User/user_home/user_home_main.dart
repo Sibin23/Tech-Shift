@@ -10,7 +10,7 @@ import 'package:prosample_1/User/user_home/user_home_promo1.dart';
 import 'package:prosample_1/User/user_home/user_home_promo2.dart';
 import 'package:prosample_1/User/user_home/user_home_promo3.dart';
 import 'package:prosample_1/User/user_home/user_home_contact_page.dart';
-import 'package:prosample_1/User/user_home/user_home_terms_policies.dart';
+import 'package:prosample_1/User/user_home/user_home_privacy_policies.dart';
 import 'package:prosample_1/User/user_home/user_home_warranty_policy.dart';
 import 'package:prosample_1/User/utils/utils_widget1.dart';
 import 'package:prosample_1/User/utils/utils_text_decorations.dart';
@@ -77,7 +77,7 @@ class _ScreenHomeState extends State<ScreenHome> {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (ctx) => const TermsAndPolicy()));
+                          builder: (ctx) => const HomePrivacyPolicy()));
                 },
               ),
               ListTile(

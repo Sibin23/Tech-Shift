@@ -26,6 +26,7 @@ class _PsuConfigState extends State<PsuConfig> {
   String? selectedPower;
   @override
   Widget build(BuildContext context) {
+    print(widget.power);
     selectedPrice ??= 0.toString();
     selectedPsu ??= 'Select a PSU';
     int totalAmt =

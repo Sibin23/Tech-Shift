@@ -29,7 +29,7 @@ class _AccountNoUserState extends State<AccountNoUser> {
                 width: MediaQuery.of(context).size.width,
                 height: MediaQuery.of(context).size.height * .27,
                 child: Image.asset(
-                  'assets/Ads section/profilebg.png',
+                  'assets/ads/profilebg.png',
                   fit: BoxFit.cover,
                 ),
               ),
@@ -58,7 +58,7 @@ class _AccountNoUserState extends State<AccountNoUser> {
                     ],
                   ),
                   child:
-                      ClipOval(child: Image.asset('assets/Icons/profile.png')),
+                      ClipOval(child: Image.asset('assets/icons/profile.png')),
                 ),
               ),
             ],
@@ -75,7 +75,7 @@ class _AccountNoUserState extends State<AccountNoUser> {
                       MaterialPageRoute(
                           builder: (ctx) => const AddUserScreen()));
                 },
-                icon: Image.asset('assets/Icons/Edit_icon.png',
+                icon: Image.asset('assets/icons/Edit_icon.png',
                     width: MediaQuery.of(context).size.width * .12,
                     color: Colors.black)),
           ],

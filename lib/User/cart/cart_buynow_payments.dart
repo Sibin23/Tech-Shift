@@ -6,7 +6,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
 import 'package:prosample_1/User/cart/cart_total_amount.dart';
 import 'package:prosample_1/User/home.dart';
-import 'package:prosample_1/User/user_home/user_home_terms_policies.dart';
+import 'package:prosample_1/User/user_home/user_home_privacy_policies.dart';
 import 'package:prosample_1/User/utils/utils_widget1.dart';
 import 'package:prosample_1/User/utils/utils_text_decorations.dart';
 import 'package:prosample_1/functions/fuctions.dart';
@@ -24,6 +24,7 @@ class _CartBuyNowPaymentsState extends State<CartBuyNowPayments> {
   bool isChecked = false;
   double? priceDifference;
   bool isLoading = false;
+  bool? isCheckedPolicy = false;
   @override
   void initState() {
     _checkbuyNow();
@@ -114,174 +115,186 @@ class _CartBuyNowPaymentsState extends State<CartBuyNowPayments> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        bottomNavigationBar: isLoading == true
-            ? null
-            : Container(
-                color: Colors.white,
-                width: MediaQuery.of(context).size.width,
-                child: Padding(
-                  padding:
-                      const EdgeInsets.only(left: 40, right: 40, bottom: 15),
-                  child: UiHelper.buttonSml(
-                    context,
-                    () {
-                      setState(() {
-                        if (isChecked == true) {
-                          isLoading = true;
-                          loading();
-                          addToOrders();
-                        } else if (isChecked == false) {
-                          UiHelper.userSnackbar(
-                              context, 'Please Select Cash On Delivery');
-                        }
-                      });
-                    },
-                    text: 'Confirm Order',
-                  ),
+      bottomNavigationBar: isLoading == true
+          ? null
+          : Container(
+              color: Colors.white,
+              width: MediaQuery.of(context).size.width,
+              child: Padding(
+                padding: const EdgeInsets.only(left: 40, right: 40, bottom: 15),
+                child: UiHelper.buttonSml(
+                  context,
+                  () {
+                    setState(() {
+                      if (isChecked == true && isCheckedPolicy == true) {
+                        isLoading = true;
+                        loading();
+                        addToOrders();
+                      } else if (isChecked == false) {
+                        UiHelper.userSnackbar(
+                            context, 'Please Select Cash On Delivery');
+                      } else if (isCheckedPolicy == false) {
+                        UiHelper.userSnackbar(
+                            context, 'Please Select Privacy Policy');
+                      }
+                    });
+                  },
+                  text: 'Confirm Order',
                 ),
               ),
-        appBar: isLoading == true
-            ? null
-            : AppBar(
-                title: const Text('Payments'),
-              ),
-        body: isLoading == true
-            ? SizedBox(
-                width: MediaQuery.of(context).size.width,
-                height: MediaQuery.of(context).size.height,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Stack(
-                      children: [
-                        Positioned(
-                          bottom: 0,
-                          child: SizedBox(
-                            width: MediaQuery.of(context).size.width,
-                            child: Center(
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text('Loading',
-                                      style: GoogleFonts.roboto(
-                                          color: Colors.grey, fontSize: 23)),
-                                  SizedBox(
-                                      width: MediaQuery.of(context).size.width *
-                                          .3,
-                                      height:
-                                          MediaQuery.of(context).size.height *
-                                              .07,
-                                      child: Lottie.asset(
-                                          'assets/animations/order_loading.json')),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
-                        Lottie.asset('assets/animations/order2.json',
-                            fit: BoxFit.contain,
-                            height: MediaQuery.of(context).size.height * .4,
-                            width: MediaQuery.of(context).size.width,
-                            filterQuality: FilterQuality.high,
-                            frameRate: FrameRate.max),
-                      ],
-                    ),
-                  ],
-                ),
-              )
-            : SafeArea(
-                child: SizedBox(
-                  width: MediaQuery.of(context).size.width,
-                  child: Padding(
-                    padding: const EdgeInsets.all(20),
-                    child: Container(
-                      decoration: const BoxDecoration(
-                          color: Colors.white,
-                          boxShadow: [
-                            BoxShadow(color: Colors.grey, spreadRadius: 1.3)
-                          ]),
-                      child: Stack(
-                        children: [
-                          SizedBox(
-                              width: MediaQuery.of(context).size.width,
-                              height: MediaQuery.of(context).size.height * .4,
-                              child: Lottie.asset('assets/animations/cod.json',
-                                  fit: BoxFit.contain)),
-                          Padding(
-                            padding: const EdgeInsets.all(10.0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
+            ),
+      appBar: isLoading == true
+          ? null
+          : AppBar(
+              title: const Text('Payments'),
+            ),
+      body: isLoading == true
+          ? SizedBox(
+              width: MediaQuery.of(context).size.width,
+              height: MediaQuery.of(context).size.height,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Stack(
+                    children: [
+                      Positioned(
+                        bottom: 0,
+                        child: SizedBox(
+                          width: MediaQuery.of(context).size.width,
+                          child: Center(
+                            child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Text('Cash On Delivey',
-                                        style: TextStyling.appTitle),
-                                    SizedBox(
-                                        width:
-                                            MediaQuery.of(context).size.width *
-                                                .2,
-                                        height:
-                                            MediaQuery.of(context).size.height *
-                                                .06,
-                                        child: Image.asset(
-                                            'assets/icons/images.jpeg.jpg',
-                                            fit: BoxFit.contain,
-                                            filterQuality: FilterQuality.high))
-                                  ],
-                                ),
-                                const SizedBox(height: 20),
-                                Text('Your Orders',
-                                    style: TextStyling.appTitle),
+                                Text('Loading',
+                                    style: GoogleFonts.roboto(
+                                        color: Colors.grey, fontSize: 23)),
                                 SizedBox(
-                                  width: MediaQuery.of(context).size.width,
-                                  child: const TotalAmout(),
-                                ),
-                                Row(
-                                  children: [
-                                    Checkbox(
-                                      value: isChecked,
-                                      onChanged: (newValue) => setState(() {
-                                        isChecked = !isChecked;
-                                      }),
-                                    ),
-                                    Text('Cash on delivery',
-                                        style: TextStyling.subtitle3),
-                                  ],
-                                ),
-                                const SizedBox(height: 30),
-                                Text(
-                                    'Your personal data will be used to process your order support your experience throughtout this App and for other purposes described in our Privacy policy',
-                                    style: TextStyling.categoryText),
-                                Row(
-                                  children: [
-                                    TextButton(
-                                        onPressed: () {
-                                          Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (ctx) =>
-                                                      const TermsAndPolicy()));
-                                        },
-                                        child: const Text(
-                                          'Privacy policy',
-                                          style: TextStyle(
-                                              color: Colors.blue,
-                                              fontWeight: FontWeight.w400),
-                                        )),
-                                  ],
-                                )
+                                    width:
+                                        MediaQuery.of(context).size.width * .3,
+                                    height: MediaQuery.of(context).size.height *
+                                        .07,
+                                    child: Lottie.asset(
+                                        'assets/animations/order_loading.json')),
                               ],
                             ),
                           ),
-                        ],
+                        ),
                       ),
-                    ),
+                      Lottie.asset('assets/animations/order2.json',
+                          fit: BoxFit.contain,
+                          height: MediaQuery.of(context).size.height * .4,
+                          width: MediaQuery.of(context).size.width,
+                          filterQuality: FilterQuality.high,
+                          frameRate: FrameRate.max),
+                    ],
+                  ),
+                ],
+              ),
+            )
+          : SafeArea(
+              child: SizedBox(
+                width: MediaQuery.of(context).size.width,
+                child: Padding(
+                  padding: const EdgeInsets.all(20),
+                  child: Container(
+                    decoration: const BoxDecoration(
+                        color: Colors.white,
+                        boxShadow: [
+                          BoxShadow(color: Colors.grey, spreadRadius: 1.3)
+                        ]),
+                    child: Stack(children: [
+                      SizedBox(
+                          width: MediaQuery.of(context).size.width,
+                          height: MediaQuery.of(context).size.height * .4,
+                          child: Lottie.asset('assets/animations/cod.json',
+                              fit: BoxFit.contain)),
+                      Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text('Cash On Delivey',
+                                      style: TextStyling.appTitle),
+                                  SizedBox(
+                                      width: MediaQuery.of(context).size.width *
+                                          .2,
+                                      height:
+                                          MediaQuery.of(context).size.height *
+                                              .06,
+                                      child: Image.asset(
+                                          'assets/icons/images.jpeg.jpg',
+                                          fit: BoxFit.contain,
+                                          filterQuality: FilterQuality.high))
+                                ],
+                              ),
+                              const SizedBox(height: 20),
+                              Text('Your Orders', style: TextStyling.appTitle),
+                              SizedBox(
+                                width: MediaQuery.of(context).size.width,
+                                child: const TotalAmout(),
+                              ),
+                              Row(
+                                children: [
+                                  Checkbox(
+                                    value: isChecked,
+                                    onChanged: (newValue) => setState(() {
+                                      isChecked = !isChecked;
+                                    }),
+                                  ),
+                                  Text('Cash on delivery',
+                                      style: TextStyling.subtitle3),
+                                ],
+                              ),
+                              const SizedBox(height: 30),
+                              Text(
+                                  'Your personal data is used only for internal functions within the app, such as displaying your user information and purchase history. While this app doesn\'t support buying or selling products, the cash on delivery option is included to enhance your user experience.  For more details, please refer to our privacy policy.',
+                                  style: TextStyling.categoryText),
+                              Row(
+                                children: [
+                                  Checkbox(
+                                      value: isCheckedPolicy,
+                                      onChanged: (newValue) {
+                                        setState(() {
+                                          isCheckedPolicy = newValue!;
+                                        });
+                                      }),
+                                  TextButton(
+                                      onPressed: () {
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (ctx) =>
+                                                    const HomePrivacyPolicy()));
+                                      },
+                                      child: Row(
+                                        children: [
+                                          Text(
+                                            'Agree with ',
+                                            style: TextStyling.categoryText,
+                                          ),
+                                          const Text(
+                                            'Privacy policy',
+                                            style: TextStyle(
+                                                color: Colors.blue,
+                                                fontWeight: FontWeight.w400),
+                                          ),
+                                        ],
+                                      )),
+                                ],
+                              )
+                            ],
+                          ))
+                    ]),
                   ),
                 ),
-              ));
+              ),
+            ),
+    );
   }
 
   void orderSuccess(double priceDifference) {

@@ -1,7 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:prosample_1/User/home.dart';
+import 'package:prosample_1/User/user_home/user_home_privacy_policies.dart';
+import 'package:prosample_1/User/utils/utils_colors.dart';
+import 'package:prosample_1/User/utils/utils_text_decorations.dart';
 import 'package:prosample_1/User/utils/utils_widget1.dart';
 
 class ScreenCreateAccnt extends StatefulWidget {
@@ -18,7 +22,7 @@ class _ScreenCreateAccntState extends State<ScreenCreateAccnt> {
   bool _obscuretext1 = true;
   bool _obscuretext2 = true;
   final _formkey = GlobalKey<FormState>();
-
+  bool isTrue = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -59,7 +63,7 @@ class _ScreenCreateAccntState extends State<ScreenCreateAccnt> {
                             decoration: InputDecoration(
                                 label: Text('Password',
                                     style: GoogleFonts.poppins(
-                                        color: Colors.black)),
+                                        color: AppColors.appTheme)),
                                 prefixIcon: const Icon(Icons.security),
                                 suffixIcon: GestureDetector(
                                   onTap: () {
@@ -86,7 +90,7 @@ class _ScreenCreateAccntState extends State<ScreenCreateAccnt> {
                             decoration: InputDecoration(
                                 label: Text('Password',
                                     style: GoogleFonts.poppins(
-                                        color: Colors.black)),
+                                        color: AppColors.appTheme)),
                                 prefixIcon: const Icon(Icons.security),
                                 suffixIcon: GestureDetector(
                                   onTap: () {
@@ -100,10 +104,44 @@ class _ScreenCreateAccntState extends State<ScreenCreateAccnt> {
                                 ),
                                 border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(10)))),
+                        Row(
+                          children: [
+                            Checkbox(
+                                value: isTrue,
+                                onChanged: (newValue) {
+                                  setState(() {
+                                    isTrue = newValue!;
+                                  });
+                                }),
+                            RichText(
+                              text: TextSpan(
+                                text: 'To Sign in I Agree with ',
+                                style: TextStyling.categoryText,
+                                children: [
+                                  TextSpan(
+                                    text: 'Privacy Policy',
+                                    style: TextStyle(color: AppColors.appTheme),
+                                    recognizer: TapGestureRecognizer()
+                                      ..onTap = () => Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (ctx) =>
+                                                  const HomePrivacyPolicy())),
+                                  ),
+                                ],
+                              ),
+                            )
+                          ],
+                        ),
                         const SizedBox(height: 50),
                         UiHelper.customButton(context, () {
                           if (_formkey.currentState!.validate()) {
-                            createAccount();
+                            if (isTrue == true) {
+                              createAccount();
+                            } else if (isTrue == false) {
+                              UiHelper.userSnackbar(
+                                  context, 'Please Agree Terms and Conditions');
+                            }
                           }
                         }, text: 'Create Account')
                       ],
@@ -123,14 +161,15 @@ class _ScreenCreateAccntState extends State<ScreenCreateAccnt> {
     if (pass1 != pass2) {
       return UiHelper.customTextAlert(context, "Password Doesn't match");
     } else {
+      
       // ignore: unused_local_variable
       UserCredential? usercredential;
       try {
         usercredential = await FirebaseAuth.instance
             .createUserWithEmailAndPassword(email: email, password: pass1)
             .then((value) {
-          Navigator.push(
-              context, MaterialPageRoute(builder: (ctx2) => const HomeInfo()));
+          Navigator.pushAndRemoveUntil(
+              context, MaterialPageRoute(builder: (ctx2) => const HomeInfo()),(route) => false);
           return null;
         });
       } on FirebaseAuthException catch (ex) {

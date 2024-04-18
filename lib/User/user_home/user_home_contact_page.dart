@@ -28,7 +28,7 @@ class ScreenContact extends StatelessWidget {
                       image: AssetImage('assets/login/login_logo.png'),
                       width: 100,
                       height: 100),
-                      const SizedBox(width: 30),
+                  const SizedBox(width: 30),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
@@ -48,37 +48,6 @@ class ScreenContact extends StatelessWidget {
               Text('Questions,Comments? You tell us. We Listen.',
                   style: TextStyling.titleText2),
               const SizedBox(height: 20),
-              Text('[Social Media]', style: TextStyling.titleText2),
-              const SizedBox(height: 20),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  SizedBox(
-                      width: MediaQuery.of(context).size.width * .09,
-                      height: MediaQuery.of(context).size.height * .07,
-                      child: const Image(
-                          image: AssetImage(
-                              'assets/ads/Whats_app_logo.png'))),
-                  SizedBox(
-                      width: MediaQuery.of(context).size.width * .09,
-                      height: MediaQuery.of(context).size.height * .07,
-                      child: const Image(
-                          image: AssetImage(
-                              'assets/ads/Instagram_logo.png'))),
-                  SizedBox(
-                      width: MediaQuery.of(context).size.width * .09,
-                      height: MediaQuery.of(context).size.height * .07,
-                      child: const Image(
-                          image: AssetImage(
-                              'assets/ads/facebook_logo.png'))),
-                  SizedBox(
-                      width: MediaQuery.of(context).size.width * .09,
-                      height: MediaQuery.of(context).size.height * .07,
-                      child: const Image(
-                          image: AssetImage(
-                              'assets/ads/Twitter_logo.png'))),
-                ],
-              ),
               const SizedBox(height: 20),
               Text('[Our Contact]', style: TextStyling.titleText2),
               const SizedBox(height: 20),
@@ -108,9 +77,12 @@ class ScreenContact extends StatelessWidget {
                                   style: TextStyling.titleText2),
                               const SizedBox(height: 10),
                               const Text(
-                                  'Tech Shift Pvt.Ltd COCHIN: 1st floor Above Union Bank, Le Meridian Road, Maradu, Ernakulam'),
+                                  'Tech Shift Malalmel Nettoor, KRA -83, Kochi, Kerala, India, 682040.'),
                               const SizedBox(height: 10),
-                              const Text('Phone: 9847144234')
+                              Text(
+                                'Email: sibinsebastian2306@gmail.com',
+                                style: TextStyling.subtitle2,
+                              )
                             ],
                           ),
                         ),

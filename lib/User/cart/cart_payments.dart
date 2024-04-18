@@ -6,7 +6,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
 import 'package:prosample_1/User/cart/cart_total_amount.dart';
 import 'package:prosample_1/User/home.dart';
-import 'package:prosample_1/User/user_home/user_home_terms_policies.dart';
+import 'package:prosample_1/User/user_home/user_home_privacy_policies.dart';
 import 'package:prosample_1/User/utils/utils_widget1.dart';
 import 'package:prosample_1/User/utils/utils_text_decorations.dart';
 import 'package:prosample_1/functions/fuctions.dart';
@@ -25,7 +25,7 @@ class _PaymentsState extends State<Payments> {
   double? priceDifference;
   bool isLoading = false;
   bool? hasConfigure;
-
+  bool isCheckedPolicy = false;
   @override
   void initState() {
     super.initState();
@@ -164,13 +164,15 @@ class _PaymentsState extends State<Payments> {
                     context,
                     () {
                       setState(() {
-                        if (isChecked == true) {
+                        if (isChecked == true && isCheckedPolicy == true) {
                           isLoading = true;
                           loading();
                           addToOrders();
                         } else if (isChecked == false) {
                           UiHelper.userSnackbar(
                               context, 'Please Select Cash On Delivery');
+                        }else if(isCheckedPolicy == false){
+                          UiHelper.userSnackbar(context, 'Please Select Privacy Policy');
                         }
                       });
                     },
@@ -291,23 +293,35 @@ class _PaymentsState extends State<Payments> {
                                 ),
                                 const SizedBox(height: 30),
                                 Text(
-                                    'Your personal data will be used to process your order support your experience throughtout this App and for other purposes described in our Privacy policy',
+                                    'Your personal data is used only for internal functions within the app, such as displaying your user information and purchase history. While this app doesn\'t support buying or selling products, the cash on delivery option is included to enhance your user experience.  For more details, please refer to our privacy policy.',
                                     style: TextStyling.categoryText),
                                 Row(
                                   children: [
+                                    Checkbox(
+                                        value: isCheckedPolicy,
+                                        onChanged: (newValue) {
+                                          setState(() {
+                                            isCheckedPolicy = newValue!;
+                                          });
+                                        }),
                                     TextButton(
                                         onPressed: () {
                                           Navigator.push(
                                               context,
                                               MaterialPageRoute(
                                                   builder: (ctx) =>
-                                                      const TermsAndPolicy()));
+                                                      const HomePrivacyPolicy()));
                                         },
-                                        child: const Text(
-                                          'Privacy policy',
-                                          style: TextStyle(
-                                              color: Colors.blue,
-                                              fontWeight: FontWeight.w400),
+                                        child: Row(
+                                          children: [
+                                            Text('Agree with ',style: TextStyling.categoryText,),
+                                            const Text(
+                                              'Privacy policy',
+                                              style: TextStyle(
+                                                  color: Colors.blue,
+                                                  fontWeight: FontWeight.w400),
+                                            ),
+                                          ],
                                         )),
                                   ],
                                 )
